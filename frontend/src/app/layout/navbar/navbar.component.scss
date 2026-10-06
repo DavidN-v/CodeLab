@@ -1,0 +1,114 @@
+@use 'mixins' as *;
+
+:host {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: block;
+}
+
+.navbar {
+  border-bottom: 1px solid var(--color-border);
+  background-color: color-mix(in srgb, var(--color-bg) 92%, transparent);
+  backdrop-filter: blur(8px);
+}
+
+.navbar__inner {
+  @include container;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.navbar__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2em;
+  // Keeps the first row at full height when the open menu wraps below it.
+  min-height: var(--navbar-height);
+  font-family: var(--font-mono);
+  font-size: var(--text-lg);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  text-decoration: none;
+}
+
+// Block cursor after the wordmark: the product's one recurring motif.
+.navbar__cursor {
+  width: 0.5em;
+  height: 1.05em;
+  background-color: var(--color-accent);
+}
+
+.navbar__toggle {
+  @include mono-label;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  background: none;
+  cursor: pointer;
+
+  @include from('sm') {
+    display: none;
+  }
+}
+
+.navbar__nav {
+  display: none;
+  flex-basis: 100%;
+  padding-bottom: var(--space-3);
+
+  &--open {
+    display: block;
+  }
+
+  @include from('sm') {
+    display: block;
+    flex-basis: auto;
+    align-self: stretch;
+    padding-bottom: 0;
+  }
+}
+
+.navbar__links {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+
+  @include from('sm') {
+    flex-direction: row;
+    gap: var(--space-5);
+    height: 100%;
+  }
+}
+
+.navbar__link {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding-block: var(--space-3);
+  border-bottom: 2px solid transparent;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+
+  &:hover {
+    color: var(--color-text);
+  }
+
+  &--active {
+    color: var(--color-text);
+  }
+
+  @include from('sm') {
+    padding-block: 0;
+    // Pull the indicator onto the navbar's own bottom border.
+    margin-bottom: -1px;
+
+    &--active {
+      border-bottom-color: var(--color-accent);
+    }
+  }
+}

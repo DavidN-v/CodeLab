@@ -1,0 +1,28 @@
+<figure class="preview">
+  <figcaption class="visually-hidden">
+    Ejemplo del entorno de práctica: un programa en el editor y su resultado en la consola.
+  </figcaption>
+
+  <div class="preview__tabs">
+    <span class="preview__tab">{{ fileName }}</span>
+  </div>
+
+  <ol class="preview__source">
+    @for (line of lines; track $index) {
+      <li class="preview__line">
+        <!-- Tokens sit on one line: inside white-space: pre, stray whitespace would render. -->
+        <code>@for (token of line; track $index) {<span [class]="'token token--' + token.kind">{{ token.text }}</span>}</code>
+      </li>
+    }
+  </ol>
+
+  <div class="preview__console">
+    <p class="preview__console-label">Consola</p>
+    <p class="preview__console-line">
+      <span class="preview__prompt" aria-hidden="true">$</span> {{ command }}
+    </p>
+    @for (outputLine of output; track $index) {
+      <p class="preview__console-line preview__console-line--output">{{ outputLine }}</p>
+    }
+  </div>
+</figure>

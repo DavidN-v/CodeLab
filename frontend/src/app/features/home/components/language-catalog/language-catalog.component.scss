@@ -1,0 +1,50 @@
+@use 'mixins' as *;
+
+.catalog {
+  @include container;
+  padding-block: var(--space-8);
+}
+
+.catalog__eyebrow {
+  @include mono-label;
+  margin-bottom: var(--space-3);
+  color: var(--color-accent);
+}
+
+.catalog__heading {
+  font-size: var(--text-2xl);
+}
+
+.catalog__intro {
+  max-width: 40rem;
+  margin-top: var(--space-3);
+  color: var(--color-text-muted);
+}
+
+.catalog__list {
+  margin: var(--space-6) 0 0;
+  border-top: 1px solid var(--color-border);
+}
+
+.catalog__item {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.catalog__message {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4);
+  margin-top: var(--space-6);
+  padding: var(--space-4);
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+
+  &--error {
+    border-style: solid;
+    border-left: 3px solid var(--color-danger);
+    color: var(--color-text);
+  }
+}

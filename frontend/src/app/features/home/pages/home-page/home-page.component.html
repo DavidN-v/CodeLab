@@ -1,0 +1,9 @@
+<app-hero [featuredLanguage]="featuredLanguage()" />
+
+<app-learning-flow />
+
+<app-language-catalog
+  [languages]="languages()"
+  [loadState]="loadState()"
+  (retry)="loadLanguages()"
+/>

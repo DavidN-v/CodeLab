@@ -1,0 +1,23 @@
+@let item = language();
+
+<ng-template #summary>
+  <span class="language__identity">
+    <span class="language__name">{{ item.name }}</span>
+    @if (item.version) {
+      <span class="language__version">{{ item.version }}</span>
+    }
+  </span>
+  <span class="language__tagline">{{ item.tagline }}</span>
+</ng-template>
+
+@if (item.active) {
+  <a class="language language--available" [routerLink]="['/languages', item.slug]">
+    <ng-container [ngTemplateOutlet]="summary" />
+    <span class="language__status">Disponible <span aria-hidden="true">→</span></span>
+  </a>
+} @else {
+  <div class="language language--upcoming">
+    <ng-container [ngTemplateOutlet]="summary" />
+    <span class="language__status">Próximamente</span>
+  </div>
+}

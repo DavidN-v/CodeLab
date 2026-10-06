@@ -1,0 +1,58 @@
+spring:
+  application:
+    name: forja-api
+  config:
+    # Lets `./mvnw spring-boot:run` pick up the root .env during local development.
+    # Inside Docker the file does not exist and plain environment variables are used.
+    import:
+      - optional:file:.env[.properties]
+      - optional:file:../.env[.properties]
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${POSTGRES_DB:forja}
+    username: ${POSTGRES_USER:forja}
+    password: ${POSTGRES_PASSWORD}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    locations: classpath:db/migration
+
+server:
+  port: ${SERVER_PORT:8080}
+  shutdown: graceful
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      show-components: always
+      group:
+        readiness:
+          include: readinessState,db
+
+springdoc:
+  api-docs:
+    enabled: ${API_DOCS_ENABLED:true}
+  swagger-ui:
+    enabled: ${API_DOCS_ENABLED:true}
+    path: /swagger-ui.html
+    operations-sorter: alpha
+    tags-sorter: alpha
+
+forja:
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:4200}
+  code-runner:
+    base-url: ${CODE_RUNNER_URL:http://localhost:8090}
+    connect-timeout: 2s
+    read-timeout: 15s
+
+logging:
+  level:
+    com.forja: ${LOG_LEVEL:INFO}

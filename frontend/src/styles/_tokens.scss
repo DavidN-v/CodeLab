@@ -1,0 +1,66 @@
+// Design tokens. Components read these custom properties instead of hard-coding
+// values, so the visual identity lives in this one file.
+
+:root {
+  color-scheme: dark;
+
+  // Surfaces: warm near-black "ink" rather than neutral or blue-tinted grey.
+  --color-bg: #131210;
+  --color-surface: #1a1916;
+  --color-surface-raised: #22201c;
+  --color-border: #2f2c26;
+  --color-border-strong: #4a463d;
+
+  // Text: off-white on ink. All three levels meet WCAG AA on --color-bg.
+  --color-text: #ece8de;
+  --color-text-muted: #a8a294;
+  --color-text-subtle: #8a8577;
+
+  // Accent: forged amber. Reserved for the primary action and for emphasis.
+  --color-accent: #e8a23a;
+  --color-accent-hover: #f2b657;
+  --color-on-accent: #1b1304;
+
+  --color-success: #8fcf8a;
+  --color-danger: #ec7b66;
+
+  // Code surfaces are darker than content so code always reads as code, and
+  // the console is darker still so output is never mistaken for source.
+  --color-code-bg: #0e0d0b;
+  --color-console-bg: #080807;
+
+  --syntax-keyword: #e8a23a;
+  --syntax-type: #dccba6;
+  --syntax-string: #a9c98a;
+  --syntax-plain: #d6d1c4;
+
+  --font-sans: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'Cascadia Code', Consolas, monospace;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.375rem;
+  --text-2xl: 1.875rem;
+  --text-display: clamp(2.25rem, 1.35rem + 3.8vw, 3.75rem);
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4.5rem;
+  --space-9: 6.5rem;
+
+  --radius-sm: 3px;
+  --radius-md: 6px;
+
+  --layout-max-width: 72rem;
+  --layout-gutter: clamp(1rem, 4vw, 2rem);
+  --navbar-height: 3.5rem;
+
+  --transition-fast: 120ms ease-out;
+}

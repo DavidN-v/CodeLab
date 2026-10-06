@@ -1,0 +1,73 @@
+@use 'mixins' as *;
+
+:host {
+  display: block;
+}
+
+.language {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    'identity status'
+    'tagline tagline';
+  align-items: baseline;
+  gap: var(--space-1) var(--space-4);
+  padding: var(--space-4) var(--space-3);
+  text-decoration: none;
+
+  @include from('md') {
+    grid-template-columns: 14rem 1fr auto;
+    grid-template-areas: 'identity tagline status';
+    gap: var(--space-5);
+  }
+}
+
+.language--available {
+  transition: background-color var(--transition-fast);
+
+  &:hover {
+    background-color: var(--color-surface);
+  }
+}
+
+.language--upcoming {
+  .language__name,
+  .language__tagline {
+    color: var(--color-text-subtle);
+  }
+}
+
+.language__identity {
+  grid-area: identity;
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+}
+
+.language__name {
+  font-size: var(--text-lg);
+  font-weight: 600;
+}
+
+.language__version {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-text-subtle);
+}
+
+.language__tagline {
+  grid-area: tagline;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.language__status {
+  @include mono-label;
+  grid-area: status;
+  color: var(--color-text-subtle);
+  white-space: nowrap;
+
+  .language--available & {
+    color: var(--color-accent);
+  }
+}

@@ -1,0 +1,16 @@
+<!-- The live region stays in the DOM while empty so screen readers announce additions. -->
+<div class="toasts" role="status" aria-live="polite">
+  @for (notification of notifications(); track notification.id) {
+    <div class="toast" [class.toast--error]="notification.kind === 'error'">
+      <p class="toast__message">{{ notification.message }}</p>
+      <button
+        type="button"
+        class="toast__dismiss"
+        aria-label="Cerrar aviso"
+        (click)="dismiss(notification.id)"
+      >
+        <span aria-hidden="true">×</span>
+      </button>
+    </div>
+  }
+</div>

@@ -1,0 +1,31 @@
+@let featured = featuredLanguage();
+
+<section class="hero" aria-labelledby="hero-heading">
+  <div class="hero__copy">
+    <!-- Always rendered so the layout does not jump when the catalog arrives. -->
+    <p class="hero__eyebrow">
+      @if (featured) {
+        {{ featured.name }} {{ featured.version }} · disponible ahora
+      } @else {
+        Plataforma de práctica
+      }
+    </p>
+
+    <h1 id="hero-heading" class="hero__heading">
+      Aprende a programar <span class="hero__emphasis">construyendo.</span>
+    </h1>
+
+    <p class="hero__lead">Aprende conceptos, escribe código y resuelve problemas reales.</p>
+
+    <div class="hero__actions">
+      @if (featured) {
+        <a class="button button--primary" [routerLink]="['/languages', featured.slug]">
+          Comenzar con {{ featured.name }}
+        </a>
+      }
+      <a class="button button--secondary" routerLink="/languages">Explorar lenguajes</a>
+    </div>
+  </div>
+
+  <app-code-preview class="hero__preview" />
+</section>

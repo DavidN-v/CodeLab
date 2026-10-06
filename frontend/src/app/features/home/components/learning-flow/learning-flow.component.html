@@ -1,0 +1,16 @@
+<section class="flow" aria-labelledby="flow-heading">
+  <header class="flow__header">
+    <p class="flow__eyebrow">Cómo funciona</p>
+    <h2 id="flow-heading" class="flow__heading">Un ciclo que se repite en cada módulo.</h2>
+  </header>
+
+  <ol class="flow__steps">
+    @for (step of steps; track step.label) {
+      <li class="flow__step">
+        <span class="flow__index" aria-hidden="true">{{ ($index + 1).toString().padStart(2, '0') }}</span>
+        <h3 class="flow__label">{{ step.label }}</h3>
+        <p class="flow__description">{{ step.description }}</p>
+      </li>
+    }
+  </ol>
+</section>

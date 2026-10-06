@@ -1,0 +1,75 @@
+@use 'mixins' as *;
+
+:host {
+  display: block;
+  border-block: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+}
+
+.flow {
+  @include container;
+  padding-block: var(--space-8);
+}
+
+.flow__eyebrow {
+  @include mono-label;
+  margin-bottom: var(--space-3);
+  color: var(--color-accent);
+}
+
+.flow__heading {
+  font-size: var(--text-2xl);
+}
+
+.flow__steps {
+  display: grid;
+  gap: var(--space-6);
+  margin: var(--space-7) 0 0;
+
+  @include from('sm') {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include from('lg') {
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-5);
+  }
+}
+
+// The top rule reads as one continuous track across the four steps; the short
+// accent segment marks where each step begins.
+.flow__step {
+  position: relative;
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-border-strong);
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 0;
+    width: var(--space-6);
+    height: 1px;
+    background-color: var(--color-accent);
+  }
+}
+
+.flow__index {
+  display: block;
+  margin-bottom: var(--space-3);
+  color: var(--color-text-subtle);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+}
+
+.flow__label {
+  @include mono-label;
+  font-size: var(--text-sm);
+  color: var(--color-text);
+}
+
+.flow__description {
+  margin-top: var(--space-2);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}

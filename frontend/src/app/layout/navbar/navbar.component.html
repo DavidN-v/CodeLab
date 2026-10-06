@@ -1,0 +1,46 @@
+<header class="navbar">
+  <div class="navbar__inner">
+    <a
+      class="navbar__brand"
+      routerLink="/"
+      [attr.aria-label]="brandName + ', ir al inicio'"
+      (click)="closeMenu()"
+    >
+      <span class="navbar__wordmark">{{ brandName.toLowerCase() }}</span>
+      <span class="navbar__cursor" aria-hidden="true"></span>
+    </a>
+
+    <button
+      type="button"
+      class="navbar__toggle"
+      aria-controls="primary-navigation"
+      [attr.aria-expanded]="menuOpen()"
+      (click)="toggleMenu()"
+    >
+      {{ menuOpen() ? 'Cerrar' : 'Menú' }}
+    </button>
+
+    <nav
+      id="primary-navigation"
+      class="navbar__nav"
+      [class.navbar__nav--open]="menuOpen()"
+      aria-label="Principal"
+    >
+      <ul class="navbar__links">
+        @for (link of links; track link.path) {
+          <li>
+            <a
+              class="navbar__link"
+              [routerLink]="link.path"
+              routerLinkActive="navbar__link--active"
+              ariaCurrentWhenActive="page"
+              (click)="closeMenu()"
+            >
+              {{ link.label }}
+            </a>
+          </li>
+        }
+      </ul>
+    </nav>
+  </div>
+</header>
