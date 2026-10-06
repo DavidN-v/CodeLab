@@ -73,4 +73,9 @@ public class CourseModule extends BaseEntity {
 		return displayOrder;
 	}
 
+	/** Made visible once its content exists; see ContentImporter. */
+	public void publish() {
+		this.published = true;
+	}
+
 }

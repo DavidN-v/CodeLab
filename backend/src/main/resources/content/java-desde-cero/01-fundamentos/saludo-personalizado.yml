@@ -1,0 +1,54 @@
+title: Saludo personalizado
+summary: Lee un nombre de la entrada y salúdalo.
+difficulty: EASY
+statement: |
+  Lee una línea con un nombre y escribe un saludo con este formato:
+
+  ```
+  Hola, <nombre>! Bienvenido a Java.
+  ```
+
+  **Ejemplo:** si la entrada es `Ada`, la salida es `Hola, Ada! Bienvenido a Java.`
+
+  El nombre puede tener espacios (`Ada Lovelace`), así que lee la línea completa.
+starter: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          String nombre = entrada.nextLine();
+          System.out.println("Hola, " + nombre + "! Bienvenido a Java.");
+      }
+  }
+hints:
+  - "`entrada.nextLine()` devuelve la línea completa que se ha escrito."
+  - Guarda el resultado en una variable `String nombre` y únela al resto del texto con `+`.
+tests:
+  - input: |
+      Ada
+    output: |
+      Hola, Ada! Bienvenido a Java.
+    sample: true
+  - input: |
+      Ada Lovelace
+    output: |
+      Hola, Ada Lovelace! Bienvenido a Java.
+    sample: true
+  - input: |
+      Grace
+    output: |
+      Hola, Grace! Bienvenido a Java.
+  - input: |
+      José María
+    output: |
+      Hola, José María! Bienvenido a Java.

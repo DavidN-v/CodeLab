@@ -51,7 +51,16 @@ forja:
   code-runner:
     base-url: ${CODE_RUNNER_URL:http://localhost:8090}
     connect-timeout: 2s
-    read-timeout: 15s
+    # Covers the worst case of a submission: compilation plus every test case
+    # hitting its time limit, and time queued behind other executions.
+    read-timeout: 120s
+  security:
+    jwt:
+      secret: ${JWT_SECRET:}
+      ttl: 7d
+      issuer: forja
+  content:
+    import-on-startup: true
 
 logging:
   level:

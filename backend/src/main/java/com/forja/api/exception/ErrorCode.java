@@ -15,6 +15,8 @@ public enum ErrorCode {
 	RESOURCE_NOT_FOUND("El recurso solicitado no existe."),
 	METHOD_NOT_ALLOWED("El método HTTP no está permitido para este recurso."),
 	CONFLICT("La operación entra en conflicto con el estado actual del recurso."),
+	TOO_MANY_REQUESTS("Has hecho demasiadas solicitudes seguidas. Espera un momento e inténtalo de nuevo."),
+	EXECUTION_UNAVAILABLE("El entorno de ejecución no está disponible ahora mismo. Inténtalo de nuevo en unos segundos."),
 	INTERNAL_ERROR("Ha ocurrido un error inesperado. Inténtalo de nuevo más tarde.");
 
 	private final String defaultMessage;
@@ -34,6 +36,7 @@ public enum ErrorCode {
 			case 404 -> RESOURCE_NOT_FOUND;
 			case 405 -> METHOD_NOT_ALLOWED;
 			case 409 -> CONFLICT;
+			case 429 -> TOO_MANY_REQUESTS;
 			default -> status.is4xxClientError() ? BAD_REQUEST : INTERNAL_ERROR;
 		};
 	}

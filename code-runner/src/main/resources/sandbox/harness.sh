@@ -11,7 +11,8 @@
 #
 # Program output goes to files and is base64 encoded, so nothing a program
 # prints can be read as a protocol line. <bytes> is the full size; only the
-# first FORJA_OUTPUT_LIMIT bytes are sent.
+# first FORJA_OUTPUT_LIMIT bytes are sent. After a run times out the rest are
+# skipped, so fewer runs than inputs may be reported.
 #
 # Inputs come as environment variables: FORJA_SOURCE, FORJA_SOURCE_FILE,
 # FORJA_MAIN, FORJA_COMPILE_COMMAND (optional), FORJA_RUN_COMMAND,
@@ -63,9 +64,15 @@ while [ "$i" -lt "$FORJA_RUNS" ]; do
   (eval "exec timeout -s KILL $FORJA_RUN_TIMEOUT $FORJA_RUN_COMMAND" \
     < "$harness/stdin" > "$harness/stdout" 2> "$harness/stderr")
   code=$?
-  echo "@@FORJA run $i $code $(( $(now_ms) - start ))"
+  elapsed=$(( $(now_ms) - start ))
+  echo "@@FORJA run $i $code $elapsed"
   emit stdout "$harness/stdout"
   emit stderr "$harness/stderr"
+  # A program that timed out once will very likely do it again: skip the
+  # remaining inputs instead of spending a full timeout on each.
+  if [ "$code" -eq 137 ] && [ "$elapsed" -ge $(( FORJA_RUN_TIMEOUT * 1000 - 250 )) ]; then
+    break
+  fi
   i=$((i + 1))
 done
 echo "@@FORJA end"

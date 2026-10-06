@@ -1,0 +1,39 @@
+title: Tarjeta de presentación
+summary: Varias líneas con formato exacto, comillas incluidas.
+difficulty: EASY
+statement: |
+  Imprime esta tarjeta exactamente como aparece, en cuatro líneas:
+
+  ```
+  +----------------------+
+  | Nombre: Ada Lovelace |
+  | Lenguaje: "Java"     |
+  +----------------------+
+  ```
+
+  La tercera línea contiene comillas dobles: tendrás que escaparlas.
+starter: |
+  public class Main {
+      public static void main(String[] args) {
+
+      }
+  }
+solution: |
+  public class Main {
+      public static void main(String[] args) {
+          System.out.println("+----------------------+");
+          System.out.println("| Nombre: Ada Lovelace |");
+          System.out.println("| Lenguaje: \"Java\"     |");
+          System.out.println("+----------------------+");
+      }
+  }
+hints:
+  - Usa un `System.out.println` por línea.
+  - "Dentro de un texto, una comilla doble se escribe `\\\"`."
+tests:
+  - output: |
+      +----------------------+
+      | Nombre: Ada Lovelace |
+      | Lenguaje: "Java"     |
+      +----------------------+
+    sample: true

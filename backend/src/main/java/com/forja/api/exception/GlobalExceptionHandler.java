@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.validation.method.ParameterErrors;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -35,6 +36,34 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 	@ExceptionHandler(ResourceNotFoundException.class)
 	public ResponseEntity<Object> handleResourceNotFound(ResourceNotFoundException ex, WebRequest request) {
 		return respond(HttpStatus.NOT_FOUND, ErrorCode.RESOURCE_NOT_FOUND, ex.getMessage(), List.of(), request);
+	}
+
+	@ExceptionHandler(ConflictException.class)
+	public ResponseEntity<Object> handleConflict(ConflictException ex, WebRequest request) {
+		return respond(HttpStatus.CONFLICT, ErrorCode.CONFLICT, ex.getMessage(), List.of(), request);
+	}
+
+	@ExceptionHandler(InvalidCredentialsException.class)
+	public ResponseEntity<Object> handleInvalidCredentials(InvalidCredentialsException ex, WebRequest request) {
+		return respond(HttpStatus.UNAUTHORIZED, ErrorCode.UNAUTHORIZED, ex.getMessage(), List.of(), request);
+	}
+
+	@ExceptionHandler(InvalidRequestException.class)
+	public ResponseEntity<Object> handleInvalidRequest(InvalidRequestException ex, WebRequest request) {
+		return respond(HttpStatus.BAD_REQUEST, ErrorCode.BAD_REQUEST, ex.getMessage(), List.of(), request);
+	}
+
+	@ExceptionHandler(TooManyRequestsException.class)
+	public ResponseEntity<Object> handleTooManyRequests(TooManyRequestsException ex, WebRequest request) {
+		return respond(HttpStatus.TOO_MANY_REQUESTS, ErrorCode.TOO_MANY_REQUESTS, ex.getMessage(), List.of(),
+				request);
+	}
+
+	@ExceptionHandler(ExecutionUnavailableException.class)
+	public ResponseEntity<Object> handleExecutionUnavailable(ExecutionUnavailableException ex, WebRequest request) {
+		log.warn("Code execution unavailable on {}: {}", pathOf(request), ex.getMessage());
+		return respond(HttpStatus.SERVICE_UNAVAILABLE, ErrorCode.EXECUTION_UNAVAILABLE,
+				ErrorCode.EXECUTION_UNAVAILABLE.defaultMessage(), List.of(), request);
 	}
 
 	@ExceptionHandler(ConstraintViolationException.class)
@@ -85,9 +114,16 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 	protected ResponseEntity<Object> handleHandlerMethodValidationException(HandlerMethodValidationException ex,
 			HttpHeaders headers, HttpStatusCode status, WebRequest request) {
 		List<FieldErrorDetail> fieldErrors = ex.getParameterValidationResults().stream()
-			.flatMap(result -> result.getResolvableErrors().stream()
-				.map(error -> new FieldErrorDetail(result.getMethodParameter().getParameterName(),
-						error.getDefaultMessage())))
+			.flatMap(result -> {
+				// A request body validated with @Valid: report its fields, not the parameter.
+				if (result instanceof ParameterErrors errors) {
+					return errors.getFieldErrors().stream()
+						.map(error -> new FieldErrorDetail(error.getField(), error.getDefaultMessage()));
+				}
+				return result.getResolvableErrors().stream()
+					.map(error -> new FieldErrorDetail(result.getMethodParameter().getParameterName(),
+							error.getDefaultMessage()));
+			})
 			.toList();
 		return respondValidationError(fieldErrors, request);
 	}

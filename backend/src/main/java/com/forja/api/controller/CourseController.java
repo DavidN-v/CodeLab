@@ -3,6 +3,9 @@ package com.forja.api.controller;
 import com.forja.api.dto.ApiErrorResponse;
 import com.forja.api.dto.CourseDetailResponse;
 import com.forja.api.dto.CourseSummaryResponse;
+import com.forja.api.dto.ExerciseSummaryResponse;
+import com.forja.api.dto.LessonDetailResponse;
+import com.forja.api.dto.ModuleDetailResponse;
 import com.forja.api.service.CourseService;
 import com.forja.api.util.SlugRules;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/courses")
-@Tag(name = "Courses", description = "Courses and their module outline.")
+@Tag(name = "Courses", description = "Courses, their modules and lessons.")
 public class CourseController {
 
 	private final CourseService courseService;
@@ -54,6 +57,39 @@ public class CourseController {
 			content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
 	public CourseDetailResponse getCourse(@PathVariable @Positive(message = "debe ser mayor que 0") Long id) {
 		return courseService.findById(id);
+	}
+
+	@GetMapping("/{id}/modules/{moduleSlug}")
+	@Operation(summary = "Get a module with its lessons and exercises")
+	@ApiResponse(responseCode = "200", description = "Module found.")
+	@ApiResponse(responseCode = "404", description = "The module is not published in that course.",
+			content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
+	public ModuleDetailResponse getModule(@PathVariable @Positive(message = "debe ser mayor que 0") Long id,
+			@Parameter(example = "variables") @PathVariable @Pattern(regexp = SlugRules.PATTERN,
+					message = SlugRules.MESSAGE) String moduleSlug) {
+		return courseService.findModule(id, moduleSlug);
+	}
+
+	@GetMapping("/{id}/modules/{moduleSlug}/lessons/{lessonSlug}")
+	@Operation(summary = "Get a lesson",
+			description = "Includes the previous and next lesson in reading order, which may belong to a neighbouring module.")
+	@ApiResponse(responseCode = "200", description = "Lesson found.")
+	@ApiResponse(responseCode = "404", description = "The lesson is not published there.",
+			content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
+	public LessonDetailResponse getLesson(@PathVariable @Positive(message = "debe ser mayor que 0") Long id,
+			@PathVariable @Pattern(regexp = SlugRules.PATTERN, message = SlugRules.MESSAGE) String moduleSlug,
+			@PathVariable @Pattern(regexp = SlugRules.PATTERN, message = SlugRules.MESSAGE) String lessonSlug) {
+		return courseService.findLesson(id, moduleSlug, lessonSlug);
+	}
+
+	@GetMapping("/{id}/exercises")
+	@Operation(summary = "List a course's exercises", description = "Published exercises in module order.")
+	@ApiResponse(responseCode = "200", description = "Exercises found.")
+	@ApiResponse(responseCode = "404", description = "The course does not exist or is not published.",
+			content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
+	public List<ExerciseSummaryResponse> listExercises(
+			@PathVariable @Positive(message = "debe ser mayor que 0") Long id) {
+		return courseService.findExercises(id);
 	}
 
 }

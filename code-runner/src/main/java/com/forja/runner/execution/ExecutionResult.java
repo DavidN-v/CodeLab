@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * @param status how far the execution got
  * @param compile compiler outcome; successful and empty for interpreted languages
- * @param runs one entry per input that finished, in input order
+ * @param runs one entry per input that ran, in input order
  * @param durationMs wall-clock time of the whole sandbox, including start-up
  */
 public record ExecutionResult(ExecutionStatus status, CompileResult compile, List<RunResult> runs, long durationMs) {

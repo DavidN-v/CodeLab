@@ -2,7 +2,11 @@ package com.forja.runner.execution;
 
 public enum ExecutionStatus {
 
-	/** Compiled and ran every input. Individual runs may still have failed or timed out. */
+	/**
+	 * Compiled and ran the inputs. Individual runs may still have failed; after a
+	 * run times out the remaining inputs are skipped, so there can be fewer runs
+	 * than inputs.
+	 */
 	COMPLETED,
 
 	/** The compiler rejected the program; nothing ran. */
