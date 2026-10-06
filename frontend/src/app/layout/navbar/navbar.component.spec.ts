@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 
 import { NavbarComponent } from './navbar.component';
@@ -13,15 +14,23 @@ describe('NavbarComponent', () => {
   let element: HTMLElement;
 
   beforeEach(async () => {
+    localStorage.clear();
     await TestBed.configureTestingModule({
       imports: [NavbarComponent],
       // Every link needs somewhere to go, or clicking it ends in a navigation error.
-      providers: [provideRouter([{ path: '**', component: DestinationStubComponent }])],
+      providers: [provideHttpClient(), provideRouter([{ path: '**', component: DestinationStubComponent }])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(NavbarComponent);
     fixture.detectChanges();
     element = fixture.nativeElement as HTMLElement;
+  });
+
+  it('invites signed-out visitors to sign in or register', () => {
+    const account = element.querySelector('.navbar__account')!;
+
+    expect(account.querySelector('a[href="/login"]')).not.toBeNull();
+    expect(account.querySelector('a[href="/register"]')).not.toBeNull();
   });
 
   it('renders one link per navigation entry, in order', () => {

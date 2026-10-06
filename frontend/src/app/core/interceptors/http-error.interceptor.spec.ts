@@ -107,6 +107,20 @@ describe('httpErrorInterceptor', () => {
     expect(error.message).toContain('servidor');
   });
 
+  it('shows the sandbox-unavailable message, which is written for learners', () => {
+    const message = 'El entorno de ejecución no está disponible ahora mismo.';
+    const error = failRequest(503, apiError(503, 'EXECUTION_UNAVAILABLE', message));
+
+    expect(error.code).toBe('EXECUTION_UNAVAILABLE');
+    expect(error.message).toBe(message);
+  });
+
+  it('explains a rate limit even without a server message', () => {
+    const error = failRequest(429, '');
+
+    expect(error.message).toContain('demasiadas solicitudes');
+  });
+
   it('reports an unreachable server as a connection problem', () => {
     const error = failRequest(0, null);
 

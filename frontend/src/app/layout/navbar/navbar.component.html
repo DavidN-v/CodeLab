@@ -41,6 +41,22 @@
           </li>
         }
       </ul>
+
+      <div class="navbar__account">
+        @if (user(); as signedIn) {
+          <span class="navbar__user" [title]="signedIn.email">{{ signedIn.displayName }}</span>
+          <button type="button" class="button button--ghost button--small" (click)="logout()">
+            Salir
+          </button>
+        } @else {
+          <a class="button button--ghost button--small" routerLink="/login" (click)="closeMenu()">
+            Entrar
+          </a>
+          <a class="button button--primary button--small" routerLink="/register" (click)="closeMenu()">
+            Crear cuenta
+          </a>
+        }
+      </div>
     </nav>
   </div>
 </header>

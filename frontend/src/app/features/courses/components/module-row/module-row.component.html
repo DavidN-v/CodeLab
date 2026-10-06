@@ -1,0 +1,34 @@
+@let item = module();
+
+@if (item.published) {
+  <a class="module" [routerLink]="['/languages', languageSlug(), 'modules', item.slug]">
+    <span class="module__position">{{ item.position < 10 ? '0' + item.position : item.position }}</span>
+    <span class="module__body">
+      <span class="module__title">{{ item.title }}</span>
+      <span class="module__summary">{{ item.summary }}</span>
+      <span class="module__meta">{{ meta() }}</span>
+    </span>
+    @if (progress(); as moduleProgress) {
+      <span
+        class="check"
+        [class.check--done]="state() === 'done'"
+        [class.check--partial]="state() === 'partial'"
+        [attr.aria-label]="
+          state() === 'done'
+            ? 'Módulo completado'
+            : moduleProgress.completedLessons + ' de ' + moduleProgress.totalLessons + ' lecciones leídas'
+        "
+        >{{ state() === 'done' ? '✓' : state() === 'partial' ? '•' : '' }}</span
+      >
+    }
+  </a>
+} @else {
+  <div class="module module--upcoming">
+    <span class="module__position">{{ item.position < 10 ? '0' + item.position : item.position }}</span>
+    <span class="module__body">
+      <span class="module__title">{{ item.title }}</span>
+      <span class="module__summary">{{ item.summary }}</span>
+    </span>
+    <span class="tag">Próximamente</span>
+  </div>
+}

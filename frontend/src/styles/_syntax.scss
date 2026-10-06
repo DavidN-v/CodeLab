@@ -1,0 +1,37 @@
+// highlight.js token classes, mapped onto the syntax tokens. CodeMirror uses
+// the same custom properties (see the practice feature's editor theme).
+
+.hljs {
+  color: var(--syntax-plain);
+}
+
+.hljs-keyword,
+.hljs-literal,
+.hljs-meta {
+  color: var(--syntax-keyword);
+}
+
+.hljs-type,
+.hljs-title.class_,
+.hljs-built_in {
+  color: var(--syntax-type);
+}
+
+.hljs-string,
+.hljs-char {
+  color: var(--syntax-string);
+}
+
+.hljs-number {
+  color: var(--syntax-number);
+}
+
+.hljs-comment {
+  color: var(--syntax-comment);
+  font-style: italic;
+}
+
+.hljs-title.function_,
+.hljs-function .hljs-title {
+  color: var(--syntax-function);
+}

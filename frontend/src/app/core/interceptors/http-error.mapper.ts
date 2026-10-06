@@ -17,6 +17,7 @@ const FALLBACK_MESSAGES: Readonly<Partial<Record<number, string>>> = {
   400: 'Hay datos que no son válidos. Revísalos e inténtalo de nuevo.',
   404: 'No encontramos lo que buscabas.',
   409: 'La operación entra en conflicto con el estado actual. Recarga la página e inténtalo de nuevo.',
+  429: 'Has hecho demasiadas solicitudes seguidas. Espera un momento e inténtalo de nuevo.',
 };
 
 const SERVER_ERROR_MESSAGE = 'Algo ha fallado en el servidor. Inténtalo de nuevo en unos minutos.';
@@ -37,8 +38,14 @@ export function toAppError(failure: unknown): AppError {
   return new AppError(failure.status, code, resolveMessage(failure.status, body), body?.fieldErrors ?? []);
 }
 
+/** 5xx codes whose message is written for learners and safe to show as is. */
+const USER_FACING_SERVER_ERRORS = new Set(['EXECUTION_UNAVAILABLE']);
+
 function resolveMessage(status: number, body: ApiErrorBody | null): string {
   if (status >= 500) {
+    if (body && USER_FACING_SERVER_ERRORS.has(body.error)) {
+      return body.message;
+    }
     // Never surface server-side failure details to the user.
     return SERVER_ERROR_MESSAGE;
   }

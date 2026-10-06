@@ -8,6 +8,7 @@ import {
 } from '@angular/router';
 
 import { routes } from './app.routes';
+import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { httpErrorInterceptor } from './core/interceptors/http-error.interceptor';
 import { PageTitleStrategy } from './core/services/page-title.strategy';
 
@@ -19,7 +20,8 @@ export const appConfig: ApplicationConfig = {
       withComponentInputBinding(),
       withInMemoryScrolling({ scrollPositionRestoration: 'enabled', anchorScrolling: 'enabled' }),
     ),
-    provideHttpClient(withFetch(), withInterceptors([httpErrorInterceptor])),
+    // Order matters: the error interceptor sees failures after the auth one reacted to them.
+    provideHttpClient(withFetch(), withInterceptors([httpErrorInterceptor, authInterceptor])),
     { provide: TitleStrategy, useClass: PageTitleStrategy },
   ],
 };

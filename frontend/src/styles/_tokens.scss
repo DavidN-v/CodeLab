@@ -23,6 +23,10 @@
 
   --color-success: #8fcf8a;
   --color-danger: #ec7b66;
+  --color-warning: #e3c25b;
+  --color-success-soft: color-mix(in srgb, var(--color-success) 14%, transparent);
+  --color-danger-soft: color-mix(in srgb, var(--color-danger) 14%, transparent);
+  --color-accent-soft: color-mix(in srgb, var(--color-accent) 14%, transparent);
 
   // Code surfaces are darker than content so code always reads as code, and
   // the console is darker still so output is never mistaken for source.
@@ -33,6 +37,9 @@
   --syntax-type: #dccba6;
   --syntax-string: #a9c98a;
   --syntax-plain: #d6d1c4;
+  --syntax-number: #d9a07a;
+  --syntax-comment: #8a8577;
+  --syntax-function: #e6d6a8;
 
   --font-sans: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, 'Cascadia Code', Consolas, monospace;

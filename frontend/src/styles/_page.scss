@@ -1,0 +1,155 @@
+@use 'mixins' as *;
+
+// Layout pieces shared by the routed pages: a centred column, a header with
+// an eyebrow, and the inline loading / error / empty states.
+
+.page {
+  @include container;
+  padding-block: var(--space-7) var(--space-8);
+}
+
+.page__header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+}
+
+.page__eyebrow {
+  @include mono-label;
+  color: var(--color-accent);
+
+  a {
+    color: inherit;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.page__title {
+  font-size: var(--text-2xl);
+
+  @include from('md') {
+    font-size: clamp(var(--text-2xl), 1.4rem + 1.6vw, 2.6rem);
+  }
+}
+
+.page__lead {
+  max-width: 44rem;
+  color: var(--color-text-muted);
+  font-size: var(--text-lg);
+}
+
+.section-title {
+  @include mono-label;
+  margin-bottom: var(--space-3);
+  color: var(--color-text-subtle);
+}
+
+.state {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+
+  &--error {
+    border-style: solid;
+    border-left: 3px solid var(--color-danger);
+    color: var(--color-text);
+  }
+}
+
+.tag {
+  @include mono-label;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 0.15rem 0.45rem;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  font-size: 0.6875rem;
+  white-space: nowrap;
+
+  &--easy {
+    border-color: color-mix(in srgb, var(--color-success) 45%, transparent);
+    color: var(--color-success);
+  }
+
+  &--medium {
+    border-color: color-mix(in srgb, var(--color-warning) 45%, transparent);
+    color: var(--color-warning);
+  }
+
+  &--hard {
+    border-color: color-mix(in srgb, var(--color-danger) 45%, transparent);
+    color: var(--color-danger);
+  }
+
+  &--done {
+    border-color: transparent;
+    background-color: var(--color-success-soft);
+    color: var(--color-success);
+  }
+
+  &--accent {
+    border-color: transparent;
+    background-color: var(--color-accent-soft);
+    color: var(--color-accent);
+  }
+}
+
+// A list of rows separated by hairlines, used for modules, lessons and exercises.
+.rows {
+  margin: 0;
+  border-top: 1px solid var(--color-border);
+}
+
+.rows > li {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.row-link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-3) var(--space-3);
+  text-decoration: none;
+  transition: background-color var(--transition-fast);
+
+  &:hover {
+    background-color: var(--color-surface);
+  }
+}
+
+// Check mark used for completed items.
+.check {
+  display: inline-grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 50%;
+  color: transparent;
+  font-size: 0.7rem;
+
+  &--done {
+    border-color: var(--color-success);
+    background-color: var(--color-success);
+    color: var(--color-bg);
+  }
+
+  &--partial {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+}
