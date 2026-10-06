@@ -54,12 +54,20 @@ services:
 
   # Deliberately the least connected service: no published ports, no access to
   # the database, and a network with no route to the internet. Only the backend
-  # can reach it.
+  # can reach it. It never runs user code itself: every execution gets a
+  # throwaway sandbox-java container, created through docker-proxy.
   code-runner:
     build: ./code-runner
     restart: unless-stopped
     environment:
       LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      DOCKER_API_URL: http://docker-proxy:2375
+      MAX_CONCURRENT_EXECUTIONS: ${MAX_CONCURRENT_EXECUTIONS:-2}
+    depends_on:
+      docker-proxy:
+        condition: service_started
+      sandbox-java:
+        condition: service_completed_successfully
     read_only: true
     tmpfs:
       - /tmp
@@ -78,6 +86,30 @@ services:
       start_period: 30s
     networks:
       - runner
+
+  # The only service that touches the Docker socket. It forwards container and
+  # image requests from the runner and refuses the rest of the Docker API
+  # (exec, build, networks, volumes, swarm...).
+  docker-proxy:
+    image: tecnativa/docker-socket-proxy:v0.4.2
+    restart: unless-stopped
+    environment:
+      CONTAINERS: 1
+      IMAGES: 1
+      POST: 1
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - runner
+
+  # Build-only: produces the image every Java execution runs in, then exits.
+  # Containers from it get no network, a read-only root and no capabilities.
+  sandbox-java:
+    build: ./code-runner/sandbox/java
+    image: forja-sandbox-java:21
+    entrypoint: ["true"]
+    network_mode: none
+    restart: "no"
 
   frontend:
     build: ./frontend

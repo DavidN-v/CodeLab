@@ -15,6 +15,45 @@ management:
     health:
       probes:
         enabled: true
+      show-components: always
+      group:
+        # Ready as soon as the app is up: a Docker problem shows as sandbox DOWN
+        # in /actuator/health instead of keeping the whole stack from starting.
+        readiness:
+          include: readinessState
+
+forja:
+  runner:
+    docker:
+      # The socket proxy in Docker; locally, a Docker daemon exposed over TCP.
+      url: ${DOCKER_API_URL:http://localhost:2375}
+      connect-timeout: 2s
+    max-concurrent-executions: ${MAX_CONCURRENT_EXECUTIONS:2}
+    queue-timeout: 20s
+    runtimes:
+      java:
+        image: ${JAVA_SANDBOX_IMAGE:forja-sandbox-java:21}
+        layout: java
+        # Quick start-up matters more than peak speed for short programs, hence
+        # the serial collector and the C1-only JIT.
+        compile-command: >-
+          javac -J-Xmx192m -J-XX:+UseSerialGC -J-XX:TieredStopAtLevel=1
+          -encoding UTF-8 -Xlint:none -cp "/opt/forja/lib/*" -d classes "$FORJA_SOURCE_FILE"
+        run-command: >-
+          java -Xmx160m -Xss1m -XX:+UseSerialGC -XX:TieredStopAtLevel=1 -XX:-UsePerfData
+          -Dfile.encoding=UTF-8 -Dstdout.encoding=UTF-8 -Dstderr.encoding=UTF-8
+          -cp "/sandbox/.harness/classes:/opt/forja/lib/*" "$FORJA_MAIN"
+        limits:
+          compile-timeout: 20s
+          run-timeout: 5s
+          memory: 512MB
+          cpus: 1.0
+          pids: 128
+          output: 64KB
+          max-runs: 20
+          max-source: 64KB
+          max-stdin: 16KB
+          workspace: 32MB
 
 logging:
   level:
