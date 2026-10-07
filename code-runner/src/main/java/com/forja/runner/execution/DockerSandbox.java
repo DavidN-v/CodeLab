@@ -149,7 +149,8 @@ public class DockerSandbox {
 
 	private static String loadHarness() {
 		try (InputStream input = new ClassPathResource("sandbox/harness.sh").getInputStream()) {
-			return new String(input.readAllBytes(), StandardCharsets.UTF_8);
+			// A checkout with CRLF line endings (Windows) would break the shell script.
+			return new String(input.readAllBytes(), StandardCharsets.UTF_8).replace("\r", "");
 		}
 		catch (IOException ex) {
 			throw new UncheckedIOException("Missing sandbox/harness.sh on the classpath", ex);
