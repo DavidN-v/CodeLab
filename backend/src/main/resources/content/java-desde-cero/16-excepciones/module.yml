@@ -1,0 +1,17 @@
+lessons:
+  - slug: try-catch
+    title: try y catch
+    summary: Capturar errores en ejecución y seguir adelante.
+    minutes: 12
+  - slug: tipos-de-excepciones
+    title: Checked, unchecked y la jerarquía de excepciones
+    summary: Qué excepciones hay que declarar, cuáles no, y por qué.
+    minutes: 12
+  - slug: lanzar-y-crear
+    title: Lanzar y crear excepciones
+    summary: throw, throws, excepciones propias y finally.
+    minutes: 12
+exercises:
+  - division-segura
+  - parsear-edades
+  - retirada-con-excepcion

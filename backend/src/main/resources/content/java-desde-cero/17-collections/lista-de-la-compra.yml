@@ -1,0 +1,78 @@
+title: Lista de la compra
+summary: Añade, quita y consulta elementos de un ArrayList.
+difficulty: EASY
+statement: |
+  Gestiona una lista de la compra con órdenes, una por línea:
+
+  - `añadir <producto>`: lo añade al final (puede repetirse).
+  - `quitar <producto>`: quita la **primera** aparición; si no está, escribe `No está: <producto>`.
+  - `mostrar`: escribe la lista con el formato `[a, b, c]` (el `toString` de `List`).
+  - `cuantos`: escribe el número de elementos.
+
+  Los productos son una sola palabra.
+starter: |
+  import java.util.ArrayList;
+  import java.util.List;
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          List<String> lista = new ArrayList<>();
+          while (entrada.hasNext()) {
+              String orden = entrada.next();
+
+          }
+      }
+  }
+solution: |
+  import java.util.ArrayList;
+  import java.util.List;
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          List<String> lista = new ArrayList<>();
+          while (entrada.hasNext()) {
+              String orden = entrada.next();
+              switch (orden) {
+                  case "añadir" -> lista.add(entrada.next());
+                  case "quitar" -> {
+                      String producto = entrada.next();
+                      if (!lista.remove(producto)) {
+                          System.out.println("No está: " + producto);
+                      }
+                  }
+                  case "mostrar" -> System.out.println(lista);
+                  case "cuantos" -> System.out.println(lista.size());
+                  default -> { }
+              }
+          }
+      }
+  }
+hints:
+  - "`lista.remove(objeto)` quita la primera aparición y devuelve `true` si lo encontró."
+  - "`System.out.println(lista)` ya imprime el formato `[a, b, c]`."
+tests:
+  - input: |
+      añadir pan
+      añadir leche
+      añadir pan
+      mostrar
+      quitar pan
+      quitar huevos
+      mostrar
+      cuantos
+    output: |
+      [pan, leche, pan]
+      No está: huevos
+      [leche, pan]
+      2
+    sample: true
+  - input: |
+      mostrar
+      cuantos
+    output: |
+      []
+      0

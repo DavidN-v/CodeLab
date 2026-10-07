@@ -1,0 +1,83 @@
+title: Las palabras más frecuentes
+summary: Cuenta con un Map y ordena sus entradas.
+difficulty: MEDIUM
+statement: |
+  Lee un texto y cuenta cuántas veces aparece cada palabra. Antes de contar, pasa todo a minúsculas y considera palabras las secuencias de letras: sustituye cualquier carácter que no sea letra por un espacio.
+
+  La primera línea de la entrada es un número `k`; el resto es el texto. Escribe las `k` palabras más frecuentes con el formato `<palabra>: <veces>`, de más a menos frecuente y, a igual frecuencia, en orden alfabético. Si hay menos de `k` palabras distintas, escríbelas todas.
+starter: |
+  import java.util.ArrayList;
+  import java.util.HashMap;
+  import java.util.List;
+  import java.util.Map;
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int k = Integer.parseInt(entrada.nextLine().trim());
+          StringBuilder texto = new StringBuilder();
+          while (entrada.hasNextLine()) {
+              texto.append(entrada.nextLine()).append(' ');
+          }
+
+      }
+  }
+solution: |
+  import java.util.ArrayList;
+  import java.util.HashMap;
+  import java.util.List;
+  import java.util.Map;
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int k = Integer.parseInt(entrada.nextLine().trim());
+          StringBuilder texto = new StringBuilder();
+          while (entrada.hasNextLine()) {
+              texto.append(entrada.nextLine()).append(' ');
+          }
+          String limpio = texto.toString().toLowerCase().replaceAll("[^\\p{L}]+", " ").strip();
+          Map<String, Integer> cuenta = new HashMap<>();
+          if (!limpio.isEmpty()) {
+              for (String palabra : limpio.split(" ")) {
+                  cuenta.merge(palabra, 1, Integer::sum);
+              }
+          }
+          List<Map.Entry<String, Integer>> entradas = new ArrayList<>(cuenta.entrySet());
+          entradas.sort((a, b) -> {
+              int porVeces = Integer.compare(b.getValue(), a.getValue());
+              return porVeces != 0 ? porVeces : a.getKey().compareTo(b.getKey());
+          });
+          for (int i = 0; i < Math.min(k, entradas.size()); i++) {
+              System.out.println(entradas.get(i).getKey() + ": " + entradas.get(i).getValue());
+          }
+      }
+  }
+hints:
+  - "`texto.replaceAll(\"[^\\\\p{L}]+\", \" \")` cambia por un espacio todo lo que no sea una letra (incluidas las acentuadas)."
+  - "`cuenta.merge(palabra, 1, Integer::sum)` suma 1 a la cuenta de cada palabra."
+  - Copia `cuenta.entrySet()` a una lista y ordénala con un comparador que mire primero el valor y después la clave.
+tests:
+  - input: |
+      3
+      El perro, el gato; y EL loro.
+      ¡El gato y el perro!
+    output: |
+      el: 5
+      gato: 2
+      perro: 2
+    sample: true
+  - input: |
+      10
+      uno dos dos
+    output: |
+      dos: 2
+      uno: 1
+  - input: |
+      2
+      Ñu ñu árbol, árbol árbol
+    output: |
+      árbol: 3
+      ñu: 2

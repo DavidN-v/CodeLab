@@ -1,0 +1,111 @@
+title: Caja con historial
+summary: Una clase genérica que recuerda sus valores y permite deshacer.
+difficulty: HARD
+statement: |
+  Crea una clase genérica `Historial<T>` que guarde un valor actual y permita deshacer cambios:
+
+  - `Historial(T inicial)`.
+  - `void cambiar(T nuevo)`: el valor actual pasa al historial y `nuevo` es el actual.
+  - `boolean deshacer()`: recupera el valor anterior; devuelve `false` si no hay nada que deshacer.
+  - `T actual()` y `int cambios()` (cuántos valores hay guardados en el historial).
+
+  El `main` usa un `Historial<String>` para el título de un documento. Órdenes, una por línea: `cambiar <texto>` (el texto es el resto de la línea), `deshacer` (escribe `nada que deshacer` si falla) y `ver` (escribe `<actual> [<cambios>]`). El título inicial es `Sin título`.
+starter: |
+  import java.util.ArrayDeque;
+  import java.util.Deque;
+  import java.util.Scanner;
+
+  // Crea aquí la clase Historial<T>
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          // Historial<String> titulo = new Historial<>("Sin título");
+          while (entrada.hasNextLine()) {
+              String linea = entrada.nextLine();
+          }
+      }
+  }
+solution: |
+  import java.util.ArrayDeque;
+  import java.util.Deque;
+  import java.util.Scanner;
+
+  class Historial<T> {
+      private final Deque<T> anteriores = new ArrayDeque<>();
+      private T actual;
+
+      Historial(T inicial) {
+          this.actual = inicial;
+      }
+
+      void cambiar(T nuevo) {
+          anteriores.push(actual);
+          actual = nuevo;
+      }
+
+      boolean deshacer() {
+          if (anteriores.isEmpty()) {
+              return false;
+          }
+          actual = anteriores.pop();
+          return true;
+      }
+
+      T actual() {
+          return actual;
+      }
+
+      int cambios() {
+          return anteriores.size();
+      }
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          Historial<String> titulo = new Historial<>("Sin título");
+          while (entrada.hasNextLine()) {
+              String linea = entrada.nextLine();
+              if (linea.startsWith("cambiar ")) {
+                  titulo.cambiar(linea.substring("cambiar ".length()));
+              } else if (linea.equals("deshacer")) {
+                  if (!titulo.deshacer()) {
+                      System.out.println("nada que deshacer");
+                  }
+              } else if (linea.equals("ver")) {
+                  System.out.println(titulo.actual() + " [" + titulo.cambios() + "]");
+              }
+          }
+      }
+  }
+hints:
+  - Guarda los valores anteriores en una pila; `ArrayDeque` con `push` y `pop` sirve perfectamente.
+  - "El texto de `cambiar` es el resto de la línea: `linea.substring(\"cambiar \".length())`."
+tests:
+  - input: |
+      ver
+      cambiar Mi novela
+      cambiar Mi gran novela
+      ver
+      deshacer
+      ver
+      deshacer
+      deshacer
+      ver
+    output: |
+      Sin título [0]
+      Mi gran novela [2]
+      Mi novela [1]
+      nada que deshacer
+      Sin título [0]
+    sample: true
+  - input: |
+      cambiar A
+      cambiar B
+      cambiar C
+      deshacer
+      cambiar D
+      ver
+    output: |
+      D [3]
