@@ -115,6 +115,7 @@ Se leen del archivo `.env` de la raíz, que no se versiona.
 | `LOG_LEVEL` | `INFO` | Nivel de log del código de la aplicación |
 | `MAX_CONCURRENT_EXECUTIONS` | `2` | Programas que se ejecutan a la vez; cada uno usa hasta 512 MB |
 | `ANTHROPIC_API_KEY` | vacía | Clave de la API de Anthropic para el tutor con IA; sin ella el tutor no aparece |
+| `ANTHROPIC_WORKSPACE_ID` | vacía | Solo para claves que no pertenecen a un workspace: el ID del workspace de Anthropic |
 | `TUTOR_MODEL` | `claude-opus-5-5` | Modelo de Claude que responde como tutor |
 
 Solo para ejecutar servicios fuera de Docker:
