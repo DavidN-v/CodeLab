@@ -1,0 +1,57 @@
+title: Cifrado César
+summary: Desplaza cada letra del alfabeto un número de posiciones.
+difficulty: HARD
+statement: |
+  El cifrado César sustituye cada letra por la que está `k` posiciones más adelante en el alfabeto inglés (de la `a` a la `z`), dando la vuelta al llegar al final: con `k = 3`, la `a` pasa a `d` y la `y` a `b`.
+
+  La entrada tiene dos líneas: el desplazamiento `k` (entre 0 y 25) y un texto. Escribe el texto cifrado:
+
+  - Las mayúsculas siguen siendo mayúsculas y las minúsculas, minúsculas.
+  - Cualquier otro carácter (espacios, signos, dígitos, letras como la ñ) se deja igual.
+
+  **Ejemplo:** con `3` y `Hola, Mundo!` → `Krod, Pxqgr!`.
+starter: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int k = Integer.parseInt(entrada.nextLine().trim());
+          String texto = entrada.nextLine();
+
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int k = Integer.parseInt(entrada.nextLine().trim());
+          String texto = entrada.nextLine();
+          StringBuilder cifrado = new StringBuilder();
+          for (char c : texto.toCharArray()) {
+              if (c >= 'a' && c <= 'z') {
+                  cifrado.append((char) ('a' + (c - 'a' + k) % 26));
+              } else if (c >= 'A' && c <= 'Z') {
+                  cifrado.append((char) ('A' + (c - 'A' + k) % 26));
+              } else {
+                  cifrado.append(c);
+              }
+          }
+          System.out.println(cifrado);
+      }
+  }
+hints:
+  - "`c - 'a'` da la posición de una minúscula en el alfabeto (0 para la `a`)."
+  - "Suma `k`, aplica `% 26` para dar la vuelta y vuelve a convertir: `(char) ('a' + posicion)`."
+tests:
+  - input: "3\nHola, Mundo!\n"
+    output: "Krod, Pxqgr!\n"
+    sample: true
+  - input: "1\nxyz XYZ\n"
+    output: "yza YZA\n"
+  - input: "0\nSin cambios\n"
+    output: "Sin cambios\n"
+  - input: "25\nabc 123 ñ\n"
+    output: "zab 123 ñ\n"

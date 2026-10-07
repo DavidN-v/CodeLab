@@ -1,0 +1,91 @@
+title: Sumas de una matriz
+summary: Suma filas, columnas y la diagonal de una matriz cuadrada.
+difficulty: MEDIUM
+statement: |
+  La entrada empieza con `n` y sigue con una matriz de `n × n` enteros, fila a fila. Escribe:
+
+  - Una línea `Filas:` con la suma de cada fila, separadas por espacios.
+  - Una línea `Columnas:` con la suma de cada columna.
+  - Una línea `Diagonal:` con la suma de la diagonal principal.
+
+  **Ejemplo**
+
+  Entrada:
+
+  ```
+  3
+  1 2 3
+  4 5 6
+  7 8 9
+  ```
+
+  Salida:
+
+  ```
+  Filas: 6 15 24
+  Columnas: 12 15 18
+  Diagonal: 15
+  ```
+starter: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int n = entrada.nextInt();
+          int[][] m = new int[n][n];
+
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int n = entrada.nextInt();
+          int[][] m = new int[n][n];
+          for (int f = 0; f < n; f++) {
+              for (int c = 0; c < n; c++) {
+                  m[f][c] = entrada.nextInt();
+              }
+          }
+          StringBuilder filas = new StringBuilder("Filas:");
+          StringBuilder columnas = new StringBuilder("Columnas:");
+          int diagonal = 0;
+          for (int i = 0; i < n; i++) {
+              int sumaFila = 0;
+              int sumaColumna = 0;
+              for (int j = 0; j < n; j++) {
+                  sumaFila += m[i][j];
+                  sumaColumna += m[j][i];
+              }
+              filas.append(' ').append(sumaFila);
+              columnas.append(' ').append(sumaColumna);
+              diagonal += m[i][i];
+          }
+          System.out.println(filas);
+          System.out.println(columnas);
+          System.out.println("Diagonal: " + diagonal);
+      }
+  }
+hints:
+  - Lee la matriz con dos bucles anidados.
+  - "Para la columna `c` suma `m[f][c]` variando `f`; para la diagonal, `m[i][i]`."
+tests:
+  - input: "3\n1 2 3\n4 5 6\n7 8 9\n"
+    output: |
+      Filas: 6 15 24
+      Columnas: 12 15 18
+      Diagonal: 15
+    sample: true
+  - input: "1\n-4\n"
+    output: |
+      Filas: -4
+      Columnas: -4
+      Diagonal: -4
+  - input: "2\n1 0\n0 1\n"
+    output: |
+      Filas: 1 1
+      Columnas: 1 1
+      Diagonal: 2

@@ -1,0 +1,66 @@
+title: El segundo mayor
+summary: Encuentra el segundo valor distinto más grande en una sola pasada.
+difficulty: HARD
+statement: |
+  Lee `n` y después `n` enteros. Escribe el **segundo mayor valor distinto**. Si no existe (todos los valores son iguales o solo hay uno), escribe `No existe`.
+
+  **Ejemplo:** `6  4 9 2 9 7 1` → `7` (el mayor es 9; el siguiente valor distinto es 7).
+
+  Intenta hacerlo recorriendo el array una sola vez, sin ordenarlo.
+starter: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int n = entrada.nextInt();
+          int[] valores = new int[n];
+          for (int i = 0; i < n; i++) {
+              valores[i] = entrada.nextInt();
+          }
+
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int n = entrada.nextInt();
+          int[] valores = new int[n];
+          for (int i = 0; i < n; i++) {
+              valores[i] = entrada.nextInt();
+          }
+          long mayor = Long.MIN_VALUE;
+          long segundo = Long.MIN_VALUE;
+          for (int valor : valores) {
+              if (valor > mayor) {
+                  segundo = mayor;
+                  mayor = valor;
+              } else if (valor < mayor && valor > segundo) {
+                  segundo = valor;
+              }
+          }
+          System.out.println(segundo == Long.MIN_VALUE ? "No existe" : String.valueOf(segundo));
+      }
+  }
+hints:
+  - Lleva dos variables, `mayor` y `segundo`, y actualízalas a la vez.
+  - Si llega un valor mayor que `mayor`, el antiguo `mayor` pasa a ser `segundo`.
+  - Ignora los valores iguales a `mayor`, o el 9 repetido te daría 9 como segundo.
+tests:
+  - input: "6\n4 9 2 9 7 1\n"
+    output: "7\n"
+    sample: true
+  - input: "3\n5 5 5\n"
+    output: "No existe\n"
+    sample: true
+  - input: "1\n8\n"
+    output: "No existe\n"
+  - input: "4\n-1 -7 -3 -1\n"
+    output: "-3\n"
+  - input: "5\n1 2 3 4 5\n"
+    output: "4\n"
+  - input: "2\n10 3\n"
+    output: "3\n"

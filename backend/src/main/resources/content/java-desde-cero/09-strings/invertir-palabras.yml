@@ -1,0 +1,46 @@
+title: Invertir el orden de las palabras
+summary: Usa split y StringBuilder para reordenar palabras.
+difficulty: MEDIUM
+statement: |
+  Lee una línea con palabras separadas por uno o más espacios (puede haber espacios al principio y al final). Escribe las palabras en orden inverso, separadas por **un solo** espacio.
+
+  **Ejemplo:** `  hola   mundo de Java ` → `Java de mundo hola`.
+starter: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          String linea = entrada.nextLine();
+
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          String linea = entrada.nextLine();
+          String[] palabras = linea.strip().split("\\s+");
+          StringBuilder resultado = new StringBuilder();
+          for (int i = palabras.length - 1; i >= 0; i--) {
+              resultado.append(palabras[i]);
+              if (i > 0) {
+                  resultado.append(' ');
+              }
+          }
+          System.out.println(resultado);
+      }
+  }
+hints:
+  - Quita los espacios de los extremos con `strip()` antes de dividir.
+  - "`split(\"\\\\s+\")` trata varios espacios seguidos como un solo separador."
+tests:
+  - input: "  hola   mundo de Java \n"
+    output: "Java de mundo hola\n"
+    sample: true
+  - input: "uno\n"
+    output: "uno\n"
+  - input: "a b c d e\n"
+    output: "e d c b a\n"

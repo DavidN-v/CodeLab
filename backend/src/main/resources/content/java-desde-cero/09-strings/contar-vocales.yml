@@ -1,0 +1,47 @@
+title: Contar vocales
+summary: Recorre una frase carácter a carácter.
+difficulty: EASY
+statement: |
+  Lee una línea de texto y escribe cuántas vocales tiene. Cuentan las vocales `a e i o u` en mayúscula o minúscula, y también las acentuadas `á é í ó ú` (y sus mayúsculas).
+
+  **Ejemplo:** `Murciélago` → `5`.
+starter: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          String frase = entrada.nextLine();
+
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          String frase = entrada.nextLine();
+          String vocales = "aeiouáéíóú";
+          int cuenta = 0;
+          for (char c : frase.toLowerCase().toCharArray()) {
+              if (vocales.indexOf(c) >= 0) {
+                  cuenta++;
+              }
+          }
+          System.out.println(cuenta);
+      }
+  }
+hints:
+  - Pasa la frase a minúsculas para no tener que comprobar cada vocal dos veces.
+  - "Un truco: guarda todas las vocales en un String y usa `vocales.indexOf(c) >= 0` para saber si `c` es una de ellas."
+tests:
+  - input: "Murciélago\n"
+    output: "5\n"
+    sample: true
+  - input: "Hola Mundo\n"
+    output: "4\n"
+  - input: "rhythm\n"
+    output: "0\n"
+  - input: "AEIOU aeiou ÁÉÍÓÚ\n"
+    output: "15\n"
