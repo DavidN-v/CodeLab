@@ -1,4 +1,7 @@
-A menudo tienes un valor de un tipo y lo necesitas en otro. Java convierte solo cuando es seguro y te obliga a pedirlo explícitamente cuando podrías perder información.
+A menudo tienes un valor de un tipo y lo necesitas en otro: una nota entera que quieres dividir con decimales, un precio decimal que quieres mostrar sin céntimos… Java convierte solo cuando es seguro y te obliga a pedirlo explícitamente cuando podrías perder información.
+
+> [!analogia]
+> Pasar agua de un vaso a una jarra grande es fácil: cabe todo. Pasarla de la jarra al vaso es arriesgado: puede que se derrame. Java hace lo primero por ti y, para lo segundo, quiere que digas "sé lo que hago".
 
 ## Conversión automática (ensanchamiento)
 
@@ -21,7 +24,7 @@ public class Main {
 
 ## Casting: conversión explícita
 
-Para ir en sentido contrario hay que escribir el tipo destino entre paréntesis. Es tu forma de decir "sé que puedo perder información":
+Para ir en sentido contrario hay que escribir el tipo destino entre paréntesis. Eso se llama **casting**, y es tu forma de decir "sé que puedo perder información":
 
 ```java
 public class Main {
@@ -34,6 +37,9 @@ public class Main {
     }
 }
 ```
+
+> [!cuidado]
+> `(int) 9.99` da `9`, no `10`: el casting **corta** los decimales, no redondea. Y sin el `(int)`, `int truncado = precio;` ni siquiera compila (`incompatible types: possible lossy conversion from double to int`).
 
 Si quieres **redondear** en vez de truncar, usa `Math.round`:
 
@@ -62,6 +68,12 @@ public class Main {
 }
 ```
 
+> [!analogia]
+> La división entera es como repartir 7 caramelos entre 2 niños sin partir ninguno: a cada uno le tocan 3 y sobra 1. Para hablar de "3 y medio" tienes que permitir trozos, es decir, decimales.
+
+> [!prueba]
+> Cambia `int b = 2;` por `int b = 4;` y vuelve a ejecutar. La primera línea muestra `1` y la segunda `1.75`: ¿ves por qué? ¿Y por qué la tercera sigue igual?
+
 Basta con que **uno** de los operandos sea decimal para que la división sea decimal. Ojo: `(double) (a / b)` da `3.0`, porque primero se hace la división entera y luego se convierte.
 
 ## Promoción en expresiones
@@ -84,11 +96,10 @@ public class Main {
 }
 ```
 
-> **Nota:** el separador decimal de `printf` depende de la configuración regional. En esta plataforma es el punto (`2.33`); en un ordenador configurado en español puede salir coma (`2,33`).
+El separador decimal de `printf` depende de la configuración regional. En esta plataforma es el punto (`2.33`); en un ordenador configurado en español puede salir coma (`2,33`).
 
-## Resumen
-
-- De pequeño a grande es automático; de grande a pequeño necesita casting `(tipo)`.
-- El casting de decimal a entero **trunca**; para redondear usa `Math.round`.
-- Entero entre entero es división entera: convierte uno de los dos a `double` antes de dividir.
-- `printf("%.2f", x)` muestra un decimal con dos cifras.
+> [!resumen]
+> - De pequeño a grande es automático; de grande a pequeño necesita casting `(tipo)`.
+> - El casting de decimal a entero **trunca**; para redondear usa `Math.round`.
+> - Entero entre entero es división entera: convierte uno de los dos a `double` antes de dividir.
+> - `printf("%.2f", x)` muestra un decimal con dos cifras.

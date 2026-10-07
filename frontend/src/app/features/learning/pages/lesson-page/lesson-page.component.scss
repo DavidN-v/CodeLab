@@ -184,3 +184,22 @@
   color: var(--color-text-subtle);
   font-size: 0.6875rem;
 }
+
+.lesson__tutor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-top: var(--space-6);
+  padding: var(--space-4);
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-md);
+}
+
+.lesson__tutor-title {
+  font-weight: 600;
+}
+
+.study__glossary {
+  margin-top: var(--space-4);
+  font-size: var(--text-sm);
+}

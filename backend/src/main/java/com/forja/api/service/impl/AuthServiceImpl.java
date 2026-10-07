@@ -79,13 +79,22 @@ public class AuthServiceImpl implements AuthService {
 			.orElseThrow(() -> new ResourceNotFoundException("La cuenta ya no existe."));
 	}
 
+	@Override
+	@Transactional
+	public UserResponse changeDailyGoal(Long userId, int dailyGoalXp) {
+		User user = userRepository.findById(userId)
+			.orElseThrow(() -> new ResourceNotFoundException("La cuenta ya no existe."));
+		user.changeDailyGoal(dailyGoalXp);
+		return toResponse(user);
+	}
+
 	private AuthResponse authResponse(User user) {
 		IssuedToken token = tokenService.issue(user);
 		return new AuthResponse(token.value(), token.expiresAt(), toResponse(user));
 	}
 
 	static UserResponse toResponse(User user) {
-		return new UserResponse(user.getId(), user.getEmail(), user.getDisplayName());
+		return new UserResponse(user.getId(), user.getEmail(), user.getDisplayName(), user.getDailyGoalXp());
 	}
 
 	private static String normalizeEmail(String email) {

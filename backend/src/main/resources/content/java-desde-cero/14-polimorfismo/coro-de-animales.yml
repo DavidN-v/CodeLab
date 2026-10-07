@@ -125,8 +125,9 @@ solution: |
       }
   }
 hints:
-  - Cada subclase solo necesita un constructor que llame a `super(nombre)` y sobrescribir `sonido()`.
-  - "Un `switch` con flechas puede devolver directamente el animal creado: `coro.add(switch (tipo) { ... });`."
+  - 'La idea: todos los animales cantan igual («<nombre> hace <sonido>»); lo único que cambia es el sonido. `Animal` ya hace lo común: cada subclase solo aporta su sonido.'
+  - 'Qué usar: cuatro clases con `extends Animal`, un constructor que llama a `super(nombre)` y `@Override` en `String sonido()`. En el `main`, un `switch` con flechas que crea el animal adecuado.'
+  - 'El plan: `class Perro extends Animal { Perro(String nombre) { super(nombre); } @Override String sonido() { return "guau"; } }` y lo mismo para los otros tres. Después, `coro.add(switch (tipo) { case "perro" -> new Perro(nombre); ... });`.'
 tests:
   - input: |
       perro Toby

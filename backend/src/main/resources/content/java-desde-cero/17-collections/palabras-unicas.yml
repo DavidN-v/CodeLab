@@ -50,8 +50,9 @@ solution: |
       }
   }
 hints:
-  - "`LinkedHashSet` conserva el orden de inserción y `TreeSet` ordena alfabéticamente."
-  - "`String.join(\" \", conjunto)` une los elementos con espacios."
+  - 'La idea: necesitas las palabras sin repetir de dos maneras: en el orden en que aparecen y en orden alfabético. Además, cuenta todas las palabras leídas.'
+  - 'Qué usar: un `LinkedHashSet` (sin repetidos, conserva el orden de inserción), un `TreeSet` (sin repetidos y ordenado) y `String.join(" ", conjunto)` para unirlas con espacios.'
+  - 'El plan: dentro del bucle, `total++` y `enOrden.add(palabra)`. Al terminar, `Set<String> ordenadas = new TreeSet<>(enOrden);` y escribe las cuatro líneas; `enOrden.size()` es el número de distintas.'
 tests:
   - input: |
       El perro y el gato

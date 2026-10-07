@@ -1,0 +1,72 @@
+title: Palabras sin repetir
+summary: Arregla un stream cuyas operaciones están mal colocadas o faltan.
+difficulty: MEDIUM
+kind: fix
+statement: |
+  El programa lee una línea de palabras y debería escribir las palabras **distintas**, en **minúsculas** y en **orden alfabético**, separadas por `, `, y debajo cuántas hay.
+
+  Con `Hola mundo hola Java MUNDO` debería escribir:
+
+  ```
+  hola, java, mundo
+  Total: 3
+  ```
+
+  Pero sale `hola, mundo, hola, java, mundo` y `Total: 5`: las repetidas se cuelan y además el orden no es alfabético. Arregla la tubería.
+starter: |
+  import java.util.Arrays;
+  import java.util.List;
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          String[] palabras = entrada.nextLine().trim().split("\\s+");
+          List<String> distintas = Arrays.stream(palabras)
+              .distinct()
+              .map(String::toLowerCase)
+              .toList();
+          System.out.println(String.join(", ", distintas));
+          System.out.println("Total: " + distintas.size());
+      }
+  }
+solution: |
+  import java.util.Arrays;
+  import java.util.List;
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          String[] palabras = entrada.nextLine().trim().split("\\s+");
+          List<String> distintas = Arrays.stream(palabras)
+              .map(String::toLowerCase)
+              .distinct()
+              .sorted()
+              .toList();
+          System.out.println(String.join(", ", distintas));
+          System.out.println("Total: " + distintas.size());
+      }
+  }
+hints:
+  - 'La idea: para Java, `Hola` y `hola` son textos distintos; solo se parecen después de pasarlos a minúsculas. El orden de las estaciones importa.'
+  - 'Qué usar: `map(String::toLowerCase)`, `distinct()` y `sorted()`, en el orden adecuado.'
+  - 'El plan: pon primero `.map(String::toLowerCase)`, después `.distinct()` y añade `.sorted()` antes de `.toList()`.'
+tests:
+  - input: "Hola mundo hola Java MUNDO\n"
+    output: |
+      hola, java, mundo
+      Total: 3
+    sample: true
+  - input: "uva pera uva\n"
+    output: |
+      pera, uva
+      Total: 2
+  - input: "Sol\n"
+    output: |
+      sol
+      Total: 1
+  - input: "b A a B c\n"
+    output: |
+      a, b, c
+      Total: 3

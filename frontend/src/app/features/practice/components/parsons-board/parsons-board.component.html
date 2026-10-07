@@ -1,0 +1,81 @@
+<div class="parsons">
+  <section class="parsons__program" aria-label="Tu programa">
+    <p class="parsons__label">Tu programa · {{ chosen().length }} líneas</p>
+    <pre class="parsons__fixed">{{ before() }}</pre>
+    <ol
+      class="parsons__list"
+      (dragover)="allowDrop($event)"
+      (drop)="onDrop(chosen().length, $event)"
+    >
+      @for (index of chosen(); track index; let position = $index) {
+        <li
+          class="parsons__line parsons__line--placed"
+          draggable="true"
+          (dragstart)="onDragStart(index, true, $event)"
+          (dragover)="allowDrop($event)"
+          (drop)="onDrop(position, $event); $event.stopPropagation()"
+        >
+          <code>{{ line(index) }}</code>
+          <span class="parsons__tools">
+            <button
+              type="button"
+              class="parsons__tool"
+              (click)="move(position, -1)"
+              [disabled]="position === 0"
+              aria-label="Subir"
+            >
+              ↑
+            </button>
+            <button
+              type="button"
+              class="parsons__tool"
+              (click)="move(position, 1)"
+              [disabled]="position === chosen().length - 1"
+              aria-label="Bajar"
+            >
+              ↓
+            </button>
+            <button
+              type="button"
+              class="parsons__tool"
+              (click)="remove(position)"
+              aria-label="Quitar"
+            >
+              ✕
+            </button>
+          </span>
+        </li>
+      } @empty {
+        <li class="parsons__empty">
+          Pulsa una línea de la derecha (o arrástrala) para ponerla aquí.
+        </li>
+      }
+    </ol>
+    <pre class="parsons__fixed">{{ after() }}</pre>
+  </section>
+
+  <section
+    class="parsons__pool"
+    aria-label="Líneas disponibles"
+    (dragover)="allowDrop($event)"
+    (drop)="onDropToPool($event)"
+  >
+    <p class="parsons__label">Líneas disponibles · puede que sobre alguna</p>
+    <ul class="parsons__list">
+      @for (line of available(); track line.index) {
+        <li
+          class="parsons__line"
+          draggable="true"
+          (dragstart)="onDragStart(line.index, false, $event)"
+        >
+          <button type="button" class="parsons__pick" (click)="add(line.index)">
+            <code>{{ line.text.trim() }}</code>
+            <span class="parsons__add" aria-hidden="true">+</span>
+          </button>
+        </li>
+      } @empty {
+        <li class="parsons__empty">Has usado todas las líneas.</li>
+      }
+    </ul>
+  </section>
+</div>

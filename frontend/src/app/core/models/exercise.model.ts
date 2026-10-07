@@ -1,8 +1,10 @@
-import { CourseRef, Difficulty, ExerciseSummary, ModuleRef } from './course.model';
+import { CourseRef, Difficulty, ExerciseKind, ExerciseSummary, ModuleRef } from './course.model';
+import { Celebration } from './progress.model';
 
 export interface SampleTest {
   input: string;
-  expectedOutput: string;
+  /** Null for PREDICT exercises: the output is the answer. */
+  expectedOutput: string | null;
 }
 
 /** Mirrors the API's ExerciseDetail: no hidden tests, hints or solution. */
@@ -12,8 +14,12 @@ export interface ExerciseDetail {
   title: string;
   summary: string;
   difficulty: Difficulty;
+  kind: ExerciseKind;
   statementMarkdown: string;
+  /** FILL: with {{?}} blanks. PARSONS: with a {{lines}} line. PREDICT: the program to read. */
   starterCode: string;
+  /** PARSONS only: the lines to order, shuffled, some of them extra. */
+  parsonsLines: string[] | null;
   samples: SampleTest[];
   totalTests: number;
   hintCount: number;
@@ -51,6 +57,19 @@ export interface SubmissionResult {
   tests: TestResult[];
   firstSolve: boolean;
   xpAwarded: number;
+  /** A plain-language note, e.g. which lines of a prediction are right. */
+  feedback: string | null;
+  /** This solve counted as a due spaced review. */
+  reviewPassed: boolean;
+  celebration: Celebration | null;
+}
+
+/** What is sent to grade an exercise. */
+export interface SubmissionRequest {
+  /** The program; for PREDICT, the predicted output. */
+  sourceCode?: string;
+  /** FILL: one answer per blank. PARSONS: the chosen lines in order. */
+  parts?: string[];
 }
 
 export interface SubmissionSummary {
@@ -73,6 +92,8 @@ export interface ExerciseProgress {
   xp: number;
   lastSubmittedCode: string | null;
   recentSubmissions: SubmissionSummary[];
+  /** Solved, and due for a spaced review. */
+  reviewDue: boolean;
 }
 
 export interface Solution {

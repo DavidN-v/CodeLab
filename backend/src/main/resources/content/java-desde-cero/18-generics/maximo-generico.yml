@@ -83,8 +83,9 @@ solution: |
       }
   }
 hints:
-  - "El límite `T extends Comparable<T>` te permite llamar a `elemento.compareTo(otro)`."
-  - Un tercer método genérico que llame a los dos y capture la excepción te ahorra repetir código para cada línea.
+  - 'La idea: buscar el mayor y el menor funciona igual con números que con palabras; solo hace falta que los elementos se puedan comparar entre sí.'
+  - 'Qué usar: métodos genéricos con el límite `<T extends Comparable<T>>`, que te deja llamar a `elemento.compareTo(otro)`, y `throw new IllegalArgumentException(...)` para la lista vacía.'
+  - 'El plan: en `maximo`, si la lista está vacía lanza la excepción; si no, empieza con `lista.get(0)` y recorre la lista quedándote con el elemento cuando `compareTo(mayor) > 0`. `minimo` es igual con `< 0`. Un tercer método genérico `resumen` puede llamar a los dos dentro de un `try` y devolver `"vacía"` en el `catch`.'
 tests:
   - input: |
       4 -2 17 9

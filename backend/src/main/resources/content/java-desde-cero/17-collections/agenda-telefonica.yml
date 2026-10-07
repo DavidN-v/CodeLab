@@ -70,9 +70,9 @@ solution: |
       }
   }
 hints:
-  - "`put` devuelve el valor anterior, o `null` si la clave no existía: te dice si es alta o actualización."
-  - "`remove` también devuelve el valor eliminado o `null`."
-  - Un `TreeMap` ya recorre las claves en orden alfabético.
+  - 'La idea: la agenda es un diccionario de nombre a teléfono; cada orden consulta o cambia ese diccionario.'
+  - 'Qué usar: un `TreeMap`, que ya recorre los nombres en orden alfabético. `put` devuelve el valor anterior (o `null` si la clave era nueva) y `remove` devuelve el valor eliminado (o `null`); `getOrDefault` sirve para `buscar` y `startsWith` para `prefijo`.'
+  - 'El plan: un `switch` sobre la orden. En `alta`, `agenda.put(nombre, telefono) == null ? "Añadido" : "Actualizado"`. En `prefijo`, recorre `entrySet()` y usa una variable `boolean alguno` para escribir `Sin resultados` al final si no salió ninguno. En `listar`, comprueba `isEmpty()` antes de recorrer.'
 tests:
   - input: |
       alta Ada 600111222

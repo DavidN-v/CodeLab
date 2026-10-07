@@ -100,7 +100,7 @@ describe('CoursePageComponent', () => {
     await render(false);
 
     expect(element.querySelector('h1')?.textContent).toBe('Java desde cero');
-    expect(element.querySelectorAll('app-module-row')).toHaveLength(2);
+    expect(element.querySelectorAll('.path__stop:not(.path__stop--goal)')).toHaveLength(2);
     expect(element.querySelector('.course__stats')?.textContent).toContain('8 lecciones');
   });
 

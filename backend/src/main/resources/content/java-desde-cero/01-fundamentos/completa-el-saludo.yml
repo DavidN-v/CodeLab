@@ -1,0 +1,62 @@
+title: Completa el saludo
+summary: Rellena los huecos para leer un nombre y saludar.
+difficulty: EASY
+kind: fill
+statement: |
+  Este programa lee un nombre y saluda a esa persona, pero le faltan dos piezas. Rellena los huecos para que:
+
+  1. Lea la **línea completa** con el nombre (puede tener espacios, como `Ada Lovelace`).
+  2. Escriba el saludo en una línea y, **debajo**, el segundo mensaje.
+
+  **Ejemplo:** con la entrada `Ada` la salida es:
+
+  ```
+  Hola, Ada!
+  Hoy aprendes Java.
+  ```
+starter: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          String nombre = entrada.{{?}}();
+          System.out.{{?}}("Hola, " + nombre + "!");
+          System.out.println("Hoy aprendes Java.");
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          String nombre = entrada.nextLine();
+          System.out.println("Hola, " + nombre + "!");
+          System.out.println("Hoy aprendes Java.");
+      }
+  }
+answers:
+  - nextLine
+  - println
+hints:
+  - 'La idea: el primer hueco es el método de `Scanner` que lee texto; el segundo, el método que escribe y salta de línea.'
+  - 'Qué usar: `nextLine` lee la línea entera, espacios incluidos (`next` solo leería la primera palabra). `println` escribe y salta de línea (`print` no salta).'
+  - 'El plan: escribe `nextLine` en el primer hueco y `println` en el segundo.'
+tests:
+  - input: |
+      Ada
+    output: |
+      Hola, Ada!
+      Hoy aprendes Java.
+    sample: true
+  - input: |
+      Ada Lovelace
+    output: |
+      Hola, Ada Lovelace!
+      Hoy aprendes Java.
+  - input: |
+      Grace
+    output: |
+      Hola, Grace!
+      Hoy aprendes Java.

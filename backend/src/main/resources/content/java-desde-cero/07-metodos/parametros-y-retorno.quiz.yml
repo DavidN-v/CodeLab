@@ -1,0 +1,34 @@
+questions:
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      public class Main {
+          static void sumarDiez(int x) {
+              x = x + 10;
+          }
+
+          public static void main(String[] args) {
+              int valor = 3;
+              sumarDiez(valor);
+              System.out.println(valor);
+          }
+      }
+    answer: |
+      3
+    explanation: 'Java pasa una **copia** del valor. El método suma 10 a su copia `x`, pero `valor` en `main` sigue valiendo 3. Para cambiarlo habría que devolver el resultado y asignarlo.'
+  - type: choice
+    prompt: ¿Cuál de estas parejas de métodos NO puede convivir en la misma clase?
+    options:
+      - '`int doble(int n)` y `double doble(int n)`'
+      - '`int doble(int n)` y `double doble(double n)`'
+      - '`int doble(int n)` y `int doble(int a, int b)`'
+    answer: 0
+    explanation: 'La sobrecarga necesita parámetros distintos (en número o tipo). Si solo cambia el tipo de retorno, Java no sabría cuál elegir al ver `doble(5)`, así que no compila.'
+  - type: choice
+    prompt: 'Dentro de `static int sumar(int a, int b)` hay una variable `resultado`. ¿Puede `main` usar esa `resultado`?'
+    options:
+      - No, es local de `sumar` y desaparece al terminar el método
+      - Sí, porque todas las variables de una clase son compartidas
+      - Sí, pero solo después de llamar a `sumar`
+    answer: 0
+    explanation: 'Las variables declaradas dentro de un método son locales: nacen al llamarlo y desaparecen al terminar. `main` solo recibe lo que `sumar` devuelve con `return`.'

@@ -1,4 +1,9 @@
+Las operaciones intermedias son las estaciones de la cinta: cada una recibe el stream, hace su trabajo y entrega otro stream a la siguiente. Aquí tienes las más usadas.
+
 ## filter: quedarse con algunos
+
+> [!analogia]
+> `filter` es el portero de una discoteca: mira a cada elemento y solo deja pasar a los que cumplen la condición.
 
 ```java
 import java.util.List;
@@ -12,9 +17,15 @@ public class Main {
 }
 ```
 
+> [!prueba]
+> Cambia `n > 7` por `n < 7` y vuelve a ejecutar: ¿qué lista sale en la primera línea?
+
 ## map: transformar cada elemento
 
 `map` aplica una función a cada elemento; el tipo puede cambiar:
+
+> [!analogia]
+> `map` es una máquina de zumo: entra una naranja, sale un vaso de zumo. Siempre sale uno por cada uno que entra, pero puede ser de otro tipo.
 
 ```java
 import java.util.List;
@@ -31,6 +42,9 @@ public class Main {
     }
 }
 ```
+
+> [!cuidado]
+> `filter` decide si un elemento sigue, y `map` lo cambia. Si escribes `map(n -> n > 7)` no te quedas con los mayores que 7: obtienes una lista de `true` y `false`.
 
 ## sorted, distinct, limit, skip
 
@@ -50,9 +64,14 @@ public class Main {
 }
 ```
 
+El orden de las estaciones importa: `sorted().limit(3)` da los 3 menores, pero `limit(3).sorted()` ordena solo los 3 primeros que llegan.
+
 ## flatMap: aplanar
 
 Cuando cada elemento produce varios, `flatMap` los junta en un único stream:
+
+> [!analogia]
+> Tienes varias bolsas de caramelos y quieres un único montón. `map` te dejaría un montón de bolsas; `flatMap` abre cada bolsa y vuelca los caramelos.
 
 ```java
 import java.util.Arrays;
@@ -94,9 +113,11 @@ public class Main {
 
 `findFirst`, `max` y `min` devuelven un **Optional**: una caja que puede estar vacía (si no había ningún elemento). Lo abres con `orElse(valorPorDefecto)`, `isPresent()` o, si estás seguro de que hay valor, `get()`. Es la forma moderna de decir "puede que no haya resultado" sin usar `null`.
 
-## Resumen
+> [!analogia]
+> Un `Optional` es un paquete de mensajería: antes de usar lo de dentro, comprueba si trae algo. `orElse(-1)` es "si viene vacío, usa -1".
 
-- `filter` se queda con lo que cumple una condición; `map` transforma cada elemento.
-- `sorted`, `distinct`, `limit` y `skip` reordenan y recortan.
-- `flatMap` aplana streams de streams.
-- `anyMatch`, `allMatch`, `count`, `findFirst`, `max`; los que pueden no encontrar nada devuelven `Optional`.
+> [!resumen]
+> - `filter` se queda con lo que cumple una condición; `map` transforma cada elemento.
+> - `sorted`, `distinct`, `limit` y `skip` reordenan y recortan; el orden de las operaciones importa.
+> - `flatMap` aplana streams de streams.
+> - `anyMatch`, `allMatch`, `count`, `findFirst`, `max`; los que pueden no encontrar nada devuelven `Optional`.

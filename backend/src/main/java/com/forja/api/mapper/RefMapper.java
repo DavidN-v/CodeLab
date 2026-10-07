@@ -43,7 +43,7 @@ public class RefMapper {
 	public ExerciseSummaryResponse toSummary(ExerciseOutline exercise) {
 		return exercise == null ? null
 				: new ExerciseSummaryResponse(exercise.id(), exercise.slug(), exercise.title(), exercise.summary(),
-						exercise.difficulty(), new ModuleRefResponse(exercise.moduleId(), exercise.moduleSlug(),
+						exercise.difficulty(), exercise.kind(), new ModuleRefResponse(exercise.moduleId(), exercise.moduleSlug(),
 								exercise.moduleTitle(), exercise.modulePosition()));
 	}
 

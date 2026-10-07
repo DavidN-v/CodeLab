@@ -6,8 +6,8 @@ import { AuthService } from '../../../../core/services/auth.service';
 import { readStorage, writeStorage } from '../../../../core/services/browser-storage';
 import { CodeHandoffService } from '../../../../core/services/code-handoff.service';
 import { ExecutionService } from '../../../../core/services/execution.service';
-import { CodeEditorComponent } from '../../components/code-editor/code-editor.component';
-import { ConsoleOutputComponent } from '../../components/console-output/console-output.component';
+import { CodeEditorComponent } from '../../../../shared/components/code-editor/code-editor.component';
+import { ConsoleOutputComponent } from '../../../../shared/components/console-output/console-output.component';
 
 const DRAFT_KEY = 'forja.playground';
 
@@ -32,6 +32,7 @@ public class Main {
 export class PlaygroundPageComponent {
   private readonly executions = inject(ExecutionService);
   private readonly router = inject(Router);
+  private readonly handoff = inject(CodeHandoffService);
   protected readonly auth = inject(AuthService);
 
   /** A snippet sent from a lesson wins over the saved draft. */
@@ -62,6 +63,11 @@ export class PlaygroundPageComponent {
       },
       error: () => this.running.set(false),
     });
+  }
+
+  protected visualize(): void {
+    this.handoff.send(this.code(), this.stdin());
+    void this.router.navigate(['/practice/visualizer']);
   }
 
   protected reset(): void {

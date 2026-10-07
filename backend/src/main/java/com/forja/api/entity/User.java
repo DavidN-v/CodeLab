@@ -10,6 +10,8 @@ import jakarta.persistence.Table;
 @Table(name = "users")
 public class User extends BaseEntity {
 
+	public static final int DEFAULT_DAILY_GOAL_XP = 30;
+
 	/** Always lower case; see the constraint in the schema. */
 	@Column(nullable = false, unique = true, length = 254)
 	private String email;
@@ -23,6 +25,10 @@ public class User extends BaseEntity {
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false, length = 20)
 	private Role role;
+
+	/** Experience per day the learner aims for. */
+	@Column(name = "daily_goal_xp", nullable = false)
+	private int dailyGoalXp = DEFAULT_DAILY_GOAL_XP;
 
 	protected User() {
 	}
@@ -48,6 +54,14 @@ public class User extends BaseEntity {
 
 	public Role getRole() {
 		return role;
+	}
+
+	public int getDailyGoalXp() {
+		return dailyGoalXp;
+	}
+
+	public void changeDailyGoal(int xp) {
+		this.dailyGoalXp = xp;
 	}
 
 }

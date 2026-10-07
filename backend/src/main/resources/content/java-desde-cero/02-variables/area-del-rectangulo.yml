@@ -34,8 +34,9 @@ solution: |
       }
   }
 hints:
-  - Guarda cada dato en una variable con un nombre claro, por ejemplo `ancho` y `alto`.
-  - "Ojo con la precedencia: `2 * ancho + alto` no es lo mismo que `2 * (ancho + alto)`."
+  - 'La idea: lee los dos lados, calcula las dos fórmulas y escribe cada resultado en su línea.'
+  - 'Qué usar: `entrada.nextInt()` para leer cada número y variables `int` con nombres claros (`ancho`, `alto`, `area`, `perimetro`). Ojo: `2 * ancho + alto` no es lo mismo que `2 * (ancho + alto)`.'
+  - 'El plan: `area = ancho * alto;` y `perimetro = 2 * (ancho + alto);`. Después `println("Área: " + area)` y `println("Perímetro: " + perimetro)`.'
 tests:
   - input: "4 3\n"
     output: |

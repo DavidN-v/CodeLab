@@ -206,10 +206,9 @@ solution: |
       }
   }
 hints:
-  - Lee cada mutante e imagina una entrada para la que dé un resultado distinto del correcto.
-  - "Un mutante no valida el porcentaje: una prueba con `assertThrows` y un porcentaje de 150 lo delata."
-  - Otro trunca en lugar de redondear; busca un precio y un porcentaje cuyo descuento tenga decimales de 0,5 o más (por ejemplo, el 15 % de 999).
-  - El último solo falla con precios pequeños, por debajo de 100 céntimos.
+  - 'La idea: tus pruebas deben pasar con la versión correcta y fallar con cada mutante. Lee cada mutante e imagina una entrada para la que dé un resultado distinto del correcto.'
+  - 'Qué usar: `assertThrows(IllegalArgumentException.class, () -> ...)` para el mutante que no valida, y `assertEquals(esperado, Tienda.descuento.aplicar(precio, porcentaje))` con casos elegidos a propósito para los otros dos.'
+  - 'El plan: una prueba con un porcentaje de 150 (delata a `SinValidar`); otra con el 15 % de 999, que da 849 al redondear y 850 al truncar (delata a `Trunca`); y otra con un precio menor que 100, como el 10 % de 50, que debe dar 45 (delata a `IgnoraPequenos`).'
 tests:
   - output: |
       Implementación correcta: todas las pruebas pasan

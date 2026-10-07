@@ -1,8 +1,20 @@
 Un **bucle** repite un bloque de código. Es lo que permite a un programa procesar mil datos con las mismas líneas que usaría para uno.
 
+> [!analogia]
+> Un bucle es como dar vueltas a una pista de atletismo: repites el mismo recorrido hasta que se cumple la condición para parar («mientras no haya dado 10 vueltas, sigue corriendo»).
+
 ## while
 
 `while` repite su bloque **mientras** la condición sea verdadera. La condición se comprueba antes de cada vuelta:
+
+```mermaid
+flowchart TD
+    A["cuenta = 3"] --> B{"cuenta > 0"}
+    B -- "true" --> C["Imprime cuenta"]
+    C --> D["cuenta--"]
+    D --> B
+    B -- "false" --> E["¡Despegue!"]
+```
 
 ```java
 public class Main {
@@ -16,6 +28,9 @@ public class Main {
     }
 }
 ```
+
+> [!prueba]
+> Cambia `int cuenta = 3;` por `int cuenta = 10;` y vuelve a ejecutar. Luego prueba con `0`: ¿se ejecuta alguna vuelta?
 
 Las tres piezas de casi cualquier bucle:
 
@@ -34,7 +49,8 @@ while (i < 10) {
 }
 ```
 
-En esta plataforma el programa se detiene al agotar el tiempo y verás **Tiempo agotado**. En tu ordenador tendrías que pararlo a mano (Ctrl + C).
+> [!cuidado]
+> Todo bucle necesita algo que lo acerque a su fin. En esta plataforma el programa se detiene al agotar el tiempo y verás **Tiempo agotado**. En tu ordenador tendrías que pararlo a mano (Ctrl + C).
 
 ## while para leer datos
 
@@ -59,6 +75,9 @@ public class Main {
 
 Con la entrada `5 3 2 0` imprime `Suma: 10`. Al número que marca el final (aquí el 0) se le llama **centinela**.
 
+> [!analogia]
+> El centinela es como la señal de «fin de la cola» en el súper: el cajero cobra un producto tras otro hasta que llega la barrita separadora.
+
 También puedes leer hasta que se acabe la entrada con `hasNextInt()` o `hasNextLine()`:
 
 ```java
@@ -81,6 +100,9 @@ public class Main {
 
 `do-while` comprueba la condición **al final**, así que el bloque se ejecuta al menos una vez:
 
+> [!analogia]
+> Es como probar un plato: primero lo pruebas y después decides si quieres repetir.
+
 ```java
 public class Main {
     public static void main(String[] args) {
@@ -93,11 +115,13 @@ public class Main {
 }
 ```
 
-Es útil para menús ("muestra el menú, y repite mientras no elija salir") o para pedir un dato hasta que sea válido. Fíjate en el punto y coma tras el `while` final.
+Es útil para menús ("muestra el menú, y repite mientras no elija salir") o para pedir un dato hasta que sea válido.
 
-## Resumen
+> [!cuidado]
+> El `do-while` termina con punto y coma tras el `while (...)`. Si lo olvidas, no compila.
 
-- `while (condición) { ... }` repite mientras la condición sea verdadera; puede no ejecutarse nunca.
-- `do { ... } while (condición);` se ejecuta al menos una vez.
-- Todo bucle necesita algo que lo acerque a su fin, o será infinito.
-- `while` es ideal cuando no sabes cuántas vueltas habrá: centinelas, `hasNext...`.
+> [!resumen]
+> - `while (condición) { ... }` repite mientras la condición sea verdadera; puede no ejecutarse nunca.
+> - `do { ... } while (condición);` se ejecuta al menos una vez.
+> - Todo bucle necesita algo que lo acerque a su fin, o será infinito.
+> - `while` es ideal cuando no sabes cuántas vueltas habrá: centinelas, `hasNext...`.

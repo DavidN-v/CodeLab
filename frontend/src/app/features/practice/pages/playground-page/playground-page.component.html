@@ -6,6 +6,9 @@
     </div>
     <div class="workbench__actions">
       <button type="button" class="button button--ghost" (click)="reset()">Restablecer</button>
+      <button type="button" class="button button--ghost" (click)="visualize()">
+        👣 Paso a paso
+      </button>
       <button type="button" class="button button--primary" [disabled]="running()" (click)="run()">
         {{
           running() ? 'Ejecutando…' : auth.isAuthenticated() ? 'Ejecutar ▸' : 'Entrar para ejecutar'

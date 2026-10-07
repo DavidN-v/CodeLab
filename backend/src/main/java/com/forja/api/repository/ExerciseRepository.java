@@ -21,11 +21,13 @@ public interface ExerciseRepository extends JpaRepository<Exercise, Long> {
 	/** Published exercises of a course in practice order: by module, then by exercise. */
 	@Query("""
 			select new com.forja.api.repository.ExerciseOutline(e.id, e.slug, e.title, e.summary, e.difficulty,
-				e.displayOrder, m.id, m.slug, m.title, m.displayOrder)
+				e.kind, e.displayOrder, m.id, m.slug, m.title, m.displayOrder)
 			from Exercise e join e.module m
 			where m.course.id = :courseId and e.published = true and m.published = true
 			order by m.displayOrder, e.displayOrder
 			""")
 	List<ExerciseOutline> findOutlinesByCourse(Long courseId);
+
+	long countByModuleIdAndPublishedTrue(Long moduleId);
 
 }

@@ -1,5 +1,8 @@
 Algunos datos solo pueden tomar unos pocos valores fijos: los días de la semana, los palos de la baraja, el estado de un pedido. Representarlos con números (`1` = pendiente, `2` = enviado…) o textos es frágil: nada impide un estado `7` o `"enviadoo"`. Un **enum** define un tipo con un conjunto cerrado de valores.
 
+> [!analogia]
+> Un enum es como el menú de un restaurante: solo puedes pedir lo que está en la carta. Pedir «sopa de piedras» no es una opción, y el camarero (el compilador) te lo dice al momento.
+
 ## Declarar y usar un enum
 
 ```java
@@ -27,6 +30,12 @@ public class Main {
 - `values()` devuelve todos; `valueOf("TEXTO")` convierte un texto (lanza `IllegalArgumentException` si no existe).
 - El compilador impide cualquier valor que no esté en la lista.
 
+> [!prueba]
+> Cambia `Estado.valueOf("ENVIADO")` por `Estado.valueOf("enviado")` (en minúsculas) y ejecuta: ¿qué ocurre?
+
+> [!cuidado]
+> `valueOf` distingue mayúsculas y minúsculas: `"pagado"` no es `PAGADO`. Si el texto viene del usuario, conviértelo antes con `toUpperCase()`.
+
 ## switch con enums
 
 Los enums encajan perfectamente con `switch`. Y si el `switch` es una expresión que cubre **todos** los valores, no hace falta `default`: el compilador comprueba que no falta ninguno.
@@ -51,6 +60,9 @@ public class Main {
 ## Enums con datos y métodos
 
 Un enum es una clase: puede tener campos, un constructor (siempre privado) y métodos.
+
+> [!analogia]
+> Ahora cada plato de la carta viene con su ficha: precio y calorías. El plato sigue siendo uno de la lista cerrada, pero además sabe cosas sobre sí mismo.
 
 ```java
 enum Planeta {
@@ -127,9 +139,8 @@ public class Main {
 
 `EnumMap` y `EnumSet` son versiones muy eficientes de `Map` y `Set` cuando las claves son de un enum: `new EnumMap<>(Estado.class)`, `EnumSet.of(Dia.SABADO, Dia.DOMINGO)`.
 
-## Resumen
-
-- `enum` define un tipo con un conjunto cerrado de valores; se comparan con `==`.
-- `values()`, `valueOf()` y `ordinal()` vienen incluidos.
-- Un `switch` que cubre todos los valores no necesita `default`.
-- Los enums pueden tener campos, constructor y métodos, incluso uno distinto por valor.
+> [!resumen]
+> - `enum` define un tipo con un conjunto cerrado de valores; se comparan con `==`.
+> - `values()`, `valueOf()` y `ordinal()` vienen incluidos.
+> - Un `switch` que cubre todos los valores no necesita `default`.
+> - Los enums pueden tener campos, constructor y métodos, incluso uno distinto por valor.

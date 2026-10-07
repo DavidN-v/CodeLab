@@ -1,0 +1,43 @@
+questions:
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      class Vehiculo {
+          String arrancar() {
+              return "Brum";
+          }
+      }
+
+      class Moto extends Vehiculo {
+          String caballito() {
+              return "¡Arriba!";
+          }
+      }
+
+      public class Main {
+          public static void main(String[] args) {
+              Moto m = new Moto();
+              System.out.println(m.arrancar());
+              System.out.println(m.caballito());
+          }
+      }
+    answer: |
+      Brum
+      ¡Arriba!
+    explanation: '`Moto extends Vehiculo`, así que hereda `arrancar()` aunque no lo escriba. Además tiene su propio método `caballito()`. Un objeto de la subclase puede usar lo heredado y lo suyo.'
+  - type: choice
+    prompt: El constructor de `Gerente` recibe `nombre`, `base` y `bonus`. ¿Qué debe hacer primero?
+    options:
+      - Llamar a `super(nombre, base)` para inicializar la parte de `Empleado`
+      - Asignar `this.bonus = bonus` y después llamar a `super(nombre, base)`
+      - Nada especial; los constructores de `Empleado` se heredan solos
+    answer: 0
+    explanation: Los constructores no se heredan. La primera línea del constructor de la hija debe ser `super(...)`, para que la parte del padre quede lista antes de añadir lo propio. Ponerlo después de otra instrucción no compila.
+  - type: choice
+    prompt: ¿En cuál de estos casos tiene sentido usar herencia (`extends`)?
+    options:
+      - Un `Coche` y su `Motor`
+      - Un `Alumno` y una `Persona`
+      - Una `Biblioteca` y sus `Libro`s
+    answer: 1
+    explanation: Usa la prueba del «es un». Un alumno **es una** persona, así que `Alumno extends Persona` encaja. Un coche **tiene un** motor y una biblioteca **tiene** libros; eso es composición (un campo), no herencia.

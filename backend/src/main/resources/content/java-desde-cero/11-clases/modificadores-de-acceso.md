@@ -1,5 +1,8 @@
 Los modificadores de acceso deciden **quién** puede usar cada campo, método o clase. Son la herramienta de la encapsulación.
 
+> [!analogia]
+> Piensa en una casa: el salón es `public` (entra cualquier visita), la cocina es de acceso de paquete (solo la familia), y el diario del cajón es `private` (solo tú).
+
 ## Los cuatro niveles
 
 | Modificador | Accesible desde |
@@ -48,9 +51,15 @@ public class Main {
 
 Nadie de fuera puede leer `valor` ni llamar a `esSegura`: solo puede preguntar si un intento coincide. (Ese `texto.chars().anyMatch(...)` es un stream; llegarán en su módulo.)
 
+> [!prueba]
+> Cambia `"forja2026"` por `"corta"` en el `new Contrasena(...)` y ejecuta: ¿qué pasa al crear el objeto?
+
 ## Getters y setters
 
 Por convención, el método que lee un campo `x` se llama `getX()` (o `isX()` si es `boolean`) y el que lo cambia `setX(...)`:
+
+> [!analogia]
+> Un getter es la ventanilla de información: te dice un dato sin dejarte tocarlo. Un setter es la ventanilla de cambios: antes de aceptar algo, el funcionario lo revisa.
 
 ```java
 class Persona {
@@ -103,14 +112,14 @@ Fíjate en tres decisiones:
 - `nombre` no tiene setter: no se puede cambiar.
 - En lugar de `setSocio(true)` hay un método con significado, `hacerSocio()`.
 
+> [!cuidado]
 > No generes getters y setters para todos los campos por costumbre. Cada setter es una puerta para cambiar el estado; abre solo las necesarias.
 
 ## Clases públicas y archivos
 
 Una clase `public` debe estar en un archivo con su mismo nombre, y solo puede haber una por archivo. Por eso en los ejercicios solo `Main` es pública.
 
-## Resumen
-
-- `private` para campos y métodos internos; `public` para lo que forma parte del uso de la clase.
-- Getters `getX`/`isX` y setters `setX`, solo cuando hacen falta.
-- Los setters validan; mejor aún, métodos con nombre de acción.
+> [!resumen]
+> - `private` para campos y métodos internos; `public` para lo que forma parte del uso de la clase.
+> - Getters `getX`/`isX` y setters `setX`, solo cuando hacen falta.
+> - Los setters validan; mejor aún, métodos con nombre de acción.

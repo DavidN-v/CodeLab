@@ -52,8 +52,9 @@ solution: |
       }
   }
 hints:
-  - "`lista.remove(objeto)` quita la primera aparición y devuelve `true` si lo encontró."
-  - "`System.out.println(lista)` ya imprime el formato `[a, b, c]`."
+  - 'La idea: lee una orden cada vez y, según cuál sea, cambia la lista o muestra algo de ella.'
+  - 'Qué usar: un `switch` sobre la orden y los métodos de `List`. `lista.remove(objeto)` quita la primera aparición y devuelve `true` si lo encontró; `System.out.println(lista)` ya imprime `[a, b, c]`.'
+  - 'El plan: `case "añadir" -> lista.add(entrada.next());`, en `"quitar"` guarda el producto y `if (!lista.remove(producto))` escribe `No está: ...`; `"mostrar"` imprime la lista y `"cuantos"` imprime `lista.size()`.'
 tests:
   - input: |
       añadir pan

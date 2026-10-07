@@ -1,0 +1,47 @@
+questions:
+  - type: choice
+    prompt: ¿Qué método usas para ejecutar un `SELECT` y recorrer las filas que devuelve?
+    options:
+      - '`executeQuery`, que devuelve un `ResultSet`'
+      - '`executeUpdate`, que devuelve cuántas filas cambió'
+      - '`getConnection`'
+      - '`next`'
+    answer: 0
+    explanation: '`executeQuery` es para consultas y devuelve un `ResultSet` con las filas. `executeUpdate` es para `INSERT`, `UPDATE` y `DELETE`, y solo devuelve un número.'
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      import java.sql.Connection;
+      import java.sql.DriverManager;
+      import java.sql.ResultSet;
+      import java.sql.SQLException;
+      import java.sql.Statement;
+
+      public class Main {
+          public static void main(String[] args) throws SQLException {
+              try (Connection c = DriverManager.getConnection("jdbc:h2:mem:frutas");
+                   Statement s = c.createStatement()) {
+                  s.execute("CREATE TABLE frutas (nombre VARCHAR(20), kilos INT)");
+                  s.execute("INSERT INTO frutas VALUES ('pera', 3), ('kiwi', 1), ('uva', 2)");
+                  try (ResultSet r = s.executeQuery("SELECT nombre FROM frutas ORDER BY kilos")) {
+                      while (r.next()) {
+                          System.out.println(r.getString("nombre"));
+                      }
+                  }
+              }
+          }
+      }
+    answer: |
+      kiwi
+      uva
+      pera
+    explanation: '`ORDER BY kilos` ordena de menos a más kilos: kiwi (1), uva (2), pera (3). El orden de inserción no importa cuando la consulta pide un orden.'
+  - type: choice
+    prompt: Acabas de obtener un `ResultSet`. ¿Por qué hay que llamar a `next()` antes de leer la primera fila?
+    options:
+      - Porque el cursor empieza antes de la primera fila
+      - Porque la primera fila siempre está vacía
+      - Porque `next()` ejecuta la consulta
+      - No hace falta; se puede leer directamente
+    answer: 0
+    explanation: El cursor empieza por encima de la primera fila. Cada `next()` lo baja una fila y devuelve `false` cuando ya no quedan; por eso el patrón es `while (r.next())`.

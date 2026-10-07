@@ -1,0 +1,38 @@
+questions:
+  - type: choice
+    prompt: ¿Por qué `GestorDeTareas` no usa `Scanner` ni `System.out`?
+    options:
+      - Para separar la lógica de la interfaz y poder probarla y reutilizarla
+      - Porque `Scanner` no funciona dentro de una clase
+      - Porque está prohibido imprimir fuera de `main`
+      - Para que el programa sea más rápido
+    answer: 0
+    explanation: Si el gestor solo recibe datos y devuelve resultados (o lanza excepciones), se puede probar con JUnit y usar desde una web o una app sin cambiarlo. Solo `Main` sabe de consola.
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      import java.util.ArrayList;
+      import java.util.Collections;
+      import java.util.List;
+
+      enum Talla { PEQUENA, MEDIANA, GRANDE }
+
+      public class Main {
+          public static void main(String[] args) {
+              List<Talla> tallas = new ArrayList<>(List.of(Talla.GRANDE, Talla.PEQUENA, Talla.MEDIANA, Talla.PEQUENA));
+              Collections.sort(tallas);
+              System.out.println(tallas);
+          }
+      }
+    answer: |
+      [PEQUENA, PEQUENA, MEDIANA, GRANDE]
+    explanation: Los valores de un enum se ordenan por la posición en que se declaran, no alfabéticamente. Por eso `Prioridad { ALTA, MEDIA, BAJA }` deja la alta primero sin escribir ningún comparador.
+  - type: choice
+    prompt: 'Completar una tarea que ya está completada, ¿qué excepción encaja mejor?'
+    options:
+      - '`IllegalStateException`, porque la tarea no está en un estado que lo permita'
+      - '`NoSuchElementException`, porque la tarea no existe'
+      - '`ArithmeticException`'
+      - Ninguna; mejor que el programa se detenga
+    answer: 0
+    explanation: La tarea existe (no es `NoSuchElementException`) y el dato es correcto, pero su **estado** no permite la operación. `Main` la captura y muestra el mensaje sin detenerse.

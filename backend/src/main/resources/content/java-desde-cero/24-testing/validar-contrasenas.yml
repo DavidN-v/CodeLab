@@ -190,9 +190,9 @@ solution: |
       }
   }
 hints:
-  - Comprueba primero `null`; si no, `texto.length()` lanzaría una `NullPointerException` en lugar de tu excepción.
-  - "`texto.chars().anyMatch(Character::isUpperCase)` dice si hay alguna mayúscula."
-  - Respeta el orden de la tabla, porque una contraseña puede incumplir varias reglas a la vez.
+  - 'La idea: revisa las reglas una a una en el orden de la tabla y, en cuanto una no se cumpla, lanza la excepción con su mensaje. Si llegas al final, la contraseña es válida.'
+  - 'Qué usar: `texto == null || texto.isEmpty()` para la primera regla (comprueba `null` antes que nada, o `length()` lanzaría una `NullPointerException`), y `texto.chars().anyMatch(...)`, `noneMatch(...)` o `allMatch(...)` con `Character::isWhitespace`, `Character::isUpperCase`, `Character::isDigit` y `Character::isLetterOrDigit`.'
+  - 'El plan: seis `if` seguidos, cada uno con su `throw new IllegalArgumentException("mensaje")`. Por ejemplo, si `texto.chars().noneMatch(Character::isUpperCase)`, lanza `"sin mayúscula"`; para el símbolo, si `allMatch(Character::isLetterOrDigit)`, lanza `"sin símbolo"`.'
 tests:
   - output: |
       8/8 pruebas superadas

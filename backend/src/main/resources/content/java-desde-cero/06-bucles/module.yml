@@ -2,17 +2,21 @@ lessons:
   - slug: while-y-do-while
     title: while y do-while
     summary: Repetir mientras se cumpla una condición.
-    minutes: 10
+    minutes: 6
   - slug: for
     title: El bucle for
     summary: Contar, recorrer rangos y acumular resultados.
-    minutes: 12
+    minutes: 6
   - slug: break-continue-y-anidados
     title: break, continue y bucles anidados
     summary: Salir antes de tiempo, saltar vueltas y repetir dentro de una repetición.
-    minutes: 12
+    minutes: 7
 exercises:
+  - predice-el-bucle
+  - suma-de-pares-hasta-n
   - tabla-de-multiplicar
   - suma-hasta-cero
   - es-primo
   - piramide-de-asteriscos
+  - cuenta-atras
+  - adivina-el-numero

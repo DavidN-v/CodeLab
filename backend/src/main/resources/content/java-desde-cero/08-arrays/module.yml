@@ -2,17 +2,21 @@ lessons:
   - slug: crear-y-recorrer
     title: Crear y recorrer arrays
     summary: Guardar muchos valores del mismo tipo y recorrerlos con bucles.
-    minutes: 12
+    minutes: 6
   - slug: algoritmos-con-arrays
     title: Algoritmos básicos con arrays
     summary: Buscar, contar, invertir y ordenar, y la clase Arrays.
-    minutes: 14
+    minutes: 7
   - slug: matrices
     title: Arrays de dos dimensiones
     summary: Tablas de filas y columnas.
-    minutes: 12
+    minutes: 6
 exercises:
+  - referencias-compartidas
+  - contar-aprobados
   - invertir-array
   - temperaturas-por-encima
   - segundo-mayor
   - suma-de-matrices
+  - maximo-con-negativos
+  - boletin-de-notas

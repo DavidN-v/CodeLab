@@ -33,8 +33,9 @@ solution: |
       }
   }
 hints:
-  - Pasa la frase a minúsculas para no tener que comprobar cada vocal dos veces.
-  - "Un truco: guarda todas las vocales en un String y usa `vocales.indexOf(c) >= 0` para saber si `c` es una de ellas."
+  - 'La idea: miras la frase letra a letra y, cada vez que la letra es una vocal, sumas uno a un contador.'
+  - 'Qué usar: `toLowerCase()` para no distinguir mayúsculas, un for-each sobre `toCharArray()` y un String con todas las vocales: `vocales.indexOf(c) >= 0` dice si `c` es una de ellas.'
+  - 'El plan: `String vocales = "aeiouáéíóú";` → `cuenta = 0` → para cada `c` de `frase.toLowerCase().toCharArray()`, si `vocales.indexOf(c) >= 0`, `cuenta++` → imprime `cuenta`.'
 tests:
   - input: "Murciélago\n"
     output: "5\n"

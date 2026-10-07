@@ -1,5 +1,8 @@
 Hay un puñado de recorridos que aparecen una y otra vez. Conocerlos de memoria te ahorra mucho tiempo.
 
+> [!analogia]
+> Son como los movimientos básicos de la cocina: picar, batir, freír. Casi cualquier receta (problema) se resuelve combinando unos pocos.
+
 ## Buscar un elemento
 
 ```java
@@ -21,7 +24,13 @@ public class Main {
 }
 ```
 
+> [!prueba]
+> Cambia `buscar(datos, 7)` por `buscar(datos, 4)` y ejecuta. ¿Por qué sale 0 y no 1?
+
 ## Máximo, mínimo y conteos
+
+> [!analogia]
+> Buscar el máximo es como un concurso de «el rey de la pista»: el primero se sube al podio y cada nuevo participante que sea mejor lo baja y ocupa su lugar.
 
 ```java
 public class Main {
@@ -44,7 +53,8 @@ public class Main {
 }
 ```
 
-Empezar con `datos[0]` (y no con 0) evita errores cuando todos los valores son negativos.
+> [!cuidado]
+> Empieza con `datos[0]`, no con 0. Si todos los valores son negativos, por ejemplo `{-5, -2, -9}`, empezar con 0 te daría un máximo de 0, que ni siquiera está en el array.
 
 ## Invertir en el sitio
 
@@ -64,6 +74,9 @@ public class Main {
     }
 }
 ```
+
+> [!idea]
+> Para intercambiar dos valores necesitas una tercera variable (`auxiliar`), igual que para intercambiar el contenido de dos vasos necesitas un tercer vaso.
 
 ## Ordenar: el método de la burbuja
 
@@ -116,11 +129,22 @@ public class Main {
 }
 ```
 
-> **Ojo:** `System.out.println(datos)` imprime algo como `[I@1b6d3586` (la dirección del objeto). Para ver el contenido usa `Arrays.toString(datos)`.
+`Arrays.copyOf` crea un array **nuevo**; el original no se toca:
 
-## Resumen
+```memoria
+stack main
+datos: @1
+copia: @2
+heap
+@1 int[]: [3, 7, 19, 42]
+@2 int[]: [3, 7, 19, 42, 0, 0]
+```
 
-- Buscar devuelve la posición o `-1`; máximo y mínimo empiezan por el primer elemento.
-- Invertir: intercambia `i` con `length - 1 - i` hasta la mitad.
-- La burbuja enseña a ordenar; `Arrays.sort` es lo que se usa.
-- `Arrays.toString`, `copyOf`, `fill`, `equals` y `binarySearch` resuelven lo cotidiano.
+> [!cuidado]
+> `System.out.println(datos)` imprime algo como `[I@1b6d3586` (la dirección del objeto). Para ver el contenido usa `Arrays.toString(datos)`.
+
+> [!resumen]
+> - Buscar devuelve la posición o `-1`; máximo y mínimo empiezan por el primer elemento.
+> - Invertir: intercambia `i` con `length - 1 - i` hasta la mitad.
+> - La burbuja enseña a ordenar; `Arrays.sort` es lo que se usa.
+> - `Arrays.toString`, `copyOf`, `fill`, `equals` y `binarySearch` resuelven lo cotidiano.

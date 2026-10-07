@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 
 import { withoutErrorNotification } from '../../../../core/interceptors/http-error.interceptor';
 import { DashboardService } from '../../../../core/services/dashboard.service';
+import { DailyGoalComponent } from '../../../../shared/components/daily-goal/daily-goal.component';
 import { ProgressBarComponent } from '../../../../shared/components/progress-bar/progress-bar.component';
 import { SUBMISSION_LABELS } from '../../../../shared/utils/labels';
 import { ActivityHeatmapComponent } from '../../components/activity-heatmap/activity-heatmap.component';
@@ -13,7 +14,7 @@ const RELATIVE = new Intl.RelativeTimeFormat('es', { numeric: 'auto' });
 /** The student's panel: where to continue, how they are doing and what they have earned. */
 @Component({
   selector: 'app-dashboard-page',
-  imports: [RouterLink, ProgressBarComponent, ActivityHeatmapComponent],
+  imports: [RouterLink, ProgressBarComponent, ActivityHeatmapComponent, DailyGoalComponent],
   templateUrl: './dashboard-page.component.html',
   styleUrl: './dashboard-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -35,6 +36,12 @@ export class DashboardPageComponent {
     }
     const { currentLevelXp, nextLevelXp } = value.level;
     return ((value.xp - currentLevelXp) / (nextLevelXp - currentLevelXp)) * 100;
+  });
+
+  /** A streak that ends today unless the learner practises. */
+  protected readonly streakAtRisk = computed(() => {
+    const streak = this.dashboard.value()?.streak;
+    return streak !== undefined && streak.current > 0 && !streak.activeToday;
   });
 
   protected readonly earnedCount = computed(
@@ -63,6 +70,11 @@ export class DashboardPageComponent {
       return RELATIVE.format(hours, 'hour');
     }
     return RELATIVE.format(Math.round(hours / 24), 'day');
+  }
+
+  protected daysSince(instant: string): string {
+    const days = Math.max(1, Math.round((Date.now() - Date.parse(instant)) / 86_400_000));
+    return days === 1 ? 'ayer' : `hace ${days} días`;
   }
 
   protected hours(minutes: number): string {

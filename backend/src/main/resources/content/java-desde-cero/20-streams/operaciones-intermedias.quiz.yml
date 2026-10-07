@@ -1,0 +1,35 @@
+questions:
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      import java.util.List;
+
+      public class Main {
+          public static void main(String[] args) {
+              List<Integer> datos = List.of(6, 2, 9, 2, 7, 1);
+              System.out.println(datos.stream().distinct().sorted().limit(3).toList());
+              System.out.println(datos.stream().limit(3).sorted().toList());
+          }
+      }
+    answer: |
+      [1, 2, 6]
+      [2, 6, 9]
+    explanation: 'En la primera línea se quitan repetidos, se ordena todo y se cogen los 3 menores: `[1, 2, 6]`. En la segunda, `limit(3)` corta antes de ordenar: coge `6, 2, 9` y luego los ordena. El orden de las operaciones importa.'
+  - type: choice
+    prompt: 'Quieres quedarte solo con los números pares de una lista. ¿Qué escribes?'
+    options:
+      - '`filter(n -> n % 2 == 0)`'
+      - '`map(n -> n % 2 == 0)`'
+      - '`filter(n -> n / 2)`'
+      - '`sorted(n -> n % 2 == 0)`'
+    answer: 0
+    explanation: '`filter` deja pasar los elementos cuya condición es `true`. `map` con esa condición transformaría cada número en `true` o `false`. `n / 2` no es una condición, y `sorted` ordena, no filtra.'
+  - type: choice
+    prompt: '¿Qué devuelve `List.of(3, 8).stream().filter(n -> n > 10).findFirst()`?'
+    options:
+      - Un `Optional` vacío
+      - '`null`'
+      - '`0`'
+      - Lanza una excepción
+    answer: 0
+    explanation: 'Ningún número supera 10, así que no hay "primero". En vez de `null`, `findFirst` devuelve un `Optional` vacío; con `orElse(-1)` obtendrías `-1`.'

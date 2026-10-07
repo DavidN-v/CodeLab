@@ -1,5 +1,8 @@
 A veces una clase es una versión más específica de otra: un `Perro` es un `Animal`, un `Gerente` es un `Empleado`. La **herencia** permite escribir lo común una vez, en la clase general, y añadir solo lo nuevo en la específica.
 
+> [!analogia]
+> Piensa en una receta de bizcocho básico. El bizcocho de chocolate no se escribe desde cero: dice «haz el bizcocho básico y añade cacao». La receta de chocolate **hereda** todos los pasos de la básica y solo añade lo suyo.
+
 ## extends
 
 ```java
@@ -34,13 +37,33 @@ public class Main {
 }
 ```
 
+> [!prueba]
+> Añade a `Animal` un método `void dormir()` que imprima `nombre + " duerme"` y llama a `toby.dormir()` en el `main`. No has tocado `Perro`, y aun así el perro sabe dormir.
+
 - `class Perro extends Animal` hace de `Perro` una **subclase** (o clase hija) de `Animal`, la **superclase** (o clase padre).
 - `Perro` hereda los campos y métodos de `Animal` y puede añadir los suyos.
 - En Java una clase solo puede extender **una** clase.
 
+Así se dibuja esa relación. La flecha con punta hueca va de la hija al padre y se lee «es un»:
+
+```mermaid
+classDiagram
+    Animal <|-- Perro
+    class Animal {
+        #String nombre
+        +comer()
+    }
+    class Perro {
+        +traerPelota()
+    }
+```
+
 ## super en el constructor
 
 Los constructores no se heredan. El constructor de la subclase debe empezar llamando a uno de la superclase con `super(...)`, para que la parte "Animal" del objeto quede inicializada:
+
+> [!analogia]
+> Construir un `Gerente` es como montar una casa con ampliación: primero se levantan los cimientos y las paredes de la casa normal (`super(...)`), y solo después se añade la ampliación (`this.bonus = bonus`).
 
 ```java
 class Empleado {
@@ -82,7 +105,8 @@ public class Main {
 }
 ```
 
-Si no escribes `super(...)`, Java intenta llamar a `super()` sin argumentos; si la superclase no tiene ese constructor, no compila.
+> [!cuidado]
+> Si no escribes `super(...)`, Java intenta llamar a `super()` sin argumentos; si la superclase no tiene ese constructor, no compila. Y `super(...)` tiene que ser la **primera** línea del constructor.
 
 Fíjate en que `Gerente` no puede leer `sueldoBase` directamente porque es `private` en `Empleado`: usa el getter. Lo privado no se hereda en el sentido de acceso.
 
@@ -93,15 +117,26 @@ Usa la prueba del **"es un"**: hereda solo si la frase "un B **es un** A" es cie
 - Un `Gerente` es un `Empleado` → herencia razonable.
 - Un `Coche` **tiene un** `Motor` → no es herencia, es **composición**: un campo `private Motor motor;`.
 
+> [!idea]
 > **Prefiere la composición.** La herencia acopla mucho la subclase a la superclase: un cambio en el padre puede romper a los hijos. Si dudas, usa un campo.
 
 ## Jerarquías
 
 Las subclases pueden tener a su vez subclases: `Animal → Mamifero → Perro`. Y toda clase de Java hereda, directa o indirectamente, de `Object`, que es la raíz de todas las jerarquías. De ahí vienen `toString`, `equals` y `hashCode`.
 
-## Resumen
+```mermaid
+classDiagram
+    Object <|-- Animal
+    Animal <|-- Mamifero
+    Mamifero <|-- Perro
+    class Object {
+        +toString() String
+        +equals(Object o) boolean
+    }
+```
 
-- `class Hija extends Padre` hereda campos y métodos; solo se extiende una clase.
-- El constructor de la hija empieza con `super(...)`.
-- Hereda solo si "es un" se cumple siempre; si "tiene un", usa composición.
-- Toda clase desciende de `Object`.
+> [!resumen]
+> - `class Hija extends Padre` hereda campos y métodos; solo se extiende una clase.
+> - El constructor de la hija empieza con `super(...)`.
+> - Hereda solo si "es un" se cumple siempre; si "tiene un", usa composición.
+> - Toda clase desciende de `Object`.

@@ -56,9 +56,9 @@ solution: |
       }
   }
 hints:
-  - "`texto.replaceAll(\"[^\\\\p{L}]+\", \" \")` cambia por un espacio todo lo que no sea una letra (incluidas las acentuadas)."
-  - "`cuenta.merge(palabra, 1, Integer::sum)` suma 1 a la cuenta de cada palabra."
-  - Copia `cuenta.entrySet()` a una lista y ordénala con un comparador que mire primero el valor y después la clave.
+  - 'La idea: primero cuenta cuántas veces sale cada palabra; después ordena esas cuentas de mayor a menor y escribe solo las `k` primeras.'
+  - 'Qué usar: `replaceAll("[^\p{L}]+", " ")` para cambiar por espacios todo lo que no sea letra, un `Map<String, Integer>` con `merge(palabra, 1, Integer::sum)` y una lista de `Map.Entry` ordenada con `sort`.'
+  - 'El plan: limpia el texto (minúsculas y `replaceAll`), haz `split(" ")` y cuenta con `merge`. Copia `cuenta.entrySet()` a un `ArrayList` y ordénala con un comparador que compare primero `b.getValue()` con `a.getValue()` y, si empatan, `a.getKey().compareTo(b.getKey())`. Recorre hasta `Math.min(k, entradas.size())`.'
 tests:
   - input: |
       3

@@ -1,5 +1,8 @@
 Un `Set` es una colección **sin repetidos**: añadir un elemento que ya está no tiene efecto. Es la herramienta para eliminar duplicados y para preguntar "¿está esto?" muy rápido.
 
+> [!analogia]
+> Un `Set` es como la lista de invitados de una fiesta en la puerta: cada nombre aparece una sola vez. Si alguien intenta entrar otra vez, el portero mira la lista, ve que ya está y no lo apunta de nuevo.
+
 ## HashSet
 
 ```java
@@ -21,6 +24,9 @@ public class Main {
 ```
 
 `contains` en un `HashSet` es casi instantáneo aunque tenga millones de elementos, mientras que en una `List` hay que recorrerla entera. Si vas a preguntar mucho "¿está?", usa un `Set`.
+
+> [!prueba]
+> Añade la línea `System.out.println(etiquetas.add("Java"));` antes del `remove` y ejecuta: imprime `true`, porque `"Java"` con mayúscula es un texto distinto de `"java"`.
 
 Para que funcione con tus propias clases, deben implementar `equals` y `hashCode` correctamente (módulo de Objetos); los `record` ya lo hacen.
 
@@ -49,7 +55,8 @@ public class Main {
 }
 ```
 
-> **Importante:** no dependas del orden de un `HashSet` al imprimirlo; puede cambiar entre versiones de Java o ejecuciones. Si el orden importa, usa `LinkedHashSet` o `TreeSet`.
+> [!cuidado]
+> No dependas del orden de un `HashSet` al imprimirlo; puede cambiar entre versiones de Java o ejecuciones. Si el orden importa, usa `LinkedHashSet` o `TreeSet`.
 
 ## Operaciones de conjuntos
 
@@ -80,9 +87,8 @@ Fíjate en que se copia `a` antes de cada operación, porque `addAll`, `retainAl
 
 `TreeSet` ofrece consultas sobre el orden: `first()`, `last()`, `floor(x)` (el mayor ≤ x), `ceiling(x)` (el menor ≥ x), `headSet(x)` (los menores que x).
 
-## Resumen
-
-- `Set` no admite repetidos; `add` devuelve `false` si el elemento ya estaba.
-- `contains` es muy rápido: úsalo para comprobar pertenencia.
-- `HashSet` sin orden, `LinkedHashSet` con orden de inserción, `TreeSet` ordenado.
-- `addAll`, `retainAll` y `removeAll` hacen unión, intersección y diferencia.
+> [!resumen]
+> - `Set` no admite repetidos; `add` devuelve `false` si el elemento ya estaba.
+> - `contains` es muy rápido: úsalo para comprobar pertenencia.
+> - `HashSet` sin orden, `LinkedHashSet` con orden de inserción, `TreeSet` ordenado.
+> - `addAll`, `retainAll` y `removeAll` hacen unión, intersección y diferencia.

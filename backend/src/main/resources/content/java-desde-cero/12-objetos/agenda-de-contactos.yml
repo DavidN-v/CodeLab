@@ -1,0 +1,325 @@
+title: Agenda de contactos
+summary: 'Miniproyecto: dos clases que colaboran para guardar, buscar y borrar contactos.'
+difficulty: HARD
+kind: project
+statement: |
+  Vas a construir una agenda de contactos que funciona con órdenes escritas, como un pequeño programa de terminal. Es tu primer programa con **dos clases que colaboran**.
+
+  Recuerda la idea del módulo: **una clase es un molde de galletas; los objetos son las galletas**. `Contacto` es el molde y cada persona que guardes es una galleta. `Agenda` es la caja de galletas: hay una sola, y dentro guarda las referencias a todos los contactos.
+
+  ## Paso 1: la clase `Contacto`
+
+  Un contacto tiene tres datos de texto: `nombre`, `telefono` y `email`.
+
+  - Hazlos `private final` (un contacto no cambia una vez creado).
+  - Escribe un constructor que reciba los tres y los guarde con `this`.
+  - Añade `String getNombre()`.
+  - Sobrescribe `toString()` para que devuelva `nombre | telefono | email`, por ejemplo `Ana | 600111222 | ana@correo.es`.
+
+  ## Paso 2: la clase `Agenda`
+
+  La agenda guarda los contactos en un array de 100 posiciones y lleva la cuenta de cuántos hay:
+
+  ```java fragment
+  private final Contacto[] contactos = new Contacto[100];
+  private int cantidad = 0;
+  ```
+
+  Escribe estos métodos:
+
+  1. `Contacto buscar(String nombre)`: recorre las posiciones `0` a `cantidad - 1` y devuelve el contacto con ese nombre (compara con `equals`, ¡no con `==`!). Si no hay ninguno, devuelve `null`.
+  2. `boolean agregar(Contacto c)`: si ya hay un contacto con ese nombre, devuelve `false` y no hace nada. Si no, lo guarda en la posición `cantidad`, suma 1 y devuelve `true`.
+  3. `boolean eliminar(String nombre)`: busca la posición del contacto. Si no está, devuelve `false`. Si está, mueve una posición a la izquierda todos los que van detrás (para no dejar huecos), pon `null` en la última posición ocupada, resta 1 a `cantidad` y devuelve `true`.
+  4. `void listar()`: imprime los contactos en el orden en que se agregaron (ver el paso 4).
+
+  ## Paso 3: leer las órdenes
+
+  En `main`, lee la entrada **línea a línea**. Cada línea es una orden; las palabras van separadas por espacios. El código inicial ya la parte en palabras con `split(" ")` y salta las líneas vacías: `partes[0]` es la orden y `partes[1]`, `partes[2]`... son los datos.
+
+  | Orden | Qué hace |
+  | --- | --- |
+  | `AGREGAR nombre telefono email` | Crea un contacto y lo añade |
+  | `BUSCAR nombre` | Muestra el contacto |
+  | `ELIMINAR nombre` | Lo borra de la agenda |
+  | `LISTAR` | Muestra todos los contactos |
+  | `SALIR` | Termina el programa |
+
+  Los nombres son una sola palabra y se distinguen mayúsculas de minúsculas (`Ana` y `ana` son distintos). Las órdenes siempre traen los datos que necesitan.
+
+  ## Paso 4: las respuestas exactas
+
+  | Situación | Imprime |
+  | --- | --- |
+  | `AGREGAR` con éxito | `Agregado: <nombre>` |
+  | `AGREGAR` con un nombre que ya existe | `Error: <nombre> ya existe` |
+  | `BUSCAR` con éxito | El `toString` del contacto (paso 1), como en el ejemplo |
+  | `BUSCAR` o `ELIMINAR` de un nombre que no está | `No encontrado: <nombre>` |
+  | `ELIMINAR` con éxito | `Eliminado: <nombre>` |
+  | `LISTAR` con la agenda vacía | `Agenda vacía` |
+  | `LISTAR` con contactos | Una línea `<n>. <contacto>` por cada uno (empezando en 1) y después `Total: <cantidad>` |
+  | `SALIR` | `¡Hasta pronto!`, y no se procesa ninguna línea más |
+  | Cualquier otra orden | `Orden desconocida: <orden>` |
+
+  Si la entrada se acaba sin `SALIR`, el programa termina sin imprimir nada más.
+
+  ## Ejemplo
+
+  Entrada:
+
+  ```
+  AGREGAR Ana 600111222 ana@correo.es
+  AGREGAR Luis 699888777 luis@correo.es
+  BUSCAR Ana
+  ELIMINAR Ana
+  LISTAR
+  SALIR
+  ```
+
+  Salida:
+
+  ```
+  Agregado: Ana
+  Agregado: Luis
+  Ana | 600111222 | ana@correo.es
+  Eliminado: Ana
+  1. Luis | 699888777 | luis@correo.es
+  Total: 1
+  ¡Hasta pronto!
+  ```
+
+  **Consejo:** ve paso a paso. Primero haz que funcionen `AGREGAR` y `LISTAR`, ejecuta, y después añade `BUSCAR`, `ELIMINAR` y `SALIR`.
+starter: |
+  import java.util.Scanner;
+
+  class Contacto {
+      // Paso 1: campos, constructor, getNombre() y toString()
+  }
+
+  class Agenda {
+      private final Contacto[] contactos = new Contacto[100];
+      private int cantidad = 0;
+
+      // Paso 2: buscar, agregar, eliminar y listar
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          Agenda agenda = new Agenda();
+          while (entrada.hasNextLine()) {
+              String linea = entrada.nextLine().trim();
+              if (linea.isEmpty()) {
+                  continue;
+              }
+              String[] partes = linea.split(" ");
+              String orden = partes[0];
+              // Paso 3: decide qué hacer según la orden
+          }
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  class Contacto {
+      private final String nombre;
+      private final String telefono;
+      private final String email;
+
+      Contacto(String nombre, String telefono, String email) {
+          this.nombre = nombre;
+          this.telefono = telefono;
+          this.email = email;
+      }
+
+      String getNombre() {
+          return nombre;
+      }
+
+      @Override
+      public String toString() {
+          return nombre + " | " + telefono + " | " + email;
+      }
+  }
+
+  class Agenda {
+      private final Contacto[] contactos = new Contacto[100];
+      private int cantidad = 0;
+
+      Contacto buscar(String nombre) {
+          for (int i = 0; i < cantidad; i++) {
+              if (contactos[i].getNombre().equals(nombre)) {
+                  return contactos[i];
+              }
+          }
+          return null;
+      }
+
+      boolean agregar(Contacto c) {
+          if (buscar(c.getNombre()) != null) {
+              return false;
+          }
+          contactos[cantidad] = c;
+          cantidad++;
+          return true;
+      }
+
+      boolean eliminar(String nombre) {
+          int posicion = -1;
+          for (int i = 0; i < cantidad; i++) {
+              if (contactos[i].getNombre().equals(nombre)) {
+                  posicion = i;
+              }
+          }
+          if (posicion == -1) {
+              return false;
+          }
+          for (int i = posicion; i < cantidad - 1; i++) {
+              contactos[i] = contactos[i + 1];
+          }
+          contactos[cantidad - 1] = null;
+          cantidad--;
+          return true;
+      }
+
+      void listar() {
+          if (cantidad == 0) {
+              System.out.println("Agenda vacía");
+              return;
+          }
+          for (int i = 0; i < cantidad; i++) {
+              System.out.println((i + 1) + ". " + contactos[i]);
+          }
+          System.out.println("Total: " + cantidad);
+      }
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          Agenda agenda = new Agenda();
+          while (entrada.hasNextLine()) {
+              String linea = entrada.nextLine().trim();
+              if (linea.isEmpty()) {
+                  continue;
+              }
+              String[] partes = linea.split(" ");
+              String orden = partes[0];
+              if (orden.equals("SALIR")) {
+                  System.out.println("¡Hasta pronto!");
+                  break;
+              }
+              switch (orden) {
+                  case "AGREGAR" -> {
+                      Contacto nuevo = new Contacto(partes[1], partes[2], partes[3]);
+                      if (agenda.agregar(nuevo)) {
+                          System.out.println("Agregado: " + partes[1]);
+                      } else {
+                          System.out.println("Error: " + partes[1] + " ya existe");
+                      }
+                  }
+                  case "BUSCAR" -> {
+                      Contacto encontrado = agenda.buscar(partes[1]);
+                      if (encontrado == null) {
+                          System.out.println("No encontrado: " + partes[1]);
+                      } else {
+                          System.out.println(encontrado);
+                      }
+                  }
+                  case "ELIMINAR" -> {
+                      if (agenda.eliminar(partes[1])) {
+                          System.out.println("Eliminado: " + partes[1]);
+                      } else {
+                          System.out.println("No encontrado: " + partes[1]);
+                      }
+                  }
+                  case "LISTAR" -> agenda.listar();
+                  default -> System.out.println("Orden desconocida: " + orden);
+              }
+          }
+      }
+  }
+hints:
+  - 'La idea: `Contacto` solo sabe guardar sus datos y presentarse; `Agenda` sabe guardar contactos, buscarlos y borrarlos; `main` solo traduce cada orden en una llamada a la agenda.'
+  - 'Qué usar: un array `Contacto[]` con un contador `cantidad`, `equals` para comparar nombres, `null` para «no lo he encontrado», `toString()` para imprimir un contacto y un `switch` sobre la orden con `break` del bucle al leer `SALIR`.'
+  - 'El plan: `buscar` recorre de 0 a `cantidad - 1` y devuelve el contacto o `null`. `agregar` usa `buscar` para rechazar repetidos. `eliminar` encuentra la posición, hace `contactos[i] = contactos[i + 1]` desde ahí hasta el final y resta 1 a `cantidad`. En `main`, `new Contacto(partes[1], partes[2], partes[3])` para `AGREGAR`.'
+tests:
+  - input: |
+      AGREGAR Ana 600111222 ana@correo.es
+      AGREGAR Luis 699888777 luis@correo.es
+      BUSCAR Ana
+      ELIMINAR Ana
+      LISTAR
+      SALIR
+    output: |
+      Agregado: Ana
+      Agregado: Luis
+      Ana | 600111222 | ana@correo.es
+      Eliminado: Ana
+      1. Luis | 699888777 | luis@correo.es
+      Total: 1
+      ¡Hasta pronto!
+    sample: true
+  - input: |
+      LISTAR
+      BUSCAR Ana
+      ELIMINAR Ana
+      SALIR
+      AGREGAR Ana 600111222 ana@correo.es
+      LISTAR
+    output: |
+      Agenda vacía
+      No encontrado: Ana
+      No encontrado: Ana
+      ¡Hasta pronto!
+    sample: true
+  - input: |
+      AGREGAR Ana 600111222 ana@correo.es
+      AGREGAR Ana 611000000 otra@correo.es
+      AGREGAR ana 622000000 ana2@correo.es
+      BUSCAR Ana
+      LLAMAR Ana
+      LISTAR
+    output: |
+      Agregado: Ana
+      Error: Ana ya existe
+      Agregado: ana
+      Ana | 600111222 | ana@correo.es
+      Orden desconocida: LLAMAR
+      1. Ana | 600111222 | ana@correo.es
+      2. ana | 622000000 | ana2@correo.es
+      Total: 2
+  - input: |
+      AGREGAR Uno 1 uno@a.es
+      AGREGAR Dos 2 dos@a.es
+      AGREGAR Tres 3 tres@a.es
+      AGREGAR Cuatro 4 cuatro@a.es
+      ELIMINAR Dos
+      ELIMINAR Cuatro
+      AGREGAR Cinco 5 cinco@a.es
+      LISTAR
+      ELIMINAR Uno
+      ELIMINAR Tres
+      ELIMINAR Cinco
+      LISTAR
+      SALIR
+    output: |
+      Agregado: Uno
+      Agregado: Dos
+      Agregado: Tres
+      Agregado: Cuatro
+      Eliminado: Dos
+      Eliminado: Cuatro
+      Agregado: Cinco
+      1. Uno | 1 | uno@a.es
+      2. Tres | 3 | tres@a.es
+      3. Cinco | 5 | cinco@a.es
+      Total: 3
+      Eliminado: Uno
+      Eliminado: Tres
+      Eliminado: Cinco
+      Agenda vacía
+      ¡Hasta pronto!
+  - input: "\nAGREGAR Eva 655444333 eva@correo.es\n\nBUSCAR Eva\n"
+    output: |
+      Agregado: Eva
+      Eva | 655444333 | eva@correo.es

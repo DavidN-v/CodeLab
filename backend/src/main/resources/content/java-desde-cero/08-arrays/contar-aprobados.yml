@@ -1,0 +1,70 @@
+title: Contar aprobados
+summary: Ordena las líneas de un programa que cuenta las notas de 5 o más.
+difficulty: EASY
+kind: parsons
+statement: |
+  Ordena las líneas para que el programa lea `n` y después `n` notas enteras (de 0 a 10), las guarde en un array y escriba cuántas son aprobados (nota mayor o igual que 5):
+
+  ```
+  Aprobados: <cantidad>
+  ```
+
+  Cuidado: sobra una línea.
+
+  **Ejemplo:** `5  7 3 5 9 4` → `Aprobados: 3`.
+starter: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+  {{lines}}
+      }
+  }
+lines:
+  - '        int n = entrada.nextInt();'
+  - '        int[] notas = new int[n];'
+  - '        for (int i = 0; i < n; i++) {'
+  - '            notas[i] = entrada.nextInt();'
+  - '        }'
+  - '        int aprobados = 0;'
+  - '        for (int nota : notas) {'
+  - '            if (nota >= 5) {'
+  - '                aprobados++;'
+  - '            }'
+  - '        }'
+  - '        System.out.println("Aprobados: " + aprobados);'
+distractors:
+  - '            if (nota > 5) {'
+solution: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int n = entrada.nextInt();
+          int[] notas = new int[n];
+          for (int i = 0; i < n; i++) {
+              notas[i] = entrada.nextInt();
+          }
+          int aprobados = 0;
+          for (int nota : notas) {
+              if (nota >= 5) {
+                  aprobados++;
+              }
+          }
+          System.out.println("Aprobados: " + aprobados);
+      }
+  }
+hints:
+  - 'La idea: primero hay que saber cuántas notas hay para crear el array, después llenarlo y, por último, recorrerlo contando.'
+  - 'Qué usar: un `for` con índice para llenar el array, un for-each para recorrerlo, un contador que empieza en 0 y un `if`.'
+  - 'El plan: leer `n` → crear el array → bucle de lectura → `aprobados = 0` → for-each con `if (nota >= 5)` que suma 1 → imprimir. Un 5 también aprueba, así que la comparación es `>=`.'
+tests:
+  - input: "5\n7 3 5 9 4\n"
+    output: "Aprobados: 3\n"
+    sample: true
+  - input: "3\n1 2 4\n"
+    output: "Aprobados: 0\n"
+  - input: "4\n5 5 10 0\n"
+    output: "Aprobados: 3\n"

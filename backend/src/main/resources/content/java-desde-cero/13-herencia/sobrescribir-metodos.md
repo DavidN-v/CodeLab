@@ -2,6 +2,9 @@
 
 Una subclase puede dar **su propia versión** de un método que hereda. Se llama sobrescritura (*override*):
 
+> [!analogia]
+> En una familia todos heredan la receta de la abuela para la tortilla, pero tu tío la hace con cebolla. Cuando alguien le pide a tu tío «haz la tortilla», usa **su** versión, no la de la abuela. Eso es sobrescribir.
+
 ```java
 class Animal {
     String sonido() {
@@ -36,7 +39,26 @@ public class Main {
 }
 ```
 
+> [!prueba]
+> Borra el método `sonido()` de `Vaca` y vuelve a ejecutar: ¿qué dice ahora la vaca? Sin su propia versión, usa la heredada de `Animal`.
+
 `presentarse` está escrito una sola vez en `Animal`, pero llama a la versión de `sonido` del objeto real. Esa es la puerta al polimorfismo (siguiente módulo).
+
+```mermaid
+classDiagram
+    Animal <|-- Gato
+    Animal <|-- Vaca
+    class Animal {
+        +sonido() String
+        +presentarse() String
+    }
+    class Gato {
+        +sonido() String
+    }
+    class Vaca {
+        +sonido() String
+    }
+```
 
 Reglas de la sobrescritura:
 
@@ -44,6 +66,9 @@ Reglas de la sobrescritura:
 - El tipo de retorno debe ser el mismo (o un subtipo).
 - No puede ser **más** restrictivo en acceso: si el original es `public`, la versión nueva también.
 - Usa siempre **`@Override`**: si te equivocas en el nombre o los parámetros, el compilador te avisa en lugar de crear un método nuevo sin que te des cuenta.
+
+> [!cuidado]
+> Sin `@Override`, escribir `String sonidos()` (con una «s» de más) no da error: crea un método **nuevo** y la versión del padre sigue usándose. Con `@Override`, el compilador te avisa al momento.
 
 ## Ampliar en vez de sustituir: super.metodo()
 
@@ -112,9 +137,11 @@ final class Dni { ... }   // nadie puede heredar de Dni
 | Firma | Mismo nombre, **distintos** parámetros | Mismo nombre, **mismos** parámetros |
 | Se decide | Al compilar, por los tipos de los argumentos | Al ejecutar, por el objeto real |
 
-## Resumen
+> [!idea]
+> Cuando llamas a un método sobrescrito, manda el **objeto real**: se ejecuta la versión más específica que tenga.
 
-- Sobrescribir es redefinir en la subclase un método heredado con la misma firma.
-- Marca siempre `@Override`.
-- `super.metodo()` reutiliza la versión del padre.
-- `final` impide sobrescribir un método o heredar de una clase.
+> [!resumen]
+> - Sobrescribir es redefinir en la subclase un método heredado con la misma firma.
+> - Marca siempre `@Override`.
+> - `super.metodo()` reutiliza la versión del padre.
+> - `final` impide sobrescribir un método o heredar de una clase.

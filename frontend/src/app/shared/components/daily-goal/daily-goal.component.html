@@ -1,0 +1,42 @@
+<div class="goal" [class.goal--reached]="reached()">
+  <div
+    class="goal__ring"
+    [style.--percent.%]="percent()"
+    role="img"
+    [attr.aria-label]="todayXp() + ' de ' + goalXp() + ' XP hoy'"
+  >
+    <span class="goal__value">{{ reached() ? '✓' : percent() + '%' }}</span>
+  </div>
+  <div class="goal__text">
+    <p class="section-title">Meta de hoy</p>
+    <p class="goal__numbers">
+      <strong>{{ todayXp() }}</strong> / {{ goalXp() }} XP
+    </p>
+    <p class="goal__detail">
+      @if (reached()) {
+        ¡Meta cumplida! Lo que hagas ahora es extra.
+      } @else {
+        Te faltan {{ goalXp() - todayXp() }} XP. Una lección da 10; un ejercicio, entre 20 y 50.
+      }
+    </p>
+    <button type="button" class="goal__change" (click)="picking.set(!picking())">
+      {{ picking() ? 'Cerrar' : 'Cambiar meta' }}
+    </button>
+  </div>
+</div>
+@if (picking()) {
+  <div class="goal__options" role="group" aria-label="Elige tu meta diaria">
+    @for (goal of goals; track goal.xp) {
+      <button
+        type="button"
+        class="goal__option"
+        [class.goal__option--current]="goal.xp === goalXp()"
+        [disabled]="saving()"
+        (click)="pick(goal.xp)"
+      >
+        <strong>{{ goal.label }}</strong>
+        <span>{{ goal.xp }} XP · {{ goal.detail }}</span>
+      </button>
+    }
+  </div>
+}

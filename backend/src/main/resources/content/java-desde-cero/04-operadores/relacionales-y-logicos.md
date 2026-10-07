@@ -1,8 +1,11 @@
-Para tomar decisiones necesitas preguntas cuya respuesta sea sí o no. En Java esas respuestas son valores `boolean`: `true` o `false`.
+Para tomar decisiones necesitas preguntas cuya respuesta sea sí o no. En Java esas respuestas son valores `boolean`: `true` (verdadero) o `false` (falso).
 
 ## Operadores relacionales
 
 Comparan dos valores y devuelven un `boolean`:
+
+> [!analogia]
+> Un operador relacional es como el portero de una discoteca que mira tu DNI: solo responde «sí» o «no» a una pregunta concreta, como «¿tiene 18 o más?».
 
 | Operador | Significa |
 | --- | --- |
@@ -24,7 +27,11 @@ public class Main {
 }
 ```
 
-> **Error clásico:** `=` asigna y `==` compara. Y recuerda: los textos se comparan con `equals`, no con `==`.
+> [!prueba]
+> Cambia `int edad = 20;` por `int edad = 15;` y vuelve a ejecutar: ¿qué líneas cambian de `true` a `false`?
+
+> [!cuidado]
+> `=` asigna y `==` compara. Y recuerda: los textos se comparan con `equals`, no con `==`.
 
 ## Operadores lógicos
 
@@ -35,6 +42,9 @@ Combinan valores `boolean`:
 | `&&` | Y (AND) | Las dos condiciones son verdaderas |
 | `\|\|` | O (OR) | Al menos una es verdadera |
 | `!` | NO (NOT) | La condición es falsa |
+
+> [!analogia]
+> «Puedes entrar si tienes entrada **y** eres mayor de edad» exige las dos cosas (`&&`). «Hay descuento si eres estudiante **o** jubilado» se conforma con una (`||`).
 
 ```java
 public class Main {
@@ -50,7 +60,8 @@ public class Main {
 }
 ```
 
-Para comprobar si un número está en un rango hay que repetir la variable: `nota >= 0 && nota <= 10`. La forma matemática `0 <= nota <= 10` no compila en Java.
+> [!cuidado]
+> Para comprobar si un número está en un rango hay que repetir la variable: `nota >= 0 && nota <= 10`. La forma matemática `0 <= nota <= 10` no compila en Java.
 
 ## Cortocircuito
 
@@ -58,6 +69,9 @@ Para comprobar si un número está en un rango hay que repetir la variable: `not
 
 - En `a && b`, si `a` es `false`, `b` ni se mira.
 - En `a || b`, si `a` es `true`, `b` ni se mira.
+
+> [!analogia]
+> Si para entrar hacen falta entrada **y** DNI, y ya ves que no traes entrada, el portero ni te pide el DNI.
 
 Esto permite escribir condiciones seguras, comprobando primero lo que podría fallar:
 
@@ -79,8 +93,7 @@ public class Main {
 
 Te ayudan a simplificar condiciones negadas, que suelen ser difíciles de leer. Por ejemplo, "no es fin de semana" = `!(dia == 6 || dia == 7)` = `dia != 6 && dia != 7`.
 
-## Resumen
-
-- `== != < > <= >=` comparan y devuelven `boolean`.
-- `&&` exige las dos, `||` al menos una, `!` invierte.
-- `&&` y `||` hacen cortocircuito: pon primero la comprobación que protege a la segunda.
+> [!resumen]
+> - `== != < > <= >=` comparan y devuelven `boolean`.
+> - `&&` exige las dos, `||` al menos una, `!` invierte.
+> - `&&` y `||` hacen cortocircuito: pon primero la comprobación que protege a la segunda.

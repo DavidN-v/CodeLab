@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { switchMap } from 'rxjs';
@@ -9,12 +9,16 @@ import { AuthService } from '../../../../core/services/auth.service';
 import { CourseService } from '../../../../core/services/course.service';
 import { ProgressService } from '../../../../core/services/progress.service';
 import { ProgressBarComponent } from '../../../../shared/components/progress-bar/progress-bar.component';
+import { readStorage, writeStorage } from '../../../../core/services/browser-storage';
+import { ModulePathComponent } from '../../components/module-path/module-path.component';
 import { ModuleRowComponent } from '../../components/module-row/module-row.component';
+
+const VIEW_KEY = 'forja.courseView';
 
 /** A language's course: what it covers, the learner's progress and the module outline. */
 @Component({
   selector: 'app-course-page',
-  imports: [RouterLink, ModuleRowComponent, ProgressBarComponent],
+  imports: [RouterLink, ModuleRowComponent, ModulePathComponent, ProgressBarComponent],
   templateUrl: './course-page.component.html',
   styleUrl: './course-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -40,6 +44,16 @@ export class CoursePageComponent {
     stream: ({ params: courseId }) =>
       this.progressService.getCourseProgress(courseId, withoutErrorNotification()),
   });
+
+  /** The outline as a path (default) or as a compact list. */
+  protected readonly view = signal<'path' | 'list'>(
+    readStorage(VIEW_KEY) === 'list' ? 'list' : 'path',
+  );
+
+  protected showAs(view: 'path' | 'list'): void {
+    this.view.set(view);
+    writeStorage(VIEW_KEY, view);
+  }
 
   protected readonly totals = computed(() => {
     const modules = this.course.value()?.modules ?? [];

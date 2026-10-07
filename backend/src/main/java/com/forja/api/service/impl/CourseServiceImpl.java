@@ -3,6 +3,8 @@ package com.forja.api.service.impl;
 import com.forja.api.dto.CourseDetailResponse;
 import com.forja.api.dto.CourseSummaryResponse;
 import com.forja.api.dto.ExerciseSummaryResponse;
+import com.forja.api.dto.GlossaryTermResponse;
+import com.forja.api.dto.QuizQuestionResponse;
 import com.forja.api.dto.LessonDetailResponse;
 import com.forja.api.dto.ModuleDetailResponse;
 import com.forja.api.dto.ModuleRefResponse;
@@ -15,6 +17,7 @@ import com.forja.api.mapper.RefMapper;
 import com.forja.api.repository.CourseRepository;
 import com.forja.api.repository.ExerciseOutline;
 import com.forja.api.repository.ExerciseRepository;
+import com.forja.api.repository.GlossaryTermRepository;
 import com.forja.api.repository.LessonOutline;
 import com.forja.api.repository.LessonRepository;
 import com.forja.api.repository.ModuleRepository;
@@ -23,6 +26,7 @@ import java.util.List;
 import java.util.Objects;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tools.jackson.databind.json.JsonMapper;
 
 @Service
 @Transactional(readOnly = true)
@@ -40,9 +44,14 @@ public class CourseServiceImpl implements CourseService {
 
 	private final RefMapper refMapper;
 
+	private final GlossaryTermRepository glossaryRepository;
+
+	private final JsonMapper jsonMapper = JsonMapper.builder().build();
+
 	public CourseServiceImpl(CourseRepository courseRepository, ModuleRepository moduleRepository,
 			LessonRepository lessonRepository, ExerciseRepository exerciseRepository, CourseMapper courseMapper,
-			RefMapper refMapper) {
+			RefMapper refMapper, GlossaryTermRepository glossaryRepository) {
+		this.glossaryRepository = glossaryRepository;
 		this.courseRepository = courseRepository;
 		this.moduleRepository = moduleRepository;
 		this.lessonRepository = lessonRepository;
@@ -114,7 +123,21 @@ public class CourseServiceImpl implements CourseService {
 				lesson.getEstimatedMinutes(), lesson.getDisplayOrder(), lesson.getContentMarkdown(),
 				refMapper.toRef(lesson.getModule().getCourse()), refMapper.toRef(lesson.getModule()),
 				index > 0 ? refMapper.toRef(outline.get(index - 1)) : null,
-				index >= 0 && index < outline.size() - 1 ? refMapper.toRef(outline.get(index + 1)) : null);
+				index >= 0 && index < outline.size() - 1 ? refMapper.toRef(outline.get(index + 1)) : null,
+				lesson.getQuizJson() == null ? List.of()
+						: List.of(jsonMapper.readValue(lesson.getQuizJson(), QuizQuestionResponse[].class)));
+	}
+
+	@Override
+	public List<GlossaryTermResponse> findGlossary(Long courseId) {
+		if (courseRepository.findByIdAndPublishedTrue(courseId).isEmpty()) {
+			throw new ResourceNotFoundException("No existe el curso con id %d.".formatted(courseId));
+		}
+		return glossaryRepository.findByCourseIdOrderByDisplayOrderAsc(courseId)
+			.stream()
+			.map(term -> new GlossaryTermResponse(term.getTerm(),
+					List.of(jsonMapper.readValue(term.getAliasesJson(), String[].class)), term.getDefinition()))
+			.toList();
 	}
 
 	@Override

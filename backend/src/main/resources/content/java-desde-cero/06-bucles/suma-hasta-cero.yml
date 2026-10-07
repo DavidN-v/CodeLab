@@ -52,8 +52,9 @@ solution: |
       }
   }
 hints:
-  - Lee el primer número antes del `while` y el siguiente al final de cada vuelta.
-  - Para el máximo, empieza con `Integer.MIN_VALUE` (así cualquier número será mayor); para el mínimo, con `Integer.MAX_VALUE`.
+  - 'La idea: lees números uno a uno hasta que llega el 0 (el centinela). Mientras tanto, vas apuntando cuántos llevas, cuánto suman y cuáles son el mayor y el menor.'
+  - 'Qué usar: un `while (numero != 0)` con un contador, un acumulador y `Math.max` / `Math.min`. Empieza el máximo en `Integer.MIN_VALUE` y el mínimo en `Integer.MAX_VALUE` para que cualquier número los mejore.'
+  - 'El plan: lee el primer número antes del while; dentro, actualiza cantidad, suma, máximo y mínimo, y lee el siguiente al final de la vuelta. Al salir, si cantidad == 0 imprime Sin datos; si no, las cuatro líneas.'
 tests:
   - input: "4 -2 9 1 0\n"
     output: |

@@ -2,6 +2,7 @@ package com.forja.api.controller;
 
 import com.forja.api.dto.ApiErrorResponse;
 import com.forja.api.dto.AuthResponse;
+import com.forja.api.dto.DailyGoalRequest;
 import com.forja.api.dto.LoginRequest;
 import com.forja.api.dto.RegisterRequest;
 import com.forja.api.dto.UserResponse;
@@ -19,6 +20,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -63,6 +65,17 @@ public class AuthController {
 			content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
 	public UserResponse me(@AuthenticationPrincipal Jwt token) {
 		return authService.findUser(CurrentUser.id(token));
+	}
+
+	@PutMapping("/me/daily-goal")
+	@Operation(summary = "Change the daily goal", description = "Experience per day, between 10 and 500.",
+			security = @SecurityRequirement(name = "bearer"))
+	@ApiResponse(responseCode = "200", description = "The account with its new goal.")
+	@ApiResponse(responseCode = "400", description = "The goal is out of range.",
+			content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
+	public UserResponse changeDailyGoal(@AuthenticationPrincipal Jwt token,
+			@Valid @RequestBody DailyGoalRequest request) {
+		return authService.changeDailyGoal(CurrentUser.id(token), request.dailyGoalXp());
 	}
 
 }

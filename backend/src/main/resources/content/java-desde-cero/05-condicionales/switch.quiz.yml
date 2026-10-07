@@ -1,0 +1,49 @@
+questions:
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int mes = 4;
+              String estacion = switch (mes) {
+                  case 12, 1, 2 -> "Invierno";
+                  case 3, 4, 5 -> "Primavera";
+                  case 6, 7, 8 -> "Verano";
+                  default -> "Otoño";
+              };
+              System.out.println(estacion);
+          }
+      }
+    answer: |
+      Primavera
+    explanation: 'El 4 aparece en el `case 3, 4, 5`, así que el switch devuelve `"Primavera"` y se guarda en `estacion`. Con flechas solo se ejecuta esa rama.'
+  - type: output
+    prompt: ¿Qué imprime este switch clásico? Fíjate en los `break`.
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int opcion = 1;
+              switch (opcion) {
+                  case 1:
+                      System.out.println("Café");
+                  case 2:
+                      System.out.println("Té");
+                      break;
+                  case 3:
+                      System.out.println("Agua");
+              }
+          }
+      }
+    answer: |
+      Café
+      Té
+    explanation: 'El `case 1` no tiene `break`, así que la ejecución «cae» al `case 2` e imprime también `Té`. Ahí sí hay un `break` y se detiene antes de `Agua`.'
+  - type: choice
+    prompt: '¿En cuál de estos casos **no** puedes usar `switch` y necesitas un `if`?'
+    options:
+      - Comprobar si una temperatura está entre 18 y 25 grados
+      - Elegir según un día de la semana del 1 al 7
+      - Elegir según una operación escrita como texto (`"+"`, `"-"`)
+      - Elegir según una letra (`'a'`, `'b'`)
+    answer: 0
+    explanation: 'Cada `case` compara con valores concretos y constantes, no con rangos. Para «entre 18 y 25» hace falta `if (t >= 18 && t <= 25)`. Los números enteros, los textos y los caracteres sí funcionan con `switch`.'

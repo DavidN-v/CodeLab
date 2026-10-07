@@ -67,8 +67,9 @@ solution: |
       }
   }
 hints:
-  - "Declara el campo dentro de la clase: `private int cuenta = 0;`."
-  - Cuando tengas los tres métodos, quita los comentarios de los `case` del `main`.
+  - 'La idea: el contador tiene que recordar un número entre una orden y otra, así que ese número vive dentro del objeto.'
+  - 'Qué usar: un campo `private int cuenta = 0;` y tres métodos sin `static` que lo cambian o lo devuelven.'
+  - 'El plan: `clic()` hace `cuenta++`, `reiniciar()` hace `cuenta = 0`, `valor()` hace `return cuenta;`. Después quita los comentarios de los `case` del `main`.'
 tests:
   - input: "clic clic ver clic ver\n"
     output: |

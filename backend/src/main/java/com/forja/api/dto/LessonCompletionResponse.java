@@ -8,5 +8,6 @@ public record LessonCompletionResponse(
 		Long lessonId,
 		Instant completedAt,
 		@Schema(description = "False when it had already been completed; no experience is awarded twice.") boolean newlyCompleted,
-		int xpAwarded) {
+		int xpAwarded,
+		@Schema(description = "What to celebrate; null when nothing new happened.") CelebrationResponse celebration) {
 }

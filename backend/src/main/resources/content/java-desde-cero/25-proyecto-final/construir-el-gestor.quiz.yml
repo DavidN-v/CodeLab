@@ -1,0 +1,42 @@
+questions:
+  - type: choice
+    prompt: ¿En qué orden conviene construir el gestor de tareas?
+    options:
+      - Modelo (enum y record), después el gestor con las reglas y al final `Main`
+      - Primero `Main` con todas las órdenes, y después lo demás
+      - Todo a la vez y ejecutarlo al final
+      - Primero las pruebas de rendimiento
+    answer: 0
+    explanation: Construir por capas te deja probar cada pieza en cuanto existe. Si algo falla, sabes que está en lo último que has añadido.
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      record Tarea(int id, String titulo, boolean completada) {
+          Tarea completar() {
+              return new Tarea(id, titulo, true);
+          }
+      }
+
+      public class Main {
+          public static void main(String[] args) {
+              Tarea tarea = new Tarea(1, "Estudiar", false);
+              Tarea hecha = tarea.completar();
+              System.out.println(tarea.completada());
+              System.out.println(hecha.completada());
+              System.out.println(tarea.titulo().equals(hecha.titulo()));
+          }
+      }
+    answer: |
+      false
+      true
+      true
+    explanation: 'Un record es inmutable: `completar()` no cambia `tarea`, devuelve otra con `completada = true`. El título se copia, así que los dos son iguales.'
+  - type: choice
+    prompt: El usuario escribe `completar;9` y no existe la tarea 9. ¿Qué hace el gestor del curso?
+    options:
+      - Lanza una excepción; `Main` la captura, escribe `Error:` y sigue con la siguiente orden
+      - El programa termina con un error
+      - Crea una tarea 9 vacía
+      - Lo ignora sin decir nada
+    answer: 0
+    explanation: El gestor lanza `NoSuchElementException` y `Main` la captura en su `try`/`catch`. Así una orden mal escrita nunca detiene el programa.

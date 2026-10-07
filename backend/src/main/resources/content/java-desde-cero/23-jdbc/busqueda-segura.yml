@@ -70,8 +70,9 @@ solution: |
       }
   }
 hints:
-  - "Escribe la consulta con un hueco: `\"SELECT rol FROM usuarios WHERE nombre = ?\"`."
-  - "Rellénalo con `ps.setString(1, nombre)` y ejecuta `ps.executeQuery()`."
+  - 'La idea: el problema es que el texto del usuario se pega dentro del SQL. Tienes que conseguir que viaje aparte, siempre como un dato.'
+  - 'Qué usar: un `PreparedStatement` con un hueco `?` en lugar de la concatenación, rellenado con `setString`.'
+  - 'El plan: en `buscar`, crea `c.prepareStatement("SELECT rol FROM usuarios WHERE nombre = ?")`, haz `ps.setString(1, nombre)` y ejecuta `ps.executeQuery()`; el resto (`r.next() ? ... : "no encontrado"`) se queda igual.'
 tests:
   - input: |
       ada

@@ -1,0 +1,61 @@
+title: Suma de pares
+summary: Ordena las líneas de un bucle que suma los números pares hasta n.
+difficulty: EASY
+kind: parsons
+statement: |
+  El programa lee un entero `n` y escribe la suma de todos los números pares desde 2 hasta `n` (incluido si es par):
+
+  ```
+  Suma de pares: <suma>
+  ```
+
+  **Ejemplo:** con `10` suma 2 + 4 + 6 + 8 + 10 y escribe `Suma de pares: 30`.
+
+  Ordena las líneas. Cuidado: alguna línea sobra.
+starter: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int n = entrada.nextInt();
+  {{lines}}
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int n = entrada.nextInt();
+          int suma = 0;
+          for (int i = 2; i <= n; i += 2) {
+              suma += i;
+          }
+          System.out.println("Suma de pares: " + suma);
+      }
+  }
+lines:
+  - '        int suma = 0;'
+  - '        for (int i = 2; i <= n; i += 2) {'
+  - '            suma += i;'
+  - '        }'
+  - '        System.out.println("Suma de pares: " + suma);'
+distractors:
+  - '        int suma = 1;'
+  - '        for (int i = 2; i < n; i += 2) {'
+hints:
+  - 'La idea: necesitas una hucha (el acumulador) que empiece vacía, un bucle que pase por 2, 4, 6… hasta `n`, y al final mostrar lo que hay en la hucha.'
+  - 'Qué usar: un acumulador declarado antes del bucle y un `for` que avance de 2 en 2 con `i += 2`. Para sumar, el acumulador empieza en 0.'
+  - 'El plan: declara suma = 0; abre el for con i <= n (para incluir n); dentro, suma += i; cierra la llave; y después del bucle, el println.'
+tests:
+  - input: "10\n"
+    output: "Suma de pares: 30\n"
+    sample: true
+  - input: "1\n"
+    output: "Suma de pares: 0\n"
+  - input: "7\n"
+    output: "Suma de pares: 12\n"
+  - input: "100\n"
+    output: "Suma de pares: 2550\n"

@@ -1,0 +1,37 @@
+questions:
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int x = 4;
+              x = x + 3;
+              x = x * 2;
+              System.out.println(x);
+          }
+      }
+    answer: |
+      14
+    explanation: '`=` significa "guarda". Primero `x` vale 4; luego se guarda 4 + 3 = 7; luego 7 * 2 = 14. Cada nuevo valor sustituye al anterior.'
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int a = 8;
+              int b = a;
+              a = 1;
+              System.out.println(a + " " + b);
+          }
+      }
+    answer: |
+      1 8
+    explanation: '`int b = a;` copia el valor 8 en `b`. Después cambiar `a` no afecta a `b`: son cajas independientes, como una fotocopia.'
+  - type: choice
+    prompt: Ya existe `int puntos = 10;`. ¿Cómo cambias su valor a 20?
+    options:
+      - '`puntos = 20;`'
+      - '`int puntos = 20;`'
+      - '`puntos == 20;`'
+    answer: 0
+    explanation: 'Para reasignar no se repite el tipo: `int puntos = 20;` intentaría crear otra variable con el mismo nombre y no compila. `==` compara, no guarda.'

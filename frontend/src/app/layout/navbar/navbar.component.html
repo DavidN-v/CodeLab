@@ -43,6 +43,15 @@
       </ul>
 
       <div class="navbar__account">
+        <button
+          type="button"
+          class="navbar__theme"
+          [attr.aria-label]="settings.theme() === 'dark' ? 'Usar tema claro' : 'Usar tema oscuro'"
+          [title]="settings.theme() === 'dark' ? 'Tema claro' : 'Tema oscuro'"
+          (click)="settings.toggleTheme()"
+        >
+          <span aria-hidden="true">{{ settings.theme() === 'dark' ? '☀' : '☾' }}</span>
+        </button>
         @if (user(); as signedIn) {
           <span class="navbar__user" [title]="signedIn.email">{{ signedIn.displayName }}</span>
           <button type="button" class="button button--ghost button--small" (click)="logout()">

@@ -43,10 +43,13 @@ public class ProgressServiceImpl implements ProgressService {
 
 	private final Clock clock;
 
+	private final ExperienceTracker experienceTracker;
+
 	public ProgressServiceImpl(LessonRepository lessonRepository, ExerciseRepository exerciseRepository,
 			CourseRepository courseRepository, LessonProgressRepository lessonProgressRepository,
 			ExerciseProgressRepository exerciseProgressRepository, UserRepository userRepository,
-			CourseProgressCalculator calculator, Clock clock) {
+			CourseProgressCalculator calculator, Clock clock, ExperienceTracker experienceTracker) {
+		this.experienceTracker = experienceTracker;
 		this.lessonRepository = lessonRepository;
 		this.exerciseRepository = exerciseRepository;
 		this.courseRepository = courseRepository;
@@ -62,11 +65,12 @@ public class ProgressServiceImpl implements ProgressService {
 		Lesson lesson = lessonRepository.findPublishedById(lessonId)
 			.orElseThrow(() -> new ResourceNotFoundException("No existe la lección con id %d.".formatted(lessonId)));
 		return lessonProgressRepository.findByUserIdAndLessonId(userId, lessonId)
-			.map(existing -> new LessonCompletionResponse(lessonId, existing.getCompletedAt(), false, 0))
+			.map(existing -> new LessonCompletionResponse(lessonId, existing.getCompletedAt(), false, 0, null))
 			.orElseGet(() -> {
 				LessonProgress progress = lessonProgressRepository
-					.save(new LessonProgress(userRepository.getReferenceById(userId), lesson, clock.instant()));
-				return new LessonCompletionResponse(lessonId, progress.getCompletedAt(), true, XpPolicy.LESSON_XP);
+					.saveAndFlush(new LessonProgress(userRepository.getReferenceById(userId), lesson, clock.instant()));
+				return new LessonCompletionResponse(lessonId, progress.getCompletedAt(), true, XpPolicy.LESSON_XP,
+						experienceTracker.celebrate(userId, XpPolicy.LESSON_XP, lesson.getModule()));
 			});
 	}
 

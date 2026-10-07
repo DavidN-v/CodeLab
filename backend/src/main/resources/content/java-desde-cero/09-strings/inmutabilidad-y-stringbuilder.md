@@ -2,6 +2,9 @@
 
 Un `String` es **inmutable**: una vez creado, su contenido no puede modificarse. Los métodos que parecen cambiarlo en realidad crean uno nuevo:
 
+> [!analogia]
+> Un String es como un texto grabado en piedra. No puedes borrar una letra: si quieres otro texto, tienes que grabar una piedra nueva y mover la etiqueta (la variable) para que apunte a ella.
+
 ```java
 public class Main {
     public static void main(String[] args) {
@@ -15,7 +18,21 @@ public class Main {
 }
 ```
 
-> **Error frecuente:** llamar a `texto.replace(...)` o `texto.strip()` y no guardar el resultado. El String original no se entera.
+Tras la última asignación, la memoria queda así: el `"hola"` original no ha cambiado, simplemente `saludo` ya no apunta a él.
+
+```memoria
+stack main
+saludo: @2
+heap
+@1 String: "hola"
+@2 String: "HOLA"
+```
+
+> [!cuidado]
+> Error frecuente: llamar a `texto.replace(...)` o `texto.strip()` y no guardar el resultado. El String original no se entera. Escribe siempre `texto = texto.strip();`.
+
+> [!prueba]
+> Borra la línea `saludo = saludo.toUpperCase();` y ejecuta. ¿Cuántas veces sale «hola» en minúsculas?
 
 La inmutabilidad tiene ventajas: los String se pueden compartir sin miedo, usar como claves en mapas y entre hilos. Pero tiene un coste cuando construyes texto pieza a pieza.
 
@@ -34,6 +51,9 @@ Cada `+=` copia el texto acumulado entero. Con miles de vueltas, el programa se 
 
 `StringBuilder` es un texto **mutable**, pensado para construirse poco a poco:
 
+> [!analogia]
+> Si un String es piedra, un `StringBuilder` es una pizarra: puedes añadir, borrar e insertar sobre la misma superficie, y cuando terminas haces una foto (`toString()`) para quedarte con el resultado.
+
 ```java
 public class Main {
     public static void main(String[] args) {
@@ -49,6 +69,9 @@ public class Main {
     }
 }
 ```
+
+> [!prueba]
+> Cambia el `5` del bucle y del `if` por un `10` y ejecuta. El mismo `StringBuilder` crece sin crear textos intermedios.
 
 Sus métodos más útiles:
 
@@ -79,8 +102,7 @@ public class Main {
 | Construir texto dentro de un bucle | `StringBuilder` |
 | Invertir un texto | `new StringBuilder(texto).reverse()` |
 
-## Resumen
-
-- Los String son inmutables: guarda siempre el resultado de sus métodos.
-- Concatenar con `+=` en bucles es lento; usa `StringBuilder` y `append`.
-- Convierte el resultado con `toString()` cuando termines.
+> [!resumen]
+> - Los String son inmutables: guarda siempre el resultado de sus métodos.
+> - Concatenar con `+=` en bucles es lento; usa `StringBuilder` y `append`.
+> - Convierte el resultado con `toString()` cuando termines.

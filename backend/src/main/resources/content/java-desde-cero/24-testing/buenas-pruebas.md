@@ -1,4 +1,9 @@
+Ya sabes escribir pruebas con JUnit. Ahora vamos a escribirlas mejor: con menos repetición, en el orden adecuado y sin depender de cosas externas.
+
 ## Pruebas parametrizadas
+
+> [!analogia]
+> Una prueba parametrizada es como una plantilla de carta: escribes el texto una vez y la imprimes con una lista de nombres y direcciones. Cada fila de datos produce una prueba distinta.
 
 Cuando quieres probar la misma lógica con muchos datos, repetir el método es tedioso. `@ParameterizedTest` ejecuta una prueba una vez por cada fila de datos:
 
@@ -44,13 +49,26 @@ public class Main {
 
 Cada fila de `@CsvSource` se convierte en los argumentos del método, y cuenta como una prueba distinta. Añadir un caso es añadir una línea.
 
+> [!prueba]
+> Añade la fila `"2100, true"` a `@CsvSource` y vuelve a ejecutar: verás `4/5 pruebas superadas`, porque 2100 no es bisiesto (es divisible entre 100 pero no entre 400). Cámbiala a `"2100, false"` y todo vuelve a pasar.
+
 ## TDD: la prueba primero
 
 El **desarrollo guiado por pruebas** (*Test-Driven Development*) invierte el orden habitual con un ciclo corto de tres pasos:
 
+> [!analogia]
+> Es como dibujar primero la diana y después lanzar el dardo: sabes exactamente a qué apuntas antes de empezar.
+
 1. **Rojo:** escribe una prueba para algo que el código aún no hace. Ejecútala y comprueba que **falla** (si pasa, la prueba no prueba nada).
 2. **Verde:** escribe el código mínimo para que pase.
 3. **Refactorizar:** limpia el código (y las pruebas) sin cambiar su comportamiento; las pruebas te avisan si rompes algo.
+
+```mermaid
+flowchart TD
+    A["Rojo: escribe una prueba que falla"] --> B["Verde: el código mínimo para que pase"]
+    B --> C["Refactorizar: limpia sin romper nada"]
+    C --> A
+```
 
 Y vuelta a empezar con la siguiente prueba. El resultado es código que nace probado y diseñado desde el punto de vista de quien lo usa. Los dos primeros ejercicios de este módulo funcionan así: las pruebas ya están escritas y tu trabajo es que pasen.
 
@@ -63,6 +81,9 @@ Y vuelta a empezar con la siguiente prueba. El resultado es código que nace pro
 - **Una idea por prueba:** varias aserciones están bien si comprueban el mismo comportamiento.
 
 ## Dobles de prueba
+
+> [!analogia]
+> Un doble de prueba es como el doble de un actor en una escena peligrosa: se parece lo suficiente para rodar, pero no arriesgas al de verdad.
 
 Para probar una clase que depende de algo lento o externo (una base de datos, un servicio de correo), se le pasa una versión falsa que implementa la misma interfaz: un **doble de prueba**. Es otra razón para programar contra interfaces:
 
@@ -79,9 +100,8 @@ class AvisadorFalso implements Avisador {
 
 Bibliotecas como Mockito los generan automáticamente.
 
-## Resumen
-
-- `@ParameterizedTest` con `@CsvSource` prueba muchos casos sin repetir código.
-- TDD: rojo (prueba que falla), verde (código mínimo), refactorizar.
-- Buenas pruebas: rápidas, independientes, repetibles y claras.
-- Los dobles de prueba sustituyen dependencias externas a través de interfaces.
+> [!resumen]
+> - `@ParameterizedTest` con `@CsvSource` prueba muchos casos sin repetir código.
+> - TDD: rojo (prueba que falla), verde (código mínimo), refactorizar.
+> - Buenas pruebas: rápidas, independientes, repetibles y claras.
+> - Los dobles de prueba sustituyen dependencias externas a través de interfaces.

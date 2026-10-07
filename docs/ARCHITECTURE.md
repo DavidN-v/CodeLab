@@ -154,7 +154,8 @@ Language 1──* Course 1──* Module 1──* Lesson
                                        └──* Submission *──1 User
 
 User 1──* LessonProgress    lecciones completadas
-User 1──* ExerciseProgress  intentos, pistas vistas, solución vista, resuelto y XP
+User 1──* ExerciseProgress  intentos, pistas vistas, solución vista, resuelto, XP y repaso espaciado
+Course 1──* GlossaryTerm    términos explicados en las lecciones
 ```
 
 | Tabla | Propósito | Campos principales | Estado |
@@ -162,19 +163,38 @@ User 1──* ExerciseProgress  intentos, pistas vistas, solución vista, resuel
 | `languages` | Lenguaje o tecnología | slug, name, version, tagline, active, display_order | Hecha (V1) |
 | `courses` | Curso de un lenguaje | language_id, slug, title, summary, published | Hecha (V1) |
 | `modules` | Unidad de un curso | course_id, slug, title, summary, published, display_order | Hecha (V1) |
-| `lessons` | Lección de un módulo | module_id, slug, title, summary, content_markdown, estimated_minutes, published | Hecha (V3) |
-| `exercises` | Ejercicio de un módulo | module_id, slug (único global), title, difficulty, statement_markdown, starter_code, solution_code | Hecha (V3) |
+| `lessons` | Lección de un módulo | module_id, slug, title, summary, content_markdown, quiz_json, estimated_minutes, published | Hecha (V3, quiz en V5) |
+| `exercises` | Ejercicio de un módulo | module_id, slug (único global), title, difficulty, kind, statement_markdown, starter_code, solution_code, parsons_json | Hecha (V3, tipos en V5) |
+| `glossary_terms` | Glosario del curso | course_id, term, aliases_json, definition, display_order | Hecha (V5) |
 | `exercise_test_cases` | Pruebas; las de ejemplo se muestran, las demás no salen de la API | exercise_id, position, stdin, expected_stdout, sample | Hecha (V3) |
 | `exercise_hints` | Pistas progresivas | exercise_id, position, content | Hecha (V3) |
-| `users` | Cuenta | email (en minúsculas, único), display_name, password_hash (BCrypt), role | Hecha (V3) |
+| `users` | Cuenta | email (en minúsculas, único), display_name, password_hash (BCrypt), role, daily_goal_xp | Hecha (V3, meta en V5) |
 | `lesson_progress` | Lección completada | user_id, lesson_id, completed_at | Hecha (V3) |
-| `exercise_progress` | Estado por ejercicio | user_id, exercise_id, attempts, hints_revealed, solution_viewed, solved_at, xp_awarded | Hecha (V3) |
+| `exercise_progress` | Estado por ejercicio | user_id, exercise_id, attempts, hints_revealed, solution_viewed, solved_at, xp_awarded, review_stage, next_review_at | Hecha (V3, repaso en V5) |
 | `submissions` | Intento de solución | user_id, exercise_id, source_code, status, passed_tests, total_tests, execution_time_ms | Hecha (V3) |
-| `concepts`, `achievements`, `projects` | Conceptos, logros persistidos, proyectos guiados | — | Futuras |
+| `concepts`, `achievements` | Conceptos, logros persistidos | — | Futuras |
 
-La experiencia, el nivel, la racha, la actividad y los logros **se calculan** a
-partir del progreso y los envíos (`learning/` en el backend), en lugar de
-guardarse: así nunca se desincronizan.
+La experiencia, el nivel, la racha, la actividad, la experiencia del día y los
+logros **se calculan** a partir del progreso y los envíos (`learning/` y
+`ExperienceTracker` en el backend), en lugar de guardarse: así nunca se
+desincronizan.
+
+**Tipos de ejercicio** (`kind`): `CODE` (escribir el programa), `FIX` (arreglar
+uno roto), `FILL` (completar huecos `{{?}}`), `PARSONS` (ordenar líneas
+desordenadas, con alguna que sobra), `PREDICT` (escribir qué imprime) y
+`PROJECT` (un programa más grande). Todos se corrigen ejecutando las pruebas,
+salvo `PREDICT`, que compara la respuesta con la salida esperada sin ejecutar
+nada y devuelve una pista de cuántas líneas acierta. En `FILL` y `PARSONS` el
+alumno envía las partes (`parts`) y el backend monta el programa a partir del
+código inicial (`ContentTemplates`).
+
+**Repaso espaciado**: al resolver un ejercicio, `next_review_at` se fija a un
+día después. Cada repaso superado (un envío correcto cuando ya tocaba) lo
+aleja: 3, 7, 21 y 60 días; después ya no vuelve (`ReviewSchedule`).
+
+**Celebraciones**: la respuesta de completar una lección o resolver un
+ejercicio por primera vez incluye `celebration` cuando ese paso sube de nivel o
+termina un módulo; el frontend lanza confeti y una tarjeta.
 
 ### 3.2 Convenciones
 
@@ -193,13 +213,15 @@ guardarse: así nunca se desincronizan.
 | --- | --- | --- |
 | `/` | home | Portada: hero, flujo de aprendizaje, catálogo |
 | `/languages` | courses | Catálogo de lenguajes |
-| `/languages/:languageSlug` | courses | Curso: descripción, progreso, continuar y temario |
+| `/languages/:languageSlug` | courses | Curso: progreso, continuar y temario como camino o como lista |
+| `/languages/:languageSlug/glossary` | courses | Glosario con buscador |
 | `/languages/:languageSlug/modules/:moduleSlug` | courses | Módulo: lecciones y ejercicios con su estado |
-| `/learn/:languageSlug/:moduleSlug/:lessonSlug` | learning | Lección en tres columnas |
+| `/learn/:languageSlug/:moduleSlug/:lessonSlug` | learning | Lección en tres columnas: ejemplos ejecutables, recuadros, diagramas, glosario, quiz y tutor |
 | `/practice` | practice | Catálogo de ejercicios con filtros |
 | `/practice/playground` | practice | Playground libre |
-| `/practice/:exerciseSlug` | practice | Ejercicio: enunciado, editor, entrada, consola y corrección |
-| `/dashboard` | dashboard | Panel del estudiante (requiere sesión) |
+| `/practice/visualizer` | practice | Visualizador paso a paso |
+| `/practice/:exerciseSlug` | practice | Ejercicio de cualquier tipo: enunciado, zona de trabajo, consola, corrección, repaso y tutor |
+| `/dashboard` | dashboard | Panel: meta diaria, racha en peligro, repasos, nivel, cursos, actividad y logros |
 | `/login`, `/register` | auth | Entrar y crear cuenta |
 | `**` | not-found | 404 |
 
@@ -217,12 +239,23 @@ Piezas transversales:
   error por su cuenta lo desactiva con `withoutErrorNotification()`.
 - **`AuthService`**: sesión en signals, guardada en `localStorage` hasta que
   caduca el token.
-- **`MarkdownComponent`**: renderiza lecciones (marked + highlight.js), escapa
-  el HTML crudo, genera el índice de la página y ofrece los ejemplos al
-  playground.
-- **`CodeEditorComponent`**: **CodeMirror 6**, cargado de forma diferida dentro
-  de la feature `practice`. Se eligió en lugar de Monaco porque es ESM, encaja
-  con el builder de Angular sin cargadores AMD ni workers, y pesa mucho menos.
+- **`MarkdownComponent`**: renderiza lecciones (marked + highlight.js) y escapa
+  el HTML crudo. Parte la página en trozos: HTML, ejemplos ejecutables
+  (`RunnableExampleComponent`: ejecutar, editar, paso a paso, playground) y
+  diagramas Mermaid (`MermaidDiagramComponent`, Mermaid cargado solo si hay
+  diagramas). Convierte `> [!tipo]` en recuadros, dibuja los bloques
+  ` ```memoria ` y marca la primera aparición de cada término del glosario.
+- **`CodeEditorComponent`**: **CodeMirror 6**, cargado de forma diferida. Se
+  eligió en lugar de Monaco porque es ESM, encaja con el builder de Angular sin
+  cargadores AMD ni workers, y pesa mucho menos. Subraya las líneas con errores
+  y tiene control de tamaño de letra.
+- **`java-errors.ts`** y **`FriendlyErrorsComponent`**: traducen los mensajes
+  de `javac` y las excepciones a una explicación en español con su línea.
+- **`OutputDiffComponent`**: salida esperada contra la del alumno, línea a
+  línea, con la primera diferencia marcada y una pista de la causa probable.
+- **`TraceViewerComponent`**: reproduce una traza del visualizador.
+- **`SettingsService`**: tema claro u oscuro y tamaño de letra del código, en
+  `localStorage`. **`CelebrationService`**: confeti y tarjetas de hito.
 
 ## 5. API REST
 
@@ -239,17 +272,22 @@ Prefijo `/api`. JSON. Documentación viva en `/swagger-ui.html`.
 | `GET /api/exercises/{slug}` | Enunciado, código inicial y pruebas de ejemplo | Público |
 | `POST /api/auth/register`, `POST /api/auth/login` | Alta e inicio de sesión; devuelven un JWT | Público |
 | `GET /api/auth/me` | Usuario actual | Sesión |
+| `GET /api/courses/{id}/glossary` | Glosario del curso | Público |
+| `PUT /api/auth/me/daily-goal` | Cambiar la meta diaria de XP | Sesión |
 | `POST /api/executions` | Ejecutar código en el playground | Sesión |
-| `POST /api/exercises/{slug}/submissions` | Corregir una solución contra todas las pruebas | Sesión |
+| `POST /api/executions/trace` | Ejecutar paso a paso (visualizador) | Sesión |
+| `POST /api/exercises/{slug}/submissions` | Corregir: `sourceCode` (código o predicción) o `parts` (huecos o líneas) | Sesión |
 | `GET /api/exercises/{slug}/progress` | Intentos, pistas vistas, últimos envíos | Sesión |
 | `POST /api/exercises/{slug}/hints` | Revelar la siguiente pista | Sesión |
 | `POST /api/exercises/{slug}/solution` | Ver la solución | Sesión |
 | `POST /api/progress/lessons/{id}` | Completar una lección (idempotente) | Sesión |
 | `GET /api/progress/courses/{id}` | Progreso en un curso | Sesión |
-| `GET /api/dashboard?timezone=` | XP, nivel, racha, actividad, cursos, logros | Sesión |
-| `POST /api/ai/hint`, `POST /api/ai/explain-error` | Tutor | Futuro |
+| `GET /api/dashboard?timezone=` | XP, nivel, racha, meta diaria, repasos, actividad, cursos, logros | Sesión |
+| `GET /api/tutor/status` | Si el tutor está configurado | Sesión |
+| `POST /api/tutor/explain`, `/debug`, `/review` | Tutor: otra explicación, pista de depuración, revisión | Sesión |
 
-Las ejecuciones y los envíos tienen un límite por alumno (30 y 20 por minuto).
+Las ejecuciones (también las trazas), los envíos y las preguntas al tutor
+tienen un límite por alumno (30, 20 y 6 por minuto).
 
 ### Errores
 
@@ -269,7 +307,8 @@ de llegar a un controlador, comparten este cuerpo:
 
 `error` es un código estable (`VALIDATION_ERROR`, `BAD_REQUEST`,
 `UNAUTHORIZED`, `FORBIDDEN`, `RESOURCE_NOT_FOUND`, `METHOD_NOT_ALLOWED`,
-`CONFLICT`, `TOO_MANY_REQUESTS`, `EXECUTION_UNAVAILABLE`, `INTERNAL_ERROR`).
+`CONFLICT`, `TOO_MANY_REQUESTS`, `EXECUTION_UNAVAILABLE`, `TUTOR_UNAVAILABLE`,
+`INTERNAL_ERROR`).
 `fieldErrors` solo aparece en errores de validación. Los 5xx nunca incluyen
 detalles internos, salvo `EXECUTION_UNAVAILABLE`, cuyo mensaje está escrito para
 el alumno.
@@ -293,6 +332,16 @@ La experiencia: 10 XP por lección; por ejercicio 20, 35 o 50 según la
 dificultad, 5 menos por pista vista (mínimo 5) y ninguna si se vio la solución
 antes de resolverlo.
 
+### Tutor
+
+`TutorService` llama a Claude (`claude-opus-5-5`) con el SDK oficial de Java
+(`anthropic-java`), con los fallbacks del servidor activados para que una
+petición rechazada se reintente en el modelo que recomienda Anthropic. Hay
+tres modos: explicar la lección de otra forma, dar una pista sobre un programa
+que falla sin escribir la solución, y revisar una solución correcta. Las
+instrucciones están en `TutorPrompts`. Sin `ANTHROPIC_API_KEY` el tutor queda
+apagado y el frontend oculta sus botones.
+
 ## 6. El contenido del curso
 
 Las lecciones y ejercicios se escriben como archivos y `ContentImporter` los
@@ -300,20 +349,26 @@ sincroniza con la base de datos al arrancar. El catálogo (lenguajes, cursos y
 módulos) sigue viniendo de las migraciones.
 
 ```
-content/<curso>/<NN>-<módulo>/
-├── module.yml        lecciones (slug, title, summary, minutes) y slugs de ejercicios, en orden
-├── <lección>.md      cuerpo de la lección en Markdown
-└── <ejercicio>.yml   title, summary, difficulty, statement, starter, solution, hints, tests
+content/<curso>/
+├── glossary.yml          términos del glosario
+└── <NN>-<módulo>/
+    ├── module.yml        lecciones (slug, title, summary, minutes) y slugs de ejercicios, en orden
+    ├── <lección>.md      cuerpo de la lección en Markdown
+    ├── <lección>.quiz.yml preguntas del final de la lección
+    └── <ejercicio>.yml   title, summary, difficulty, kind, statement, starter, solution, hints, tests
 ```
+
+El formato completo y las pautas de estilo están en [CONTENT.md](CONTENT.md).
 
 - Lecciones y ejercicios se casan por slug y se actualizan en el sitio; lo que
   desaparece de los archivos se despublica.
 - Un módulo con contenido se publica automáticamente.
 - En Markdown, ` ```java ` con un `main` es un ejemplo ejecutable; ` ```java
   fragment ` y ` ```java error ` son fragmentos y errores intencionados.
-- `ContentVerificationTest` ejecuta contra un code-runner real todas las
-  soluciones (deben pasar sus pruebas), los códigos iniciales y los ejemplos
-  (deben compilar).
+- `tools/verify_content.py` (y `ContentVerificationTest`, que hace lo mismo
+  desde Maven) ejecuta contra un code-runner real todas las soluciones, los
+  programas de las predicciones y de los quizzes, los códigos iniciales y los
+  ejemplos, y comprueba la estructura de cada tipo de ejercicio.
 
 ## 7. Ejecución segura de código
 
@@ -358,7 +413,24 @@ producción, el mismo contrato admite un aislamiento más fuerte sin tocar el
 backend: gVisor (`runsc`) como runtime de los contenedores, o microVMs
 Firecracker.
 
-### 7.3 Preparado para más lenguajes
+### 7.3 El visualizador paso a paso
+
+`POST /internal/traces` ejecuta el programa una vez en el mismo sandbox, pero
+con otro comando: `ForjaTracer` (en la imagen, `/opt/forja/tracer`) lanza el
+programa bajo el depurador de Java (JDI), avanza línea a línea solo por el
+código del alumno (las clases del JDK se excluyen) y escribe un JSON con cada
+paso: la línea, la pila de llamadas con sus variables, los campos `static`, los
+objetos alcanzables (arrays, listas, mapas, objetos propios, `StringBuilder`),
+lo impreso en ese paso, el valor devuelto por un método y la excepción final si
+la hubo. El código se compila con `-g` para que las variables locales tengan
+nombre. Límites propios: 400 pasos, 12 s y 4 MB de traza; un programa que los
+supera se muestra hasta donde llegó.
+
+El depurado conecta por `127.0.0.1` dentro del contenedor (que no tiene red):
+dejar que JDI eligiera la dirección le hacía buscar el nombre del host y
+esperar segundos a que fallara la resolución DNS.
+
+### 7.4 Preparado para más lenguajes
 
 El runner no sabe nada de Java salvo cómo nombrar el archivo
 (`JavaSourceLayout`). Cada lenguaje es una entrada de configuración:
@@ -405,6 +477,7 @@ Herramienta para desarrolladores, no panel genérico. Los valores viven en
 | 4 | Playground: editor, consola, ejecución segura | **Hecha** |
 | 5 | Ejercicios: pruebas, corrección, pistas, solución | **Hecha** |
 | 6 | Gamificación: XP, niveles, logros, rachas | **Hecha** (calculada; los logros no se persisten) |
-| 7 | Tutor IA: pistas, explicación de errores | Pendiente |
-| 8 | Proyectos guiados y proyecto final | Proyecto final como módulo 25; proyectos guiados pendientes |
+| 7 | Tutor IA: otra explicación, pistas de depuración, revisión | **Hecha** (necesita `ANTHROPIC_API_KEY`) |
+| 8 | Proyectos guiados y proyecto final | **Hecha**: miniproyectos en los módulos 6, 8, 9, 12 y 17, y proyecto final en el 25 |
+| 8b | Ayudas para aprender desde cero: visualizador, errores en español, quizzes, tipos de ejercicio, glosario, repaso espaciado, meta diaria | **Hecha** |
 | 9 | Nuevos lenguajes | Pendiente |

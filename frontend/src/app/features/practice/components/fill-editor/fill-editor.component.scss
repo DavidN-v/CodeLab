@@ -1,0 +1,54 @@
+:host {
+  display: block;
+  overflow: auto;
+}
+
+.fill__status {
+  padding: var(--space-2) var(--space-4);
+  color: var(--color-text-subtle);
+  font-size: var(--text-xs);
+}
+
+.fill__code {
+  margin: 0;
+  padding: var(--space-2) 0 var(--space-4);
+  overflow-x: auto;
+  color: var(--syntax-plain);
+  font-family: var(--font-mono);
+  font-size: var(--editor-font-size, var(--text-sm));
+  line-height: 2;
+}
+
+.fill__line {
+  min-height: 2em;
+  white-space: pre;
+}
+
+.fill__text {
+  white-space: pre;
+}
+
+.fill__number {
+  display: inline-block;
+  width: 3rem;
+  padding-right: var(--space-3);
+  color: var(--color-text-subtle);
+  text-align: right;
+  user-select: none;
+}
+
+.fill__blank {
+  min-width: 4ch;
+  padding: 0 0.4ch;
+  border: 1px dashed var(--color-accent);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-accent-soft);
+  color: var(--color-text);
+  font: inherit;
+
+  &:focus {
+    border-style: solid;
+    outline: none;
+    box-shadow: 0 0 0 2px var(--color-accent-soft);
+  }
+}

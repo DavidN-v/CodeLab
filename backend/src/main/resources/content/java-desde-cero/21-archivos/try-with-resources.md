@@ -4,9 +4,15 @@
 
 Lectores, escritores, conexiones de red o de base de datos son **recursos**: ocupan algo del sistema operativo (un descriptor de archivo, un socket) que hay que liberar. Si no los cierras, el programa acaba agotándolos.
 
+> [!analogia]
+> Un recurso es como un grifo: lo abres para usarlo y, si se te olvida cerrarlo, el agua se sigue gastando aunque ya no la necesites. Si dejas muchos grifos abiertos, el depósito se vacía.
+
 ## try-with-resources
 
 Los recursos declarados entre paréntesis tras `try` se cierran **automáticamente** al salir del bloque, termine bien o con una excepción:
+
+> [!analogia]
+> try-with-resources es un grifo con temporizador: cuando sales del baño, se cierra solo, tanto si sales tranquilamente como si sales corriendo.
 
 ```java
 import java.io.BufferedReader;
@@ -37,9 +43,23 @@ public class Main {
 }
 ```
 
+> [!prueba]
+> Cambia `i <= 5` por `i <= 3` y ejecuta: ¿cuántas líneas lee ahora el bucle `while`?
+
 - `readLine()` devuelve la siguiente línea, o `null` al llegar al final.
 - La condición `(linea = lector.readLine()) != null` lee y comprueba a la vez: es el patrón clásico.
 - No hay `close()` en ninguna parte: lo hace el `try`.
+
+Así funciona el bucle de lectura:
+
+```mermaid
+flowchart TD
+    A["Abrir el lector"] --> B["linea = readLine()"]
+    B --> C{"¿linea es null?"}
+    C -- No --> D["Procesar la línea"]
+    D --> B
+    C -- Sí --> E["Salir del try: se cierra solo"]
+```
 
 Puedes declarar varios recursos separados por `;` y se cierran en orden inverso.
 
@@ -118,9 +138,11 @@ public class Main {
 }
 ```
 
-## Resumen
+> [!cuidado]
+> El recurso solo existe dentro del bloque `try`. Si intentas usar `lector` o `lineas` después de la llave de cierre, no compila: ya está cerrado y fuera de alcance. Guarda en una variable de fuera lo que necesites (una suma, una lista).
 
-- Los recursos (lectores, escritores, conexiones) deben cerrarse siempre.
-- `try (Recurso r = ...) { }` los cierra automáticamente, incluso si hay excepción.
-- `BufferedReader.readLine()` lee línea a línea hasta devolver `null`.
-- `Files.lines` da un stream de líneas; ciérralo con try-with-resources.
+> [!resumen]
+> - Los recursos (lectores, escritores, conexiones) deben cerrarse siempre.
+> - `try (Recurso r = ...) { }` los cierra automáticamente, incluso si hay excepción.
+> - `BufferedReader.readLine()` lee línea a línea hasta devolver `null`.
+> - `Files.lines` da un stream de líneas; ciérralo con try-with-resources.

@@ -1,0 +1,53 @@
+questions:
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      class Instrumento {
+          String tocar() {
+              return "...";
+          }
+      }
+
+      class Guitarra extends Instrumento {
+          @Override
+          String tocar() {
+              return "rasgueo";
+          }
+      }
+
+      class Tambor extends Instrumento {
+          @Override
+          String tocar() {
+              return "pum";
+          }
+      }
+
+      public class Main {
+          public static void main(String[] args) {
+              Instrumento[] banda = {new Tambor(), new Guitarra(), new Instrumento()};
+              for (Instrumento i : banda) {
+                  System.out.println(i.tocar());
+              }
+          }
+      }
+    answer: |
+      pum
+      rasgueo
+      ...
+    explanation: 'El array es de tipo `Instrumento`, pero cada casilla guarda un objeto distinto. En cada vuelta, `i.tocar()` ejecuta la versión del objeto real: primero el tambor, luego la guitarra y por último el instrumento genérico, que no sobrescribe nada.'
+  - type: choice
+    prompt: '`Perro` tiene un método propio `traerPelota()`. Con `Animal a = new Perro();`, ¿qué pasa al escribir `a.traerPelota();`?'
+    options:
+      - No compila, porque la variable es de tipo `Animal` y `Animal` no tiene ese método
+      - Funciona, porque el objeto es un `Perro`
+      - Compila, pero lanza un error al ejecutar
+    answer: 0
+    explanation: El tipo de la **variable** decide qué métodos puedes llamar, y eso se comprueba al compilar. El tipo del **objeto** solo decide qué versión se ejecuta de un método que la variable ya permite llamar.
+  - type: choice
+    prompt: Tienes un método `avisarATodos(Notificacion[] canales, ...)` y añades una nueva clase `Whatsapp extends Notificacion`. ¿Qué hay que cambiar en `avisarATodos`?
+    options:
+      - Nada; funciona con la nueva clase gracias al polimorfismo
+      - Añadir un `if` que compruebe si el canal es un `Whatsapp`
+      - Crear una copia del método que reciba `Whatsapp[]`
+    answer: 0
+    explanation: '`avisarATodos` solo llama a `canal.enviar(...)`, y cada canal sabe enviarse a su manera. Como `Whatsapp` es una `Notificacion` y sobrescribe `enviar`, el método funciona sin tocarlo. Es el principio abierto/cerrado.'

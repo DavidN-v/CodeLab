@@ -1,0 +1,37 @@
+questions:
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      import java.util.Set;
+      import java.util.TreeSet;
+
+      public class Main {
+          public static void main(String[] args) {
+              Set<Integer> numeros = new TreeSet<>();
+              numeros.add(5);
+              numeros.add(2);
+              System.out.println(numeros.add(5));
+              numeros.add(9);
+              System.out.println(numeros + " " + numeros.size());
+          }
+      }
+    answer: |
+      false
+      [2, 5, 9] 3
+    explanation: El segundo `add(5)` devuelve `false` porque el 5 ya estaba y un `Set` no admite repetidos. Al ser un `TreeSet`, se recorre ordenado de menor a mayor.
+  - type: choice
+    prompt: Quieres quitar los repetidos de una lista de visitas **conservando el orden en que aparecieron**. ¿Qué usas?
+    options:
+      - LinkedHashSet
+      - HashSet
+      - TreeSet
+    answer: 0
+    explanation: '`LinkedHashSet` recuerda el orden de inserción. `HashSet` no garantiza ningún orden y `TreeSet` ordena alfabéticamente, que no es el orden de aparición.'
+  - type: choice
+    prompt: ¿Por qué se usa un `Set` en vez de una `List` cuando vas a preguntar muchas veces «¿está este elemento?»?
+    options:
+      - Porque `contains` en un `HashSet` es casi instantáneo, y en una lista hay que recorrerla entera
+      - Porque las listas no tienen método `contains`
+      - Porque un `Set` ocupa siempre menos memoria
+    answer: 0
+    explanation: Las listas también tienen `contains`, pero tienen que mirar elemento a elemento. Un `HashSet` va directo al sitio donde estaría el elemento.

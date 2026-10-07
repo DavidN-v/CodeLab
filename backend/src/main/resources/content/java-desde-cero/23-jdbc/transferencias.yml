@@ -139,9 +139,9 @@ solution: |
       }
   }
 hints:
-  - "Desactiva el autocommit con `c.setAutoCommit(false)` antes de los dos `UPDATE`."
-  - "Si todo va bien, `c.commit()`; en el `catch`, `c.rollback()` y vuelve a lanzar la excepción."
-  - Restaura `c.setAutoCommit(true)` en un `finally` para no afectar a lo que venga después.
+  - 'La idea: los dos `UPDATE` deben aplicarse juntos o no aplicarse ninguno. Si algo falla a mitad, hay que deshacer lo que ya se hizo.'
+  - 'Qué usar: `c.setAutoCommit(false)` para empezar la transacción, `c.commit()` para confirmar, `c.rollback()` para deshacer y un `finally` para volver a `setAutoCommit(true)`. Comprueba lo que devuelve `executeUpdate()`: 0 significa que esa cuenta no existe.'
+  - 'El plan: `setAutoCommit(false)`; dentro de un `try`, ejecuta la resta y la suma (si alguna afecta a 0 filas, lanza `SQLException`) y termina con `commit()`; en el `catch`, `rollback()` y relanza la excepción; en el `finally`, `setAutoCommit(true)`.'
 tests:
   - input: |
       cuenta ada 100

@@ -38,8 +38,9 @@ solution: |
       }
   }
 hints:
-  - Empieza con un acumulador `resultado = 1` (el neutro de la multiplicación).
-  - Multiplícalo por la base tantas veces como indique el exponente.
+  - 'La idea: elevar a un exponente es multiplicar la base por sí misma tantas veces como diga el exponente; 2^3 es 2 * 2 * 2.'
+  - 'Qué usar: un acumulador `long resultado = 1` (el 1 no cambia una multiplicación) y un bucle `for` que dé `exponente` vueltas.'
+  - 'El plan: declara `static long potencia(long base, int exponente)` → `resultado = 1` → en cada vuelta `resultado *= base;` → `return resultado;` y descomenta la línea de `main`.'
 tests:
   - input: "2 10\n"
     output: "1024\n"

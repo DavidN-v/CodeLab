@@ -95,3 +95,16 @@
   color: var(--color-text-subtle);
   font-size: 0.6875rem;
 }
+
+.results__feedback {
+  margin: var(--space-3) var(--space-4) 0;
+  padding: var(--space-2) var(--space-3);
+  border-left: 3px solid var(--color-warning);
+  background-color: color-mix(in srgb, var(--color-warning) 10%, transparent);
+  font-size: var(--text-sm);
+}
+
+.test__detail app-output-diff,
+.test__detail .test__stderr {
+  grid-column: 1 / -1;
+}

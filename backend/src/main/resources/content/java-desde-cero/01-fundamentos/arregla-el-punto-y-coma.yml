@@ -1,0 +1,52 @@
+title: Arregla los errores de compilación
+summary: Lee los mensajes del compilador y corrige un punto y coma y una comilla.
+difficulty: EASY
+kind: fix
+statement: |
+  Este programa debería imprimir tres líneas de bienvenida, pero **no llega a ejecutarse**. Al pulsar **Ejecutar**, el compilador muestra esto:
+
+  ```
+  Main.java:3: error: ';' expected
+          System.out.println("Bienvenido a Forja")
+                                                  ^
+  Main.java:4: error: unclosed string literal
+          System.out.println("Hoy es tu primer día);
+                             ^
+  2 errors
+  ```
+
+  Lee cada mensaje: te dice **la línea** y **qué esperaba** el compilador. Corrige el programa para que imprima:
+
+  ```
+  Bienvenido a Forja
+  Hoy es tu primer día
+  ¡Ánimo!
+  ```
+
+  Tranquilidad: son errores pequeños, de los que todo el mundo comete al empezar.
+starter: |
+  public class Main {
+      public static void main(String[] args) {
+          System.out.println("Bienvenido a Forja")
+          System.out.println("Hoy es tu primer día);
+          System.out.println("¡Ánimo!");
+      }
+  }
+solution: |
+  public class Main {
+      public static void main(String[] args) {
+          System.out.println("Bienvenido a Forja");
+          System.out.println("Hoy es tu primer día");
+          System.out.println("¡Ánimo!");
+      }
+  }
+hints:
+  - 'La idea: hay dos errores, uno en la línea 3 y otro en la 4. Cada mensaje te dice qué falta.'
+  - 'Qué usar: `'';'' expected` significa "falta un punto y coma". `unclosed string literal` significa "abriste un texto con comillas y no lo cerraste".'
+  - 'El plan: añade `;` al final de la línea 3, y en la línea 4 añade la comilla de cierre `"` justo después de `día`.'
+tests:
+  - output: |
+      Bienvenido a Forja
+      Hoy es tu primer día
+      ¡Ánimo!
+    sample: true

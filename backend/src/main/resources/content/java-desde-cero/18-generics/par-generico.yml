@@ -68,8 +68,9 @@ solution: |
       }
   }
 hints:
-  - "`class Par<A, B>` y dentro usa `A` y `B` como tipos de los campos."
-  - "`invertir` devuelve `new Par<>(segundo, primero)`; el diamante deduce `Par<B, A>`."
+  - 'La idea: quieres una sola clase que sirva para cualquier pareja de tipos, por ejemplo un texto y un número, sin escribir una clase para cada combinación.'
+  - 'Qué usar: `class Par<A, B>` con dos parámetros de tipo; dentro, `A` y `B` se usan como tipos de los campos, del constructor y de los getters. Para el texto, sobrescribe `toString()` con `@Override`.'
+  - 'El plan: campos `private final A primero;` y `private final B segundo;`, constructor que los rellena, getters, `Par<B, A> invertir() { return new Par<>(segundo, primero); }` y `toString()` que devuelva `"(" + primero + ", " + segundo + ")"`. En el `main`, quita los comentarios de las dos líneas.'
 tests:
   - input: "Ada 36\n"
     output: "(Ada, 36) -> (36, Ada)\n"

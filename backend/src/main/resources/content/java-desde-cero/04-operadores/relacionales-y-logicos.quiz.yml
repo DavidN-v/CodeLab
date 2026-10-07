@@ -1,0 +1,36 @@
+questions:
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int edad = 16;
+              boolean conPadres = true;
+              System.out.println(edad >= 18 && conPadres);
+              System.out.println(edad >= 18 || conPadres);
+              System.out.println(!conPadres);
+          }
+      }
+    answer: |
+      false
+      true
+      false
+    explanation: '`edad >= 18` es `false`. Con `&&` hacen falta las dos condiciones, así que da `false`; con `||` basta una (`conPadres` es `true`), así que da `true`. `!` invierte `true` en `false`.'
+  - type: choice
+    prompt: ¿Cómo se comprueba en Java que `nota` está entre 0 y 10 (ambos incluidos)?
+    options:
+      - '`nota >= 0 && nota <= 10`'
+      - '`0 <= nota <= 10`'
+      - '`nota >= 0 || nota <= 10`'
+      - '`nota => 0 && nota =< 10`'
+    answer: 0
+    explanation: 'Hay que hacer dos comparaciones y unirlas con `&&` (se deben cumplir las dos). `0 <= nota <= 10` no compila, con `||` cualquier número valdría, y `=>` / `=<` no existen: se escribe `>=` y `<=`.'
+  - type: choice
+    prompt: 'Si `divisor` vale 0, ¿qué ocurre al evaluar `divisor != 0 && 10 / divisor > 1`?'
+    options:
+      - 'Da `false` sin llegar a dividir'
+      - 'El programa falla al dividir entre cero'
+      - 'Da `true`'
+      - 'No compila'
+    answer: 0
+    explanation: 'Es el cortocircuito: como `divisor != 0` es `false`, el `&&` ya sabe que el resultado es `false` y no evalúa la división. Por eso la comprobación que protege va primero.'

@@ -140,10 +140,9 @@ solution: |
       }
   }
 hints:
-  - "Modela la prioridad con un `enum Prioridad { ALTA, MEDIA, BAJA }`: su orden natural ya es el de urgencia."
-  - "`Comparator.comparing(Tarea::prioridad).thenComparing(Tarea::limite, Comparator.nullsLast(Comparator.naturalOrder())).thenComparing(Tarea::id)` ordena con los tres criterios."
-  - Separa la lógica en una clase `Gestor` que lance excepciones con el mensaje exacto, y deja que `main` las capture y escriba `Error:` delante.
-  - "`split(\";\", -1)` conserva los campos vacíos al final, como un título vacío."
+  - 'La idea: es el gestor de la lección «Construir el gestor de tareas», con sus propios mensajes. Ve paso a paso: primero el modelo, después las reglas y al final la lectura de órdenes. Comprueba cada orden con el ejemplo antes de pasar a la siguiente.'
+  - 'Qué usar: un `enum Prioridad { ALTA, MEDIA, BAJA }` (su orden natural ya es el de urgencia), un `record Tarea`, un `LinkedHashMap<Integer, Tarea>` y el comparador `Comparator.comparing(Tarea::prioridad).thenComparing(Tarea::limite, Comparator.nullsLast(Comparator.naturalOrder())).thenComparing(Tarea::id)`. Usa `split(";", -1)` para conservar un título vacío.'
+  - 'El plan: crea una clase `Gestor` cuyos métodos lancen excepciones con el mensaje exacto (`título vacío`, `prioridad no válida`, `no existe la tarea #<id>`…). En `main`, lee cada línea, decide la orden con un `switch` sobre `partes[0]` y envuélvelo en un `try`/`catch` que escriba `Error: ` + el mensaje.'
 tests:
   - input: |
       añadir;Estudiar streams;alta;2026-10-10

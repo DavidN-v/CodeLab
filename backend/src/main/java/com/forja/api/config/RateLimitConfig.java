@@ -23,4 +23,10 @@ public class RateLimitConfig {
 		return new RateLimiter(20, Duration.ofMinutes(1), clock);
 	}
 
+	/** Each tutor answer is a paid model call: a few per minute is plenty for a learner. */
+	@Bean
+	RateLimiter tutorRateLimiter(Clock clock) {
+		return new RateLimiter(6, Duration.ofMinutes(1), clock);
+	}
+
 }

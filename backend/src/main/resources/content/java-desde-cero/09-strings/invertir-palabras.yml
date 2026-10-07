@@ -34,8 +34,9 @@ solution: |
       }
   }
 hints:
-  - Quita los espacios de los extremos con `strip()` antes de dividir.
-  - "`split(\"\\\\s+\")` trata varios espacios seguidos como un solo separador."
+  - 'La idea: parte la frase en palabras, como cortar una barra de pan, y después recoge los trozos empezando por el último.'
+  - 'Qué usar: `strip()` para quitar los espacios de los extremos, `split("\s+")` para que varios espacios seguidos cuenten como un solo separador, y un `StringBuilder`.'
+  - 'El plan: `palabras = linea.strip().split("\s+");` → recorre de `palabras.length - 1` a 0 → añade cada palabra y un espacio solo si `i > 0` → imprime.'
 tests:
   - input: "  hola   mundo de Java \n"
     output: "Java de mundo hola\n"

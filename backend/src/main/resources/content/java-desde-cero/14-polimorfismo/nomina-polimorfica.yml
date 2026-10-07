@@ -121,8 +121,9 @@ solution: |
       }
   }
 hints:
-  - "Una vez creados, recorre la lista sin preguntar el tipo de nadie: `t.pagoMensual()` ya hace lo correcto."
-  - "Para las horas extra: `Math.max(0, horas - 160)`."
+  - 'La idea: cada tipo de trabajador calcula su pago de forma distinta, pero al final todos responden a la misma pregunta: «¿cuánto cobras este mes?».'
+  - 'Qué usar: una clase abstracta `Trabajador` con el nombre, un getter y `abstract int pagoMensual();`, tres subclases con `@Override`, y `Math.min`/`Math.max` para separar las horas normales de las extra.'
+  - 'El plan: crea cada trabajador según el tipo y guárdalo en la lista. Luego recórrela sin preguntar el tipo de nadie: imprime `t.pagoMensual()`, súmalo al total y quédate con el mayor solo si su pago es estrictamente mayor (así gana el primero en caso de empate).'
 tests:
   - input: |
       Fijo Ada 2500

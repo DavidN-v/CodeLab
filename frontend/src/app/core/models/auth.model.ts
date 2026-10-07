@@ -2,6 +2,8 @@ export interface User {
   id: number;
   email: string;
   displayName: string;
+  /** Experience per day the learner aims for. */
+  dailyGoalXp: number;
 }
 
 /** Mirrors the API's AuthResponse. */

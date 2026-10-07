@@ -81,9 +81,9 @@ solution: |
       }
   }
 hints:
-  - "`raiz.resolve(\"src/App.java\")` construye la ruta completa, y `getParent()` la carpeta que hay que crear."
-  - "`Files.walk(raiz)` incluye la propia raíz; ordénalo con `sorted()` y ciérralo con try-with-resources."
-  - "`raiz.relativize(ruta).getNameCount()` te dice a cuántos niveles de la raíz está cada ruta."
+  - 'La idea: primero construyes el árbol en el disco (carpetas y archivos dentro de `proyecto`) y después lo recorres para dibujarlo con sangría según la profundidad.'
+  - 'Qué usar: `raiz.resolve(ruta)` y `getParent()` para saber qué carpeta crear con `Files.createDirectories`; `Files.walk(raiz)` en un try-with-resources con `sorted()`; `raiz.relativize(ruta).getNameCount()` da el nivel.'
+  - 'El plan: por cada línea, crea las carpetas del padre y escribe el archivo; recoge `Files.walk(raiz).sorted().toList()`; para cada ruta, sangría `"  ".repeat(nivel)` (ninguna para la raíz), nombre con `getFileName()` y `/` si `Files.isDirectory`; cuenta carpetas y archivos y escribe el total.'
 tests:
   - input: |
       src/App.java

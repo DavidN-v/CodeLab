@@ -1,5 +1,8 @@
 **JUnit** es la biblioteca de pruebas estándar del ecosistema Java. En un proyecto real las pruebas viven en `src/test/java` y las ejecuta Maven o tu IDE con un clic. En esta plataforma JUnit está disponible y las lanzarás desde un `main`, como verás abajo.
 
+> [!analogia]
+> JUnit es como el profesor que corrige un examen con la hoja de respuestas: tú escribes las preguntas y las respuestas esperadas (las pruebas), y JUnit recorre tu código y marca cada una como bien o mal.
+
 ## Tu primera clase de pruebas
 
 ```java fragment
@@ -23,7 +26,10 @@ class CalculadoraTest {
 - Cada método marcado con `@Test` es una prueba independiente.
 - Por convención, la clase de pruebas se llama como la clase probada más `Test`.
 - Nombra los métodos describiendo el comportamiento: `sumaDosNumerosPositivos`, `rechazaUnaNotaNegativa`.
-- `assertEquals(esperado, obtenido)`: el **esperado va primero**. Si los inviertes, el mensaje de error confundirá.
+- `assertEquals(esperado, obtenido)`: el **esperado va primero**.
+
+> [!cuidado]
+> Si escribes `assertEquals(resultado, 5)`, la prueba funciona igual, pero cuando falle el mensaje dirá «se esperaba 7 pero fue 5» al revés de como es, y te confundirá.
 
 ## Las aserciones más usadas
 
@@ -111,14 +117,19 @@ public class Main {
 }
 ```
 
-Cambia algo en `Cuenta` (por ejemplo, quita la comprobación del saldo) y vuelve a ejecutar: verás qué prueba lo detecta.
+> [!prueba]
+> Borra el `if` de `retirar` (la comprobación del saldo) y vuelve a ejecutar: verás `2/3 pruebas superadas` y qué prueba lo detecta.
 
 ## El ciclo de vida
+
+> [!analogia]
+> `@BeforeEach` es como limpiar la mesa antes de cada comida: así lo que quedó de la anterior no estropea la siguiente.
 
 - `@BeforeEach`: se ejecuta antes de **cada** prueba. Ideal para preparar un objeto nuevo, de modo que las pruebas no dependan unas de otras.
 - `@AfterEach`: después de cada prueba (liberar recursos).
 - `@BeforeAll` / `@AfterAll`: una vez para toda la clase (métodos `static`).
 
+> [!idea]
 > **Las pruebas deben ser independientes.** JUnit no garantiza el orden en que las ejecuta; si una depende del estado que dejó otra, fallará de forma aleatoria.
 
 ## Probar excepciones
@@ -131,9 +142,8 @@ IllegalArgumentException error = assertThrows(IllegalArgumentException.class,
 assertEquals("Denominador cero", error.getMessage());
 ```
 
-## Resumen
-
-- Cada `@Test` es una prueba independiente; nómbrala por el comportamiento.
-- `assertEquals(esperado, real)`, `assertTrue`, `assertThrows` y compañía.
-- `@BeforeEach` prepara un estado limpio para cada prueba.
-- Aquí las lanzas desde `main` con `LauncherFactory`; en un proyecto, con Maven o el IDE.
+> [!resumen]
+> - Cada `@Test` es una prueba independiente; nómbrala por el comportamiento.
+> - `assertEquals(esperado, real)`, `assertTrue`, `assertThrows` y compañía.
+> - `@BeforeEach` prepara un estado limpio para cada prueba.
+> - Aquí las lanzas desde `main` con `LauncherFactory`; en un proyecto, con Maven o el IDE.

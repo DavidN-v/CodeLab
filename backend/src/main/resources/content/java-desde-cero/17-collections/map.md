@@ -1,5 +1,8 @@
 Un `Map` asocia **claves** con **valores**: un DNI con una persona, una palabra con su definición, un producto con su stock. Las claves son únicas; los valores pueden repetirse.
 
+> [!analogia]
+> Un `Map` es como un diccionario de papel: buscas la palabra (la **clave**) y lees su definición (el **valor**). No hay dos entradas con la misma palabra, pero dos palabras sí pueden tener la misma definición.
+
 ## HashMap
 
 ```java
@@ -23,6 +26,12 @@ public class Main {
 ```
 
 `Map<String, Integer>`: el primer tipo es el de las claves y el segundo el de los valores. Buscar por clave (`get`, `containsKey`) es casi instantáneo, como en un `HashSet`.
+
+> [!prueba]
+> Cambia `stock.put("manzanas", 35)` por `stock.put("Manzanas", 35)` y vuelve a ejecutar: ¿qué pasa? Ahora son dos claves distintas, así que el mapa acaba con un elemento más.
+
+> [!cuidado]
+> `get` de una clave que no existe devuelve `null`. Si haces `int n = stock.get("kiwis");` el programa lanza `NullPointerException`. Usa `getOrDefault` o comprueba antes con `containsKey`.
 
 ## Recorrer un Map
 
@@ -69,6 +78,9 @@ public class Main {
 
 `merge(clave, 1, Integer::sum)` significa: si la clave no está, ponle 1; si está, súmale 1. Es equivalente a `cuenta.put(palabra, cuenta.getOrDefault(palabra, 0) + 1)`.
 
+> [!idea]
+> Para contar cosas, piensa en un `Map` de «cosa» a «cuántas veces».
+
 ## Agrupar en listas
 
 ```java
@@ -100,9 +112,8 @@ public class Main {
 | Buscar un valor a partir de una clave | `Map` (`HashMap`) |
 | Lo mismo pero ordenado | `TreeSet` / `TreeMap` |
 
-## Resumen
-
-- `Map<K, V>`: `put`, `get`, `getOrDefault`, `containsKey`, `remove`.
-- Recorre con `entrySet()`, `keySet()` o `forEach((k, v) -> ...)`.
-- `merge` para contar y `computeIfAbsent` para agrupar.
-- `HashMap` sin orden, `LinkedHashMap` por inserción, `TreeMap` ordenado por clave.
+> [!resumen]
+> - `Map<K, V>`: `put`, `get`, `getOrDefault`, `containsKey`, `remove`.
+> - Recorre con `entrySet()`, `keySet()` o `forEach((k, v) -> ...)`.
+> - `merge` para contar y `computeIfAbsent` para agrupar.
+> - `HashMap` sin orden, `LinkedHashMap` por inserción, `TreeMap` ordenado por clave.

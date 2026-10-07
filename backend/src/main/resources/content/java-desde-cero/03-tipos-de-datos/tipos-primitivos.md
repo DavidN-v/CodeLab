@@ -1,4 +1,7 @@
-Java tiene **ocho tipos primitivos**: los ladrillos con los que se construye todo lo demás. Guardan un valor simple directamente, sin objetos de por medio.
+Java tiene **ocho tipos primitivos**: los ladrillos con los que se construye todo lo demás. Guardan un valor simple directamente en la variable, sin objetos de por medio.
+
+> [!analogia]
+> Los tipos son como recipientes de cocina de distintos tamaños y formas: una huevera (`boolean`, solo sí o no), un vaso pequeño (`byte`), una jarra (`int`), un barreño (`long`)… Cada uno guarda un tipo de cosa y hasta cierta cantidad.
 
 ## Los ocho primitivos
 
@@ -13,9 +16,12 @@ Java tiene **ocho tipos primitivos**: los ladrillos con los que se construye tod
 | `char` | Un carácter Unicode | 16 bits | `'a'`, `'Ñ'`, `'7'`… |
 | `boolean` | Verdadero o falso | — | `true` / `false` |
 
-En la práctica usarás casi siempre **`int`** para enteros, **`double`** para decimales, **`boolean`** para sí/no y **`char`** para caracteres sueltos. `long` cuando los números pueden superar los 2 100 millones (milisegundos, identificadores grandes, poblaciones).
+> [!idea]
+> En la práctica usarás casi siempre **`int`** para enteros, **`double`** para decimales, **`boolean`** para sí/no y **`char`** para caracteres sueltos. `long`, cuando los números pueden superar los 2 100 millones.
 
 ## Literales: cómo se escribe cada valor
+
+Un **literal** es un valor escrito directamente en el código, como `42` o `'J'`.
 
 ```java
 public class Main {
@@ -34,9 +40,28 @@ public class Main {
 }
 ```
 
+Cada primitivo vive dentro de su propia caja en la pila (*stack*), la zona de memoria de las variables del método:
+
+```memoria
+stack main
+entero: 42
+grande: 9000000000
+decimal: 3.14
+corto: 3.14
+letra: 'J'
+activo: true
+conGuiones: 1000000
+```
+
 - Un número sin punto es `int`; con punto, `double`.
 - Para `long` añade `L`; para `float`, `f`.
-- `char` va entre **comillas simples** y contiene exactamente un carácter. `"J"` (dobles) es un `String`, no un `char`.
+- `char` va entre **comillas simples** y contiene exactamente un carácter.
+
+> [!cuidado]
+> `'J'` (comillas simples) es un `char`; `"J"` (comillas dobles) es un `String`. `char letra = "J";` no compila: `incompatible types`.
+
+> [!prueba]
+> Quita la `L` de `9_000_000_000L` y ejecuta. El compilador dice `integer number too large`: sin la `L`, Java intenta meterlo en un `int`, donde no cabe. Vuelve a ponerla.
 
 ## Desbordamiento: cuando no cabe
 
@@ -54,6 +79,9 @@ public class Main {
 
 Imprime `2147483647` y luego `-2147483648`. Si trabajas con cantidades grandes, usa `long`.
 
+> [!analogia]
+> Es como el cuentakilómetros de un coche antiguo: al pasar de 99999 vuelve a 00000. El número sigue "funcionando", pero ya no es el de verdad.
+
 ## La precisión de los decimales
 
 `double` guarda los decimales en binario, y muchos números (como 0,1) no tienen representación exacta:
@@ -68,7 +96,7 @@ public class Main {
 
 Imprime `0.30000000000000004`. Para la mayoría de cálculos da igual, pero **nunca uses `double` para dinero real**: para eso existe `BigDecimal`, que verás más adelante.
 
-## Valores por defecto y char como número
+## char como número
 
 Un `char` es en el fondo un número (su código Unicode), por eso se puede operar con él:
 
@@ -82,8 +110,7 @@ public class Main {
 }
 ```
 
-## Resumen
-
-- Ocho primitivos; los habituales son `int`, `double`, `boolean` y `char`.
-- `long` lleva `L`, `float` lleva `f`, `char` va entre comillas simples.
-- Los enteros se desbordan en silencio; los `double` no son exactos.
+> [!resumen]
+> - Ocho primitivos; los habituales son `int`, `double`, `boolean` y `char`.
+> - `long` lleva `L`, `float` lleva `f`, `char` va entre comillas simples.
+> - Los enteros se desbordan en silencio; los `double` no son exactos.

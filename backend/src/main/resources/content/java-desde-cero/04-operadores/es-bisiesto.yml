@@ -30,8 +30,9 @@ solution: |
       }
   }
 hints:
-  - "\"Divisible entre 4\" se escribe `anio % 4 == 0`."
-  - "Es bisiesto si (divisible entre 4 y no entre 100) o si es divisible entre 400."
+  - 'La idea: traduce la regla a preguntas de sí o no. «Divisible entre 4» significa que al dividir entre 4 no sobra nada.'
+  - 'Qué usar: el resto `%` comparado con 0 (`anio % 4 == 0`), `!=` para «no divisible», y `&&` y `||` para combinar. Los paréntesis dejan claro qué va junto.'
+  - 'El plan: bisiesto = (divisible entre 4 Y NO divisible entre 100) O divisible entre 400. Cada «divisible entre X» es una comparación del resto con 0.'
 tests:
   - input: "2024\n"
     output: "true\n"

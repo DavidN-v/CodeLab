@@ -1,0 +1,32 @@
+questions:
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              String texto = "12";
+              int numero = Integer.parseInt(texto);
+              System.out.println(texto + 1);
+              System.out.println(numero + 1);
+          }
+      }
+    answer: |
+      121
+      13
+    explanation: '`texto` es un `String`, así que `+ 1` pega un 1 detrás: "121". `numero` es un `int` de verdad gracias a `parseInt`, así que `+ 1` suma: 13.'
+  - type: choice
+    prompt: ¿Cómo compruebas si dos `String`, `a` y `b`, tienen el mismo texto?
+    options:
+      - '`a.equals(b)`'
+      - '`a == b`'
+      - '`a = b`'
+    answer: 0
+    explanation: '`equals` compara el contenido. `==` compara si son el mismo objeto, y dos textos iguales pueden ser objetos distintos. `=` no compara: asigna.'
+  - type: choice
+    prompt: ¿Qué valor devuelve `"Hola mundo".length()`?
+    options:
+      - '`10`'
+      - '`9`'
+      - '`2`'
+    answer: 0
+    explanation: '`length()` cuenta todos los caracteres, también el espacio: 4 de "Hola" + 1 espacio + 5 de "mundo" = 10.'

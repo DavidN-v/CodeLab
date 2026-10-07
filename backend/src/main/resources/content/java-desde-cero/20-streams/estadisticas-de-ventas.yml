@@ -72,8 +72,9 @@ solution: |
       }
   }
 hints:
-  - "`mapToInt(Venta::unidades).sum()` y `mapToDouble(Venta::importe).sum()` dan los totales."
-  - "`max(Comparator.comparingInt(Venta::unidades))` funciona, pero en un empate no garantiza quedarse con el primero; un `reduce` que solo cambie si la otra venta es estrictamente mayor sí lo hace."
+  - 'La idea: cada dato del informe es un resumen distinto de la misma lista de ventas: una cuenta, dos sumas, un máximo y una división.'
+  - 'Qué usar: `mapToInt(Venta::unidades).sum()`, `mapToDouble(Venta::importe).sum()` y, para el más vendido, un `reduce` que solo cambie de venta si la otra tiene estrictamente más unidades (así gana la primera en un empate).'
+  - 'El plan: si la lista está vacía, imprime `Sin ventas` y `return`; si no, calcula los totales, `reduce((mejor, otra) -> otra.unidades() > mejor.unidades() ? otra : mejor)` para el más vendido, e imprime con `printf("%.2f%n", ...)` los importes.'
 tests:
   - input: |
       café 3 1.50

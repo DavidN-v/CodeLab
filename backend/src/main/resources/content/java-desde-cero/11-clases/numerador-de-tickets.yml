@@ -61,8 +61,9 @@ solution: |
       }
   }
 hints:
-  - Un campo `private static int` es compartido por todos los tickets; increméntalo en el constructor.
-  - Copia su valor a un campo de instancia `numero` para que cada ticket recuerde el suyo.
+  - 'La idea: hay un número que comparten todos los tickets (el último emitido) y otro que es de cada ticket (el suyo).'
+  - 'Qué usar: un campo `private static int ultimoNumero` compartido y un campo de instancia `private final int numero`.'
+  - 'El plan: en el constructor haz `ultimoNumero++;` y copia su valor a `this.numero`. `texto()` devuelve `"Ticket " + numero + ": " + cliente` y `static int emitidos()` devuelve `ultimoNumero`.'
 tests:
   - input: |
       Ada

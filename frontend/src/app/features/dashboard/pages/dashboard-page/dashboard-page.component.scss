@@ -175,3 +175,20 @@
   color: var(--color-text-muted);
   font-size: var(--text-xs);
 }
+
+.risk {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-warning);
+  border-radius: var(--radius-md);
+  background-color: color-mix(in srgb, var(--color-warning) 12%, transparent);
+}
+
+.reviews .rows {
+  margin-top: var(--space-3);
+}

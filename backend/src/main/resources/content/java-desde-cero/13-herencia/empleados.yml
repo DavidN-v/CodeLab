@@ -109,8 +109,9 @@ solution: |
       }
   }
 hints:
-  - "`class Gerente extends Empleado` y, en su constructor, `super(nombre, base);` como primera línea."
-  - "En el `sueldo()` sobrescrito, `super.sueldo()` te da el sueldo base."
+  - 'La idea: un gerente es un empleado que, además, cobra un bonus. Lo común ya está en `Empleado`; solo tienes que añadir lo nuevo.'
+  - 'Qué usar: `class Gerente extends Empleado`, un campo `bonus`, `super(nombre, base)` en el constructor y `@Override` en `sueldo()`.'
+  - 'El plan: en el constructor, primero `super(nombre, base);` y después `this.bonus = bonus;`. En `sueldo()`, devuelve `super.sueldo() + bonus`. Por último, en el `main` crea `new Gerente(nombre, base, bonus)`.'
 tests:
   - input: |
       empleado Ada 2000

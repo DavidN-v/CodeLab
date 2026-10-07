@@ -1,0 +1,88 @@
+title: Ordena la clase Libro
+summary: Coloca en orden los campos, el constructor y un método de una clase.
+difficulty: EASY
+kind: parsons
+statement: |
+  Ordena las líneas para completar la clase `Libro`. Debe tener:
+
+  1. Dos campos privados y `final`: `titulo` (texto) y `paginas` (entero).
+  2. Un constructor que reciba los dos datos y los guarde en los campos con `this`.
+  3. Un método `String ficha()` que devuelva `<titulo> (<paginas> págs.)`.
+
+  El `main` ya lee un título (una línea) y un número de páginas (otra línea), crea el libro e imprime su ficha.
+
+  Cuidado: sobran algunas líneas.
+starter: |
+  import java.util.Scanner;
+
+  class Libro {
+  {{lines}}
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          String titulo = entrada.nextLine();
+          int paginas = Integer.parseInt(entrada.nextLine().trim());
+          Libro libro = new Libro(titulo, paginas);
+          System.out.println(libro.ficha());
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  class Libro {
+      private final String titulo;
+      private final int paginas;
+      Libro(String titulo, int paginas) {
+          this.titulo = titulo;
+          this.paginas = paginas;
+      }
+      String ficha() {
+          return titulo + " (" + paginas + " págs.)";
+      }
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          String titulo = entrada.nextLine();
+          int paginas = Integer.parseInt(entrada.nextLine().trim());
+          Libro libro = new Libro(titulo, paginas);
+          System.out.println(libro.ficha());
+      }
+  }
+lines:
+  - '    private final String titulo;'
+  - '    private final int paginas;'
+  - '    Libro(String titulo, int paginas) {'
+  - '        this.titulo = titulo;'
+  - '        this.paginas = paginas;'
+  - '    }'
+  - '    String ficha() {'
+  - '        return titulo + " (" + paginas + " págs.)";'
+  - '    }'
+distractors:
+  - '        titulo = titulo;'
+  - '    void Libro(String titulo, int paginas) {'
+hints:
+  - 'La idea: una clase suele ir en este orden: primero los campos, después el constructor y al final los métodos.'
+  - 'Qué usar: el constructor se llama como la clase y no lleva tipo de retorno (ni `void`); `this.titulo` es el campo y `titulo` el parámetro.'
+  - 'El plan: las dos líneas `private final`, luego `Libro(String titulo, int paginas) {` con sus dos asignaciones `this.x = x;` y su `}`, y por último `ficha()` con su `return`.'
+tests:
+  - input: |
+      Rayuela
+      600
+    output: |
+      Rayuela (600 págs.)
+    sample: true
+  - input: |
+      El principito
+      96
+    output: |
+      El principito (96 págs.)
+  - input: |
+      Cien años de soledad
+      471
+    output: |
+      Cien años de soledad (471 págs.)

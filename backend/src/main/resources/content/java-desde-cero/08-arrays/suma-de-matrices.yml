@@ -70,8 +70,9 @@ solution: |
       }
   }
 hints:
-  - Lee la matriz con dos bucles anidados.
-  - "Para la columna `c` suma `m[f][c]` variando `f`; para la diagonal, `m[i][i]`."
+  - 'La idea: una fila se suma moviéndote a lo ancho; una columna, moviéndote hacia abajo; la diagonal, bajando y avanzando a la vez.'
+  - 'Qué usar: dos bucles `for` anidados para leer la matriz y para sumar. Fila `i` → `m[i][j]` variando `j`; columna `i` → `m[j][i]` variando `j`; diagonal → `m[i][i]`.'
+  - 'El plan: lee la matriz → para cada `i`, calcula `sumaFila` y `sumaColumna` con un bucle interior en `j` y añádelas a sus líneas → suma `m[i][i]` a la diagonal → imprime las tres líneas.'
 tests:
   - input: "3\n1 2 3\n4 5 6\n7 8 9\n"
     output: |

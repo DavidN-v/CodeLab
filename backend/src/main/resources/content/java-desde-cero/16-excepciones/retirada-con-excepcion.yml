@@ -78,8 +78,9 @@ solution: |
       }
   }
 hints:
-  - "`class SaldoInsuficienteException extends RuntimeException` con un campo `faltan` y un getter."
-  - Valida primero la cantidad y después el saldo, para que una cantidad inválida no se confunda con falta de saldo.
+  - 'La idea: el cajero rechaza una retirada lanzando una excepción, y tu propia excepción lleva dentro el dato útil: cuánto falta.'
+  - 'Qué usar: `class SaldoInsuficienteException extends RuntimeException` con un campo `faltan` y su getter, `throw new ...` en `retirar`, y dos `catch` en el `main` (primero el de tu excepción).'
+  - 'El plan: en `retirar`, valida primero `cantidad <= 0 || cantidad % 10 != 0` (lanza `IllegalArgumentException`), después `cantidad > saldo` (lanza `new SaldoInsuficienteException(cantidad - saldo)`), y si no, resta. En el `main`, `while (entrada.hasNextInt())` con `try`/`catch` y al final `Saldo: <saldo>`.'
 tests:
   - input: "100 30 25 90 70\n"
     output: |

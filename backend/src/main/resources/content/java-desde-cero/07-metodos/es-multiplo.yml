@@ -1,0 +1,67 @@
+title: ¿Es múltiplo?
+summary: Completa un método que devuelve true o false.
+difficulty: EASY
+kind: fill
+statement: |
+  Completa los huecos para que el método `esMultiplo(a, b)` **devuelva** `true` si `a` es múltiplo de `b` (es decir, si `a` entre `b` da resto 0) y `false` si no.
+
+  El `main` lee dos enteros (`b` nunca es 0) y escribe `sí` o `no`.
+
+  **Ejemplos:** `12 4` → `sí`; `10 3` → `no`.
+starter: |
+  import java.util.Scanner;
+
+  public class Main {
+      static {{?}} esMultiplo(int a, int b) {
+          {{?}} a {{?}} b == 0;
+      }
+
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int a = entrada.nextInt();
+          int b = entrada.nextInt();
+          if ({{?}}) {
+              System.out.println("sí");
+          } else {
+              System.out.println("no");
+          }
+      }
+  }
+answers:
+  - boolean
+  - return
+  - '%'
+  - esMultiplo(a, b)
+solution: |
+  import java.util.Scanner;
+
+  public class Main {
+      static boolean esMultiplo(int a, int b) {
+          return a % b == 0;
+      }
+
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int a = entrada.nextInt();
+          int b = entrada.nextInt();
+          if (esMultiplo(a, b)) {
+              System.out.println("sí");
+          } else {
+              System.out.println("no");
+          }
+      }
+  }
+hints:
+  - 'La idea: el método responde a una pregunta de sí o no, así que devuelve un valor verdadero o falso.'
+  - 'Qué usar: el tipo `boolean` para el resultado, `return` para devolverlo y el operador `%`, que da el resto de una división.'
+  - 'El plan: la cabecera es `static boolean esMultiplo(...)`, el cuerpo `return a % b == 0;` y en el `if` llama al método con `esMultiplo(a, b)`.'
+tests:
+  - input: "12 4\n"
+    output: "sí\n"
+    sample: true
+  - input: "10 3\n"
+    output: "no\n"
+  - input: "0 7\n"
+    output: "sí\n"
+  - input: "-9 3\n"
+    output: "sí\n"

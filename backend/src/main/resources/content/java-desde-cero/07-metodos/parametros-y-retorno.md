@@ -2,6 +2,9 @@
 
 En Java, al llamar a un método se pasa una **copia** del valor de cada argumento. Si el método modifica su parámetro, la variable original no cambia:
 
+> [!analogia]
+> Es como darle a alguien una fotocopia de tu examen. Puede tachar y escribir lo que quiera en la fotocopia: tu original sigue intacto.
+
 ```java
 public class Main {
     static void duplicar(int n) {
@@ -17,13 +20,29 @@ public class Main {
 }
 ```
 
-Imprime `Dentro: 10` y `Fuera: 5`. Si quieres el valor nuevo, **devuélvelo** y asígnalo: `numero = duplicar(numero);`.
+Imprime `Dentro: 10` y `Fuera: 5`. Mientras `duplicar` se ejecuta, cada método tiene su propio marco en la pila con sus propias variables:
 
+```memoria
+stack main
+numero: 5
+stack duplicar
+n: 10
+```
+
+Si quieres el valor nuevo, **devuélvelo** y asígnalo: `numero = duplicar(numero);`.
+
+> [!prueba]
+> Cambia el método para que sea `static int duplicar(int n)`, añade `return n;` al final y en `main` escribe `numero = duplicar(numero);`. Ejecuta: ¿qué imprime ahora «Fuera»?
+
+> [!idea]
 > Con objetos y arrays se copia la *referencia* (la dirección del objeto), así que un método sí puede modificar el contenido de un array que recibe. Lo verás en el módulo de Arrays.
 
 ## Variables locales
 
 Las variables declaradas dentro de un método (incluidos sus parámetros) son **locales**: nacen al llamarlo y desaparecen al terminar. Dos métodos pueden tener variables con el mismo nombre sin interferir:
+
+> [!analogia]
+> Cada método es una habitación con su propia pizarra. Que en dos habitaciones haya una pizarra que pone «resultado» no las convierte en la misma pizarra.
 
 ```java
 public class Main {
@@ -39,9 +58,15 @@ public class Main {
 }
 ```
 
+> [!cuidado]
+> Desde `main` no puedes usar `a` ni `b`: solo existen dentro de `sumar`. Si lo intentas, verás el error `cannot find symbol`.
+
 ## Sobrecarga
 
 Varios métodos pueden llamarse igual si sus parámetros son distintos (en número o en tipo). Java elige cuál ejecutar según los argumentos:
+
+> [!analogia]
+> Como el verbo «abrir»: abrir una puerta, abrir una lata y abrir un libro se dicen igual, pero cada uno se hace de forma distinta según lo que tengas en la mano.
 
 ```java
 public class Main {
@@ -97,6 +122,9 @@ public class Main {
 
 Fíjate en que `esPar` devuelve directamente la condición, en vez de `if (n % 2 == 0) return true; else return false;`.
 
+> [!prueba]
+> Cambia `contarPares(1, 10)` por `contarPares(1, 15)` y ejecuta. ¿Te sale el número que esperabas?
+
 ## Documentar un método
 
 Para métodos importantes, un comentario `/** ... */` (Javadoc) explica qué hace, qué recibe y qué devuelve:
@@ -113,9 +141,8 @@ static double aplicarDescuento(double precio, double porcentaje) {
 }
 ```
 
-## Resumen
-
-- Java pasa los argumentos **por valor**: el método recibe copias.
-- Las variables de un método son locales a él.
-- La sobrecarga permite varios métodos con el mismo nombre y distintos parámetros.
-- Construye métodos grandes combinando métodos pequeños.
+> [!resumen]
+> - Java pasa los argumentos **por valor**: el método recibe copias.
+> - Las variables de un método son locales a él.
+> - La sobrecarga permite varios métodos con el mismo nombre y distintos parámetros.
+> - Construye métodos grandes combinando métodos pequeños.

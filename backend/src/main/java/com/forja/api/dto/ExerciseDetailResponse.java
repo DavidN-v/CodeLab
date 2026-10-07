@@ -1,6 +1,7 @@
 package com.forja.api.dto;
 
 import com.forja.api.entity.Difficulty;
+import com.forja.api.entity.ExerciseKind;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 
@@ -11,8 +12,10 @@ public record ExerciseDetailResponse(
 		@Schema(example = "Intercambiar valores") String title,
 		String summary,
 		Difficulty difficulty,
+		ExerciseKind kind,
 		@Schema(description = "Statement in CommonMark.") String statementMarkdown,
-		String starterCode,
+		@Schema(description = "Starting code. FILL: the program with {{?}} blanks. PARSONS: the skeleton with a {{lines}} line. PREDICT: the program to read.") String starterCode,
+		@Schema(description = "PARSONS only: the lines to order, shuffled, including some that do not belong.") List<String> parsonsLines,
 		List<SampleTestResponse> samples,
 		@Schema(description = "Sample and hidden test cases together.", example = "5") int totalTests,
 		@Schema(example = "3") int hintCount,

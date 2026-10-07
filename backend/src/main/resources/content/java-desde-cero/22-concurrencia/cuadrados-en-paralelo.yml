@@ -1,0 +1,92 @@
+title: Cuadrados en paralelo
+summary: Arregla un programa con futuros que no compila y que suma mal.
+difficulty: MEDIUM
+kind: fix
+statement: |
+  La entrada es un número `n`. El programa calcula el cuadrado de cada número de 1 a `n`, cada uno en una tarea distinta enviada a un `ExecutorService`. Después escribe `El cuadrado de <i> es <cuadrado>` para cada número, en orden, y al final `Total: <suma de todos los cuadrados>`.
+
+  Tiene dos problemas:
+
+  1. **No compila**: el compilador se queja de una variable usada dentro de la lambda.
+  2. Cuando lo arreglas, el `Total` sale mal: con `n = 3` escribe `Total: 9` en lugar de `Total: 14`.
+
+  Encuentra y corrige los dos errores.
+starter: |
+  import java.util.ArrayList;
+  import java.util.List;
+  import java.util.Scanner;
+  import java.util.concurrent.ExecutorService;
+  import java.util.concurrent.Executors;
+  import java.util.concurrent.Future;
+
+  public class Main {
+      public static void main(String[] args) throws Exception {
+          Scanner entrada = new Scanner(System.in);
+          int n = entrada.nextInt();
+          List<Future<Long>> futuros = new ArrayList<>();
+          try (ExecutorService ejecutor = Executors.newFixedThreadPool(4)) {
+              for (int i = 1; i <= n; i++) {
+                  futuros.add(ejecutor.submit(() -> (long) i * i));
+              }
+              long total = 0;
+              for (int i = 0; i < n; i++) {
+                  long cuadrado = futuros.get(i).get();
+                  System.out.println("El cuadrado de " + (i + 1) + " es " + cuadrado);
+                  total = cuadrado;
+              }
+              System.out.println("Total: " + total);
+          }
+      }
+  }
+solution: |
+  import java.util.ArrayList;
+  import java.util.List;
+  import java.util.Scanner;
+  import java.util.concurrent.ExecutorService;
+  import java.util.concurrent.Executors;
+  import java.util.concurrent.Future;
+
+  public class Main {
+      public static void main(String[] args) throws Exception {
+          Scanner entrada = new Scanner(System.in);
+          int n = entrada.nextInt();
+          List<Future<Long>> futuros = new ArrayList<>();
+          try (ExecutorService ejecutor = Executors.newFixedThreadPool(4)) {
+              for (int i = 1; i <= n; i++) {
+                  long numero = i;
+                  futuros.add(ejecutor.submit(() -> numero * numero));
+              }
+              long total = 0;
+              for (int i = 0; i < n; i++) {
+                  long cuadrado = futuros.get(i).get();
+                  System.out.println("El cuadrado de " + (i + 1) + " es " + cuadrado);
+                  total += cuadrado;
+              }
+              System.out.println("Total: " + total);
+          }
+      }
+  }
+hints:
+  - 'La idea: hay un error que impide compilar y otro de lógica en la suma. Arregla primero el de compilación y luego compara tu `Total` con el esperado.'
+  - 'Qué usar: una lambda solo puede usar variables locales que no cambian (efectivamente finales), y el `i` del `for` cambia en cada vuelta. Para acumular se usa `+=`, no `=`.'
+  - 'El plan: dentro del primer `for`, copia `i` en una variable nueva (`long numero = i;`) y usa esa en la lambda. En el segundo `for`, cambia `total = cuadrado;` por `total += cuadrado;`.'
+tests:
+  - input: "3\n"
+    output: |
+      El cuadrado de 1 es 1
+      El cuadrado de 2 es 4
+      El cuadrado de 3 es 9
+      Total: 14
+    sample: true
+  - input: "1\n"
+    output: |
+      El cuadrado de 1 es 1
+      Total: 1
+  - input: "5\n"
+    output: |
+      El cuadrado de 1 es 1
+      El cuadrado de 2 es 4
+      El cuadrado de 3 es 9
+      El cuadrado de 4 es 16
+      El cuadrado de 5 es 25
+      Total: 55

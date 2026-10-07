@@ -85,7 +85,7 @@ public class ExerciseController {
 	public SubmissionResultResponse submit(@AuthenticationPrincipal Jwt token, @PathVariable
 	@Pattern(regexp = SlugRules.PATTERN, message = SlugRules.MESSAGE) String slug,
 			@Valid @RequestBody SubmissionRequest request) {
-		return exerciseService.submit(CurrentUser.id(token), slug, request.sourceCode());
+		return exerciseService.submit(CurrentUser.id(token), slug, request);
 	}
 
 }

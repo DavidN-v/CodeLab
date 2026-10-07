@@ -144,9 +144,9 @@ solution: |
       }
   }
 hints:
-  - Guarda los productos en un `TreeMap` por nombre; así cualquier listado sale ya ordenado.
-  - "`Files.write(archivo, lineas)` para guardar y `Files.readAllLines(archivo)` para cargar; al cargar, vacía primero el mapa."
-  - "Para el informe, `Collectors.groupingBy(categoria, TreeMap::new, Collectors.summingInt(stock))`."
+  - 'La idea: el inventario vive en memoria mientras el programa corre, y `guardar`/`cargar` lo copian a un archivo y de vuelta. Haz primero `alta`, `entrada`, `salida` e `informe`, y deja el archivo para el final.'
+  - 'Qué usar: un `TreeMap` por nombre (así los listados salen ya ordenados), `Files.write(archivo, lineas)` para guardar, `Files.readAllLines(archivo)` para cargar y `Collectors.groupingBy(categoria, TreeMap::new, Collectors.summingInt(stock))` para el informe.'
+  - 'El plan: al guardar, convierte cada producto en `nombre,categoria,stock` y escribe la lista de líneas; al cargar, vacía primero el mapa y vuelve a crear cada producto con `split(",")`. Para el informe, agrupa por categoría y después filtra los productos con stock menor que 5.'
 tests:
   - input: |
       alta tornillos ferreteria 100

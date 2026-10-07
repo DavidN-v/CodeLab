@@ -2,6 +2,9 @@
 
 `break` termina el bucle inmediatamente, aunque la condición siga siendo verdadera. Es útil al **buscar**: en cuanto encuentras lo que buscas, no tiene sentido seguir.
 
+> [!analogia]
+> Buscas tus llaves cajón por cajón. En cuanto las encuentras, dejas de abrir cajones: eso es `break`.
+
 ```java
 public class Main {
     public static void main(String[] args) {
@@ -17,9 +20,26 @@ public class Main {
 }
 ```
 
+> [!prueba]
+> Cambia `500` por `50` y vuelve a ejecutar: ¿en qué vuelta para ahora el bucle?
+
 ## continue: saltar a la siguiente vuelta
 
 `continue` abandona la vuelta actual y pasa a la siguiente (en un `for`, ejecutando antes la actualización):
+
+> [!analogia]
+> Repartes folletos casa por casa y te saltas las que tienen el cartel «no publicidad»: no dejas de repartir, solo pasas a la siguiente puerta.
+
+```mermaid
+flowchart TD
+    A["i = 1"] --> B{"i <= 10"}
+    B -- "false" --> F["Fin"]
+    B -- "true" --> C{"i % 3 == 0"}
+    C -- "true: continue" --> D["i++"]
+    C -- "false" --> E["Imprime i"]
+    E --> D
+    D --> B
+```
 
 ```java
 public class Main {
@@ -40,6 +60,9 @@ Imprime `1 2 4 5 7 8 10`. Úsalo con moderación: muchas veces un `if` normal es
 ## Bucles anidados
 
 Un bucle dentro de otro: por cada vuelta del exterior, el interior hace **todas** sus vueltas.
+
+> [!analogia]
+> Es como las agujas de un reloj: por cada vuelta de la aguja de las horas, la de los minutos da una vuelta completa.
 
 ```java
 public class Main {
@@ -79,11 +102,15 @@ public class Main {
 }
 ```
 
-> **Coste:** si el exterior da `n` vueltas y el interior otras `n`, el cuerpo se ejecuta `n × n` veces. Con `n = 1000` ya es un millón. Tenlo presente cuando trabajes con muchos datos.
+> [!prueba]
+> Cambia `fila <= 4` por `fila <= 6` y vuelve a ejecutar. Después cambia `"*"` por `fila` para ver qué fila dibuja cada línea.
+
+> [!cuidado]
+> Si el exterior da `n` vueltas y el interior otras `n`, el cuerpo se ejecuta `n × n` veces. Con `n = 1000` ya es un millón. Tenlo presente cuando trabajes con muchos datos.
 
 ## break en bucles anidados
 
-`break` solo sale del bucle más interno. Para salir de todos a la vez puedes usar una **etiqueta**:
+`break` solo sale del bucle más interno. Para salir de todos a la vez puedes usar una **etiqueta** (un nombre que le pones al bucle):
 
 ```java
 public class Main {
@@ -103,8 +130,7 @@ public class Main {
 
 Si te ves necesitando etiquetas a menudo, suele ser señal de que ese código debería ir en un método propio (siguiente módulo) y salir con `return`.
 
-## Resumen
-
-- `break` termina el bucle; `continue` salta a la siguiente vuelta.
-- En bucles anidados, el interior completa todas sus vueltas por cada vuelta del exterior.
-- `break` afecta solo al bucle más interno, salvo que uses una etiqueta.
+> [!resumen]
+> - `break` termina el bucle; `continue` salta a la siguiente vuelta.
+> - En bucles anidados, el interior completa todas sus vueltas por cada vuelta del exterior.
+> - `break` afecta solo al bucle más interno, salvo que uses una etiqueta.

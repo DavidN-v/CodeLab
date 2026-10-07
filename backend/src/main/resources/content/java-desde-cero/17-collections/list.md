@@ -1,5 +1,8 @@
 Los arrays tienen tamaño fijo. En la práctica casi siempre usarás **colecciones**: estructuras de datos que crecen y encogen solas y traen operaciones ya hechas. Viven en el paquete `java.util`.
 
+> [!analogia]
+> Un array es una caja de huevos: tiene 12 huecos y no puedes añadir un decimotercero. Una lista es una lista de la compra en una libreta: puedes apuntar más cosas al final, meter una entre dos, tachar otra, y la libreta se adapta.
+
 ## ArrayList
 
 Una `List` es una secuencia ordenada que admite repetidos y se accede por posición. La implementación habitual es `ArrayList`:
@@ -31,6 +34,23 @@ public class Main {
 - Declara la variable con la **interfaz** `List` y crea la implementación con `new ArrayList<>()`: así podrías cambiarla sin tocar el resto.
 - Las colecciones solo guardan objetos: para números usa `List<Integer>` y Java convierte automáticamente.
 
+> [!prueba]
+> Cambia `tareas.add(0, "Desayunar")` por `tareas.add("Desayunar")` y vuelve a ejecutar: ¿qué pasa? «Desayunar» queda al final, y el `remove(0)` posterior borra otra tarea distinta.
+
+En memoria, la variable `tareas` solo guarda una flecha (referencia) al objeto `ArrayList`, que vive en el montón y a su vez apunta a cada texto. Así quedaría justo después de los dos primeros `add`:
+
+```memoria
+stack main
+tareas: @1
+heap
+@1 ArrayList: [@2, @3]
+@2 String: "Estudiar Java"
+@3 String: "Hacer ejercicios"
+```
+
+> [!cuidado]
+> Las posiciones empiezan en 0, como en los arrays. En una lista de 3 elementos, `get(3)` lanza `IndexOutOfBoundsException`: el último es `get(size() - 1)`.
+
 ## Recorrer
 
 ```java
@@ -54,7 +74,8 @@ public class Main {
 }
 ```
 
-> **Cuidado:** no elimines elementos de una lista mientras la recorres con un for-each: lanza `ConcurrentModificationException`. Usa `removeIf` o un iterador.
+> [!cuidado]
+> No elimines elementos de una lista mientras la recorres con un for-each: lanza `ConcurrentModificationException`. Usa `removeIf` o un iterador.
 
 ## Listas inmutables
 
@@ -88,9 +109,8 @@ public class Main {
 
 Existe también `LinkedList`. `ArrayList` es la opción por defecto: acceso por posición inmediato y muy buen rendimiento en general. `LinkedList` solo compensa en casos raros de muchas inserciones en medio. Ante la duda, `ArrayList`.
 
-## Resumen
-
-- `List<T> lista = new ArrayList<>();` crece sola; `add`, `get`, `set`, `remove`, `size`, `contains`.
-- Declara con la interfaz `List`, crea con `ArrayList`.
-- `List.of(...)` es inmutable; `removeIf` borra con una condición.
-- `sort` con un `Comparator`, y `Collections` para utilidades.
+> [!resumen]
+> - `List<T> lista = new ArrayList<>();` crece sola; `add`, `get`, `set`, `remove`, `size`, `contains`.
+> - Declara con la interfaz `List`, crea con `ArrayList`.
+> - `List.of(...)` es inmutable; `removeIf` borra con una condición.
+> - `sort` con un `Comparator`, y `Collections` para utilidades.

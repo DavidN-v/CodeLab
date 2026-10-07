@@ -4,6 +4,7 @@ import com.forja.api.dto.ApiErrorResponse;
 import com.forja.api.dto.CourseDetailResponse;
 import com.forja.api.dto.CourseSummaryResponse;
 import com.forja.api.dto.ExerciseSummaryResponse;
+import com.forja.api.dto.GlossaryTermResponse;
 import com.forja.api.dto.LessonDetailResponse;
 import com.forja.api.dto.ModuleDetailResponse;
 import com.forja.api.service.CourseService;
@@ -80,6 +81,15 @@ public class CourseController {
 			@PathVariable @Pattern(regexp = SlugRules.PATTERN, message = SlugRules.MESSAGE) String moduleSlug,
 			@PathVariable @Pattern(regexp = SlugRules.PATTERN, message = SlugRules.MESSAGE) String lessonSlug) {
 		return courseService.findLesson(id, moduleSlug, lessonSlug);
+	}
+
+	@GetMapping("/{id}/glossary")
+	@Operation(summary = "Get a course's glossary", description = "Terms used in the lessons, explained in plain words.")
+	@ApiResponse(responseCode = "200", description = "Glossary found; empty when the course has none.")
+	@ApiResponse(responseCode = "404", description = "The course does not exist or is not published.",
+			content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
+	public List<GlossaryTermResponse> getGlossary(@PathVariable @Positive(message = "debe ser mayor que 0") Long id) {
+		return courseService.findGlossary(id);
 	}
 
 	@GetMapping("/{id}/exercises")

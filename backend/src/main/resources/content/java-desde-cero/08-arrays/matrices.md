@@ -1,5 +1,8 @@
 Un array puede contener otros arrays. Así se forman **matrices**: tablas de filas y columnas, como un tablero, una hoja de cálculo o una imagen.
 
+> [!analogia]
+> Una matriz es como el patio de butacas de un cine: para encontrar tu asiento necesitas dos números, la fila y el número de butaca. `cine[3][7]` es la fila 3, butaca 7.
+
 ## Crear una matriz
 
 ```java
@@ -20,6 +23,20 @@ public class Main {
 ```
 
 `matriz[fila][columna]`. `matriz.length` es el número de filas y `matriz[f].length` el de columnas de la fila `f`.
+
+En memoria, `tabla` apunta a un array de filas, y cada fila es a su vez un array de `int`:
+
+```memoria
+stack main
+tabla: @1
+heap
+@1 int[][]: [@2, @3]
+@2 int[]: [1, 2, 3]
+@3 int[]: [4, 5, 6]
+```
+
+> [!prueba]
+> Cambia `tabla[1][0]` por `tabla[0][1]` y ejecuta. ¿Sale el número que esperabas? Primero va la fila y después la columna.
 
 ## Recorrer: dos bucles anidados
 
@@ -43,6 +60,9 @@ public class Main {
     }
 }
 ```
+
+> [!idea]
+> El bucle de fuera elige la fila; el de dentro recorre las columnas de esa fila. Por cada vuelta del de fuera, el de dentro da todas sus vueltas.
 
 ## Operaciones típicas
 
@@ -81,6 +101,9 @@ public class Main {
 
 Para sumar columnas, el bucle **exterior** recorre las columnas y el interior las filas.
 
+> [!cuidado]
+> Es muy fácil confundir `m[f][c]` con `m[c][f]`. En una matriz cuadrada no da error, pero suma lo que no es; en una rectangular, acabas fuera de rango.
+
 ## Matrices irregulares
 
 Como cada fila es un array independiente, pueden tener tamaños distintos:
@@ -102,9 +125,8 @@ public class Main {
 
 `Arrays.deepToString` muestra arrays de varias dimensiones.
 
-## Resumen
-
-- `tipo[][] m = new tipo[filas][columnas];` y `m[f][c]` para acceder.
-- `m.length` son las filas; `m[f].length`, las columnas de esa fila.
-- Dos bucles anidados recorren la matriz; intercámbialos para trabajar por columnas.
-- `Arrays.deepToString` imprime matrices.
+> [!resumen]
+> - `tipo[][] m = new tipo[filas][columnas];` y `m[f][c]` para acceder.
+> - `m.length` son las filas; `m[f].length`, las columnas de esa fila.
+> - Dos bucles anidados recorren la matriz; intercámbialos para trabajar por columnas.
+> - `Arrays.deepToString` imprime matrices.

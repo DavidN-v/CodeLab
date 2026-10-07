@@ -5,23 +5,40 @@ ejecutables, ejercicios con corrección automática y seguimiento del progreso.
 Java es el primer lenguaje; la arquitectura trata el lenguaje como un dato para
 poder añadir más sin reescribir nada.
 
-Incluye el curso **Java desde cero**: 25 módulos, 79 lecciones y 82 ejercicios,
-desde el primer `println` hasta streams, concurrencia, JDBC, pruebas con JUnit y
-un proyecto final. El diseño y las fases están en
-[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+Incluye el curso **Java desde cero**, pensado para quien nunca ha programado:
+25 módulos, 81 lecciones cortas con su quiz, 145 ejercicios de seis tipos,
+miniproyectos y un glosario de 126 términos, desde el primer `println` hasta
+streams, concurrencia, JDBC, pruebas con JUnit y un proyecto final. El diseño
+está en [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) y el formato del
+contenido en [docs/CONTENT.md](docs/CONTENT.md).
 
 ## Qué puedes hacer
 
-- **Lenguajes y cursos:** catálogo, temario con progreso por módulo y portada de
-  cada módulo con sus lecciones y ejercicios.
-- **Lecciones:** vista de estudio en tres columnas. Los ejemplos de código se
-  abren en el playground con un clic.
-- **Práctica:** catálogo de ejercicios con filtros, editor con resaltado
-  (CodeMirror), ejecución con entrada propia, corrección contra pruebas visibles
-  y ocultas, pistas progresivas y solución.
-- **Playground:** editor libre para ejecutar cualquier programa Java.
-- **Panel:** experiencia y nivel, racha diaria, actividad de las últimas 12
-  semanas, progreso por curso, envíos recientes y logros.
+- **Lenguajes y cursos:** catálogo y el curso como un camino de módulos que
+  marca dónde estás (o como lista), con glosario buscable.
+- **Lecciones:** cortas, con comparaciones de la vida diaria («Piénsalo así»),
+  propuestas de cambios («Pruébalo»), errores típicos, resumen, diagramas de
+  memoria y de flujo, y términos con su definición al pasar el ratón. Los
+  ejemplos se ejecutan y se editan dentro de la lección. Al final, un quiz de
+  tres preguntas con su explicación.
+- **Visualizador paso a paso:** ejecuta un programa línea a línea mostrando la
+  pila de llamadas, cómo cambia cada variable, los objetos en memoria y lo que
+  imprime, con una frase que explica cada paso.
+- **Práctica:** seis tipos de ejercicio para ir de menos a más: «¿Qué
+  imprime?», completar huecos, ordenar líneas, encontrar el error, escribir el
+  programa y proyectos. Escalera de pistas, solución y corrección contra
+  pruebas visibles y ocultas.
+- **Errores que no asustan:** los errores de compilación y las excepciones se
+  explican en español y se subrayan en el editor; cuando la salida no coincide,
+  se compara línea a línea con la esperada y se sugiere la causa (espacios,
+  mayúsculas, una línea de más…).
+- **Tutor con IA (opcional):** explica una lección de otra forma, da una pista
+  sobre por qué falla un programa sin dar la solución y revisa soluciones.
+- **Motivación:** meta diaria, racha con aviso cuando está en peligro, repaso
+  espaciado de ejercicios ya resueltos, confeti y tarjetas al subir de nivel o
+  terminar un módulo, experiencia, niveles y logros.
+- **Comodidad:** tema claro y oscuro, tamaño de letra del código, borradores
+  guardados, «Continúa donde lo dejaste» en la portada y diseño para móvil.
 - **Cuentas:** registro e inicio de sesión. Leer es libre; ejecutar código,
   enviar soluciones y guardar progreso requieren cuenta.
 
@@ -34,7 +51,7 @@ un proyecto final. El diseño y las fases están en
 | `postgres` | PostgreSQL 17 | Persistencia | 5432 |
 | `code-runner` | Spring Boot 4.1, Java 21 | Orquesta la ejecución aislada de código | ninguno (red interna) |
 | `docker-proxy` | docker-socket-proxy | Único acceso al socket de Docker, filtrado | ninguno (red interna) |
-| `sandbox-java` | JDK 21 + H2 + JUnit | Imagen de los contenedores donde corre el código de los alumnos (solo se construye) | — |
+| `sandbox-java` | JDK 21 + H2 + JUnit + trazador | Imagen de los contenedores donde corre el código de los alumnos (solo se construye) | — |
 
 ## Requisitos
 
@@ -97,6 +114,8 @@ Se leen del archivo `.env` de la raíz, que no se versiona.
 | `API_DOCS_ENABLED` | `true` | Publica Swagger UI y `/v3/api-docs` |
 | `LOG_LEVEL` | `INFO` | Nivel de log del código de la aplicación |
 | `MAX_CONCURRENT_EXECUTIONS` | `2` | Programas que se ejecutan a la vez; cada uno usa hasta 512 MB |
+| `ANTHROPIC_API_KEY` | vacía | Clave de la API de Anthropic para el tutor con IA; sin ella el tutor no aparece |
+| `TUTOR_MODEL` | `claude-opus-5-5` | Modelo de Claude que responde como tutor |
 
 Solo para ejecutar servicios fuera de Docker:
 
@@ -190,32 +209,42 @@ cd code-runner
 
 ## El contenido del curso
 
-Las lecciones y los ejercicios son archivos del repositorio, no datos que se
-editen en la base de datos. Viven en
-`backend/src/main/resources/content/<curso>/<NN>-<módulo>/` y el backend los
-sincroniza con la base de datos cada vez que arranca:
+Las lecciones, los quizzes, los ejercicios y el glosario son archivos del
+repositorio, no datos que se editen en la base de datos. Viven en
+`backend/src/main/resources/content/<curso>/` y el backend los sincroniza con la
+base de datos cada vez que arranca:
 
 ```
-content/java-desde-cero/02-variables/
-├── module.yml              lecciones (slug, título, resumen, minutos) y ejercicios, en orden
-├── que-es-una-variable.md  cuerpo de una lección, en Markdown
-└── intercambiar-valores.yml enunciado, código inicial, solución, pistas y pruebas
+content/java-desde-cero/
+├── glossary.yml                    términos del glosario
+└── 02-variables/
+    ├── module.yml                  lecciones y ejercicios, en orden
+    ├── que-es-una-variable.md      cuerpo de una lección, en Markdown
+    ├── que-es-una-variable.quiz.yml quiz del final de la lección
+    └── intercambiar-valores.yml    un ejercicio: tipo, enunciado, código inicial, solución, pistas y pruebas
 ```
 
-En las lecciones, los bloques ` ```java ` con un método `main` muestran el botón
-**Abrir en el playground**. Los fragmentos incompletos se marcan como
-` ```java fragment ` y los ejemplos que fallan a propósito como
-` ```java error `.
+[docs/CONTENT.md](docs/CONTENT.md) describe cada formato (bloques de código,
+recuadros, diagramas de memoria y Mermaid, quizzes, los seis tipos de
+ejercicio, la escalera de pistas, el glosario) y las pautas de estilo para que
+se entienda desde cero.
 
-Cada cambio de contenido se puede comprobar contra el sandbox real: el test
-ejecuta todas las soluciones contra sus pruebas y compila todos los códigos
-iniciales y ejemplos.
+Cada cambio de contenido se comprueba contra el sandbox real: el verificador
+ejecuta todas las soluciones contra sus pruebas, los programas de las
+predicciones y de los quizzes, y compila todos los códigos iniciales y
+ejemplos.
 
 ```bash
 docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d code-runner
-cd backend
-FORJA_RUNNER_URL=http://localhost:8090 ./mvnw test -Dtest=ContentVerificationTest
+python3 tools/verify_content.py                 # todo el curso
+python3 tools/verify_content.py 05-condicionales # un módulo
 ```
+
+Necesita Python 3 con PyYAML (`pip install pyyaml`).
+
+El mismo control existe como test de Maven:
+`FORJA_RUNNER_URL=http://localhost:8090 ./mvnw test -Dtest=ContentVerificationTest`
+(desde `backend/`).
 
 ## Docker en detalle
 
@@ -250,7 +279,9 @@ forja/
 ├── docker-compose.yml
 ├── docker-compose.dev.yml   publica el code-runner para desarrollo
 ├── .env.example
-├── docs/ARCHITECTURE.md
+├── docs/ARCHITECTURE.md     diseño
+├── docs/CONTENT.md          formato y estilo del contenido
+├── tools/verify_content.py  comprueba el contenido contra el sandbox
 ├── backend/                 API REST y contenido del curso
 ├── code-runner/             ejecución aislada de código e imagen del sandbox
 └── frontend/                Angular + nginx

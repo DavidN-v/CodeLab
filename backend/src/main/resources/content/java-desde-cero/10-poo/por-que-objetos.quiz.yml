@@ -1,0 +1,47 @@
+questions:
+  - type: choice
+    prompt: ¿Qué agrupa un objeto?
+    options:
+      - Su estado (datos) y su comportamiento (métodos)
+      - Solo variables del mismo tipo, como un array
+      - Solo métodos `static` reutilizables
+      - Todo el código del programa en un único `main`
+    answer: 0
+    explanation: Un objeto junta los datos que lo describen (titular, saldo) con las acciones que trabajan sobre ellos (ingresar, retirar). Un array solo guarda valores, sin comportamiento.
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      class Cuenta {
+          double saldo;
+
+          void retirar(double cantidad) {
+              if (cantidad <= saldo) {
+                  saldo -= cantidad;
+              } else {
+                  System.out.println("No hay saldo");
+              }
+          }
+      }
+
+      public class Main {
+          public static void main(String[] args) {
+              Cuenta cuenta = new Cuenta();
+              cuenta.saldo = 50;
+              cuenta.retirar(80);
+              cuenta.retirar(20);
+              System.out.println(cuenta.saldo);
+          }
+      }
+    answer: |
+      No hay saldo
+      30.0
+    explanation: 'Retirar 80 de 50 no se permite, así que imprime `No hay saldo` y el saldo sigue en 50. Retirar 20 sí se permite: quedan 30. Como `saldo` es `double`, se imprime `30.0`.'
+  - type: choice
+    prompt: 'Diseñas una aplicación de biblioteca: «Un socio pide prestado un libro». ¿Qué serían probablemente clases?'
+    options:
+      - Socio y Libro
+      - Pedir y prestar
+      - Un
+      - El título del libro
+    answer: 0
+    explanation: 'Los sustantivos del problema (socio, libro) suelen ser clases. Los verbos (pedir, prestar) suelen ser métodos, y los datos de cada cosa (el título) son campos.'

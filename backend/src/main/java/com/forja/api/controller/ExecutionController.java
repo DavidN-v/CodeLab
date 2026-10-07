@@ -3,6 +3,7 @@ package com.forja.api.controller;
 import com.forja.api.dto.ApiErrorResponse;
 import com.forja.api.dto.ExecutionRequest;
 import com.forja.api.dto.ExecutionResponse;
+import com.forja.api.dto.TraceResponse;
 import com.forja.api.security.CurrentUser;
 import com.forja.api.service.PlaygroundService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -40,6 +41,19 @@ public class ExecutionController {
 			content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
 	public ExecutionResponse run(@AuthenticationPrincipal Jwt token, @Valid @RequestBody ExecutionRequest request) {
 		return playgroundService.run(CurrentUser.id(token), request);
+	}
+
+	@PostMapping("/trace")
+	@Operation(summary = "Run a program step by step",
+			description = "Runs it once under a debugger and returns every step: the line, the variables, the objects and the output. For the visualizer; at most 400 steps.",
+			security = @SecurityRequirement(name = "bearer"))
+	@ApiResponse(responseCode = "200", description = "Traced, or why it could not be; the outcome is in the body.")
+	@ApiResponse(responseCode = "429", description = "Too many runs in a short time.",
+			content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
+	@ApiResponse(responseCode = "503", description = "The sandbox is unavailable.",
+			content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
+	public TraceResponse trace(@AuthenticationPrincipal Jwt token, @Valid @RequestBody ExecutionRequest request) {
+		return playgroundService.trace(CurrentUser.id(token), request);
 	}
 
 }

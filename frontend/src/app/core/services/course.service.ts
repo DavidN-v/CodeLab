@@ -8,6 +8,7 @@ import {
   CourseDetail,
   CourseSummary,
   ExerciseSummary,
+  GlossaryTerm,
   LessonDetail,
   ModuleDetail,
 } from '../models/course.model';
@@ -20,6 +21,7 @@ export class CourseService {
   /** Courses rarely change while the app is open; each one is fetched once. */
   private readonly courseCache = new Map<number, Observable<CourseDetail>>();
   private readonly primaryCourseCache = new Map<string, Observable<CourseSummary>>();
+  private readonly glossaryCache = new Map<number, Observable<GlossaryTerm[]>>();
 
   /**
    * The course a language's pages are about. URLs only carry the language, so
@@ -75,5 +77,18 @@ export class CourseService {
 
   getExercises(courseId: number): Observable<ExerciseSummary[]> {
     return this.http.get<ExerciseSummary[]>(`${this.coursesUrl}/${courseId}/exercises`);
+  }
+
+  /** The course's glossary; fetched once per course. */
+  getGlossary(courseId: number): Observable<GlossaryTerm[]> {
+    let glossary = this.glossaryCache.get(courseId);
+    if (!glossary) {
+      glossary = this.http
+        .get<GlossaryTerm[]>(`${this.coursesUrl}/${courseId}/glossary`)
+        .pipe(shareReplay({ bufferSize: 1, refCount: false }));
+      this.glossaryCache.set(courseId, glossary);
+      glossary.subscribe({ error: () => this.glossaryCache.delete(courseId) });
+    }
+    return glossary;
   }
 }

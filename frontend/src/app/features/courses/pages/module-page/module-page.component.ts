@@ -7,7 +7,12 @@ import { withoutErrorNotification } from '../../../../core/interceptors/http-err
 import { AuthService } from '../../../../core/services/auth.service';
 import { CourseService } from '../../../../core/services/course.service';
 import { ProgressService } from '../../../../core/services/progress.service';
-import { DIFFICULTY_LABELS, DIFFICULTY_TAGS } from '../../../../shared/utils/labels';
+import {
+  DIFFICULTY_LABELS,
+  DIFFICULTY_TAGS,
+  KIND_ICONS,
+  KIND_LABELS,
+} from '../../../../shared/utils/labels';
 
 /** A module's lessons, in reading order, and its exercises. */
 @Component({
@@ -28,6 +33,8 @@ export class ModulePageComponent {
 
   protected readonly difficultyLabels = DIFFICULTY_LABELS;
   protected readonly difficultyTags = DIFFICULTY_TAGS;
+  protected readonly kindLabels = KIND_LABELS;
+  protected readonly kindIcons = KIND_ICONS;
 
   protected readonly module = rxResource({
     params: () => ({ language: this.languageSlug(), module: this.moduleSlug() }),

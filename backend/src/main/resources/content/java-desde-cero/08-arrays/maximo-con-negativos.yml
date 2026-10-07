@@ -1,0 +1,107 @@
+title: El récord de frío
+summary: Arregla un programa que falla cuando todas las temperaturas son negativas.
+difficulty: MEDIUM
+kind: fix
+statement: |
+  Este programa lee `n` y después `n` temperaturas enteras, y escribe la más alta y la más baja:
+
+  ```
+  Máxima: <valor>
+  Mínima: <valor>
+  ```
+
+  **Síntoma:** con temperaturas de verano funciona, pero en invierno falla. Con la entrada `3  -5 -2 -9` escribe `Máxima: 0`, cuando debería escribir `Máxima: -2`. Y con `3  4 8 6` la mínima sale `0` en vez de `4`.
+
+  Encuentra los errores y corrígelos.
+starter: |
+  import java.util.Scanner;
+
+  public class Main {
+      static int maximo(int[] valores) {
+          int mayor = 0;
+          for (int valor : valores) {
+              if (valor > mayor) {
+                  mayor = valor;
+              }
+          }
+          return mayor;
+      }
+
+      static int minimo(int[] valores) {
+          int menor = 0;
+          for (int valor : valores) {
+              if (valor < menor) {
+                  menor = valor;
+              }
+          }
+          return menor;
+      }
+
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int n = entrada.nextInt();
+          int[] temperaturas = new int[n];
+          for (int i = 0; i < n; i++) {
+              temperaturas[i] = entrada.nextInt();
+          }
+          System.out.println("Máxima: " + maximo(temperaturas));
+          System.out.println("Mínima: " + minimo(temperaturas));
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  public class Main {
+      static int maximo(int[] valores) {
+          int mayor = valores[0];
+          for (int valor : valores) {
+              if (valor > mayor) {
+                  mayor = valor;
+              }
+          }
+          return mayor;
+      }
+
+      static int minimo(int[] valores) {
+          int menor = valores[0];
+          for (int valor : valores) {
+              if (valor < menor) {
+                  menor = valor;
+              }
+          }
+          return menor;
+      }
+
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int n = entrada.nextInt();
+          int[] temperaturas = new int[n];
+          for (int i = 0; i < n; i++) {
+              temperaturas[i] = entrada.nextInt();
+          }
+          System.out.println("Máxima: " + maximo(temperaturas));
+          System.out.println("Mínima: " + minimo(temperaturas));
+      }
+  }
+hints:
+  - 'La idea: el 0 que aparece en la salida no es ninguna de las temperaturas. Mira de dónde sale ese 0.'
+  - 'Qué usar: el valor inicial de `mayor` y de `menor`. Si empiezan en 0, una temperatura tiene que superar (o quedar por debajo de) 0 para cambiarlos.'
+  - 'El plan: en los dos métodos, empieza con el primer elemento del array: `int mayor = valores[0];` y `int menor = valores[0];`.'
+tests:
+  - input: "3\n-5 -2 -9\n"
+    output: |
+      Máxima: -2
+      Mínima: -9
+    sample: true
+  - input: "3\n4 8 6\n"
+    output: |
+      Máxima: 8
+      Mínima: 4
+  - input: "1\n-7\n"
+    output: |
+      Máxima: -7
+      Mínima: -7
+  - input: "5\n0 -3 12 5 -1\n"
+    output: |
+      Máxima: 12
+      Mínima: -3

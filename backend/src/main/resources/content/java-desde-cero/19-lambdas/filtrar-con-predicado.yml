@@ -57,8 +57,9 @@ solution: |
       }
   }
 hints:
-  - "Dentro de `filtrar`, `condicion.test(n)` devuelve si `n` cumple la condición."
-  - "Cada llamada pasa una lambda distinta: `filtrar(numeros, n -> n % 2 == 0)`."
+  - 'La idea: escribes un solo método `filtrar` que no sabe qué condición aplicar; quien lo llama se la pasa como lambda.'
+  - 'Qué usar: un parámetro `Predicate<Integer> condicion` y su método `condicion.test(n)`, que responde `true` si `n` la cumple.'
+  - 'El plan: en `filtrar`, crea una lista vacía, recorre `numeros` y añade los `n` con `condicion.test(n)`; en `main`, llama tres veces, por ejemplo `filtrar(numeros, n -> n % 2 == 0)`.'
 tests:
   - input: "3 -4 10 7 -15 0 9\n"
     output: |

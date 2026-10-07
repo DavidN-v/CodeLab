@@ -18,7 +18,40 @@
       </h1>
     </header>
 
+    @if (streakAtRisk()) {
+      <div class="risk" role="alert">
+        <p>
+          <span aria-hidden="true">🔥</span> Tu racha de
+          <strong
+            >{{ panel.streak.current }} {{ panel.streak.current === 1 ? 'día' : 'días' }}</strong
+          >
+          está en peligro: haz una lección o un ejercicio hoy para no perderla.
+        </p>
+        @if (panel.courses[0]?.nextLesson; as next) {
+          <a
+            class="button button--primary button--small"
+            [routerLink]="[
+              '/learn',
+              panel.courses[0].course.languageSlug,
+              next.moduleSlug,
+              next.slug,
+            ]"
+          >
+            Salvar la racha →
+          </a>
+        }
+      </div>
+    }
+
     <div class="overview">
+      <div class="card">
+        <app-daily-goal
+          [goalXp]="panel.dailyGoal.goalXp"
+          [todayXp]="panel.dailyGoal.todayXp"
+          (changed)="dashboard.reload()"
+        />
+      </div>
+
       <div class="card level">
         <p class="section-title">Nivel {{ panel.level.number }}</p>
         <p class="level__title">{{ panel.level.title }}</p>
@@ -104,6 +137,38 @@
               >
             }
           </article>
+        }
+
+        @if (panel.reviews.length > 0) {
+          <h2 class="section-title columns__heading">🔁 Repaso de hoy</h2>
+          <div class="card reviews">
+            <p class="card__detail">
+              Volver a resolver lo que ya hiciste, sin mirar, es lo que hace que no se olvide. Cada
+              repaso superado lo aleja un poco más en el tiempo.
+            </p>
+            <ul class="rows">
+              @for (review of panel.reviews; track review.exerciseSlug) {
+                <li>
+                  <a class="row-link" [routerLink]="['/practice', review.exerciseSlug]">
+                    <span class="check" aria-hidden="true">↻</span>
+                    <span class="submission">
+                      <span>{{ review.exerciseTitle }}</span>
+                      <span class="submission__meta"
+                        >{{ review.moduleTitle }} · lo resolviste
+                        {{ daysSince(review.solvedAt) }}</span
+                      >
+                    </span>
+                    <span class="submission__time">Repasar →</span>
+                  </a>
+                </li>
+              }
+            </ul>
+            @if (panel.reviewsDue > panel.reviews.length) {
+              <p class="card__detail">
+                Y {{ panel.reviewsDue - panel.reviews.length }} más pendientes.
+              </p>
+            }
+          </div>
         }
 
         <h2 class="section-title columns__heading">Actividad</h2>

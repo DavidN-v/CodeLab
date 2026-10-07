@@ -1,5 +1,8 @@
 **Polimorfismo** significa "muchas formas": poder tratar objetos de clases distintas a través de un tipo común, y que cada uno responda a su manera.
 
+> [!analogia]
+> Un director de orquesta levanta la batuta y dice «¡tocad!». No le explica a cada músico cómo se toca su instrumento: el violín suena a violín y la trompeta a trompeta. Una sola orden, muchas respuestas distintas. Eso es el polimorfismo.
+
 ## Una variable del tipo padre
 
 Una variable de tipo `Animal` puede guardar cualquier objeto que **sea** un `Animal`, incluidos perros y gatos:
@@ -35,13 +38,42 @@ public class Main {
 }
 ```
 
+> [!prueba]
+> Añade al final del `main` las líneas `a = new Animal();` y `System.out.println(a.sonido());`. ¿Qué imprime ahora? La misma variable, tres objetos distintos, tres respuestas.
+
 ## Enlace dinámico
 
 El tipo de la **variable** (`Animal`) decide qué métodos puedes llamar: solo los que tiene `Animal`. Pero el tipo del **objeto** (`Perro`, `Gato`) decide qué versión se ejecuta. Esa elección se hace en tiempo de ejecución y se llama **enlace dinámico**.
 
+> [!analogia]
+> La variable es la etiqueta del mando a distancia («mando de tele») y el objeto es la tele concreta. La etiqueta dice qué botones hay; la tele que tengas enchufada decide qué pasa al pulsarlos.
+
+> [!cuidado]
+> Si `Perro` tiene un método propio `traerPelota()`, `a.traerPelota()` **no compila** aunque `a` guarde un perro: la variable es de tipo `Animal` y `Animal` no tiene ese método.
+
 ## Por qué es tan útil
 
 Permite escribir código general que funciona con tipos que ni siquiera existían cuando lo escribiste:
+
+```mermaid
+classDiagram
+    Notificacion <|-- Email
+    Notificacion <|-- Sms
+    Notificacion <|-- Push
+    class Notificacion {
+        <<abstract>>
+        +enviar(String mensaje)*
+    }
+    class Email {
+        +enviar(String mensaje)
+    }
+    class Sms {
+        +enviar(String mensaje)
+    }
+    class Push {
+        +enviar(String mensaje)
+    }
+```
 
 ```java
 abstract class Notificacion {
@@ -97,8 +129,10 @@ else if (tipo.equals("push")) { ... }
 
 repetido en cada sitio que dependa del tipo. Cuando veas una cadena de `if` sobre "qué clase de cosa es", piensa si cada caso debería ser una subclase con su propio método.
 
-## Resumen
+> [!idea]
+> El tipo de la variable decide **qué** puedes pedir; el objeto real decide **cómo** se hace.
 
-- Una variable del tipo padre puede guardar objetos de cualquier subclase.
-- El tipo de la variable decide qué métodos puedes llamar; el del objeto, qué versión se ejecuta.
-- El polimorfismo permite código general que funciona con clases nuevas sin modificarlo.
+> [!resumen]
+> - Una variable del tipo padre puede guardar objetos de cualquier subclase.
+> - El tipo de la variable decide qué métodos puedes llamar; el del objeto, qué versión se ejecuta.
+> - El polimorfismo permite código general que funciona con clases nuevas sin modificarlo.

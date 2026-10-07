@@ -1,0 +1,99 @@
+<section class="quiz" aria-labelledby="quiz-heading">
+  <header class="quiz__header">
+    <h2 id="quiz-heading" class="quiz__title">¿Lo has entendido?</h2>
+    <p class="quiz__progress">{{ answered() }} de {{ questions().length }} respondidas</p>
+  </header>
+
+  <ol class="quiz__list">
+    @for (question of questions(); track $index; let index = $index) {
+      @let answer = answers()[index];
+      <li
+        class="question"
+        [class.question--right]="answer?.correct"
+        [class.question--wrong]="answer && !answer.correct"
+      >
+        <app-markdown class="question__prompt" [content]="question.prompt" />
+        @if (question.code) {
+          <pre class="question__code"><code class="hljs" [innerHTML]="code(question)"></code></pre>
+        }
+        @if (question.type === 'OUTPUT' && question.input) {
+          <p class="question__note">
+            Con esta entrada: <code>{{ question.input }}</code>
+          </p>
+        }
+
+        @if (question.type === 'CHOICE') {
+          <div
+            class="question__options"
+            role="group"
+            [attr.aria-label]="'Opciones de la pregunta ' + (index + 1)"
+          >
+            @for (option of question.options ?? []; track $index; let optionIndex = $index) {
+              <button
+                type="button"
+                class="option"
+                [class.option--right]="answer && optionIndex === question.correctOption"
+                [class.option--wrong]="answer && answer.value === optionIndex && !answer.correct"
+                [disabled]="answer !== null"
+                (click)="choose(index, optionIndex)"
+              >
+                <app-markdown [content]="option" />
+              </button>
+            }
+          </div>
+        } @else {
+          <textarea
+            class="question__answer"
+            rows="3"
+            spellcheck="false"
+            placeholder="Escribe la salida exacta…"
+            [value]="drafts()[index]"
+            [disabled]="answer !== null"
+            (input)="onDraft(index, $event)"
+          ></textarea>
+          @if (!answer) {
+            <button
+              type="button"
+              class="button button--secondary button--small"
+              (click)="check(index)"
+            >
+              Comprobar
+            </button>
+          } @else if (!answer.correct) {
+            <div class="question__expected">
+              <p class="question__note">El programa imprime:</p>
+              <pre>{{ question.expectedOutput }}</pre>
+            </div>
+          }
+        }
+
+        @if (answer) {
+          <div class="question__feedback" aria-live="polite">
+            <p class="question__verdict">
+              {{ answer.correct ? '✓ ¡Correcto!' : '✗ No exactamente' }}
+            </p>
+            <app-markdown [content]="question.explanation" />
+          </div>
+        }
+      </li>
+    }
+  </ol>
+
+  @if (done()) {
+    <div class="quiz__result">
+      <p class="quiz__score">
+        {{ correct() }} de {{ questions().length }}
+        {{
+          correct() === questions().length
+            ? '· ¡Perfecto! 🎉'
+            : correct() > 0
+              ? '· ¡Bien! Repasa las que fallaste.'
+              : '· Vuelve a leer la lección y prueba otra vez.'
+        }}
+      </p>
+      <button type="button" class="button button--ghost button--small" (click)="retry()">
+        Repetir el quiz
+      </button>
+    </div>
+  }
+</section>

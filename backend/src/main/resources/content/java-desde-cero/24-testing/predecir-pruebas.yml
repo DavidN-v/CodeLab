@@ -1,0 +1,79 @@
+title: ¿Qué pruebas pasan?
+summary: Lee una clase y sus pruebas de JUnit y predice el resumen.
+difficulty: EASY
+kind: predict
+statement: |
+  Este programa tiene una clase `Numeros`, unas pruebas en `NumerosTest` y un `main` que las ejecuta con JUnit. Escribe **exactamente** lo que imprime.
+
+  El `main` escribe primero cuántas pruebas pasan de cuántas hay y, después, una línea `FALLA <nombre de la prueba>()` por cada prueba que falla, en orden alfabético.
+
+  Pista: revisa cada prueba como si fueras JUnit. Calcula lo que devuelve el método y compáralo con el valor esperado.
+starter: |
+  import static org.junit.jupiter.api.Assertions.assertEquals;
+  import static org.junit.jupiter.api.Assertions.assertTrue;
+  import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+
+  import org.junit.jupiter.api.Test;
+  import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
+  import org.junit.platform.launcher.core.LauncherFactory;
+  import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
+
+  class Numeros {
+      static int maximo(int a, int b) {
+          return a > b ? a : b;
+      }
+
+      static int absoluto(int n) {
+          return n;
+      }
+  }
+
+  class NumerosTest {
+      @Test
+      void maximoDeDosNumeros() {
+          assertEquals(8, Numeros.maximo(3, 8));
+      }
+
+      @Test
+      void maximoDeDosIguales() {
+          assertEquals(5, Numeros.maximo(5, 5));
+      }
+
+      @Test
+      void absolutoDeUnPositivo() {
+          assertEquals(4, Numeros.absoluto(4));
+      }
+
+      @Test
+      void absolutoDeUnNegativo() {
+          assertEquals(4, Numeros.absoluto(-4));
+      }
+
+      @Test
+      void elAbsolutoNuncaEsNegativo() {
+          assertTrue(Numeros.absoluto(-1) >= 0);
+      }
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          var peticion = LauncherDiscoveryRequestBuilder.request().selectors(selectClass(NumerosTest.class)).build();
+          var resumen = new SummaryGeneratingListener();
+          LauncherFactory.create().execute(peticion, resumen);
+          var resultado = resumen.getSummary();
+          System.out.println(resultado.getTestsSucceededCount() + "/" + resultado.getTestsFoundCount() + " pruebas superadas");
+          resultado.getFailures().stream()
+              .map(fallo -> "FALLA " + fallo.getTestIdentifier().getDisplayName())
+              .sorted()
+              .forEach(System.out::println);
+      }
+  }
+hints:
+  - 'La idea: cada método con `@Test` es una prueba. Tienes que decidir, una a una, si pasa o falla, y después contar.'
+  - 'Qué usar: `assertEquals(esperado, real)` falla si los dos valores son distintos; `assertTrue(condición)` falla si la condición es `false`. Fíjate en que `absoluto` devuelve el número tal cual, sin quitarle el signo.'
+  - 'El plan: las dos pruebas de `maximo` pasan. De las tres de `absoluto`, solo pasa la del positivo: `absoluto(-4)` da -4 y `absoluto(-1)` da -1. Escribe el recuento y luego los nombres de las que fallan ordenados alfabéticamente, cada uno con `()` al final.'
+tests:
+  - output: |
+      3/5 pruebas superadas
+      FALLA absolutoDeUnNegativo()
+      FALLA elAbsolutoNuncaEsNegativo()

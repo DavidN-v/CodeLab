@@ -1,0 +1,47 @@
+title: ¿Qué imprime? Dos perros
+summary: Predice la salida de un programa con dos objetos de la misma clase.
+difficulty: EASY
+kind: predict
+statement: |
+  Lee el programa con calma y escribe **exactamente** lo que imprime, línea por línea.
+
+  Recuerda: la clase es el molde y cada objeto creado con `new` es una galleta distinta, con sus propios valores en los campos.
+starter: |
+  class Perro {
+      String nombre;
+      int edad;
+
+      void cumplirAnios() {
+          edad++;
+      }
+
+      String ficha() {
+          return nombre + " (" + edad + ")";
+      }
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Perro toby = new Perro();
+          toby.nombre = "Toby";
+          toby.edad = 3;
+
+          Perro luna = new Perro();
+          luna.nombre = "Luna";
+
+          toby.cumplirAnios();
+          toby.cumplirAnios();
+          luna.cumplirAnios();
+
+          System.out.println(toby.ficha());
+          System.out.println(luna.ficha());
+      }
+  }
+hints:
+  - 'La idea: sigue a cada perro por separado; lo que le pasa a `toby` no le pasa a `luna`.'
+  - 'Qué usar: el valor por defecto de un campo `int` que nadie inicializa es `0`.'
+  - 'El plan: `toby` empieza en 3 y cumple dos años; `luna` empieza en 0 y cumple uno. Después escribe `nombre (edad)` para cada uno.'
+tests:
+  - output: |
+      Toby (5)
+      Luna (1)

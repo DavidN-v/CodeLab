@@ -1,0 +1,30 @@
+questions:
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              String s = "Forja";
+              System.out.println(s.length() + " " + s.charAt(1) + " " + s.substring(1, 3));
+          }
+      }
+    answer: |
+      5 o or
+    explanation: '"Forja" tiene 5 caracteres. Las posiciones empiezan en 0, así que `charAt(1)` es la `o`. `substring(1, 3)` toma las posiciones 1 y 2 (la 3 queda fuera): `or`.'
+  - type: choice
+    prompt: '¿Cuál es la forma correcta de comprobar si el texto de `respuesta` es `"si"`?'
+    options:
+      - '`respuesta.equals("si")`'
+      - '`respuesta == "si"`'
+      - '`respuesta = "si"`'
+    answer: 0
+    explanation: '`equals` compara las letras. `==` compara si son el mismo objeto en memoria y puede dar `false` con textos iguales. Y `=` no compara: asigna.'
+  - type: choice
+    prompt: '¿Qué devuelve `"banana".indexOf("z")`?'
+    options:
+      - '`-1`'
+      - '`0`'
+      - '`6`'
+      - Lanza un error
+    answer: 0
+    explanation: 'Cuando el texto buscado no aparece, `indexOf` devuelve `-1` por convención. `0` significaría que está al principio.'

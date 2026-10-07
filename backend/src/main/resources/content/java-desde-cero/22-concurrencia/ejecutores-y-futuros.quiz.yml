@@ -1,0 +1,47 @@
+questions:
+  - type: choice
+    prompt: ¿Qué devuelve `ejecutor.submit(tarea)`?
+    options:
+      - Un `Future`, la promesa de un resultado que podrás recoger con `get()`
+      - El resultado de la tarea, ya calculado
+      - Un `Thread` nuevo
+      - Nada, es `void`
+    answer: 0
+    explanation: '`submit` vuelve enseguida con un `Future`. La tarea puede seguir trabajando; `get()` espera a que termine y te da su resultado.'
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      import java.util.List;
+      import java.util.concurrent.Callable;
+      import java.util.concurrent.ExecutorService;
+      import java.util.concurrent.Executors;
+      import java.util.concurrent.Future;
+
+      public class Main {
+          public static void main(String[] args) throws Exception {
+              List<Callable<Integer>> tareas = List.of(() -> 3 * 3, () -> 4 * 4, () -> 5 * 5);
+              try (ExecutorService ejecutor = Executors.newFixedThreadPool(3)) {
+                  int total = 0;
+                  for (Future<Integer> f : ejecutor.invokeAll(tareas)) {
+                      System.out.println(f.get());
+                      total += f.get();
+                  }
+                  System.out.println("Total: " + total);
+              }
+          }
+      }
+    answer: |
+      9
+      16
+      25
+      Total: 50
+    explanation: '`invokeAll` devuelve los `Future` en el mismo orden que la lista de tareas, así que la salida es siempre 9, 16, 25, aunque las tareas terminen en otro orden. La suma es 50.'
+  - type: choice
+    prompt: Tu programa hace 1000 peticiones a una web y pasa casi todo el tiempo esperando la respuesta. ¿Qué ejecutor encaja mejor?
+    options:
+      - '`Executors.newVirtualThreadPerTaskExecutor()`'
+      - '`Executors.newFixedThreadPool(1)`'
+      - Crear 1000 `Thread` normales a mano
+      - Ninguno, hay que hacerlas una a una
+    answer: 0
+    explanation: Los hilos virtuales son ligerísimos y perfectos para tareas que esperan. Un pool de 1 hilo las haría una a una, y 1000 hilos normales gastan mucha memoria.

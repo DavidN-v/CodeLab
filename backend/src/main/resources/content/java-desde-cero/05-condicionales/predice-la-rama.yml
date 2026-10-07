@@ -1,0 +1,38 @@
+title: ¿Qué medalla gana?
+summary: Predice la salida de un programa con else if y un if/else.
+difficulty: EASY
+kind: predict
+statement: |
+  Un juego da medallas según los puntos. Lee el programa **sin ejecutarlo** y escribe exactamente lo que imprime.
+
+  Recuerda: en una cadena de `else if` solo se ejecuta la **primera** rama cuya condición sea verdadera.
+starter: |
+  public class Main {
+      public static void main(String[] args) {
+          int puntos = 75;
+          if (puntos >= 90) {
+              System.out.println("Oro");
+          } else if (puntos >= 70) {
+              System.out.println("Plata");
+          } else if (puntos >= 50) {
+              System.out.println("Bronce");
+          } else {
+              System.out.println("Sin medalla");
+          }
+          if (puntos % 2 == 0) {
+              System.out.println("Puntos pares");
+          } else {
+              System.out.println("Puntos impares");
+          }
+          System.out.println("Fin");
+      }
+  }
+hints:
+  - 'La idea: hay dos decisiones separadas y una línea final. Cada decisión imprime exactamente una línea.'
+  - 'Qué usar: evalúa cada condición con `puntos = 75`, de arriba abajo. En la primera cadena, para en cuanto una sea verdadera. En la segunda, `%` da el resto de dividir entre 2.'
+  - 'El plan: 75 >= 90 es falso, 75 >= 70 es verdadero → primera línea. 75 % 2 es 1 → segunda línea. Y después Fin.'
+tests:
+  - output: |
+      Plata
+      Puntos impares
+      Fin

@@ -30,8 +30,9 @@ solution: |
       }
   }
 hints:
-  - Primero normaliza el texto quitando espacios y pasándolo a minúsculas.
-  - "`new StringBuilder(texto).reverse().toString()` invierte un String."
+  - 'La idea: un palíndromo es un texto que, dado la vuelta, queda igual. Antes de comparar, limpia lo que no importa: los espacios y las mayúsculas.'
+  - 'Qué usar: `replace(" ", "")` y `toLowerCase()` para limpiar, `new StringBuilder(texto).reverse().toString()` para invertir y `equals` para comparar.'
+  - 'El plan: `limpio = texto.replace(" ", "").toLowerCase();` → `invertido = new StringBuilder(limpio).reverse().toString();` → si `limpio.equals(invertido)`, escribe `sí`; si no, `no`.'
 tests:
   - input: "Anita lava la tina\n"
     output: "sí\n"

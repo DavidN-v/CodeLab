@@ -43,8 +43,9 @@ solution: |
       }
   }
 hints:
-  - "`c - 'a'` da la posición de una minúscula en el alfabeto (0 para la `a`)."
-  - "Suma `k`, aplica `% 26` para dar la vuelta y vuelve a convertir: `(char) ('a' + posicion)`."
+  - 'La idea: convierte cada letra en su número de posición en el alfabeto (a = 0, b = 1…), súmale `k`, da la vuelta si te pasas de la z y vuelve a convertirla en letra.'
+  - 'Qué usar: aritmética con `char`. `c - ''a''` da la posición, `% 26` da la vuelta y `(char) (''a'' + posicion)` vuelve a letra. Lo mismo con `''A''` para las mayúsculas.'
+  - 'El plan: para cada `c`: si está entre `''a''` y `''z''`, añade `(char) (''a'' + (c - ''a'' + k) % 26)`; si está entre `''A''` y `''Z''`, igual con `''A''`; si no, añade `c` sin cambiar. Usa un `StringBuilder`.'
 tests:
   - input: "3\nHola, Mundo!\n"
     output: "Krod, Pxqgr!\n"

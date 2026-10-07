@@ -1,0 +1,135 @@
+title: Adivina el número
+summary: 'Miniproyecto: el juego clásico de adivinar un número con pistas «Mayor» y «Menor».'
+difficulty: HARD
+kind: project
+statement: |
+  Vas a programar un juego clásico: alguien piensa un número del 1 al 100 y tú intentas adivinarlo. Después de cada intento, el juego te dice si el número secreto es **mayor** o **menor**.
+
+  Para que el programa se pueda comprobar, la entrada está fijada de antemano:
+
+  - La **primera línea** es el número secreto (entre 1 y 100).
+  - Las **siguientes líneas** son los intentos del jugador, uno por línea.
+
+  **Ejemplo** de entrada y salida:
+
+  | Entrada | Salida |
+  | --- | --- |
+  | `42` (el secreto) | |
+  | `50` | `Menor` |
+  | `25` | `Mayor` |
+  | `42` | `¡Correcto! Lo adivinaste en 3 intentos.` |
+
+  Ve paso a paso. Ejecuta tu programa después de cada paso para comprobar que lo que llevas funciona.
+
+  ### Paso 1: lee el número secreto
+
+  Ya lo tienes en el código inicial: `int secreto = entrada.nextInt();`.
+
+  ### Paso 2: lee los intentos uno a uno
+
+  No sabes cuántos intentos habrá, así que usa un `while` que siga mientras quede otro número en la entrada: `while (entrada.hasNextInt())`. Dentro, lee el intento con `entrada.nextInt()`.
+
+  ### Paso 3: cuenta los intentos
+
+  Declara un contador `intentos` **antes** del bucle, empezando en 0, y súmale 1 cada vez que leas un intento.
+
+  ### Paso 4: da la pista
+
+  Compara el intento con el secreto:
+
+  - Si el intento es **menor** que el secreto, escribe `Mayor` (el secreto es mayor).
+  - Si el intento es **mayor** que el secreto, escribe `Menor`.
+  - Si es igual, escribe `¡Correcto! Lo adivinaste en N intentos.` (con `N` el número de intentos) y **termina el bucle** con `break`.
+
+  ### Paso 5: ¿se acabaron los intentos?
+
+  Si el bucle termina porque no quedan intentos y nadie acertó, escribe:
+
+  ```
+  Se acabaron los intentos. El número era X.
+  ```
+
+  con `X` el número secreto. Para saber si se acertó, usa una variable `boolean acertado` que empiece en `false` y pase a `true` al acertar.
+
+  ### Para jugar de verdad (opcional)
+
+  Cuando las pruebas pasen, pruébalo en el playground escribiendo tú los intentos en el panel de entrada. Más adelante aprenderás a que el ordenador elija el secreto al azar.
+starter: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          // Paso 1: el número secreto
+          int secreto = entrada.nextInt();
+
+          // Paso 2: lee los intentos mientras queden
+          // Paso 3: cuenta los intentos
+          // Paso 4: escribe Mayor, Menor o ¡Correcto!...
+          // Paso 5: si nadie acertó, di cuál era el número
+
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int secreto = entrada.nextInt();
+          int intentos = 0;
+          boolean acertado = false;
+          while (entrada.hasNextInt()) {
+              int intento = entrada.nextInt();
+              intentos++;
+              if (intento < secreto) {
+                  System.out.println("Mayor");
+              } else if (intento > secreto) {
+                  System.out.println("Menor");
+              } else {
+                  System.out.println("¡Correcto! Lo adivinaste en " + intentos + " intentos.");
+                  acertado = true;
+                  break;
+              }
+          }
+          if (!acertado) {
+              System.out.println("Se acabaron los intentos. El número era " + secreto + ".");
+          }
+      }
+  }
+hints:
+  - 'La idea: es un bucle que se repite una vez por intento. En cada vuelta comparas el intento con el secreto y das una pista; si aciertas, el juego termina. Si se acaban los intentos sin acertar, lo dices al final.'
+  - 'Qué usar: `while (entrada.hasNextInt())` para leer mientras queden intentos, un contador `intentos`, una cadena `if` / `else if` / `else` para la pista, `break` para salir al acertar y un `boolean acertado` para saber, después del bucle, si se ganó.'
+  - 'El plan: intentos = 0; acertado = false; mientras haya otro número → léelo, intentos++, si es menor imprime Mayor, si es mayor imprime Menor, si no imprime el mensaje de acierto, acertado = true y break. Después del bucle: si !acertado, imprime el mensaje de los intentos agotados.'
+tests:
+  - input: "42\n50\n25\n42\n"
+    output: |
+      Menor
+      Mayor
+      ¡Correcto! Lo adivinaste en 3 intentos.
+    sample: true
+  - input: "60\n10\n90\n"
+    output: |
+      Mayor
+      Menor
+      Se acabaron los intentos. El número era 60.
+    sample: true
+  - input: "7\n7\n"
+    output: |
+      ¡Correcto! Lo adivinaste en 1 intentos.
+  - input: "30\n50\n30\n99\n"
+    output: |
+      Menor
+      ¡Correcto! Lo adivinaste en 2 intentos.
+  - input: "15\n"
+    output: |
+      Se acabaron los intentos. El número era 15.
+  - input: "100\n50\n75\n88\n94\n97\n99\n100\n"
+    output: |
+      Mayor
+      Mayor
+      Mayor
+      Mayor
+      Mayor
+      Mayor
+      ¡Correcto! Lo adivinaste en 7 intentos.

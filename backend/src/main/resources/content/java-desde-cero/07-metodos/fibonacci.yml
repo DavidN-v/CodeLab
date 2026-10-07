@@ -46,9 +46,9 @@ solution: |
       }
   }
 hints:
-  - Guarda dos variables, `anterior` y `actual`, que empiecen en `F(0)` y `F(1)`.
-  - En cada vuelta calcula el siguiente término y desplaza las dos variables una posición.
-  - Usa `long`; `F(90)` no cabe en un `int`.
+  - 'La idea: para el siguiente término solo necesitas los dos últimos; no hace falta recalcularlo todo desde el principio cada vez.'
+  - 'Qué usar: dos variables `long anterior = 0` y `long actual = 1` (F(0) y F(1)) y un bucle `for`. Usa `long`, porque F(90) no cabe en un `int`.'
+  - 'El plan: si `n == 0`, devuelve 0. Para `i` de 2 a `n`: `siguiente = anterior + actual; anterior = actual; actual = siguiente;`. Al final, `return actual;`'
 tests:
   - input: "10\n"
     output: "55\n"

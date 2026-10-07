@@ -1,0 +1,36 @@
+questions:
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      import java.util.ArrayList;
+      import java.util.List;
+
+      public class Main {
+          public static void main(String[] args) {
+              List<Integer> numeros = new ArrayList<>(List.of(3, 8, 1, 6));
+              numeros.removeIf(n -> n > 5);
+              numeros.replaceAll(n -> n * 2);
+              System.out.println(numeros);
+          }
+      }
+    answer: |
+      [6, 2]
+    explanation: '`removeIf` quita los que cumplen `n > 5` (el 8 y el 6), así que quedan `[3, 1]`. Después `replaceAll` dobla cada uno: `[6, 2]`.'
+  - type: choice
+    prompt: ¿Cuál de estas lambdas **no** compila?
+    options:
+      - 'x -> { x * 2; }'
+      - 'x -> x * 2'
+      - 'x -> { return x * 2; }'
+      - '(x) -> x * 2'
+    answer: 0
+    explanation: Con llaves el cuerpo es un bloque normal y el valor no se devuelve solo; hace falta `return`. Sin llaves, la expresión se devuelve automáticamente, y los paréntesis alrededor de un único parámetro son opcionales.
+  - type: choice
+    prompt: ¿Qué es una interfaz funcional?
+    options:
+      - Una interfaz con un único método abstracto
+      - Cualquier clase que tenga un método `main`
+      - Una interfaz que solo tiene métodos `static`
+      - Una clase anónima con varios métodos
+    answer: 0
+    explanation: Una lambda solo puede rellenar un hueco, así que encaja donde se espera una interfaz con un solo método abstracto, como `Comparator` (con `compare`) o `Predicate` (con `test`).

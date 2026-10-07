@@ -18,6 +18,12 @@ public class Main {
 }
 ```
 
+> [!analogia]
+> Piensa en una casa con un armario. Lo que dejas en la casa (`exterior`) está a mano en todas partes, también con el armario abierto. Lo que metes en el armario (`interior`) solo está a mano mientras el armario está abierto: al cerrarlo (`}`), ya no puedes usarlo.
+
+> [!prueba]
+> Quita las dos barras `//` de la línea comentada y ejecuta. Verás `cannot find symbol`: fuera de sus llaves, `interior` ya no existe. Vuelve a poner las barras.
+
 Las variables declaradas dentro de un `if`, un bucle o un método funcionan igual: viven solo dentro de sus llaves. Lo verás constantemente en los módulos de condicionales y bucles.
 
 Dentro de un mismo método no puedes declarar dos variables con el mismo nombre si sus ámbitos se solapan:
@@ -33,7 +39,8 @@ public class Main {
 }
 ```
 
-> **Regla práctica:** declara cada variable lo más cerca posible de donde la usas y en el bloque más pequeño que la necesite. Menos ámbito, menos sitios donde algo puede cambiarla por error.
+> [!idea]
+> Declara cada variable lo más cerca posible de donde la usas y en el bloque más pequeño que la necesite. Menos ámbito, menos sitios donde algo puede cambiarla por error.
 
 ## Constantes con final
 
@@ -49,6 +56,9 @@ public class Main {
     }
 }
 ```
+
+> [!analogia]
+> Una variable normal es una pizarra: escribes, borras y vuelves a escribir. Una constante `final` es una placa grabada: el valor se pone una vez y ya no se puede cambiar.
 
 `final` comunica intención: quien lea el código sabe que ese valor es fijo.
 
@@ -71,11 +81,13 @@ public class Main {
 - `final`: no cambia.
 - Nombre en `MAYÚSCULAS_CON_GUIONES`, por convención.
 
+> [!prueba]
+> Cambia `EDAD_MINIMA` a `16` y ejecuta. Basta con tocar un solo sitio para que todo el programa use el nuevo valor.
+
 Usar constantes con nombre en lugar de "números mágicos" sueltos (`if (edad >= 18)`) hace el código más claro y más fácil de cambiar: si mañana la edad mínima es 16, la cambias en un solo sitio.
 
-## Resumen
-
-- Una variable existe desde su declaración hasta la llave que cierra su bloque.
-- No puedes repetir un nombre en ámbitos que se solapan.
-- `final` impide reasignar; `static final` a nivel de clase define constantes globales.
-- Sustituye los números mágicos por constantes con nombre.
+> [!resumen]
+> - Una variable existe desde su declaración hasta la llave que cierra su bloque.
+> - No puedes repetir un nombre en ámbitos que se solapan.
+> - `final` impide reasignar; `static final` a nivel de clase define constantes para todo el programa.
+> - Sustituye los números mágicos por constantes con nombre.

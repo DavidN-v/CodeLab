@@ -1,0 +1,65 @@
+title: Ordena la cuenta de la tienda
+summary: Coloca las líneas en orden para calcular un subtotal y sumar el envío.
+difficulty: EASY
+kind: parsons
+statement: |
+  Una tienda online lee el **precio** de un producto y la **cantidad** comprada. Primero muestra el subtotal y después le suma 5 euros de envío.
+
+  Ordena las líneas para que el programa funcione. Cuidado: hay una línea que **sobra**.
+
+  **Ejemplo:** con la entrada `12 3` la salida es:
+
+  ```
+  Subtotal: 36
+  Con envío: 41
+  ```
+starter: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+  {{lines}}
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int precio = entrada.nextInt();
+          int cantidad = entrada.nextInt();
+          int total = precio * cantidad;
+          System.out.println("Subtotal: " + total);
+          total = total + 5;
+          System.out.println("Con envío: " + total);
+      }
+  }
+lines:
+  - '        int precio = entrada.nextInt();'
+  - '        int cantidad = entrada.nextInt();'
+  - '        int total = precio * cantidad;'
+  - '        System.out.println("Subtotal: " + total);'
+  - '        total = total + 5;'
+  - '        System.out.println("Con envío: " + total);'
+distractors:
+  - '        int total = total + 5;'
+hints:
+  - 'La idea: una variable tiene que existir (y tener valor) antes de usarla, y cada mensaje debe imprimirse en el momento justo.'
+  - 'Qué usar: primero las lecturas con `nextInt()`, luego el cálculo de `total`. Para cambiar `total` después, se reasigna sin repetir `int`.'
+  - 'El plan: leer precio, leer cantidad, calcular `total`, imprimir el subtotal, sumar 5 a `total` e imprimir el total con envío. La línea `int total = total + 5;` sobra: declararía `total` por segunda vez.'
+tests:
+  - input: "12 3\n"
+    output: |
+      Subtotal: 36
+      Con envío: 41
+    sample: true
+  - input: "10 1\n"
+    output: |
+      Subtotal: 10
+      Con envío: 15
+  - input: "7 4\n"
+    output: |
+      Subtotal: 28
+      Con envío: 33

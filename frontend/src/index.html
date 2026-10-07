@@ -11,6 +11,16 @@
     />
     <meta name="theme-color" content="#131210" />
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <script>
+      // The saved theme, applied before the first paint so the page does not flash.
+      try {
+        var theme = localStorage.getItem('forja.theme');
+        if (theme !== 'light' && theme !== 'dark') {
+          theme = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+        }
+        document.documentElement.dataset.theme = theme;
+      } catch (e) {}
+    </script>
   </head>
   <body>
     <app-root></app-root>

@@ -1,6 +1,9 @@
 ## Métodos genéricos
 
-Un método puede tener sus propios parámetros de tipo, declarados **antes del tipo de retorno**:
+No solo las clases pueden ser genéricas. Un método también puede tener sus propios parámetros de tipo, declarados **antes del tipo de retorno**:
+
+> [!analogia]
+> Un método genérico es como un pelador que sirve para cualquier fruta: la receta («quita la piel») es la misma, y la fruta concreta la decides cada vez que lo usas.
 
 ```java
 import java.util.List;
@@ -28,7 +31,16 @@ public class Main {
 
 El compilador deduce `T` a partir de los argumentos: en la primera llamada es `String`; en la segunda, `Integer`.
 
+> [!prueba]
+> Cambia `List.of("Ada", "Grace", "Linus")` por `List.of("Ada", "Grace")` y vuelve a ejecutar: ahora el último es `Grace`. Después prueba a guardar el resultado de `ultimo(List.of(4, 8, 15))` en un `String`: no compila, porque ahí `T` es `Integer`.
+
+> [!cuidado]
+> El `<T>` de un método genérico va **antes** del tipo de retorno: `static <T> T ultimo(...)`. Escribir `static T ultimo(...)` sin declarar `<T>` no compila, porque Java no sabe qué es `T`.
+
 ## Límites: <T extends Algo>
+
+> [!analogia]
+> Un límite es como un anuncio de trabajo: «se busca conductor, **con carné**». Sin saber quién vendrá, sabes que podrá conducir. Con `<T extends Comparable<T>>` no sabes qué tipo será `T`, pero sabes que podrá compararse.
 
 Dentro de un método genérico, de `T` solo sabes que es un objeto: no puedes llamar a `compareTo` ni sumar. Un **límite superior** restringe `T` a tipos que cumplan un contrato, y a cambio te deja usar sus métodos:
 
@@ -83,9 +95,8 @@ Los genéricos existen solo para el compilador. Al generar el bytecode, Java **b
 
 Son limitaciones raras en el día a día; lo importante es saber por qué existen.
 
-## Resumen
-
-- `static <T> T metodo(...)` declara un método genérico; el tipo se deduce de los argumentos.
-- `<T extends Tipo>` limita `T` y permite usar los métodos de `Tipo`.
-- `<T extends Comparable<T>>` es el límite clásico para comparar.
-- Los tipos genéricos se borran al compilar: no hay `new T()`.
+> [!resumen]
+> - `static <T> T metodo(...)` declara un método genérico; el tipo se deduce de los argumentos.
+> - `<T extends Tipo>` limita `T` y permite usar los métodos de `Tipo`.
+> - `<T extends Comparable<T>>` es el límite clásico para comparar.
+> - Los tipos genéricos se borran al compilar: no hay `new T()`.

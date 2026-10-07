@@ -1,0 +1,55 @@
+questions:
+  - type: choice
+    prompt: ¿Por qué `"... WHERE nombre = '" + nombre + "'"` es peligroso?
+    options:
+      - Porque el texto del usuario puede cambiar la consulta (inyección SQL)
+      - Porque es más lento de escribir
+      - Porque `+` no funciona con texto SQL
+      - Porque los nombres no pueden tener letras
+    answer: 0
+    explanation: Si alguien escribe `x' OR '1'='1`, la comilla cierra el texto y el resto se interpreta como SQL. Con `PreparedStatement` el valor viaja siempre como dato.
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      import java.sql.Connection;
+      import java.sql.DriverManager;
+      import java.sql.PreparedStatement;
+      import java.sql.ResultSet;
+      import java.sql.SQLException;
+      import java.sql.Statement;
+
+      public class Main {
+          public static void main(String[] args) throws SQLException {
+              try (Connection c = DriverManager.getConnection("jdbc:h2:mem:club")) {
+                  try (Statement s = c.createStatement()) {
+                      s.execute("CREATE TABLE socios (nombre VARCHAR(20), edad INT)");
+                      s.execute("INSERT INTO socios VALUES ('Ana', 30), ('Luis', 17), ('Eva', 45)");
+                  }
+                  try (PreparedStatement ps = c.prepareStatement("SELECT COUNT(*) FROM socios WHERE edad >= ?")) {
+                      ps.setInt(1, 18);
+                      try (ResultSet r = ps.executeQuery()) {
+                          r.next();
+                          System.out.println(r.getInt(1));
+                      }
+                      ps.setInt(1, 40);
+                      try (ResultSet r = ps.executeQuery()) {
+                          r.next();
+                          System.out.println(r.getInt(1));
+                      }
+                  }
+              }
+          }
+      }
+    answer: |
+      2
+      1
+    explanation: 'Con el hueco a 18, cuentan Ana y Eva: 2. Reutilizando la misma consulta con 40, solo Eva: 1. Un `PreparedStatement` se puede ejecutar muchas veces cambiando los parámetros.'
+  - type: choice
+    prompt: En `SELECT * FROM libros WHERE autor = ? AND anio > ?`, ¿cómo rellenas el año?
+    options:
+      - '`ps.setInt(2, anio)`'
+      - '`ps.setInt(1, anio)`'
+      - '`ps.setInt(0, anio)`'
+      - '`ps.setString("anio", anio)`'
+    answer: 0
+    explanation: Los huecos se numeran desde 1 en el orden en que aparecen. El año es el segundo `?`, así que va en la posición 2.

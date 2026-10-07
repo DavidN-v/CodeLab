@@ -41,8 +41,9 @@ solution: |
       }
   }
 hints:
-  - Un bucle exterior para las filas; dentro, un bucle para los espacios y otro para los asteriscos.
-  - No olvides el `System.out.println()` al terminar cada fila.
+  - 'La idea: dibuja la pirámide fila a fila. Cada fila son unos espacios para centrarla y después unos asteriscos; los dos números dependen de la fila.'
+  - 'Qué usar: bucles anidados. Un `for` exterior para las filas y, dentro, dos `for` seguidos con `System.out.print` (sin salto de línea), y `System.out.println()` para cerrar la fila.'
+  - 'El plan: for (fila de 1 a n) → imprime n - fila espacios; imprime 2 * fila - 1 asteriscos; println().'
 tests:
   - input: "4\n"
     output: "   *\n  ***\n *****\n*******\n"

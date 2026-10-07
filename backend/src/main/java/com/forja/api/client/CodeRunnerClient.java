@@ -68,6 +68,31 @@ public class CodeRunnerClient {
 		}
 	}
 
+	/**
+	 * Runs the program once under the tracer for the step-by-step visualizer.
+	 * @throws InvalidRequestException if the runner refuses the program
+	 * @throws ExecutionUnavailableException if the runner is down, busy or failing
+	 */
+	public RunnerExecution.TraceResult trace(String language, String sourceCode, String stdin) {
+		try {
+			return restClient.post()
+				.uri("/internal/traces")
+				.contentType(MediaType.APPLICATION_JSON)
+				.body(new RunnerExecution.TraceRequest(language, sourceCode, stdin))
+				.retrieve()
+				.body(RunnerExecution.TraceResult.class);
+		}
+		catch (RestClientResponseException ex) {
+			if (ex.getStatusCode().isSameCodeAs(HttpStatus.BAD_REQUEST)) {
+				throw new InvalidRequestException("El programa no se puede visualizar: " + runnerMessage(ex));
+			}
+			throw new ExecutionUnavailableException("Code runner answered " + ex.getStatusCode(), ex);
+		}
+		catch (RestClientException ex) {
+			throw new ExecutionUnavailableException("Code runner unreachable", ex);
+		}
+	}
+
 	private static String runnerMessage(RestClientResponseException ex) {
 		try {
 			RunnerError error = ex.getResponseBodyAs(RunnerError.class);

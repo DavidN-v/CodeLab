@@ -8,6 +8,18 @@ List<Number> numeros = enteros;   // no compila
 numeros.add(3.14);                // si compilara, meteríamos un Double en una lista de Integer
 ```
 
+```mermaid
+classDiagram
+    Object <|-- Number
+    Number <|-- Integer
+    Number <|-- Double
+```
+
+Aunque `Integer` y `Double` son hijas de `Number`, las listas no heredan así: `List<Integer>` y `List<Number>` son tipos sin relación.
+
+> [!analogia]
+> Una cesta de manzanas no es una cesta de fruta cualquiera: si lo fuera, alguien podría meter un plátano en tu cesta de manzanas. Por eso Java no deja tratar una `List<Integer>` como una `List<Number>`.
+
 Por eso existen los **comodines** (`?`), que expresan "una lista de algún tipo relacionado con este".
 
 ## ? extends T: leer
@@ -34,6 +46,9 @@ public class Main {
     }
 }
 ```
+
+> [!prueba]
+> Añade la línea `numeros.add(4);` dentro del método `total` y ejecuta: no compila. Con `? extends Number` puedes leer, pero no añadir, porque la lista podría ser de `Double`.
 
 ## ? super T: escribir
 
@@ -62,6 +77,9 @@ public class Main {
 
 ## PECS
 
+> [!analogia]
+> Piensa en una fuente y un buzón. De una fuente (productor) solo **sacas** agua: `? extends`. En un buzón (consumidor) solo **metes** cartas: `? super`.
+
 La regla para recordar cuál usar: **P**roducer **E**xtends, **C**onsumer **S**uper.
 
 - Si la colección **produce** elementos que tú lees → `? extends T`.
@@ -78,8 +96,7 @@ La regla para recordar cuál usar: **P**roducer **E**xtends, **C**onsumer **S**u
 
 Usarás comodines sobre todo al **leer firmas** de la biblioteca estándar (`Comparator<? super T>`, `Collection<? extends E>`). En tu propio código, empieza con tipos exactos y añade comodines cuando una llamada razonable no compile.
 
-## Resumen
-
-- `List<Integer>` no es un `List<Number>`; los comodines resuelven ese hueco.
-- `? extends T` para leer (productor), `? super T` para escribir (consumidor): PECS.
-- `List<?>` cuando el tipo no importa.
+> [!resumen]
+> - `List<Integer>` no es un `List<Number>`; los comodines resuelven ese hueco.
+> - `? extends T` para leer (productor), `? super T` para escribir (consumidor): PECS.
+> - `List<?>` cuando el tipo no importa.

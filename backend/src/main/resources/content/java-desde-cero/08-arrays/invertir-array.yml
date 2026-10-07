@@ -38,8 +38,9 @@ solution: |
       }
   }
 hints:
-  - Primero llena el array con un bucle; después recórrelo desde `n - 1` hasta `0`.
-  - Para no dejar un espacio sobrante, escribe el espacio solo entre números.
+  - 'La idea: primero guardas todos los números en las taquillas del array y después los vas sacando empezando por la última.'
+  - 'Qué usar: un bucle `for` para llenar el array y otro `for` que cuente hacia atrás, de `n - 1` hasta `0` con `i--`.'
+  - 'El plan: llena `numeros[i]` con `entrada.nextInt()` → recorre `for (int i = n - 1; i >= 0; i--)` → escribe `numeros[i]` y añade un espacio solo si `i > 0`, para no dejar uno sobrante al final.'
 tests:
   - input: "5\n1 2 3 4 5\n"
     output: "5 4 3 2 1\n"

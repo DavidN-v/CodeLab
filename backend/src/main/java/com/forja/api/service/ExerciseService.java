@@ -3,6 +3,7 @@ package com.forja.api.service;
 import com.forja.api.dto.ExerciseDetailResponse;
 import com.forja.api.dto.ExerciseProgressResponse;
 import com.forja.api.dto.SolutionResponse;
+import com.forja.api.dto.SubmissionRequest;
 import com.forja.api.dto.SubmissionResultResponse;
 
 public interface ExerciseService {
@@ -22,6 +23,6 @@ public interface ExerciseService {
 	 * Runs the code against every test case, records the attempt and, on the
 	 * first correct one, the solve and its experience.
 	 */
-	SubmissionResultResponse submit(Long userId, String slug, String sourceCode);
+	SubmissionResultResponse submit(Long userId, String slug, SubmissionRequest request);
 
 }

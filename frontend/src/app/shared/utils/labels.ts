@@ -1,4 +1,4 @@
-import { Difficulty } from '../../core/models/course.model';
+import { Difficulty, ExerciseKind } from '../../core/models/course.model';
 import { SubmissionStatus, TestOutcome } from '../../core/models/exercise.model';
 
 export const DIFFICULTY_LABELS: Readonly<Record<Difficulty, string>> = {
@@ -34,3 +34,32 @@ export const TEST_OUTCOME_LABELS: Readonly<Record<TestOutcome, string>> = {
 export function plural(count: number, singular: string, pluralForm: string): string {
   return `${count} ${count === 1 ? singular : pluralForm}`;
 }
+
+export const KIND_LABELS: Readonly<Record<ExerciseKind, string>> = {
+  CODE: 'Escribe el programa',
+  FIX: 'Encuentra el error',
+  FILL: 'Completa los huecos',
+  PARSONS: 'Ordena las líneas',
+  PREDICT: '¿Qué imprime?',
+  PROJECT: 'Proyecto',
+};
+
+/** Short icon shown next to the kind in listings. */
+export const KIND_ICONS: Readonly<Record<ExerciseKind, string>> = {
+  CODE: '⌨',
+  FIX: '🐞',
+  FILL: '▭',
+  PARSONS: '⇅',
+  PREDICT: '👁',
+  PROJECT: '🛠',
+};
+
+/** What to do, in one sentence, above the work area. */
+export const KIND_INSTRUCTIONS: Readonly<Record<ExerciseKind, string>> = {
+  CODE: 'Escribe el programa en el editor, pruébalo con «Ejecutar» y envíalo cuando funcione.',
+  FIX: 'Este programa tiene un error. Encuéntralo, arréglalo y envíalo.',
+  FILL: 'Escribe en cada hueco lo que falta para que el programa funcione.',
+  PARSONS: 'Pon las líneas en el orden correcto. Ojo: puede que sobre alguna.',
+  PREDICT: 'Lee el programa sin ejecutarlo y escribe exactamente lo que imprimirá.',
+  PROJECT: 'Un programa más grande: avanza paso a paso y ejecuta a menudo.',
+};

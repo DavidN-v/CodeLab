@@ -1,0 +1,50 @@
+<section class="console" aria-label="Consola" aria-live="polite">
+  <header class="console__bar">
+    <span class="console__label">Consola</span>
+    @if (running()) {
+      <span class="console__status">Compilando y ejecutando…</span>
+    } @else if (result(); as run) {
+      <span class="console__status" [class.console__status--error]="failed()">
+        {{ statusLabel() }}
+        @if (run.exitCode !== null) {
+          · código {{ run.exitCode }}
+        }
+        @if (run.status !== 'COMPILATION_ERROR') {
+          · {{ run.durationMs }} ms
+        }
+      </span>
+    }
+  </header>
+
+  <div class="console__body">
+    @if (running()) {
+      <p class="console__hint">Tu programa se está ejecutando en un entorno aislado…</p>
+    } @else if (result(); as run) {
+      @if (run.compileOutput) {
+        <pre class="console__stream console__stream--error">{{ run.compileOutput }}</pre>
+        <app-friendly-errors [compileOutput]="run.compileOutput" />
+      }
+      @if (run.stdout) {
+        <pre class="console__stream">{{ run.stdout }}</pre>
+      }
+      @if (run.stderr) {
+        <pre class="console__stream console__stream--error">{{ run.stderr }}</pre>
+        <app-friendly-errors [stderr]="run.stderr" />
+      }
+      @if (run.status === 'TIMEOUT') {
+        <p class="console__hint">
+          El programa superó el tiempo máximo y se detuvo. ¿Hay un bucle que nunca termina, o espera
+          más entrada de la que le diste?
+        </p>
+      }
+      @if (run.outputTruncated) {
+        <p class="console__hint">La salida era demasiado larga y se ha recortado.</p>
+      }
+      @if (run.status === 'SUCCESS' && !run.stdout && !run.stderr) {
+        <p class="console__hint">El programa terminó sin escribir nada.</p>
+      }
+    } @else {
+      <p class="console__hint">Pulsa Ejecutar (o Ctrl + Enter) para ver aquí la salida.</p>
+    }
+  </div>
+</section>

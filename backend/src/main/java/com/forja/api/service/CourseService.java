@@ -3,6 +3,7 @@ package com.forja.api.service;
 import com.forja.api.dto.CourseDetailResponse;
 import com.forja.api.dto.CourseSummaryResponse;
 import com.forja.api.dto.ExerciseSummaryResponse;
+import com.forja.api.dto.GlossaryTermResponse;
 import com.forja.api.dto.LessonDetailResponse;
 import com.forja.api.dto.ModuleDetailResponse;
 import java.util.List;
@@ -26,5 +27,8 @@ public interface CourseService {
 
 	/** Published exercises of the course, in module order. */
 	List<ExerciseSummaryResponse> findExercises(Long courseId);
+
+	/** Terms of the course in display order. */
+	List<GlossaryTermResponse> findGlossary(Long courseId);
 
 }

@@ -1,0 +1,62 @@
+title: Arregla el reparto de la cuenta
+summary: Un programa que pierde los céntimos al dividir la cuenta entre amigos.
+difficulty: EASY
+kind: fix
+statement: |
+  Este programa lee el total de una cena en euros (un entero) y el número de personas, y muestra cuánto paga cada una con dos decimales.
+
+  Compila y se ejecuta, pero algo falla con los céntimos. Con la entrada `100 3` imprime:
+
+  ```
+  Cada persona paga: 33.00
+  ```
+
+  y debería imprimir:
+
+  ```
+  Cada persona paga: 33.33
+  ```
+
+  Con `10 4` sale `2.00` en vez de `2.50`. Encuentra por qué se pierden los decimales y corrígelo.
+starter: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int total = entrada.nextInt();
+          int personas = entrada.nextInt();
+          double porPersona = total / personas;
+          System.out.printf("Cada persona paga: %.2f%n", porPersona);
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int total = entrada.nextInt();
+          int personas = entrada.nextInt();
+          double porPersona = (double) total / personas;
+          System.out.printf("Cada persona paga: %.2f%n", porPersona);
+      }
+  }
+hints:
+  - 'La idea: el resultado se guarda en un `double`, pero los decimales ya se han perdido antes de llegar ahí.'
+  - 'Qué usar: `total / personas` es entero entre entero, así que es una división entera. Basta con que uno de los dos sea decimal, usando un casting `(double)`.'
+  - 'El plan: cambia la división por `(double) total / personas`. Ojo: `(double) (total / personas)` no sirve, porque primero haría la división entera.'
+tests:
+  - input: "100 3\n"
+    output: |
+      Cada persona paga: 33.33
+    sample: true
+  - input: "10 4\n"
+    output: |
+      Cada persona paga: 2.50
+  - input: "7 2\n"
+    output: |
+      Cada persona paga: 3.50
+  - input: "90 3\n"
+    output: |
+      Cada persona paga: 30.00

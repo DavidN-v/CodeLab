@@ -70,9 +70,9 @@ solution: |
       }
   }
 hints:
-  - "Cada tramo tiene `size / k` elementos, y los `size % k` primeros tramos uno más."
-  - "`lista.subList(inicio, fin)` te da el tramo sin copiarlo; pásaselo a una lambda que devuelva su suma."
-  - Recorre los `Future` en el orden en que los creaste para escribir los tramos en orden.
+  - 'La idea: parte la lista en `k` trozos seguidos, suma cada trozo en una tarea distinta y junta las sumas al final, en orden.'
+  - 'Qué usar: cada tramo tiene `size / k` elementos y los `size % k` primeros uno más; `lista.subList(inicio, fin)` te da el tramo, y `ejecutor.submit(() -> ...)` devuelve un `Future<Long>` con su suma.'
+  - 'El plan: con `inicio = 0`, en cada vuelta calcula `fin = inicio + base + (i < sobran ? 1 : 0)`, envía una tarea que sume `numeros.subList(inicio, fin)`, guarda su `Future` en una lista y haz `inicio = fin`. Después recorre los `Future` en orden con `get()`, imprime cada tramo y acumula el total.'
 tests:
   - input: "3\n1 2 3 4 5 6 7\n"
     output: |

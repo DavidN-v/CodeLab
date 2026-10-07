@@ -18,4 +18,14 @@ public interface LessonProgressRepository extends JpaRepository<LessonProgress, 
 	@Query("select p.completedAt from LessonProgress p where p.user.id = :userId and p.completedAt >= :since")
 	List<Instant> findCompletionTimesSince(Long userId, Instant since);
 
+	long countByUserId(Long userId);
+
+	long countByUserIdAndCompletedAtGreaterThanEqual(Long userId, Instant since);
+
+	@Query("""
+			select count(p) from LessonProgress p
+			where p.user.id = :userId and p.lesson.module.id = :moduleId and p.lesson.published = true
+			""")
+	long countCompletedInModule(Long userId, Long moduleId);
+
 }

@@ -2,6 +2,9 @@
 
 `Arrays.sort` sabe ordenar números y textos, pero ¿cómo ordena tus propios objetos? Tienes que decirle cuál va antes implementando `Comparable<T>`:
 
+> [!analogia]
+> Imagina que le pides a alguien que ordene una pila de fichas de alumnos. Lo primero que te preguntará es: «¿ordeno por nombre, por nota, por edad?». `compareTo` es tu respuesta: la regla para decidir, entre dos fichas, cuál va primero.
+
 ```java
 import java.util.Arrays;
 
@@ -34,13 +37,17 @@ public class Main {
 }
 ```
 
+> [!prueba]
+> Cambia `Double.compare(otro.nota, this.nota)` por `Double.compare(this.nota, otro.nota)` y ejecuta. El orden se invierte: ahora va de menor a mayor nota.
+
 `compareTo` devuelve:
 
 - un número **negativo** si `this` va antes que `otro`,
 - **cero** si son equivalentes,
 - un número **positivo** si `this` va después.
 
-Usa `Integer.compare`, `Double.compare` o `a.compareTo(b)` en vez de restar números: `a - b` puede desbordarse.
+> [!cuidado]
+> Usa `Integer.compare`, `Double.compare` o `a.compareTo(b)` en vez de restar números: `a - b` puede desbordarse con números muy grandes y dar el signo equivocado.
 
 ## Comparator: otros órdenes
 
@@ -72,6 +79,29 @@ public class Main {
 ## Programar contra interfaces
 
 Un principio que guía el buen diseño: **depende de abstracciones, no de clases concretas**.
+
+> [!analogia]
+> Un cargador USB no está pensado para un móvil concreto, sino para «cualquier cosa con USB». Por eso sirve para tu móvil de hoy y para el que te compres el año que viene.
+
+```mermaid
+classDiagram
+    Almacen <|.. AlmacenEnMemoria
+    Registro --> Almacen : usa
+    class Almacen {
+        <<interface>>
+        +guardar(String dato)
+        +cantidad() int
+    }
+    class AlmacenEnMemoria {
+        +guardar(String dato)
+        +cantidad() int
+    }
+    class Registro {
+        -Almacen almacen
+        +anotar(String evento)
+        +total() int
+    }
+```
 
 ```java
 interface Almacen {
@@ -123,8 +153,10 @@ public class Main {
 
 `Registro` funciona con cualquier `Almacen`: en memoria para pruebas, en un archivo o en una base de datos en producción, sin cambiar una línea. Pasar la dependencia por el constructor se llama **inyección de dependencias**, y es exactamente lo que hace Spring a gran escala.
 
-## Resumen
+> [!idea]
+> Si una clase recibe una interfaz en lugar de una clase concreta, puedes cambiarle la pieza sin tocarla.
 
-- `Comparable<T>` y `compareTo` dan a tus objetos un orden natural para `Arrays.sort`.
-- `Comparator.comparing(...)` crea otros órdenes; `.reversed()` los invierte.
-- Recibe interfaces en lugar de clases concretas: el código queda desacoplado y fácil de probar.
+> [!resumen]
+> - `Comparable<T>` y `compareTo` dan a tus objetos un orden natural para `Arrays.sort`.
+> - `Comparator.comparing(...)` crea otros órdenes; `.reversed()` los invierte.
+> - Recibe interfaces en lugar de clases concretas: el código queda desacoplado y fácil de probar.

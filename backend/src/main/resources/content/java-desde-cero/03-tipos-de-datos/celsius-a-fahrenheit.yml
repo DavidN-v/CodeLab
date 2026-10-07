@@ -32,8 +32,9 @@ solution: |
       }
   }
 hints:
-  - Lee el valor con `nextDouble()` para admitir decimales.
-  - "`printf(\"%.1f\", valor)` muestra un decimal con una sola cifra decimal."
+  - 'La idea: lee la temperatura, aplica la fórmula y muestra los dos valores con un decimal.'
+  - 'Qué usar: `nextDouble()` para leer (admite decimales) y `printf` con `%.1f` para mostrar un decimal. `%n` añade el salto de línea.'
+  - 'El plan: `fahrenheit = celsius * 9 / 5 + 32;` y después `printf("%.1f °C = %.1f °F%n", celsius, fahrenheit)`.'
 tests:
   - input: "25\n"
     output: |

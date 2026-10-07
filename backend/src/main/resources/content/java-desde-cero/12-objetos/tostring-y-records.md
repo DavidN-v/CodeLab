@@ -2,6 +2,9 @@
 
 Al imprimir un objeto o unirlo a un texto, Java llama a su método `toString()`. Por defecto devuelve algo poco útil como `Libro@6d06d69c`. Sobrescríbelo para dar una representación legible:
 
+> [!analogia]
+> `toString` es la etiqueta de la estantería de una tienda: en vez de un código interno raro, pone «Rayuela, 600 páginas».
+
 ```java
 class Libro {
     private final String titulo;
@@ -27,11 +30,17 @@ public class Main {
 }
 ```
 
+> [!prueba]
+> Borra el método `toString` entero (con su `@Override`) y vuelve a ejecutar: ¿qué se imprime ahora?
+
 Un buen `toString` facilita muchísimo depurar: en un mensaje de error o un log verás el contenido del objeto.
 
 ## Records: clases de datos en una línea
 
 Muchas clases solo transportan datos: un punto, una fecha, un resultado. Escribir constructor, getters, `equals`, `hashCode` y `toString` para cada una es repetitivo. Desde Java 16, un **record** lo genera todo:
+
+> [!analogia]
+> Un record es como una ficha de cartulina ya impresa: solo rellenas los huecos (los datos) y la ficha viene con todo lo demás de serie.
 
 ```java
 record Punto(int x, int y) {}
@@ -53,6 +62,9 @@ Un record:
 - Tiene campos `private final` con los componentes declarados.
 - Genera el constructor, los accesores `x()` e `y()`, `equals`, `hashCode` y `toString`.
 - Es **inmutable**: no hay setters.
+
+> [!cuidado]
+> Los accesores de un record no empiezan por `get`: es `a.x()`, no `a.getX()`.
 
 ## Añadir lógica a un record
 
@@ -92,9 +104,8 @@ public class Main {
 | La igualdad es "mismos valores" | La identidad importa más que los valores |
 | No necesita cambiar tras crearse | Necesita modificarse (una cuenta, un carrito) |
 
-## Resumen
-
-- Sobrescribe `toString` para que tus objetos se impriman de forma legible.
-- `record Nombre(tipo a, tipo b) {}` crea una clase de datos inmutable con todo generado.
-- Los accesores de un record se llaman como el componente: `punto.x()`.
-- Valida en el constructor compacto y añade los métodos que necesites.
+> [!resumen]
+> - Sobrescribe `toString` para que tus objetos se impriman de forma legible.
+> - `record Nombre(tipo a, tipo b) {}` crea una clase de datos inmutable con todo generado.
+> - Los accesores de un record se llaman como el componente: `punto.x()`.
+> - Valida en el constructor compacto y añade los métodos que necesites.

@@ -6,6 +6,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import com.forja.api.learning.ReviewSchedule;
 import java.time.Instant;
 
 /** A learner's state on one exercise: attempts, help used and whether it is solved. */
@@ -36,6 +37,14 @@ public class ExerciseProgress extends BaseEntity {
 	@Column(name = "xp_awarded", nullable = false)
 	private int xpAwarded;
 
+	/** Spaced reviews passed since it was solved. */
+	@Column(name = "review_stage", nullable = false)
+	private int reviewStage;
+
+	/** When it should be practised again; null before solving and once learned. */
+	@Column(name = "next_review_at")
+	private Instant nextReviewAt;
+
 	protected ExerciseProgress() {
 	}
 
@@ -55,6 +64,21 @@ public class ExerciseProgress extends BaseEntity {
 		}
 		solvedAt = at;
 		xpAwarded = xp;
+		nextReviewAt = ReviewSchedule.next(0, at);
+		return true;
+	}
+
+	public boolean isReviewDue(Instant now) {
+		return nextReviewAt != null && !nextReviewAt.isAfter(now);
+	}
+
+	/** @return whether this solve counted as a due review */
+	public boolean passReview(Instant at) {
+		if (!isReviewDue(at)) {
+			return false;
+		}
+		reviewStage++;
+		nextReviewAt = ReviewSchedule.next(reviewStage, at);
 		return true;
 	}
 
@@ -94,6 +118,14 @@ public class ExerciseProgress extends BaseEntity {
 
 	public int getXpAwarded() {
 		return xpAwarded;
+	}
+
+	public int getReviewStage() {
+		return reviewStage;
+	}
+
+	public Instant getNextReviewAt() {
+		return nextReviewAt;
 	}
 
 }

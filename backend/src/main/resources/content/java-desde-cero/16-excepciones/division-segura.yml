@@ -44,8 +44,9 @@ solution: |
       }
   }
 hints:
-  - El código inicial ya funciona con datos correctos; solo tienes que envolver la parte que puede fallar en un `try`.
-  - "`Integer.parseInt` lanza `NumberFormatException`; dividir entre 0 lanza `ArithmeticException`."
+  - 'La idea: el código inicial ya funciona con datos correctos; solo falta que una línea mala no detenga el programa y que se escriba el mensaje de error adecuado.'
+  - 'Qué usar: un `try` con dos `catch`. `Integer.parseInt` lanza `NumberFormatException` y dividir entre 0 lanza `ArithmeticException`.'
+  - 'El plan: dentro del `while`, envuelve las dos conversiones y el `println` en un `try`; añade `catch (NumberFormatException e)` que escriba `Error: no es un número` y `catch (ArithmeticException e)` que escriba `Error: división entre cero`.'
 tests:
   - input: |
       10 2

@@ -1,0 +1,65 @@
+title: La cuenta atrás que se queda corta
+summary: Corrige un bucle for que da una vuelta de menos.
+difficulty: EASY
+kind: fix
+statement: |
+  Este programa lee un número `n` y debería hacer una cuenta atrás desde `n` hasta 1, una línea por número, y terminar con `¡Despegue!`. Con `3` debería escribir:
+
+  ```
+  3
+  2
+  1
+  ¡Despegue!
+  ```
+
+  Pero el 1 nunca aparece: con `3` escribe `3`, `2` y `¡Despegue!`. Encuentra el error y corrígelo.
+starter: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int n = entrada.nextInt();
+          for (int i = n; i > 1; i--) {
+              System.out.println(i);
+          }
+          System.out.println("¡Despegue!");
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int n = entrada.nextInt();
+          for (int i = n; i >= 1; i--) {
+              System.out.println(i);
+          }
+          System.out.println("¡Despegue!");
+      }
+  }
+hints:
+  - 'La idea: el bucle para una vuelta antes de tiempo. Fíjate en qué pasa cuando `i` vale 1: ¿se cumple la condición?'
+  - 'Qué usar: la condición del `for`. La diferencia entre `>` y `>=` es justo incluir o no el último número.'
+  - 'El plan: cambia la condición para que el bucle siga mientras `i` sea mayor o igual que 1.'
+tests:
+  - input: "3\n"
+    output: |
+      3
+      2
+      1
+      ¡Despegue!
+    sample: true
+  - input: "1\n"
+    output: |
+      1
+      ¡Despegue!
+  - input: "5\n"
+    output: |
+      5
+      4
+      3
+      2
+      1
+      ¡Despegue!

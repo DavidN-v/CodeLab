@@ -9,7 +9,7 @@ import { AuthService } from './auth.service';
 const RESPONSE: AuthResponse = {
   token: 'jwt-token',
   expiresAt: '2999-01-01T00:00:00Z',
-  user: { id: 1, email: 'ada@example.com', displayName: 'Ada' },
+  user: { id: 1, email: 'ada@example.com', displayName: 'Ada', dailyGoalXp: 30 },
 };
 
 describe('AuthService', () => {

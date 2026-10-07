@@ -17,6 +17,12 @@ export const COURSES_ROUTES: Routes = [
       import('./pages/course-page/course-page.component').then((m) => m.CoursePageComponent),
   },
   {
+    path: ':languageSlug/glossary',
+    title: 'Glosario',
+    loadComponent: () =>
+      import('./pages/glossary-page/glossary-page.component').then((m) => m.GlossaryPageComponent),
+  },
+  {
     path: ':languageSlug/modules/:moduleSlug',
     title: 'Módulo',
     loadComponent: () =>

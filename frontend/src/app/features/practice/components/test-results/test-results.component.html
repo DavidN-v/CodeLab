@@ -2,17 +2,27 @@
 
 <section class="results" aria-label="Resultado de la corrección" aria-live="polite">
   <header class="results__verdict" [class.results__verdict--ok]="submission.status === 'ACCEPTED'">
-    <p class="results__status">{{ statusLabels[submission.status] }}</p>
+    <p class="results__status">
+      {{ submission.status === 'ACCEPTED' ? '✓ ' : '' }}{{ statusLabels[submission.status] }}
+    </p>
     <p class="results__count">
       {{ submission.passedTests }} / {{ submission.totalTests }} pruebas superadas
     </p>
     @if (submission.firstSolve) {
       <p class="tag tag--accent">+{{ submission.xpAwarded }} XP</p>
     }
+    @if (submission.reviewPassed) {
+      <p class="tag tag--done">Repaso superado</p>
+    }
   </header>
+
+  @if (submission.feedback) {
+    <p class="results__feedback">💡 {{ submission.feedback }}</p>
+  }
 
   @if (submission.compileOutput) {
     <pre class="results__compile">{{ submission.compileOutput }}</pre>
+    <app-friendly-errors [compileOutput]="submission.compileOutput" />
   }
 
   <ol class="results__tests">
@@ -33,18 +43,22 @@
                 <pre>{{ test.input }}</pre>
               </div>
             }
-            <div>
-              <p class="test__caption">Esperado</p>
-              <pre>{{ test.expectedOutput }}</pre>
-            </div>
-            <div>
-              <p class="test__caption">Tu salida</p>
-              <pre>{{ test.actualOutput || '(nada)' }}</pre>
-            </div>
+            @if (test.outcome === 'WRONG_OUTPUT') {
+              <app-output-diff
+                [expected]="test.expectedOutput ?? ''"
+                [actual]="test.actualOutput ?? ''"
+              />
+            } @else {
+              <div>
+                <p class="test__caption">Tu salida</p>
+                <pre>{{ test.actualOutput || '(nada)' }}</pre>
+              </div>
+            }
             @if (test.stderr) {
               <div class="test__stderr">
                 <p class="test__caption">Errores</p>
                 <pre>{{ test.stderr }}</pre>
+                <app-friendly-errors [stderr]="test.stderr" />
               </div>
             }
           </div>

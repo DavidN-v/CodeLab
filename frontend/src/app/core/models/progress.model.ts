@@ -1,4 +1,5 @@
-import { LessonRef } from './course.model';
+import { LessonRef, ModuleRef } from './course.model';
+import { Level } from './dashboard.model';
 
 export interface ModuleProgress {
   moduleId: number;
@@ -31,4 +32,11 @@ export interface LessonCompletion {
   completedAt: string;
   newlyCompleted: boolean;
   xpAwarded: number;
+  celebration: Celebration | null;
+}
+
+/** Milestones reached by the action that returned it. */
+export interface Celebration {
+  newLevel: Level | null;
+  completedModule: ModuleRef | null;
 }

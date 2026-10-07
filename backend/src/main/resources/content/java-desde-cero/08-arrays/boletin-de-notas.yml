@@ -1,0 +1,212 @@
+title: 'Proyecto: boletín de notas'
+summary: Construye paso a paso un boletín con calificaciones, media, máxima, mínima y aprobados.
+difficulty: HARD
+kind: project
+statement: |
+  Vas a programar el boletín de notas de una clase. Es un proyecto más largo que un ejercicio normal, así que lo construirás **por pasos**. Ejecuta el programa al terminar cada paso para comprobar que vas bien.
+
+  ## La entrada
+
+  Primero llega un entero `n` (al menos 1): el número de alumnos. Después llegan `n` notas entre 0 y 10, con un decimal como mucho (por ejemplo `7.5` o `9`).
+
+  ## La salida
+
+  Para la entrada
+
+  ```
+  4
+  7.5 4 9.2 5
+  ```
+
+  el programa debe escribir **exactamente**:
+
+  ```
+  Alumno 1: 7.5 - Notable
+  Alumno 2: 4.0 - Suspenso
+  Alumno 3: 9.2 - Sobresaliente
+  Alumno 4: 5.0 - Aprobado
+  Media: 6.43
+  Nota más alta: 9.2
+  Nota más baja: 4.0
+  Aprobados: 3 de 4
+  ```
+
+  ## Paso 1: leer las notas
+
+  Lee `n` y crea un array `double[] notas` de tamaño `n`. Llénalo con un bucle. Para leer cada nota usa `Double.parseDouble(entrada.next())`, que entiende el punto decimal (`7.5`).
+
+  ## Paso 2: el método `calificacion`
+
+  Escribe `static String calificacion(double nota)` que devuelva:
+
+  | Nota | Calificación |
+  | --- | --- |
+  | menos de 5 | `Suspenso` |
+  | de 5 a menos de 7 | `Aprobado` |
+  | de 7 a menos de 9 | `Notable` |
+  | 9 o más | `Sobresaliente` |
+
+  ## Paso 3: listar a los alumnos
+
+  Recorre el array y escribe una línea por alumno: `Alumno <número>: <nota> - <calificación>`. Los alumnos se numeran desde 1 y la nota se escribe con **un** decimal: `System.out.printf("Alumno %d: %.1f - %s%n", ...)`.
+
+  ## Paso 4: la media
+
+  Escribe `static double media(double[] notas)` y muestra `Media: <media>` con **dos** decimales (`%.2f`).
+
+  ## Paso 5: la más alta y la más baja
+
+  Escribe `static double maxima(double[] notas)` y `static double minima(double[] notas)`. Empieza siempre por el primer elemento, `notas[0]`. Escríbelas con un decimal: `Nota más alta: 9.2` y `Nota más baja: 4.0`.
+
+  ## Paso 6: los aprobados
+
+  Escribe `static int contarAprobados(double[] notas)` (aprueba quien tiene 5 o más) y termina con `Aprobados: <aprobados> de <n>`.
+starter: |
+  import java.util.Scanner;
+
+  public class Main {
+      // Paso 2
+      static String calificacion(double nota) {
+          return "";
+      }
+
+      // Paso 4
+      static double media(double[] notas) {
+          return 0;
+      }
+
+      // Paso 5
+      static double maxima(double[] notas) {
+          return 0;
+      }
+
+      static double minima(double[] notas) {
+          return 0;
+      }
+
+      // Paso 6
+      static int contarAprobados(double[] notas) {
+          return 0;
+      }
+
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          // Paso 1: lee n y las n notas
+
+          // Paso 3: una línea por alumno
+
+          // Pasos 4, 5 y 6: el resumen
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  public class Main {
+      static String calificacion(double nota) {
+          if (nota < 5) {
+              return "Suspenso";
+          } else if (nota < 7) {
+              return "Aprobado";
+          } else if (nota < 9) {
+              return "Notable";
+          }
+          return "Sobresaliente";
+      }
+
+      static double media(double[] notas) {
+          double suma = 0;
+          for (double nota : notas) {
+              suma += nota;
+          }
+          return suma / notas.length;
+      }
+
+      static double maxima(double[] notas) {
+          double mayor = notas[0];
+          for (double nota : notas) {
+              if (nota > mayor) {
+                  mayor = nota;
+              }
+          }
+          return mayor;
+      }
+
+      static double minima(double[] notas) {
+          double menor = notas[0];
+          for (double nota : notas) {
+              if (nota < menor) {
+                  menor = nota;
+              }
+          }
+          return menor;
+      }
+
+      static int contarAprobados(double[] notas) {
+          int aprobados = 0;
+          for (double nota : notas) {
+              if (nota >= 5) {
+                  aprobados++;
+              }
+          }
+          return aprobados;
+      }
+
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int n = entrada.nextInt();
+          double[] notas = new double[n];
+          for (int i = 0; i < n; i++) {
+              notas[i] = Double.parseDouble(entrada.next());
+          }
+          for (int i = 0; i < n; i++) {
+              System.out.printf("Alumno %d: %.1f - %s%n", i + 1, notas[i], calificacion(notas[i]));
+          }
+          System.out.printf("Media: %.2f%n", media(notas));
+          System.out.printf("Nota más alta: %.1f%n", maxima(notas));
+          System.out.printf("Nota más baja: %.1f%n", minima(notas));
+          System.out.println("Aprobados: " + contarAprobados(notas) + " de " + n);
+      }
+  }
+hints:
+  - 'La idea: divide el problema en piezas pequeñas. Cada pieza (la calificación, la media, la máxima…) es un método que recibe la nota o el array entero y devuelve una sola respuesta. `main` solo lee y escribe.'
+  - 'Qué usar: un `double[]` para las notas, una cadena de `if / else if` en `calificacion`, for-each con acumuladores en los demás métodos, y `printf` con `%.1f` (un decimal) y `%.2f` (dos decimales).'
+  - 'El plan: `calificacion` → `if (nota < 5) return "Suspenso"; else if (nota < 7) ...`. `media` → suma todo y divide entre `notas.length`. `maxima` y `minima` → empieza con `notas[0]` y compara. `contarAprobados` → cuenta las `nota >= 5`. En `main`: leer, listar con `i + 1`, y las cuatro líneas del resumen.'
+tests:
+  - input: "4\n7.5 4 9.2 5\n"
+    output: |
+      Alumno 1: 7.5 - Notable
+      Alumno 2: 4.0 - Suspenso
+      Alumno 3: 9.2 - Sobresaliente
+      Alumno 4: 5.0 - Aprobado
+      Media: 6.43
+      Nota más alta: 9.2
+      Nota más baja: 4.0
+      Aprobados: 3 de 4
+    sample: true
+  - input: "1\n10\n"
+    output: |
+      Alumno 1: 10.0 - Sobresaliente
+      Media: 10.00
+      Nota más alta: 10.0
+      Nota más baja: 10.0
+      Aprobados: 1 de 1
+  - input: "3\n2.5 4.9 0\n"
+    output: |
+      Alumno 1: 2.5 - Suspenso
+      Alumno 2: 4.9 - Suspenso
+      Alumno 3: 0.0 - Suspenso
+      Media: 2.47
+      Nota más alta: 4.9
+      Nota más baja: 0.0
+      Aprobados: 0 de 3
+  - input: "5\n6.9 7 8.9 9 5\n"
+    output: |
+      Alumno 1: 6.9 - Aprobado
+      Alumno 2: 7.0 - Notable
+      Alumno 3: 8.9 - Notable
+      Alumno 4: 9.0 - Sobresaliente
+      Alumno 5: 5.0 - Aprobado
+      Media: 7.36
+      Nota más alta: 9.0
+      Nota más baja: 5.0
+      Aprobados: 5 de 5

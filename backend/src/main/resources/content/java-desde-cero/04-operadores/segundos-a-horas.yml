@@ -33,8 +33,9 @@ solution: |
       }
   }
 hints:
-  - Una hora tiene 3600 segundos; `total / 3600` da las horas completas.
-  - Lo que sobra tras quitar las horas es `total % 3600`; divídelo entre 60 para los minutos.
+  - 'La idea: es como cambiar billetes grandes por pequeños. Primero sacas cuántas horas completas caben en los segundos, luego cuántos minutos caben en lo que sobra, y lo último que sobra son los segundos.'
+  - 'Qué usar: la división entera (`/`) para saber cuántas unidades completas caben y el resto (`%`) para quedarte con lo que sobra. Una hora son 3600 segundos y un minuto, 60.'
+  - 'El plan: horas = total / 3600; minutos = total % 3600 / 60; segundos = total % 60; y después un println que junte las tres variables con " h ", " min " y " s".'
 tests:
   - input: "3725\n"
     output: "1 h 2 min 5 s\n"

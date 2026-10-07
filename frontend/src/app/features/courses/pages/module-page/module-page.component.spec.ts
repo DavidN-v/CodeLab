@@ -46,6 +46,7 @@ const MODULE: ModuleDetail = {
       title: 'Hola, mundo',
       summary: '',
       difficulty: 'EASY',
+      kind: 'CODE',
       module: { id: 1, slug: 'fundamentos', title: 'Fundamentos', position: 1 },
     },
   ],

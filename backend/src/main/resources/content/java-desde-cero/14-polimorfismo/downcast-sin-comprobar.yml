@@ -1,0 +1,153 @@
+title: El gato que no trae la pelota
+summary: Arregla una conversión de tipo que falla al ejecutar.
+difficulty: MEDIUM
+kind: fix
+statement: |
+  En la guardería de mascotas, cada animal juega a su manera: los perros traen la pelota y los gatos ronronean.
+
+  La entrada tiene líneas `perro <nombre>` o `gato <nombre>`. El programa escribe una línea por animal: `<nombre> trae la pelota` para los perros y `<nombre> ronronea` para los gatos.
+
+  **El problema:** si solo hay perros, todo va bien; pero en cuanto llega un gato, el programa se detiene con un `ClassCastException`. Encuentra el fallo y corrígelo.
+starter: |
+  import java.util.ArrayList;
+  import java.util.List;
+  import java.util.Scanner;
+
+  class Animal {
+      protected final String nombre;
+
+      Animal(String nombre) {
+          this.nombre = nombre;
+      }
+  }
+
+  class Perro extends Animal {
+      Perro(String nombre) {
+          super(nombre);
+      }
+
+      void traerPelota() {
+          System.out.println(nombre + " trae la pelota");
+      }
+  }
+
+  class Gato extends Animal {
+      Gato(String nombre) {
+          super(nombre);
+      }
+
+      void ronronear() {
+          System.out.println(nombre + " ronronea");
+      }
+  }
+
+  public class Main {
+      static void jugar(Animal animal) {
+          if (animal instanceof Animal) {
+              Perro perro = (Perro) animal;
+              perro.traerPelota();
+          } else if (animal instanceof Gato gato) {
+              gato.ronronear();
+          }
+      }
+
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          List<Animal> animales = new ArrayList<>();
+          while (entrada.hasNext()) {
+              String tipo = entrada.next();
+              String nombre = entrada.next();
+              if (tipo.equals("perro")) {
+                  animales.add(new Perro(nombre));
+              } else {
+                  animales.add(new Gato(nombre));
+              }
+          }
+          for (Animal animal : animales) {
+              jugar(animal);
+          }
+      }
+  }
+solution: |
+  import java.util.ArrayList;
+  import java.util.List;
+  import java.util.Scanner;
+
+  class Animal {
+      protected final String nombre;
+
+      Animal(String nombre) {
+          this.nombre = nombre;
+      }
+  }
+
+  class Perro extends Animal {
+      Perro(String nombre) {
+          super(nombre);
+      }
+
+      void traerPelota() {
+          System.out.println(nombre + " trae la pelota");
+      }
+  }
+
+  class Gato extends Animal {
+      Gato(String nombre) {
+          super(nombre);
+      }
+
+      void ronronear() {
+          System.out.println(nombre + " ronronea");
+      }
+  }
+
+  public class Main {
+      static void jugar(Animal animal) {
+          if (animal instanceof Perro perro) {
+              perro.traerPelota();
+          } else if (animal instanceof Gato gato) {
+              gato.ronronear();
+          }
+      }
+
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          List<Animal> animales = new ArrayList<>();
+          while (entrada.hasNext()) {
+              String tipo = entrada.next();
+              String nombre = entrada.next();
+              if (tipo.equals("perro")) {
+                  animales.add(new Perro(nombre));
+              } else {
+                  animales.add(new Gato(nombre));
+              }
+          }
+          for (Animal animal : animales) {
+              jugar(animal);
+          }
+      }
+  }
+hints:
+  - 'La idea: el programa convierte a `Perro` algo que no siempre es un perro. Antes de convertir hay que comprobar qué hay realmente dentro de la variable.'
+  - 'Qué usar: fíjate en la condición del primer `if`. ¿Hay algún animal para el que `animal instanceof Animal` sea falso? Usa `instanceof` con el tipo concreto y una variable: `animal instanceof Perro perro`.'
+  - 'El plan: cambia el primer `if` por `if (animal instanceof Perro perro) { perro.traerPelota(); }` y borra el cast `(Perro) animal`, que ya no hace falta.'
+tests:
+  - input: |
+      perro Toby
+      gato Luna
+    output: |
+      Toby trae la pelota
+      Luna ronronea
+    sample: true
+  - input: |
+      gato Michi
+      gato Garfield
+      perro Rex
+    output: |
+      Michi ronronea
+      Garfield ronronea
+      Rex trae la pelota
+  - input: |
+      perro Lassie
+    output: |
+      Lassie trae la pelota

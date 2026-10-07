@@ -1,0 +1,28 @@
+questions:
+  - type: choice
+    prompt: ¿Qué hace el compilador `javac` con tu archivo `.java`?
+    options:
+      - Lo traduce a bytecode y lo guarda en un archivo `.class`
+      - Lo ejecuta directamente en el procesador
+      - Lo convierte en un programa que solo funciona en Windows
+    answer: 0
+    explanation: '`javac` traduce tu código a bytecode, un idioma intermedio. Después la JVM lee ese bytecode y lo ejecuta. Por eso el mismo `.class` sirve en Windows, Linux o macOS.'
+  - type: choice
+    prompt: ¿Por qué el mismo programa Java funciona en sistemas distintos?
+    options:
+      - Porque cada sistema tiene su propia JVM que entiende el mismo bytecode
+      - Porque Java compila una versión distinta para cada sistema a la vez
+      - Porque los ordenadores modernos entienden Java directamente
+    answer: 0
+    explanation: 'El bytecode es igual en todas partes; lo que cambia es la JVM, que hay una para cada sistema. Es como una receta universal con un intérprete en cada cocina.'
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              System.out.println("Java 21");
+          }
+      }
+    answer: |
+      Java 21
+    explanation: '`println` escribe en la consola exactamente el texto que hay entre las comillas, sin las comillas.'

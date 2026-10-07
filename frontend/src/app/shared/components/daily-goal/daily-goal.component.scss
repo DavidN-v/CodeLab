@@ -1,0 +1,94 @@
+:host {
+  display: block;
+}
+
+.goal {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.goal__ring {
+  --percent: 0%;
+  display: grid;
+  flex-shrink: 0;
+  width: 4.5rem;
+  height: 4.5rem;
+  place-items: center;
+  border-radius: 999px;
+  background: conic-gradient(var(--color-accent) var(--percent), var(--color-border-strong) 0);
+
+  .goal--reached & {
+    background: var(--color-success);
+  }
+}
+
+.goal__value {
+  display: grid;
+  width: 3.6rem;
+  height: 3.6rem;
+  place-items: center;
+  border-radius: 999px;
+  background-color: var(--color-surface);
+  font-family: var(--font-mono);
+  font-weight: 700;
+
+  .goal--reached & {
+    color: var(--color-success);
+    font-size: var(--text-xl);
+  }
+}
+
+.goal__numbers {
+  font-size: var(--text-lg);
+}
+
+.goal__detail {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.goal__change {
+  margin-top: var(--space-1);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-accent);
+  font-size: var(--text-xs);
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.goal__options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+.goal__option {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  text-align: left;
+  cursor: pointer;
+
+  span {
+    color: var(--color-text-subtle);
+    font-size: var(--text-xs);
+  }
+
+  &:hover {
+    border-color: var(--color-accent);
+  }
+}
+
+.goal__option--current {
+  border-color: var(--color-accent);
+  background-color: var(--color-accent-soft);
+}

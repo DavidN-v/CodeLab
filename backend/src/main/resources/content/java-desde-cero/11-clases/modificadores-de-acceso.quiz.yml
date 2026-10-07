@@ -1,0 +1,50 @@
+questions:
+  - type: choice
+    prompt: ¿Qué modificador conviene usar casi siempre para los campos de una clase?
+    options:
+      - '`private`'
+      - '`public`'
+      - 'Ninguno (acceso de paquete)'
+      - '`protected`'
+    answer: 0
+    explanation: 'Con `private`, solo la propia clase toca sus datos, así que puede vigilar que siempre sean válidos. Los demás niveles dejan que código de fuera cambie el estado sin control.'
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      class Termometro {
+          private int grados = 20;
+
+          public void setGrados(int nuevos) {
+              if (nuevos < -50 || nuevos > 60) {
+                  System.out.println("Rechazado: " + nuevos);
+                  return;
+              }
+              grados = nuevos;
+          }
+
+          public int getGrados() {
+              return grados;
+          }
+      }
+
+      public class Main {
+          public static void main(String[] args) {
+              Termometro t = new Termometro();
+              t.setGrados(25);
+              t.setGrados(100);
+              System.out.println(t.getGrados());
+          }
+      }
+    answer: |
+      Rechazado: 100
+      25
+    explanation: 'El setter valida: 25 está dentro del rango y se guarda; 100 no, así que imprime el aviso y no cambia nada. Al final los grados siguen en 25.'
+  - type: choice
+    prompt: 'Por convención, ¿cómo se llama el getter de un campo `boolean activo`?'
+    options:
+      - '`isActivo()`'
+      - '`getActivo(boolean activo)`'
+      - '`setActivo()`'
+      - '`activo.get()`'
+    answer: 0
+    explanation: 'Para los `boolean` el getter suele empezar por `is`: `isActivo()`. Un getter no recibe parámetros; `setActivo` sería el método que lo cambia.'

@@ -133,8 +133,9 @@ solution: |
       }
   }
 hints:
-  - "`saldo` es `protected`, así que `CuentaAhorro` puede modificarlo en `aplicarInteres`."
-  - "En el `retirar` sobrescrito comprueba solo el límite de 500 y deja el resto de reglas a `super.retirar(cantidad)`."
+  - 'La idea: una cuenta de ahorro funciona como una cuenta normal, con dos cambios: puede ganar intereses y no deja sacar más de 500 de golpe.'
+  - 'Qué usar: `class CuentaAhorro extends Cuenta`, el campo `saldo` (es `protected`, así que puedes modificarlo), `@Override` en `retirar` y `super.retirar(cantidad)` para reutilizar las reglas del padre.'
+  - 'El plan: en `retirar`, si `cantidad > 500` devuelve `false`; si no, `return super.retirar(cantidad);`. En `aplicarInteres`, `saldo += saldo * interes / 100;`. En el `main`, crea `new CuentaAhorro(interes)` y activa el caso `"interes"`.'
 tests:
   - input: |
       ahorro 10

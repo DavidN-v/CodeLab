@@ -15,4 +15,6 @@ public interface AuthService {
 
 	UserResponse findUser(Long userId);
 
+	UserResponse changeDailyGoal(Long userId, int dailyGoalXp);
+
 }

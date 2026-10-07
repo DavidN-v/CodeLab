@@ -1,0 +1,44 @@
+questions:
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int velocidad = 95;
+              if (velocidad > 120) {
+                  System.out.println("Multa grave");
+              } else if (velocidad > 90) {
+                  System.out.println("Multa leve");
+              } else if (velocidad > 50) {
+                  System.out.println("Correcto");
+              } else {
+                  System.out.println("Muy lento");
+              }
+          }
+      }
+    answer: |
+      Multa leve
+    explanation: '`95 > 120` es falso, así que pasa a la siguiente. `95 > 90` es verdadero: imprime `Multa leve` y no mira las demás ramas, aunque `95 > 50` también sea cierto.'
+  - type: choice
+    prompt: '¿Qué imprime este fragmento con `nota = 10`?'
+    code: |
+      if (nota >= 5) {
+          System.out.println("Aprobado");
+      } else if (nota >= 9) {
+          System.out.println("Sobresaliente");
+      }
+    options:
+      - Aprobado
+      - Sobresaliente
+      - Aprobado y Sobresaliente
+      - Nada
+    answer: 0
+    explanation: 'Gana la primera condición verdadera: `10 >= 5` ya se cumple, así que nunca se llega a la segunda. Por eso las condiciones se ordenan de la más restrictiva (`>= 9`) a la más general (`>= 5`).'
+  - type: choice
+    prompt: '¿Qué condición equivale a un `if (edad >= 18)` con otro `if (tieneCarnet)` dentro?'
+    options:
+      - '`if (edad >= 18 && tieneCarnet)`'
+      - '`if (edad >= 18 || tieneCarnet)`'
+      - '`if (edad >= 18 == tieneCarnet)`'
+    answer: 0
+    explanation: 'Para llegar al `if` de dentro hay que cumplir la primera condición **y** la segunda: eso es `&&`. Con `||` bastaría con una de las dos.'

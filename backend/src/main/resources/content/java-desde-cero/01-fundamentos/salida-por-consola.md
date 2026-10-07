@@ -1,4 +1,4 @@
-Casi todos los programas de este curso se comunican contigo a través de la consola. Vale la pena dominar las tres formas de escribir en ella.
+Casi todos los programas de este curso se comunican contigo a través de la **consola**: el panel de texto donde aparece lo que tu programa escribe. Vamos a ver cómo escribir en ella con soltura.
 
 ## print y println
 
@@ -22,11 +22,17 @@ Hola, mundo!
 Esta línea va debajo.
 ```
 
+> [!analogia]
+> Piensa en una máquina de escribir. `print` escribe y deja el carro donde está; `println` escribe y además pulsa **Intro**, así que lo siguiente empieza en una línea nueva.
+
 `System.out.println()` sin nada dentro imprime una línea en blanco.
+
+> [!prueba]
+> Cambia el primer `print` por `println` y vuelve a ejecutar. ¿En cuántas líneas sale ahora el saludo?
 
 ## Unir textos con +
 
-El operador `+` une (concatena) textos. Si uno de los lados es un número, también lo convierte en texto:
+El operador `+` une (**concatena**) textos. Si uno de los lados es un número, también lo convierte en texto:
 
 ```java
 public class Main {
@@ -39,11 +45,17 @@ public class Main {
 }
 ```
 
-La última línea imprime `1 + 2 = 12`: se evalúa de izquierda a derecha, así que primero une `"1 + 2 = "` con `1`, y luego el resultado (ya un texto) con `2`. Los paréntesis de la línea anterior obligan a sumar primero.
+> [!analogia]
+> Concatenar es como unir vagones de tren: `"Tengo "` + `3` + `" gatos"` engancha tres vagones en uno solo, `"Tengo 3 gatos"`.
+
+La última línea imprime `1 + 2 = 12`. Java lee de izquierda a derecha: primero une `"1 + 2 = "` con `1`, y luego el resultado (ya un texto) con `2`. Los paréntesis de la línea anterior obligan a sumar primero.
+
+> [!cuidado]
+> Los espacios dentro de las comillas cuentan. `"Tengo" + 3` imprime `Tengo3`, todo pegado. Si quieres un espacio, ponlo tú: `"Tengo " + 3`.
 
 ## Secuencias de escape
 
-Algunos caracteres no se pueden escribir tal cual dentro de unas comillas. Se escriben con una barra invertida delante:
+Algunos caracteres no se pueden escribir tal cual dentro de unas comillas. Se escriben con una barra invertida `\` delante:
 
 | Secuencia | Resultado |
 | --- | --- |
@@ -63,35 +75,12 @@ public class Main {
 }
 ```
 
-## printf: salida con formato
-
-`printf` usa una plantilla con **marcadores** que se sustituyen por valores, en orden:
-
-```java
-public class Main {
-    public static void main(String[] args) {
-        System.out.printf("%s tiene %d años%n", "Ada", 36);
-        System.out.printf("Precio: %.2f euros%n", 3.14159);
-        System.out.printf("|%5d|%-5d|%n", 42, 42);
-    }
-}
-```
-
-| Marcador | Para |
-| --- | --- |
-| `%s` | Texto |
-| `%d` | Números enteros |
-| `%f` | Decimales; `%.2f` con dos decimales |
-| `%n` | Salto de línea |
-| `%5d` / `%-5d` | Ancho mínimo de 5, alineado a la derecha / izquierda |
-
-A diferencia de `println`, `printf` **no** añade el salto de línea: tienes que poner `%n` tú.
-
-> **Ojo con los ejercicios:** el corrector compara tu salida carácter a carácter (ignorando solo los espacios al final de cada línea). Un espacio de más dentro de la línea, una mayúscula distinta o un punto que falta hacen que la respuesta no coincida.
+> [!analogia]
+> La barra `\` es como decir "ojo, lo siguiente es especial". `\"` significa "una comilla que forma parte del texto, no la que lo cierra".
 
 ## Comentarios
 
-Los comentarios son notas para personas; el compilador los ignora.
+Los **comentarios** son notas para personas; el compilador los ignora.
 
 ```java
 public class Main {
@@ -108,9 +97,11 @@ public class Main {
 
 Comenta el **porqué**, no el qué: `// sumamos 1 a i` no aporta nada; `// el primer día del mes es el 1, no el 0` sí.
 
-## Resumen
+> [!idea]
+> El corrector de los ejercicios compara tu salida carácter a carácter (ignorando solo los espacios al final de cada línea). Un espacio de más, una mayúscula distinta o un punto que falta hacen que no coincida.
 
-- `print` no salta de línea; `println` sí.
-- `+` concatena textos y convierte números en texto.
-- `\n`, `\t`, `\"` y `\\` escriben caracteres especiales.
-- `printf` formatea con `%s`, `%d`, `%.2f` y `%n`.
+> [!resumen]
+> - `print` no salta de línea; `println` sí.
+> - `+` concatena textos y convierte números en texto, de izquierda a derecha.
+> - `\n`, `\t`, `\"` y `\\` escriben caracteres especiales.
+> - Los comentarios (`//` y `/* */`) son notas que Java ignora.

@@ -14,6 +14,7 @@ import com.forja.runner.config.RunnerProperties;
 import com.forja.runner.config.RunnerProperties.DockerProperties;
 import com.forja.runner.config.RuntimeProperties;
 import com.forja.runner.config.SandboxLimits;
+import com.forja.runner.config.TraceProperties;
 import com.forja.runner.execution.ExecutionResult.CompileResult;
 import java.net.URI;
 import java.time.Duration;
@@ -45,7 +46,8 @@ class ExecutionServiceTest {
 		RunnerProperties properties = new RunnerProperties(
 				new DockerProperties(URI.create("http://docker:2375"), Duration.ofSeconds(1)), 1,
 				Duration.ofMillis(50),
-				Map.of("java", new RuntimeProperties("img", "java", "javac", "java", LIMITS)));
+				Map.of("java", new RuntimeProperties("img", "java", "javac", "java", LIMITS,
+						new TraceProperties("trace", Duration.ofSeconds(10), DataSize.ofMegabytes(4)))));
 		RuntimeRegistry registry = new RuntimeRegistry(properties, List.of(new JavaSourceLayout()));
 		service = new ExecutionService(registry, sandbox, properties);
 	}
@@ -100,6 +102,30 @@ class ExecutionServiceTest {
 			release.countDown();
 			executor.shutdown();
 		}
+	}
+
+	@Test
+	void aTraceIsPassedThroughAsJson() {
+		when(sandbox.execute(any(), anyString(), anyList(), any())).thenReturn(new ExecutionResult(
+				ExecutionStatus.COMPLETED, new CompileResult(true, "", false, 1),
+				List.of(new ExecutionResult.RunResult(0, false, "{\"steps\":[]}\n", false, "", false, 5)), 1));
+
+		TraceResult result = service.trace(new TraceRequest("java", "class A {}", ""));
+
+		assertThat(result.status()).isEqualTo(ExecutionStatus.COMPLETED);
+		assertThat(result.trace()).isEqualTo("{\"steps\":[]}");
+	}
+
+	@Test
+	void aCutOffTraceIsNotPassedOn() {
+		when(sandbox.execute(any(), anyString(), anyList(), any())).thenReturn(new ExecutionResult(
+				ExecutionStatus.COMPLETED, new CompileResult(true, "", false, 1),
+				List.of(new ExecutionResult.RunResult(0, false, "{\"steps\":[", true, "", false, 5)), 1));
+
+		TraceResult result = service.trace(new TraceRequest("java", "class A {}", ""));
+
+		assertThat(result.status()).isEqualTo(ExecutionStatus.TIMEOUT);
+		assertThat(result.trace()).isNull();
 	}
 
 }

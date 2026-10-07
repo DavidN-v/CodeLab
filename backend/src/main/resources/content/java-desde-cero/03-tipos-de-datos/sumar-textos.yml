@@ -49,8 +49,9 @@ solution: |
       }
   }
 hints:
-  - Con `+` entre dos `String` obtienes la concatenación.
-  - "`Integer.parseInt(texto)` convierte un texto como `\"12\"` en el número 12."
+  - 'La idea: con los mismos dos textos tienes que hacer dos cosas: pegarlos y sumarlos como números.'
+  - 'Qué usar: `+` entre dos `String` los concatena. `Integer.parseInt(texto)` convierte un texto como `"12"` en el número 12.'
+  - 'El plan: imprime `"Unidos: " + primero + segundo`. Después calcula `int suma = Integer.parseInt(primero) + Integer.parseInt(segundo);` e imprime `"Suma: " + suma`.'
 tests:
   - input: |
       12

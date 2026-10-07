@@ -2,6 +2,9 @@
 
 Una variable primitiva guarda el valor en sí: `int x = 5` contiene un 5. Una variable de tipo objeto **no contiene el objeto**: contiene una **referencia**, la dirección donde vive el objeto en memoria.
 
+> [!analogia]
+> Una clase es un molde de galletas; los objetos son las galletas. Las galletas están en la bandeja (el montón, *heap*), y tu variable no es una galleta: es una **etiqueta con una flecha** que señala una galleta concreta de la bandeja.
+
 ```java
 class Caja {
     int valor;
@@ -23,15 +26,30 @@ public class Main {
 }
 ```
 
+Así está la memoria al final del programa. `a` y `b` guardan la misma referencia (`@1`): dos flechas hacia **una sola** caja. En cambio, `x` e `y` guardan cada una su propio número.
+
+```memoria
+stack main
+a: @1
+b: @1
+x: 1
+y: 99
+heap
+@1 Caja: valor=99
 ```
-a ──┐
-    ├──► [ Caja: valor = 99 ]
-b ──┘
-```
+
+> [!prueba]
+> Cambia `Caja b = a;` por `Caja b = new Caja();` y vuelve a ejecutar: ¿qué imprime ahora `a.valor`? ¿Por qué?
 
 Asignar una variable de objeto a otra **no copia el objeto**; crea un segundo nombre para el mismo. Si quieres una copia independiente, tienes que crearla (`new Caja()` y copiar los campos, o un constructor de copia).
 
+> [!idea]
+> `b = a` no copia la galleta: hace que dos etiquetas señalen la misma galleta. Lo que hagas con una, lo ves con la otra.
+
 ## Referencias y métodos
+
+> [!analogia]
+> Pasar un objeto a un método es como darle a alguien una fotocopia de la dirección de tu casa. Con esa dirección puede ir y pintar tu puerta (modificar el objeto). Pero si tacha la dirección de su papel y escribe otra, tu casa no se mueve.
 
 Como viste en Arrays, un método recibe una copia de la **referencia**. Puede modificar el objeto al que apunta, pero si reasigna su parámetro, solo cambia su copia local:
 
@@ -64,6 +82,19 @@ public class Main {
 
 `null` es una referencia que no apunta a ningún objeto. Es el valor por defecto de los campos de tipo objeto y de las posiciones de un `new Tipo[n]`.
 
+> [!analogia]
+> `null` es una etiqueta sin flecha: tiene nombre, pero no señala ninguna galleta. Si le pides a esa etiqueta que te dé un mordisco, no hay nada que morder.
+
+Por ejemplo, con `Caja llena = new Caja();` y `Caja vacia = null;`, la memoria queda así: `llena` tiene flecha; `vacia`, no.
+
+```memoria
+stack main
+llena: @1
+vacia: null
+heap
+@1 Caja: valor=0
+```
+
 Usar un `null` como si fuera un objeto lanza la excepción más famosa de Java:
 
 ```java
@@ -76,6 +107,9 @@ public class Main {
 }
 ```
 
+> [!cuidado]
+> `NullPointerException` significa «has usado el punto (`.`) sobre una variable que vale `null`». Mira la línea que indica el error y pregúntate qué variable de esa línea no apunta a nada.
+
 Formas de defenderse:
 
 - **Comprobar antes:** `if (nombre != null && !nombre.isBlank())` (el cortocircuito evita llamar a `isBlank` sobre `null`).
@@ -87,8 +121,11 @@ Formas de defenderse:
 
 Cuando ningún nombre apunta ya a un objeto, este queda inaccesible y el **recolector de basura** de la JVM libera su memoria automáticamente. No tienes que (ni puedes) borrar objetos a mano.
 
-## Resumen
+> [!analogia]
+> Es como el servicio de limpieza de un restaurante: cuando nadie está sentado ya en una mesa, se llevan los platos solos.
 
-- Una variable de objeto guarda una referencia; asignarla no copia el objeto.
-- Los métodos pueden modificar el objeto recibido, pero no la variable del llamador.
-- Llamar a un método sobre `null` lanza `NullPointerException`: comprueba, valida y no dejes objetos a medias.
+> [!resumen]
+> - Una variable de objeto guarda una referencia (una flecha); asignarla no copia el objeto.
+> - Los métodos pueden modificar el objeto recibido, pero no la variable del llamador.
+> - `null` es una referencia sin objeto: usar el punto sobre ella lanza `NullPointerException`.
+> - Los objetos sin ninguna referencia los borra solo el recolector de basura.

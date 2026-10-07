@@ -53,8 +53,9 @@ solution: |
       }
   }
 hints:
-  - Empieza por la moneda más grande. `cantidad / 200` te dice cuántas de 2 € caben.
-  - Después quédate con lo que falta por pagar con `cantidad %= 200` y repite con la siguiente moneda.
+  - 'La idea: haz lo que haría un cajero. Empieza por la moneda más grande, da todas las que quepan y sigue con lo que falta por pagar usando la siguiente moneda.'
+  - 'Qué usar: `resto / 200` dice cuántas monedas de 200 caben, y `resto %= 200` deja en `resto` lo que falta por pagar. Repite lo mismo con cada moneda.'
+  - 'El plan: para cada moneda de mayor a menor (200, 100, 50, 20, 10, 5, 2): imprime "moneda: " + resto / moneda; después resto %= moneda. Al final imprime "1: " + resto.'
 tests:
   - input: "388\n"
     output: |

@@ -1,0 +1,49 @@
+questions:
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              for (int i = 1; i <= 6; i++) {
+                  if (i == 2) {
+                      continue;
+                  }
+                  if (i == 5) {
+                      break;
+                  }
+                  System.out.println(i);
+              }
+          }
+      }
+    answer: |
+      1
+      3
+      4
+    explanation: 'Con `i == 2`, `continue` salta el resto de esa vuelta y no imprime nada. Con `i == 5`, `break` termina el bucle entero, así que ni el 5 ni el 6 se imprimen.'
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              for (int fila = 1; fila <= 3; fila++) {
+                  for (int i = 0; i < 2; i++) {
+                      System.out.print(fila);
+                  }
+                  System.out.println();
+              }
+          }
+      }
+    answer: |
+      11
+      22
+      33
+    explanation: 'Por cada vuelta del bucle exterior, el interior da sus 2 vueltas imprimiendo el número de fila sin salto de línea. Después, el `println()` vacío cierra la fila.'
+  - type: choice
+    prompt: 'Un bucle exterior da 10 vueltas y, dentro, otro bucle da 5 vueltas. ¿Cuántas veces se ejecuta el cuerpo del bucle interior?'
+    options:
+      - '50'
+      - '15'
+      - '10'
+      - '5'
+    answer: 0
+    explanation: 'El interior completa sus 5 vueltas por **cada** vuelta del exterior: 10 × 5 = 50. No se suman, se multiplican.'

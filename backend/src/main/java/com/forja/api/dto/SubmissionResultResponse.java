@@ -14,5 +14,8 @@ public record SubmissionResultResponse(
 		@Schema(description = "Compiler messages when it did not compile.") String compileOutput,
 		List<TestResultResponse> tests,
 		@Schema(description = "True only the first time the learner solves this exercise.") boolean firstSolve,
-		@Schema(description = "Experience earned by this submission.") int xpAwarded) {
+		@Schema(description = "Experience earned by this submission.") int xpAwarded,
+		@Schema(description = "A plain-language note on the answer, e.g. which lines of a prediction are right.") String feedback,
+		@Schema(description = "True when this solve counted as a due spaced review.") boolean reviewPassed,
+		@Schema(description = "What to celebrate; null when nothing new happened.") CelebrationResponse celebration) {
 }

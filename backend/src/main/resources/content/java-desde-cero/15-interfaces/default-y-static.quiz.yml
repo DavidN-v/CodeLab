@@ -1,0 +1,57 @@
+questions:
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      interface Saludador {
+          String nombre();
+
+          default String saludar() {
+              return "Hola, soy " + nombre();
+          }
+      }
+
+      class Robot implements Saludador {
+          @Override
+          public String nombre() {
+              return "R2";
+          }
+      }
+
+      class Pirata implements Saludador {
+          @Override
+          public String nombre() {
+              return "Barbanegra";
+          }
+
+          @Override
+          public String saludar() {
+              return "¡Arr! Soy " + nombre();
+          }
+      }
+
+      public class Main {
+          public static void main(String[] args) {
+              System.out.println(new Pirata().saludar());
+              System.out.println(new Robot().saludar());
+          }
+      }
+    answer: |
+      ¡Arr! Soy Barbanegra
+      Hola, soy R2
+    explanation: '`Pirata` sobrescribe el método `default`, así que usa su propia versión. `Robot` no lo sobrescribe y hereda el `saludar()` de la interfaz, que llama a su `nombre()`.'
+  - type: choice
+    prompt: 'La interfaz `Moneda` tiene `static Moneda euros(double cantidad)`. ¿Cómo se llama a ese método?'
+    options:
+      - '`Moneda.euros(10)`'
+      - '`new Moneda().euros(10)`'
+      - '`euros(10)` desde cualquier clase, sin nada delante'
+    answer: 0
+    explanation: Los métodos `static` de una interfaz se llaman con el nombre de la interfaz delante. Además, una interfaz no se puede instanciar con `new`.
+  - type: choice
+    prompt: ¿Qué es una interfaz funcional?
+    options:
+      - Una interfaz con un solo método abstracto, que se puede implementar con una lambda
+      - Una interfaz en la que todos los métodos son `default`
+      - Cualquier interfaz que tenga métodos `static`
+    answer: 0
+    explanation: Si solo hay un método abstracto, Java sabe qué método implementa la lambda. `@FunctionalInterface` pide al compilador que compruebe que es así. Los métodos `default` y `static` no cuentan.

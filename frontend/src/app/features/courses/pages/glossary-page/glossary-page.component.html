@@ -1,0 +1,50 @@
+<section class="page" aria-labelledby="glossary-heading">
+  <header class="page__header">
+    <p class="page__eyebrow">
+      <a [routerLink]="['/languages', languageSlug()]">{{
+        glossary.value()?.course?.title ?? 'Curso'
+      }}</a>
+      / Glosario
+    </p>
+    <h1 id="glossary-heading" class="page__title">Glosario</h1>
+    <p class="page__lead">
+      Las palabras que aparecen en el curso, explicadas con palabras sencillas. En las lecciones,
+      las verás subrayadas con puntos: pasa el ratón por encima (o tócalas) para ver qué significan.
+    </p>
+  </header>
+
+  <input
+    class="glossary__search"
+    type="search"
+    placeholder="Buscar un término…"
+    aria-label="Buscar en el glosario"
+    [value]="query()"
+    (input)="onQuery($event)"
+  />
+
+  @if (glossary.isLoading()) {
+    <p class="state" role="status">Cargando el glosario…</p>
+  } @else if (glossary.error()) {
+    <p class="state state--error" role="alert">No hemos podido cargar el glosario.</p>
+  } @else {
+    <p class="glossary__count">{{ count() }} términos</p>
+    @for (group of groups(); track group.letter) {
+      <h2 class="glossary__letter">{{ group.letter }}</h2>
+      <dl class="glossary__list">
+        @for (term of group.items; track term.term) {
+          <div class="glossary__item">
+            <dt>
+              {{ term.term }}
+              @if (term.aliases.length > 0) {
+                <span class="glossary__aliases">también: {{ term.aliases.join(', ') }}</span>
+              }
+            </dt>
+            <dd>{{ term.definition }}</dd>
+          </div>
+        }
+      </dl>
+    } @empty {
+      <p class="state">Ningún término coincide con «{{ query() }}».</p>
+    }
+  }
+</section>

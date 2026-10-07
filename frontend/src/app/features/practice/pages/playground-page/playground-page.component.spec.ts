@@ -33,19 +33,17 @@ describe('PlaygroundPageComponent', () => {
   beforeEach(() => {
     localStorage.clear();
     authenticated = true;
-    run = vi
-      .fn()
-      .mockReturnValue(
-        of({
-          status: 'SUCCESS',
-          compileOutput: '',
-          stdout: 'Hola\n',
-          stderr: '',
-          exitCode: 0,
-          durationMs: 50,
-          outputTruncated: false,
-        }),
-      );
+    run = vi.fn().mockReturnValue(
+      of({
+        status: 'SUCCESS',
+        compileOutput: '',
+        stdout: 'Hola\n',
+        stderr: '',
+        exitCode: 0,
+        durationMs: 50,
+        outputTruncated: false,
+      }),
+    );
   });
 
   it('starts from the template and runs the code with the given input', async () => {

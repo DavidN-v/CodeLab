@@ -35,8 +35,9 @@ solution: |
       }
   }
 hints:
-  - Los números menores que 2 no son primos.
-  - "Recorre posibles divisores `d` desde 2 mientras `d * d <= n`; si alguno divide a `n`, no es primo y puedes hacer `break`."
+  - 'La idea: un número es primo si ningún número entre 2 y su raíz cuadrada lo divide. En cuanto encuentres un divisor, ya sabes la respuesta.'
+  - 'Qué usar: una variable `boolean primo` que empieza en `n > 1`, un `for` con la condición `d * d <= n`, el resto `n % d == 0` para detectar divisores y `break` para salir.'
+  - 'El plan: primo = n > 1; for (d desde 2 mientras d * d <= n) → si n % d == 0, primo = false y break. Al final imprime primo o no primo según la variable.'
 tests:
   - input: "7\n"
     output: "primo\n"

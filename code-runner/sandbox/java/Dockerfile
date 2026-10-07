@@ -19,6 +19,11 @@ RUN mkdir -p /opt/forja/lib \
     && echo "${H2_SHA256}  /opt/forja/lib/h2.jar" | sha256sum -c - \
     && echo "${JUNIT_SHA256}  /opt/forja/lib/junit-platform-console-standalone.jar" | sha256sum -c -
 
+# The step-by-step visualizer: a tracer that runs programs under the Java
+# debugger (JDI) and prints every step as JSON.
+COPY tracer/ /opt/forja/tracer-src/
+RUN javac -d /opt/forja/tracer /opt/forja/tracer-src/*.java && rm -rf /opt/forja/tracer-src
+
 ENV LANG=C.UTF-8
 USER 65534:65534
 WORKDIR /sandbox

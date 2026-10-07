@@ -14,7 +14,9 @@ const EXERCISE: ExerciseDetail = {
   title: 'Saludo personalizado',
   summary: '',
   difficulty: 'EASY',
+  kind: 'CODE',
   statementMarkdown: 'Lee un nombre y salúdalo.',
+  parsonsLines: null,
   starterCode: 'public class Main {}',
   samples: [{ input: 'Ada\n', expectedOutput: 'Hola, Ada!\n' }],
   totalTests: 3,
@@ -42,6 +44,7 @@ const PROGRESS: ExerciseProgress = {
   xp: 20,
   lastSubmittedCode: null,
   recentSubmissions: [],
+  reviewDue: false,
 };
 
 describe('ExercisePageComponent', () => {
@@ -56,35 +59,34 @@ describe('ExercisePageComponent', () => {
       getExercise: vi.fn().mockReturnValue(of(EXERCISE)),
       getProgress: vi.fn().mockReturnValue(of(PROGRESS)),
       revealHint: vi.fn().mockReturnValue(of({ ...PROGRESS, hints: ['Usa nextLine().'], xp: 15 })),
-      submit: vi
-        .fn()
-        .mockReturnValue(
-          of({
-            id: 9,
-            status: 'ACCEPTED',
-            passedTests: 3,
-            totalTests: 3,
-            executionTimeMs: 40,
-            compileOutput: null,
-            tests: [],
-            firstSolve: true,
-            xpAwarded: 20,
-          }),
-        ),
-    };
-    run = vi
-      .fn()
-      .mockReturnValue(
+      submit: vi.fn().mockReturnValue(
         of({
-          status: 'SUCCESS',
-          compileOutput: '',
-          stdout: 'Hola, Ada!\n',
-          stderr: '',
-          exitCode: 0,
-          durationMs: 30,
-          outputTruncated: false,
+          id: 9,
+          status: 'ACCEPTED',
+          passedTests: 3,
+          totalTests: 3,
+          executionTimeMs: 40,
+          compileOutput: null,
+          tests: [],
+          firstSolve: true,
+          feedback: null,
+          reviewPassed: false,
+          celebration: null,
+          xpAwarded: 20,
         }),
-      );
+      ),
+    };
+    run = vi.fn().mockReturnValue(
+      of({
+        status: 'SUCCESS',
+        compileOutput: '',
+        stdout: 'Hola, Ada!\n',
+        stderr: '',
+        exitCode: 0,
+        durationMs: 30,
+        outputTruncated: false,
+      }),
+    );
     await TestBed.configureTestingModule({
       imports: [ExercisePageComponent],
       providers: [
@@ -126,8 +128,10 @@ describe('ExercisePageComponent', () => {
     button('Enviar solución').click();
     fixture.detectChanges();
 
-    expect(exerciseService['submit']).toHaveBeenCalledWith('saludo', 'public class Main {}');
-    expect(element.querySelector('.results__status')?.textContent).toBe('Correcto');
+    expect(exerciseService['submit']).toHaveBeenCalledWith('saludo', {
+      sourceCode: 'public class Main {}',
+    });
+    expect(element.querySelector('.results__status')?.textContent?.trim()).toBe('✓ Correcto');
   });
 
   it('reveals hints one at a time', () => {

@@ -10,23 +10,32 @@ import {
 import { rxResource } from '@angular/core/rxjs-interop';
 import { Title } from '@angular/platform-browser';
 import { Router, RouterLink } from '@angular/router';
-import { forkJoin, switchMap, tap } from 'rxjs';
+import { Observable, catchError, forkJoin, of, switchMap, tap } from 'rxjs';
 
 import { BRAND } from '../../../../core/config/brand.config';
 import { withoutErrorNotification } from '../../../../core/interceptors/http-error.interceptor';
 import { AuthService } from '../../../../core/services/auth.service';
-import { CodeHandoffService } from '../../../../core/services/code-handoff.service';
+import { CelebrationService } from '../../../../core/services/celebration.service';
 import { CourseService } from '../../../../core/services/course.service';
 import { NotificationService } from '../../../../core/services/notification.service';
 import { ProgressService } from '../../../../core/services/progress.service';
+import { TutorService } from '../../../../core/services/tutor.service';
 import { MarkdownComponent } from '../../../../shared/components/markdown/markdown.component';
 import { ProgressBarComponent } from '../../../../shared/components/progress-bar/progress-bar.component';
-import { DIFFICULTY_LABELS } from '../../../../shared/utils/labels';
+import { TutorPanelComponent } from '../../../../shared/components/tutor-panel/tutor-panel.component';
+import { DIFFICULTY_LABELS, KIND_ICONS } from '../../../../shared/utils/labels';
+import { LessonQuizComponent } from '../../components/lesson-quiz/lesson-quiz.component';
 
 /** The study view: module index, lesson content, and what is on this page. */
 @Component({
   selector: 'app-lesson-page',
-  imports: [RouterLink, MarkdownComponent, ProgressBarComponent],
+  imports: [
+    RouterLink,
+    MarkdownComponent,
+    ProgressBarComponent,
+    LessonQuizComponent,
+    TutorPanelComponent,
+  ],
   templateUrl: './lesson-page.component.html',
   styleUrl: './lesson-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -35,7 +44,8 @@ export class LessonPageComponent {
   private readonly courses = inject(CourseService);
   private readonly progressService = inject(ProgressService);
   private readonly notifications = inject(NotificationService);
-  private readonly handoff = inject(CodeHandoffService);
+  private readonly celebrations = inject(CelebrationService);
+  private readonly tutor = inject(TutorService);
   protected readonly router = inject(Router);
   private readonly title = inject(Title);
   protected readonly auth = inject(AuthService);
@@ -46,6 +56,7 @@ export class LessonPageComponent {
   readonly lessonSlug = input.required<string>();
 
   protected readonly difficultyLabels = DIFFICULTY_LABELS;
+  protected readonly kindIcons = KIND_ICONS;
 
   protected readonly page = rxResource({
     params: () => ({
@@ -63,6 +74,13 @@ export class LessonPageComponent {
         ),
         tap(({ lesson }) => this.title.setTitle(`${lesson.title} · ${BRAND.name}`)),
       ),
+  });
+
+  /** Terms explained on hover; the lesson reads fine without them. */
+  protected readonly glossary = rxResource({
+    params: () => this.page.value()?.lesson.course.id,
+    stream: ({ params: courseId }) =>
+      this.courses.getGlossary(courseId).pipe(catchError(() => of([]))),
   });
 
   private readonly progress = rxResource({
@@ -101,9 +119,14 @@ export class LessonPageComponent {
     return this.completedIds().has(lessonId);
   }
 
-  protected openInPlayground(code: string): void {
-    this.handoff.send(code);
-    void this.router.navigate(['/practice/playground']);
+  protected readonly askTutor = (question: string): Observable<string> =>
+    this.tutor.explain(this.page.value()!.lesson.id, question);
+
+  /** A perfect quiz deserves a little confetti. */
+  protected onQuizFinished(correct: number): void {
+    if (correct === this.page.value()?.lesson.quiz.length) {
+      this.celebrations.confetti();
+    }
   }
 
   /** Marks the lesson as read and moves on to the next one, if any. */
@@ -136,6 +159,9 @@ export class LessonPageComponent {
         this.justCompleted.update((ids) => new Set([...ids, lesson.id]));
         if (completion.newlyCompleted) {
           this.notifications.showInfo(`Lección completada · +${completion.xpAwarded} XP`);
+          if (completion.celebration) {
+            this.celebrations.celebrate(completion.celebration);
+          }
         }
         goNext();
       },

@@ -48,8 +48,9 @@ solution: |
       }
   }
 hints:
-  - "`switch` funciona con `String`: `case \"+\" -> ...`."
-  - Comprueba la división entre cero antes de dividir; `return;` termina `main` en ese momento.
+  - 'La idea: según el símbolo que llegue, haces una cuenta u otra. Antes de dividir, asegúrate de que no divides entre cero.'
+  - 'Qué usar: un `switch` sobre el `String` del operador (`case "+" -> ...`), con `default` para los operadores desconocidos. `return;` termina `main` en el acto.'
+  - 'El plan: si el operador es "/" o "%" y b == 0, imprime el error y haz return. Después, un switch con un case por operador que imprima la cuenta, y default para el error de operador desconocido.'
 tests:
   - input: "7 * 6\n"
     output: "42\n"

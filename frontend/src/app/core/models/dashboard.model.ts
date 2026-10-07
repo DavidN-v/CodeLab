@@ -66,4 +66,20 @@ export interface Dashboard {
   courses: CourseCard[];
   recentSubmissions: RecentSubmission[];
   achievements: Achievement[];
+  dailyGoal: DailyGoal;
+  /** Due for a spaced review, most overdue first (at most 3). */
+  reviews: ReviewItem[];
+  reviewsDue: number;
+}
+
+export interface DailyGoal {
+  goalXp: number;
+  todayXp: number;
+}
+
+export interface ReviewItem {
+  exerciseSlug: string;
+  exerciseTitle: string;
+  moduleTitle: string;
+  solvedAt: string;
 }

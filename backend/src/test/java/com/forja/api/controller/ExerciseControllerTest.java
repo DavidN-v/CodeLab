@@ -11,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.forja.api.config.JwtConfig;
 import com.forja.api.config.SecurityConfig;
+import com.forja.api.dto.SubmissionRequest;
 import com.forja.api.dto.SubmissionResultResponse;
 import com.forja.api.entity.SubmissionStatus;
 import com.forja.api.security.ApiErrorWriter;
@@ -62,8 +63,9 @@ class ExerciseControllerTest {
 
 	@Test
 	void submitsForTheLearnerInTheToken() throws Exception {
-		when(exerciseService.submit(eq(7L), eq("hola-mundo"), eq("class A {}"))).thenReturn(
-				new SubmissionResultResponse(1L, SubmissionStatus.ACCEPTED, 1, 1, 40, null, List.of(), true, 20));
+		when(exerciseService.submit(eq(7L), eq("hola-mundo"), eq(new SubmissionRequest("class A {}")))).thenReturn(
+				new SubmissionResultResponse(1L, SubmissionStatus.ACCEPTED, 1, 1, 40, null, List.of(), true, 20, null,
+						false, null));
 
 		mockMvc.perform(post("/api/exercises/hola-mundo/submissions").with(jwt().jwt(token -> token.subject("7")))
 			.contentType(MediaType.APPLICATION_JSON)
@@ -74,10 +76,11 @@ class ExerciseControllerTest {
 	}
 
 	@Test
-	void rejectsAnEmptySubmission() throws Exception {
+	void rejectsAnOversizedSubmission() throws Exception {
+		String code = "x".repeat(65537);
 		mockMvc.perform(post("/api/exercises/hola-mundo/submissions").with(jwt().jwt(token -> token.subject("7")))
 			.contentType(MediaType.APPLICATION_JSON)
-			.content("{\"sourceCode\": \"   \"}"))
+			.content("{\"sourceCode\": \"" + code + "\"}"))
 			.andExpect(status().isBadRequest())
 			.andExpect(jsonPath("$.error").value("VALIDATION_ERROR"))
 			.andExpect(jsonPath("$.fieldErrors[0].field").value("sourceCode"));

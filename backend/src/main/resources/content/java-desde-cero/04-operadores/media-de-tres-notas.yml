@@ -1,0 +1,54 @@
+title: La media que no cuadra
+summary: Encuentra por qué la media de tres notas sale disparatada.
+difficulty: MEDIUM
+kind: fix
+statement: |
+  Este programa lee tres notas enteras y debería escribir su media con decimales:
+
+  ```
+  Media: <media>
+  ```
+
+  Pero algo falla: con `6 7 8` escribe `Media: 15.666666666666666`, cuando la media de 6, 7 y 8 es `7.0`. ¡Una media no puede ser mayor que todas las notas!
+
+  Encuentra el error y corrígelo. Ojo: con `5 6 6` la media correcta es `5.666666666666667`, con decimales.
+starter: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int a = entrada.nextInt();
+          int b = entrada.nextInt();
+          int c = entrada.nextInt();
+          double media = a + b + c / 3;
+          System.out.println("Media: " + media);
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int a = entrada.nextInt();
+          int b = entrada.nextInt();
+          int c = entrada.nextInt();
+          double media = (a + b + c) / 3.0;
+          System.out.println("Media: " + media);
+      }
+  }
+hints:
+  - 'La idea: Java no lee la cuenta como tú. Pregúntate qué se calcula primero en `a + b + c / 3`.'
+  - 'Qué usar: la precedencia (la división va antes que la suma) y los paréntesis. Recuerda también que entre enteros `/` descarta los decimales.'
+  - 'El plan: suma las tres notas entre paréntesis y divide entre `3.0` (un número decimal) para no perder los decimales.'
+tests:
+  - input: "6 7 8\n"
+    output: "Media: 7.0\n"
+    sample: true
+  - input: "5 6 6\n"
+    output: "Media: 5.666666666666667\n"
+  - input: "10 10 9\n"
+    output: "Media: 9.666666666666666\n"
+  - input: "0 0 1\n"
+    output: "Media: 0.3333333333333333\n"

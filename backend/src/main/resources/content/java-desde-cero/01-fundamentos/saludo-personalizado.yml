@@ -31,8 +31,9 @@ solution: |
       }
   }
 hints:
-  - "`entrada.nextLine()` devuelve la línea completa que se ha escrito."
-  - Guarda el resultado en una variable `String nombre` y únela al resto del texto con `+`.
+  - 'La idea: primero lee el nombre que llega por la entrada y después escríbelo dentro de la frase del saludo.'
+  - 'Qué usar: `entrada.nextLine()` lee la línea completa (aunque tenga espacios). Une textos con `+`.'
+  - 'El plan: guarda la línea en `String nombre = entrada.nextLine();` y después imprime `"Hola, " + nombre + "! Bienvenido a Java."`.'
 tests:
   - input: |
       Ada

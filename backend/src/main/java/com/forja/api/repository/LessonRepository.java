@@ -10,6 +10,8 @@ public interface LessonRepository extends JpaRepository<Lesson, Long> {
 
 	List<Lesson> findByModuleId(Long moduleId);
 
+	long countByModuleIdAndPublishedTrue(Long moduleId);
+
 	/** Published lessons of a course in reading order: by module, then by lesson. */
 	@Query("""
 			select new com.forja.api.repository.LessonOutline(l.id, l.slug, l.title, l.summary, l.estimatedMinutes,

@@ -2,6 +2,9 @@
 
 En la lección anterior cualquiera podía hacer `cuenta.saldo = -1000`. La **encapsulación** consiste en ocultar el estado y exponer solo operaciones que lo mantienen válido.
 
+> [!analogia]
+> Piensa en una hucha: el dinero está dentro y no puedes cogerlo con la mano. Solo hay una ranura para meter monedas. La hucha decide qué entra; nadie puede vaciarla «por la puerta de atrás».
+
 ## private y los métodos de acceso
 
 ```java
@@ -53,13 +56,22 @@ public class Main {
 
 - `private` hace que el campo solo sea accesible **desde dentro** de la clase.
 - Los métodos públicos (aquí sin modificador, accesibles desde el mismo paquete) son la única forma de cambiar el estado, y validan cada cambio.
-- Un **getter** (`getSaldo`) permite leer sin permitir escribir.
+- Un **getter** (`getSaldo`) es un método que permite leer un campo sin permitir escribirlo.
 
-Fíjate en que no hay `setSaldo`: el saldo solo cambia por ingresos y retiradas. No todo campo necesita un setter; de hecho, cuantos menos, mejor.
+> [!prueba]
+> Quita las dos barras de `// cuenta.saldo = -1000;` y ejecuta: lee el error del compilador. Después prueba `cuenta.ingresar(-5)`.
+
+Fíjate en que no hay `setSaldo`: el saldo solo cambia por ingresos y retiradas. No todo campo necesita un setter (un método que cambia el campo); de hecho, cuantos menos, mejor.
+
+> [!idea]
+> Los datos son privados; para cambiarlos hay que pasar por un método que los vigila.
 
 ## Responsabilidad única
 
 Cada clase debería tener **una** razón para existir. Un buen diseño reparte el trabajo:
+
+> [!analogia]
+> En un restaurante el cocinero cocina, el camarero sirve y el cajero cobra. Si todos hicieran de todo, nadie sabría a quién reclamar cuando algo sale mal.
 
 ```java
 class Producto {
@@ -126,9 +138,11 @@ cuenta.retirar(precio);
 
 La segunda forma mantiene la regla dentro de `Cuenta` y no la repite por todo el programa.
 
-## Resumen
+> [!cuidado]
+> Hacer los campos `private` y luego añadir un setter que asigna cualquier cosa sin comprobar nada es como poner candado a la hucha y dejar la llave pegada: no protege nada.
 
-- `private` oculta el estado; los métodos validan cada cambio.
-- Ofrece getters solo para lo que haya que leer, y setters solo si de verdad hacen falta.
-- Cada clase, una responsabilidad.
-- Dile al objeto qué hacer en vez de manipular sus datos desde fuera.
+> [!resumen]
+> - `private` oculta el estado; los métodos validan cada cambio.
+> - Ofrece getters solo para lo que haya que leer, y setters solo si de verdad hacen falta.
+> - Cada clase, una responsabilidad.
+> - Dile al objeto qué hacer en vez de manipular sus datos desde fuera.

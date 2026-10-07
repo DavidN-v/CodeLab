@@ -27,6 +27,10 @@ public class Lesson extends BaseEntity {
 	@Column(name = "content_markdown", nullable = false, columnDefinition = "text")
 	private String contentMarkdown;
 
+	/** Normalised quiz questions as JSON; null when the lesson has no quiz. */
+	@Column(name = "quiz_json", columnDefinition = "text")
+	private String quizJson;
+
 	@Column(name = "estimated_minutes", nullable = false)
 	private int estimatedMinutes;
 
@@ -44,8 +48,10 @@ public class Lesson extends BaseEntity {
 		this.slug = slug;
 	}
 
-	public void update(String title, String summary, String contentMarkdown, int estimatedMinutes, int displayOrder) {
+	public void update(String title, String summary, String contentMarkdown, String quizJson, int estimatedMinutes,
+			int displayOrder) {
 		this.title = title;
+		this.quizJson = quizJson;
 		this.summary = summary;
 		this.contentMarkdown = contentMarkdown;
 		this.estimatedMinutes = estimatedMinutes;
@@ -76,6 +82,10 @@ public class Lesson extends BaseEntity {
 
 	public String getContentMarkdown() {
 		return contentMarkdown;
+	}
+
+	public String getQuizJson() {
+		return quizJson;
 	}
 
 	public int getEstimatedMinutes() {

@@ -58,8 +58,9 @@ solution: |
       }
   }
 hints:
-  - Dentro de `parsearEdad`, captura la `NumberFormatException` y lanza en su lugar una `IllegalArgumentException` con tu mensaje.
-  - Las dos situaciones lanzan el mismo tipo, así que en el `main` basta un único `catch (IllegalArgumentException e)`.
+  - 'La idea: `parsearEdad` decide si una edad es válida y, si no lo es, avisa lanzando una excepción con un mensaje claro; el `main` solo escucha esos avisos.'
+  - 'Qué usar: `try`/`catch` para transformar la `NumberFormatException` en `throw new IllegalArgumentException(...)`, y un único `catch (IllegalArgumentException e)` en el `main`, con `e.getMessage()`.'
+  - 'El plan: en `parsearEdad`, `strip()`, luego `try { edad = Integer.parseInt(limpio); } catch (NumberFormatException e) { throw ... }`, y después `if (edad < 0 || edad > 130) throw ...`. En el `main`, por cada línea suma las válidas y cuéntalas; al final, `String.format("Media: %.1f", ...)` o `Media: -`.'
 tests:
   - input: |
       30

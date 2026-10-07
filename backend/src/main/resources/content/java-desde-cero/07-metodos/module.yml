@@ -2,17 +2,20 @@ lessons:
   - slug: definir-y-llamar
     title: Definir y llamar métodos
     summary: Dar nombre a un bloque de código y reutilizarlo.
-    minutes: 12
+    minutes: 6
   - slug: parametros-y-retorno
     title: Parámetros, retorno y sobrecarga
     summary: Cómo entran los datos, cómo sale el resultado y paso por valor.
-    minutes: 12
+    minutes: 6
   - slug: recursividad
     title: Recursividad
     summary: Métodos que se llaman a sí mismos, y cuándo conviene.
-    minutes: 12
+    minutes: 6
 exercises:
+  - traza-de-llamadas
+  - es-multiplo
   - maximo-de-tres
   - potencia-entera
   - contar-digitos
   - fibonacci
+  - resultado-perdido

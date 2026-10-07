@@ -46,9 +46,9 @@ solution: |
       }
   }
 hints:
-  - Lleva dos variables, `mayor` y `segundo`, y actualízalas a la vez.
-  - Si llega un valor mayor que `mayor`, el antiguo `mayor` pasa a ser `segundo`.
-  - Ignora los valores iguales a `mayor`, o el 9 repetido te daría 9 como segundo.
+  - 'La idea: es como un podio con dos puestos. Cuando llega alguien mejor que el campeón, el campeón baja a segundo puesto y el nuevo sube al primero.'
+  - 'Qué usar: dos variables, `mayor` y `segundo`, que empiecen con un valor imposible (`Long.MIN_VALUE`) y un solo recorrido del array con `if / else if`.'
+  - 'El plan: si `valor > mayor` → `segundo = mayor; mayor = valor;`. Si no, y además `valor < mayor && valor > segundo` → `segundo = valor;`. Al final, si `segundo` sigue en `Long.MIN_VALUE`, escribe `No existe`.'
 tests:
   - input: "6\n4 9 2 9 7 1\n"
     output: "7\n"

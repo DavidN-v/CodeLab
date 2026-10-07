@@ -71,8 +71,9 @@ solution: |
       }
   }
 hints:
-  - Cada método comprueba primero las condiciones que lo harían inválido y devuelve `false`.
-  - Recuerda quitar los comentarios del `main` cuando tus métodos existan.
+  - 'La idea: el saldo solo puede cambiar si la operación tiene sentido; si no, el método se niega y lo dice devolviendo `false`.'
+  - 'Qué usar: un campo `private int saldo = 0;`, métodos que devuelven `boolean` y un `if` que comprueba primero lo que haría inválida la operación.'
+  - 'El plan: en `retirar`, `if (cantidad <= 0 || cantidad > saldo) return false;` y si no, resta y `return true;`. `ingresar` igual pero solo comprueba `cantidad <= 0`. Al final quita los comentarios del `main`.'
 tests:
   - input: |
       ingresar 100

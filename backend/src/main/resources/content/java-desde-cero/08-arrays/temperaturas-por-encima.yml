@@ -47,8 +47,9 @@ solution: |
       }
   }
 hints:
-  - No puedes saber qué días superan la media hasta haberlos leído todos; guárdalos en un array.
-  - Los días empiezan en 1 pero las posiciones del array en 0.
+  - 'La idea: no sabes qué días superan la media hasta conocerla, y para conocerla tienes que haber leído todos los días. Por eso necesitas guardarlos.'
+  - 'Qué usar: un array `int[]` de tamaño `n`, una suma para la media (`(double) suma / n`), `printf("%.1f")` y un segundo recorrido del array.'
+  - 'El plan: lee y suma → calcula la media e imprímela → recorre otra vez y, si `temperaturas[i] > media`, apunta el día `i + 1` (los días empiezan en 1, las posiciones en 0) → si no apuntaste ninguno, escribe `ninguno`.'
 tests:
   - input: "5\n20 25 18 30 22\n"
     output: |

@@ -7,6 +7,7 @@ import {
   ExerciseDetail,
   ExerciseProgress,
   Solution,
+  SubmissionRequest,
   SubmissionResult,
 } from '../models/exercise.model';
 
@@ -31,8 +32,8 @@ export class ExerciseService {
     return this.http.post<Solution>(`${this.url(slug)}/solution`, null);
   }
 
-  submit(slug: string, sourceCode: string): Observable<SubmissionResult> {
-    return this.http.post<SubmissionResult>(`${this.url(slug)}/submissions`, { sourceCode });
+  submit(slug: string, request: SubmissionRequest): Observable<SubmissionResult> {
+    return this.http.post<SubmissionResult>(`${this.url(slug)}/submissions`, request);
   }
 
   private url(slug: string): string {

@@ -1,0 +1,83 @@
+title: Parejas que no cuadran
+summary: Un programa que nunca encuentra parejas aunque las cartas sean iguales.
+difficulty: MEDIUM
+kind: fix
+statement: |
+  En un juego de memoria se levantan dos cartas cada turno. La entrada tiene una línea por turno con el formato `palo1 numero1 palo2 numero2`. Para cada turno el programa debe imprimir `Pareja` si las dos cartas son iguales (mismo palo y mismo número) o `Distintas` si no. Al final imprime `Parejas: <total>`.
+
+  El problema: aunque levantes dos cartas idénticas, el programa siempre dice `Distintas`.
+
+  Encuentra el error y arréglalo. La carta ya es un `record`, que sabe compararse por su contenido.
+
+  **Ejemplo:** `oros 3 oros 3` → `Pareja`.
+starter: |
+  import java.util.Scanner;
+
+  record Carta(String palo, int numero) {}
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int parejas = 0;
+          while (entrada.hasNext()) {
+              Carta primera = new Carta(entrada.next(), entrada.nextInt());
+              Carta segunda = new Carta(entrada.next(), entrada.nextInt());
+              if (primera == segunda) {
+                  System.out.println("Pareja");
+                  parejas++;
+              } else {
+                  System.out.println("Distintas");
+              }
+          }
+          System.out.println("Parejas: " + parejas);
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  record Carta(String palo, int numero) {}
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int parejas = 0;
+          while (entrada.hasNext()) {
+              Carta primera = new Carta(entrada.next(), entrada.nextInt());
+              Carta segunda = new Carta(entrada.next(), entrada.nextInt());
+              if (primera.equals(segunda)) {
+                  System.out.println("Pareja");
+                  parejas++;
+              } else {
+                  System.out.println("Distintas");
+              }
+          }
+          System.out.println("Parejas: " + parejas);
+      }
+  }
+hints:
+  - 'La idea: cada turno crea dos cartas con `new`, así que siempre son dos objetos distintos, aunque tengan lo mismo escrito.'
+  - 'Qué usar: `==` pregunta «¿es el mismo objeto?»; `equals` pregunta «¿tienen el mismo contenido?». Un record ya trae su `equals`.'
+  - 'El plan: cambia la condición `primera == segunda` por `primera.equals(segunda)`.'
+tests:
+  - input: |
+      oros 3 oros 3
+      copas 7 espadas 7
+    output: |
+      Pareja
+      Distintas
+      Parejas: 1
+    sample: true
+  - input: |
+      bastos 1 bastos 1
+      bastos 1 bastos 2
+      espadas 12 espadas 12
+    output: |
+      Pareja
+      Distintas
+      Pareja
+      Parejas: 2
+  - input: |
+      copas 5 oros 5
+    output: |
+      Distintas
+      Parejas: 0

@@ -18,6 +18,7 @@ const EXERCISES: ExerciseSummary[] = [
     title: 'Hola, mundo',
     summary: 'Tu primer programa.',
     difficulty: 'EASY',
+    kind: 'CODE',
     module: FUNDAMENTOS,
   },
   {
@@ -26,6 +27,7 @@ const EXERCISES: ExerciseSummary[] = [
     title: 'Tabla de multiplicar',
     summary: 'Con un for.',
     difficulty: 'MEDIUM',
+    kind: 'CODE',
     module: BUCLES,
   },
 ];

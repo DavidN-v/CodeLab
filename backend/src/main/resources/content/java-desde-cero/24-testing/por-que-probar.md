@@ -1,5 +1,8 @@
 Hasta ahora has comprobado tus programas ejecutándolos y mirando la salida. Funciona con programas pequeños, pero cada vez que cambias algo tendrías que volver a comprobarlo todo a mano. Las **pruebas automáticas** son código que comprueba tu código, y se ejecutan en segundos tantas veces como quieras.
 
+> [!analogia]
+> Una prueba automática es como la lista de comprobación de un piloto antes de despegar: en vez de confiar en la memoria, repasa los mismos puntos cada vez. Y como la lista la ejecuta el ordenador, repasarla cuesta segundos.
+
 De hecho, llevas todo el curso usándolas: cada ejercicio se corrige ejecutando tu programa contra unos casos de prueba.
 
 ## Lo que aportan
@@ -30,16 +33,22 @@ public class Main {
         comprobar("división exacta", 5, Calculadora.dividirRedondeando(10, 2));
         comprobar("redondea hacia arriba", 4, Calculadora.dividirRedondeando(7, 2));
         comprobar("redondea hacia abajo", 2, Calculadora.dividirRedondeando(7, 3));
-        comprobar("negativos", -3, Calculadora.dividirRedondeando(-7, 2));
+        comprobar("negativos", -4, Calculadora.dividirRedondeando(-7, 2));
     }
 }
 ```
 
-Ejecútalo: la última prueba falla, porque `Math.round(-3.5)` da `-3`… ¿o lo que falla es la expectativa? Eso también es útil: una prueba que falla te obliga a decidir cuál es el comportamiento correcto.
+Ejecútalo: la última prueba falla. Esperábamos `-4` (redondear -3,5 «alejándose del cero»), pero `Math.round(-3.5)` da `-3`, porque redondea las mitades hacia arriba. ¿Está mal el código o lo que está mal es la expectativa? Eso también es útil: una prueba que falla te obliga a decidir cuál es el comportamiento correcto.
+
+> [!prueba]
+> Cambia el esperado de la prueba «negativos» de `-4` a `-3` y vuelve a ejecutar: ahora pasan todas. Después cambia `Math.round((float) a / b)` por `a / b` (división entera, sin redondear): ¿qué prueba falla ahora?
 
 ## Arrange, Act, Assert
 
 Toda prueba bien escrita tiene tres partes, a menudo separadas por una línea en blanco:
+
+> [!analogia]
+> Es como probar una receta: **preparas** los ingredientes, **cocinas** el plato y **pruebas** si sabe como esperabas.
 
 1. **Arrange (preparar):** crear los objetos y datos necesarios.
 2. **Act (actuar):** ejecutar **una** operación, la que se prueba.
@@ -68,8 +77,10 @@ No se puede probar todo, así que hay que elegir bien:
 
 Para una función que dice si un año es bisiesto: un año normal (2023), uno divisible entre 4 (2024), uno entre 100 (1900) y uno entre 400 (2000). Cuatro pruebas cubren las cuatro reglas.
 
-## Resumen
+> [!cuidado]
+> Probar solo el caso «normal» es el error más común. Los fallos suelen esconderse en los bordes: la lista vacía, el 0, el último elemento.
 
-- Las pruebas automáticas comprueban tu código en segundos, cada vez que lo cambias.
-- Cada prueba: preparar, actuar, comprobar.
-- Prueba el caso normal, los bordes, los errores y los fallos ya conocidos.
+> [!resumen]
+> - Las pruebas automáticas comprueban tu código en segundos, cada vez que lo cambias.
+> - Cada prueba: preparar, actuar, comprobar.
+> - Prueba el caso normal, los bordes, los errores y los fallos ya conocidos.

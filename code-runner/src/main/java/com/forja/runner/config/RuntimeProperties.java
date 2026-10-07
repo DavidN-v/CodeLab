@@ -17,7 +17,9 @@ import jakarta.validation.constraints.NotNull;
  * @param runCommand shell command that runs {@code $FORJA_MAIN}; it reads stdin
  * and writes stdout and stderr
  * @param limits resource limits applied to every execution
+ * @param trace how to trace a run for the visualizer; null when the language
+ * cannot be traced
  */
 public record RuntimeProperties(@NotBlank String image, @NotBlank String layout, String compileCommand,
-		@NotBlank String runCommand, @Valid @NotNull SandboxLimits limits) {
+		@NotBlank String runCommand, @Valid @NotNull SandboxLimits limits, @Valid TraceProperties trace) {
 }

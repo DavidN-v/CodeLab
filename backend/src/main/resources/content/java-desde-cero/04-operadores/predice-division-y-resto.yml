@@ -1,0 +1,30 @@
+title: Reparte las galletas
+summary: Predice qué imprime un programa con división entera, resto e incremento.
+difficulty: EASY
+kind: predict
+statement: |
+  Catorce galletas se reparten entre unos niños. Lee el programa con calma, **sin ejecutarlo**, y escribe exactamente lo que imprime.
+
+  Pista para leerlo: sigue las variables línea a línea, como si fueras el ordenador. Apunta en un papel cuánto vale cada una.
+starter: |
+  public class Main {
+      public static void main(String[] args) {
+          int galletas = 14;
+          int ninos = 4;
+          int cadaUno = galletas / ninos;
+          int sobran = galletas % ninos;
+          ninos++;
+          System.out.println(cadaUno + " para cada uno");
+          System.out.println(sobran + " sobran");
+          System.out.println(galletas / ninos + " si llega otro niño");
+      }
+  }
+hints:
+  - 'La idea: son tres líneas de salida. Calcula cada variable en el orden en que aparece y no olvides que `ninos` cambia antes del último println.'
+  - 'Qué usar: entre enteros, `/` da la división sin decimales y `%` lo que sobra. `ninos++` suma 1 a `ninos`.'
+  - 'El plan: 14 / 4 = 3 (sobran 2). Después `ninos` pasa a 5, así que la última línea usa 14 / 5.'
+tests:
+  - output: |
+      3 para cada uno
+      2 sobran
+      2 si llega otro niño

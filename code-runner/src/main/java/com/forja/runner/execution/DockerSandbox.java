@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.unit.DataSize;
 
 /**
  * Runs one execution in a throwaway container: create, start, wait, collect
@@ -47,14 +48,28 @@ public class DockerSandbox {
 		this.harnessScript = loadHarness();
 	}
 
+	/** How the program is run: normally, or under the tracer. */
+	public record RunPlan(String command, Duration runTimeout, DataSize output) {
+
+		static RunPlan normal(LanguageRuntime runtime) {
+			return new RunPlan(runtime.properties().runCommand(), runtime.limits().runTimeout(),
+					runtime.limits().output());
+		}
+
+	}
+
 	public ExecutionResult execute(LanguageRuntime runtime, String sourceCode, List<String> inputs) {
+		return execute(runtime, sourceCode, inputs, RunPlan.normal(runtime));
+	}
+
+	public ExecutionResult execute(LanguageRuntime runtime, String sourceCode, List<String> inputs, RunPlan plan) {
 		SandboxLimits limits = runtime.limits();
 		SourceFile sourceFile = runtime.layout().resolve(sourceCode);
 		long startedAt = System.nanoTime();
 
 		String containerId;
 		try {
-			containerId = dockerClient.createContainer(containerSpec(runtime, sourceFile, sourceCode, inputs));
+			containerId = dockerClient.createContainer(containerSpec(runtime, sourceFile, sourceCode, inputs, plan));
 		}
 		catch (DockerException ex) {
 			throw new SandboxUnavailableException("Could not create the sandbox", ex);
@@ -62,14 +77,14 @@ public class DockerSandbox {
 
 		try {
 			dockerClient.start(containerId);
-			Duration budget = limits.compileTimeout().plus(limits.runTimeout().multipliedBy(inputs.size())).plus(OVERHEAD);
+			Duration budget = limits.compileTimeout().plus(plan.runTimeout().multipliedBy(inputs.size())).plus(OVERHEAD);
 			Optional<Integer> exitCode = dockerClient.waitForExit(containerId, budget);
 			if (exitCode.isEmpty()) {
 				dockerClient.kill(containerId);
 			}
 			HarnessOutput output = HarnessOutputParser.parse(dockerClient.stdout(containerId));
 			long durationMs = (System.nanoTime() - startedAt) / 1_000_000;
-			return interpret(output, exitCode.isEmpty(), limits, durationMs);
+			return interpret(output, exitCode.isEmpty(), plan.runTimeout(), durationMs);
 		}
 		catch (DockerException ex) {
 			throw new SandboxUnavailableException("The sandbox failed while running", ex);
@@ -80,17 +95,17 @@ public class DockerSandbox {
 	}
 
 	private ContainerSpec containerSpec(LanguageRuntime runtime, SourceFile sourceFile, String sourceCode,
-			List<String> inputs) {
+			List<String> inputs, RunPlan plan) {
 		SandboxLimits limits = runtime.limits();
 		List<String> env = new ArrayList<>();
 		env.add("FORJA_SOURCE=" + sourceCode);
 		env.add("FORJA_SOURCE_FILE=" + sourceFile.fileName());
 		env.add("FORJA_MAIN=" + sourceFile.entryPoint());
 		env.add("FORJA_COMPILE_COMMAND=" + nullToEmpty(runtime.properties().compileCommand()));
-		env.add("FORJA_RUN_COMMAND=" + runtime.properties().runCommand());
+		env.add("FORJA_RUN_COMMAND=" + plan.command());
 		env.add("FORJA_COMPILE_TIMEOUT=" + Math.max(1, limits.compileTimeout().toSeconds()));
-		env.add("FORJA_RUN_TIMEOUT=" + Math.max(1, limits.runTimeout().toSeconds()));
-		env.add("FORJA_OUTPUT_LIMIT=" + limits.output().toBytes());
+		env.add("FORJA_RUN_TIMEOUT=" + Math.max(1, plan.runTimeout().toSeconds()));
+		env.add("FORJA_OUTPUT_LIMIT=" + plan.output().toBytes());
 		env.add("FORJA_RUNS=" + inputs.size());
 		for (int i = 0; i < inputs.size(); i++) {
 			env.add("FORJA_STDIN_" + i + "=" + inputs.get(i));
@@ -102,7 +117,7 @@ public class DockerSandbox {
 				Map.of("/sandbox", tmpfsOptions, "/tmp", tmpfsOptions));
 	}
 
-	private static ExecutionResult interpret(HarnessOutput output, boolean killed, SandboxLimits limits,
+	private static ExecutionResult interpret(HarnessOutput output, boolean killed, Duration runTimeout,
 			long durationMs) {
 		if (output.compile() == null) {
 			// Killed (or crashed) before the compiler finished.
@@ -118,7 +133,7 @@ public class DockerSandbox {
 			return new ExecutionResult(ExecutionStatus.COMPILATION_ERROR, compile, List.of(), durationMs);
 		}
 
-		long runTimeoutMs = limits.runTimeout().toMillis();
+		long runTimeoutMs = runTimeout.toMillis();
 		List<RunResult> runs = output.runs()
 			.stream()
 			.map(run -> toRunResult(run, runTimeoutMs))

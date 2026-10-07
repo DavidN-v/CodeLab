@@ -1,0 +1,24 @@
+@if (shown().length > 0) {
+  <section class="friendly" aria-label="Qué significa el error">
+    <p class="friendly__heading">¿Qué significa?</p>
+    <ul class="friendly__list">
+      @for (error of shown(); track $index) {
+        <li class="friendly__item">
+          <p class="friendly__title">
+            @if (error.line) {
+              <span class="friendly__line">Línea {{ error.line }}</span>
+            }
+            {{ error.title }}
+          </p>
+          <p class="friendly__text">{{ error.explanation }}</p>
+        </li>
+      }
+    </ul>
+    @if (hidden() > 0) {
+      <p class="friendly__more">
+        Y {{ hidden() }} {{ hidden() === 1 ? 'error más' : 'errores más' }}. Corrige primero el de
+        arriba: a menudo los siguientes son consecuencia suya.
+      </p>
+    }
+  </section>
+}

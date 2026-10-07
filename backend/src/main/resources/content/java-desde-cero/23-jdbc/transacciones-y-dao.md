@@ -2,6 +2,9 @@
 
 Transferir dinero son dos operaciones: restar de una cuenta y sumar a otra. Si la segunda falla después de la primera, el dinero desaparece. Una **transacción** agrupa varias operaciones para que se apliquen **todas o ninguna**.
 
+> [!analogia]
+> Una transacción es como mudarte de piso con un contrato: o firmas la salida del viejo **y** la entrada del nuevo, o no firmas nada. Lo que no puede pasar es que te quedes en la calle a mitad de camino.
+
 Por defecto JDBC confirma cada sentencia al momento (*autocommit*). Para agrupar, lo desactivas, y al final confirmas con `commit()` o deshaces con `rollback()`:
 
 ```java
@@ -63,9 +66,29 @@ public class Main {
 }
 ```
 
+```mermaid
+flowchart TD
+    A["setAutoCommit(false)"] --> B["restar del origen"]
+    B --> C["sumar al destino"]
+    C --> D{"¿Algún fallo?"}
+    D -- No --> E["commit(): se guardan los dos cambios"]
+    D -- Sí --> F["rollback(): no se guarda ninguno"]
+    E --> G["setAutoCommit(true)"]
+    F --> G
+```
+
+> [!prueba]
+> Cambia `c.rollback();` por un comentario (`// c.rollback();`) y vuelve a ejecutar: ¿qué saldos salen tras la transferencia fallida? Ese dinero «desaparecido» es justo lo que evita el rollback.
+
+> [!cuidado]
+> Tras un fallo, no olvides restaurar `setAutoCommit(true)` en un `finally`: si no, las siguientes operaciones quedarán sin confirmar sin que te des cuenta.
+
 Fíjate en el `CHECK (saldo >= 0)` de la tabla: la propia base de datos rechaza saldos negativos, otra capa de protección.
 
 ## El patrón DAO
+
+> [!analogia]
+> Un DAO es como el bibliotecario: tú le pides «el libro número 2» y él sabe en qué estantería mirar. No necesitas conocer cómo está organizado el almacén.
 
 Mezclar SQL con la lógica del programa se vuelve inmanejable. Un **DAO** (*Data Access Object*) encierra todo el acceso a una tabla tras métodos con significado:
 
@@ -143,8 +166,24 @@ public class Main {
 
 El resto del programa trabaja con objetos `Libro` y no sabe nada de SQL. Frameworks como Spring Data JPA (el que usa el backend de esta plataforma) generan estos DAO por ti, pero por debajo hacen exactamente esto.
 
-## Resumen
+```mermaid
+classDiagram
+    class Main
+    class LibroDao {
+        guardar(titulo, anio)
+        buscarPorId(id)
+        anterioresA(anio)
+    }
+    class Libro {
+        id
+        titulo
+        anio
+    }
+    Main --> LibroDao : usa
+    LibroDao --> Libro : devuelve
+```
 
-- `setAutoCommit(false)` + `commit()` / `rollback()` agrupan operaciones en una transacción.
-- Haz rollback ante cualquier fallo y restaura el autocommit en un `finally`.
-- Un DAO encierra el SQL de una tabla tras métodos que devuelven objetos.
+> [!resumen]
+> - `setAutoCommit(false)` + `commit()` / `rollback()` agrupan operaciones en una transacción.
+> - Haz rollback ante cualquier fallo y restaura el autocommit en un `finally`.
+> - Un DAO encierra el SQL de una tabla tras métodos que devuelven objetos.

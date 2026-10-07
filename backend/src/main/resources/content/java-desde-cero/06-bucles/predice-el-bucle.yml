@@ -1,0 +1,36 @@
+title: Sigue al bucle
+summary: Predice la salida de un for con acumulador y un while que divide.
+difficulty: EASY
+kind: predict
+statement: |
+  Lee el programa **sin ejecutarlo** y escribe exactamente lo que imprime.
+
+  Truco: haz una tabla en un papel con una columna por variable y una fila por vuelta. Así no se te escapa nada.
+starter: |
+  public class Main {
+      public static void main(String[] args) {
+          int total = 0;
+          for (int i = 1; i <= 4; i++) {
+              total += i;
+              System.out.println(i + " -> " + total);
+          }
+          int n = 20;
+          int pasos = 0;
+          while (n > 1) {
+              n = n / 2;
+              pasos++;
+          }
+          System.out.println("Pasos: " + pasos);
+      }
+  }
+hints:
+  - 'La idea: el `for` imprime una línea por vuelta y el `while` no imprime nada; solo cuenta vueltas. Al final se imprime cuántas dio.'
+  - 'Qué usar: una tabla de valores. En el `for`, `total` va acumulando `i`. En el `while`, `n / 2` es división entera.'
+  - 'El plan: total vale 1, 3, 6 y 10 en las cuatro vueltas. Después n pasa por 10, 5, 2 y 1: cuenta cuántas divisiones hacen falta para que deje de ser mayor que 1.'
+tests:
+  - output: |
+      1 -> 1
+      2 -> 3
+      3 -> 6
+      4 -> 10
+      Pasos: 4

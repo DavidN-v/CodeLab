@@ -85,8 +85,9 @@ solution: |
       }
   }
 hints:
-  - "El constructor de un lado puede delegar en el otro: `this(lado, lado);`."
-  - "`esCuadrado` puede devolver directamente la comparación `ancho == alto`."
+  - 'La idea: un cuadrado es un rectángulo con los dos lados iguales, así que el segundo constructor puede reutilizar el primero.'
+  - 'Qué usar: dos campos `private final int`, dos constructores y `this(lado, lado);` como primera línea del constructor de un lado.'
+  - 'El plan: `area()` devuelve `ancho * alto`, `perimetro()` devuelve `2 * (ancho + alto)` y `esCuadrado()` devuelve `ancho == alto`. Luego quita los comentarios del `main`.'
 tests:
   - input: "3 4\n"
     output: |

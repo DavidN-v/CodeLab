@@ -11,6 +11,9 @@ const RESULT: SubmissionResult = {
   executionTimeMs: 90,
   compileOutput: null,
   firstSolve: false,
+  feedback: null,
+  reviewPassed: false,
+  celebration: null,
   xpAwarded: 0,
   tests: [
     {
@@ -51,7 +54,9 @@ describe('TestResultsComponent', () => {
     fixture.detectChanges();
     const element = fixture.nativeElement as HTMLElement;
 
-    expect(element.querySelector('.results__status')?.textContent).toBe('Respuesta incorrecta');
+    expect(element.querySelector('.results__status')?.textContent?.trim()).toBe(
+      'Respuesta incorrecta',
+    );
     expect(element.querySelector('.results__count')?.textContent).toContain('1 / 3');
     expect(element.querySelectorAll('.test__detail')).toHaveLength(1);
     expect(element.querySelector('.test__detail')?.textContent).toContain('5');

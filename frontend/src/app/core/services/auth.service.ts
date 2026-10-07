@@ -62,9 +62,25 @@ export class AuthService {
       );
   }
 
+  /** Changes the daily experience goal and keeps the stored session in step. */
+  changeDailyGoal(dailyGoalXp: number): Observable<User> {
+    return this.http
+      .put<User>(`${this.authUrl}/me/daily-goal`, { dailyGoalXp })
+      .pipe(tap((user) => this.updateUser(user)));
+  }
+
   logout(): void {
     this.session.set(null);
     removeStorage(SESSION_KEY);
+  }
+
+  private updateUser(user: User): void {
+    const session = this.session();
+    if (session) {
+      const updated = { ...session, user };
+      this.session.set(updated);
+      writeStorage(SESSION_KEY, JSON.stringify(updated));
+    }
   }
 
   private start(response: AuthResponse): void {

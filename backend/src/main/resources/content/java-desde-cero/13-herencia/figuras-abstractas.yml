@@ -122,9 +122,9 @@ solution: |
       }
   }
 hints:
-  - "`resumen()` va en `Figura` y llama a `area()` y `perimetro()`; cada subclase solo implementa esos dos."
-  - "Cada subclase llama a `super(\"Círculo\")` (o el nombre que toque) en su constructor."
-  - "`String.format(\"%.2f\", x)` da dos decimales."
+  - 'La idea: todas las figuras se resumen igual; solo cambia cómo se calculan el área y el perímetro. Lo común va en `Figura` y lo que cambia, en cada subclase.'
+  - 'Qué usar: `abstract double area();` y `abstract double perimetro();` en `Figura`, un `resumen()` normal con `String.format("%s: área %.2f, perímetro %.2f", ...)`, y tres subclases con `extends Figura` y `@Override`.'
+  - 'El plan: cada subclase llama a `super("Círculo")` (o su nombre) y guarda sus medidas. En el `main`, según `tipo` lee 1, 2 o 3 números con `nextDouble()`, crea la figura y escribe `figura.resumen()`.'
 tests:
   - input: |
       circulo 1

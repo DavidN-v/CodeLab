@@ -1,0 +1,379 @@
+terms:
+  - term: programa
+    aliases: [programas]
+    definition: Una lista de instrucciones que el ordenador sigue en orden, como una receta paso a paso.
+  - term: compilar
+    aliases: [compila, compilación]
+    definition: Traducir tu código a un formato que la máquina entiende, revisando antes que esté bien escrito.
+  - term: compilador
+    aliases: []
+    definition: El programa que traduce tu código y te avisa de los errores antes de ejecutarlo, como un corrector que revisa un texto antes de imprimirlo.
+  - term: JVM
+    aliases: [máquina virtual]
+    definition: La máquina virtual de Java, un programa que ejecuta el bytecode en cualquier sistema, como un intérprete que entiende un único idioma común.
+  - term: JDK
+    aliases: []
+    definition: El kit de herramientas para programar en Java; incluye el compilador y la máquina virtual.
+  - term: bytecode
+    aliases: []
+    definition: El código intermedio que produce el compilador de Java; no lo lee una persona, sino la máquina virtual.
+  - term: consola
+    aliases: [terminal]
+    definition: La ventana de texto donde un programa escribe sus mensajes y donde puedes teclear respuestas.
+  - term: main
+    aliases: []
+    definition: El método por el que empieza a ejecutarse un programa en Java, como la puerta de entrada de una casa.
+  - term: instrucción
+    aliases: [instrucciones, sentencia]
+    definition: Una orden completa para el ordenador; en Java suele terminar en punto y coma.
+  - term: comentario
+    aliases: [comentarios]
+    definition: Texto dentro del código que el ordenador ignora y que sirve para explicar algo a quien lo lea, como una nota en el margen.
+  - term: System.out.println
+    aliases: [println]
+    definition: La orden que escribe un texto en la consola y salta a la línea siguiente.
+  - term: Scanner
+    aliases: []
+    definition: Una clase de Java que lee lo que el usuario escribe con el teclado.
+  - term: error de compilación
+    aliases: [errores de compilación]
+    definition: Un fallo que el compilador detecta antes de ejecutar, como una falta de ortografía que impide imprimir el texto.
+  - term: error de ejecución
+    aliases: []
+    definition: Un fallo que aparece mientras el programa ya está funcionando, por ejemplo al dividir entre cero.
+  - term: variable
+    aliases: [variables]
+    definition: Un nombre que guarda un valor que puede cambiar, como una caja con etiqueta.
+  - term: declarar
+    aliases: [declaración, declara]
+    definition: Anunciar que existe una variable o un método indicando su tipo y su nombre, como poner la etiqueta a una caja vacía.
+  - term: inicializar
+    aliases: [inicialización]
+    definition: Dar a una variable su primer valor.
+  - term: asignar
+    aliases: [asignación, asigna]
+    definition: Guardar un valor en una variable con el signo =, como meter algo en la caja.
+  - term: ámbito
+    aliases: []
+    definition: La zona del código donde una variable existe y se puede usar, normalmente el bloque entre llaves donde se creó.
+  - term: bloque
+    aliases: [bloques]
+    definition: Un grupo de instrucciones encerradas entre llaves { } que van juntas.
+  - term: constante
+    aliases: [constantes]
+    definition: Un valor con nombre que no puede cambiar una vez fijado, como la fecha grabada en una placa.
+  - term: tipo
+    aliases: [tipos, tipo de dato]
+    definition: La clase de dato que guarda una variable, como número entero, decimal o texto; decide qué se puede hacer con él.
+  - term: tipo primitivo
+    aliases: [tipos primitivos]
+    definition: Uno de los ocho tipos básicos de Java, como int o boolean, que guardan el valor directamente.
+  - term: int
+    aliases: []
+    definition: El tipo para números enteros, sin decimales, como 7 o -20.
+  - term: double
+    aliases: []
+    definition: El tipo para números con decimales, como 3.14.
+  - term: boolean
+    aliases: [booleanos, booleana]
+    definition: El tipo que solo puede valer true (verdadero) o false (falso), como un interruptor encendido o apagado.
+  - term: String
+    aliases: []
+    definition: El tipo de Java para guardar texto, escrito entre comillas dobles.
+  - term: cadena
+    aliases: []
+    definition: Una secuencia de caracteres, es decir, un texto; en Java se guarda en un String.
+  - term: carácter
+    aliases: [caracteres]
+    definition: Un solo símbolo, como una letra, un dígito o un espacio.
+  - term: casting
+    aliases: []
+    definition: Convertir un valor de un tipo a otro de forma explícita, escribiendo el tipo entre paréntesis, como (int) 3.7.
+  - term: división entera
+    aliases: []
+    definition: La división entre dos enteros, que descarta los decimales; 7 / 2 da 3.
+  - term: clase envoltorio
+    aliases: [clases envoltorio]
+    definition: Una clase que envuelve un tipo primitivo para tratarlo como objeto, como Integer para int.
+  - term: Integer
+    aliases: []
+    definition: La clase envoltorio de int; también ofrece utilidades como Integer.parseInt para convertir texto en número.
+  - term: operador
+    aliases: [operadores]
+    definition: Un símbolo que hace una operación con valores, como + para sumar o == para comparar.
+  - term: expresión
+    aliases: [expresiones]
+    definition: Un trozo de código que se calcula y da un valor, como 2 + 3 o edad > 18.
+  - term: operador ternario
+    aliases: [ternario]
+    definition: 'Un if en miniatura que elige entre dos valores, escrito condición ? valorSi : valorNo.'
+  - term: condición
+    aliases: [condiciones]
+    definition: Una pregunta que solo puede responderse con verdadero o falso, como "¿la edad es mayor que 18?".
+  - term: if
+    aliases: []
+    definition: La instrucción que ejecuta un código solo si se cumple una condición, como "si llueve, coge el paraguas".
+  - term: switch
+    aliases: []
+    definition: Una instrucción que elige qué hacer según el valor de algo, como un menú con varias opciones.
+  - term: bucle
+    aliases: [bucles]
+    definition: Un trozo de código que se repite mientras se cumpla una condición, como dar vueltas a una pista.
+  - term: iteración
+    aliases: [vuelta, vueltas]
+    definition: Cada una de las repeticiones de un bucle.
+  - term: while
+    aliases: []
+    definition: Un bucle que repite su bloque mientras la condición sea verdadera.
+  - term: for
+    aliases: []
+    definition: Un bucle pensado para contar, con un inicio, una condición y un paso, como recorrer los días del 1 al 30.
+  - term: break
+    aliases: []
+    definition: La instrucción que sale de un bucle o de un switch antes de tiempo.
+  - term: bucle infinito
+    aliases: [bucles infinitos]
+    definition: Un bucle cuya condición nunca deja de cumplirse, así que el programa no termina.
+  - term: método
+    aliases: [métodos]
+    definition: Un bloque de código con nombre que hace una tarea y se puede usar muchas veces, como una receta.
+  - term: llamar
+    aliases: [llamada, llamadas]
+    definition: Pedir que se ejecute un método escribiendo su nombre con paréntesis.
+  - term: parámetro
+    aliases: [parámetros]
+    definition: Una variable que un método recibe para trabajar, como los ingredientes que pide una receta.
+  - term: argumento
+    aliases: [argumentos]
+    definition: El valor concreto que le pasas a un método al llamarlo, como los ingredientes que usas de verdad.
+  - term: retorno
+    aliases: [valor de retorno, devolver, devuelve]
+    definition: El resultado que un método entrega al terminar, con la palabra return.
+  - term: return
+    aliases: []
+    definition: La palabra que termina un método y, si hace falta, entrega un resultado a quien lo llamó.
+  - term: void
+    aliases: []
+    definition: Indica que un método no devuelve ningún resultado; solo hace algo.
+  - term: sobrecarga
+    aliases: []
+    definition: Tener varios métodos con el mismo nombre pero distintos parámetros.
+  - term: recursividad
+    aliases: [recursivo, recursiva, recursión]
+    definition: Cuando un método se llama a sí mismo para resolver una versión más pequeña del problema, como unas muñecas rusas.
+  - term: caso base
+    aliases: []
+    definition: La situación en la que un método recursivo deja de llamarse a sí mismo y devuelve un resultado directo.
+  - term: array
+    aliases: [arrays]
+    definition: Una fila de casillas numeradas de tamaño fijo que guardan valores del mismo tipo, como taquillas.
+  - term: índice
+    aliases: [índices, posición, posiciones]
+    definition: El número de casilla de un elemento; en Java se empieza a contar desde 0.
+  - term: for-each
+    aliases: []
+    definition: Un bucle for abreviado que recorre todos los elementos de un array o una colección sin usar índices.
+  - term: matriz
+    aliases: [matrices]
+    definition: Un array de dos dimensiones, organizado en filas y columnas como una hoja de cálculo.
+  - term: inmutable
+    aliases: [inmutabilidad, inmutables]
+    definition: Que no puede cambiar después de crearse; para "cambiarlo" hay que crear otro nuevo.
+  - term: StringBuilder
+    aliases: []
+    definition: Una clase para construir texto poco a poco de forma eficiente, como una pizarra donde vas añadiendo palabras.
+  - term: clase
+    aliases: [clases]
+    definition: Un molde que describe cómo serán unos objetos, con sus datos y lo que saben hacer, como un molde de galletas.
+  - term: objeto
+    aliases: [objetos]
+    definition: Una pieza creada a partir de una clase, con sus propios datos, como cada galleta hecha con el molde.
+  - term: instancia
+    aliases: []
+    definition: Otra forma de llamar a un objeto concreto creado a partir de una clase.
+  - term: atributo
+    aliases: [atributos, campo, campos]
+    definition: Una variable que pertenece a un objeto y guarda parte de su estado, como el color de un coche.
+  - term: new
+    aliases: []
+    definition: La palabra que crea un objeto nuevo a partir de una clase.
+  - term: constructor
+    aliases: [constructores]
+    definition: Un método especial que se ejecuta al crear un objeto con new y le da sus valores iniciales.
+  - term: this
+    aliases: []
+    definition: Una palabra que se refiere al propio objeto que está ejecutando el código, como decir "yo mismo".
+  - term: encapsulación
+    aliases: []
+    definition: Esconder los datos de un objeto y dejar que se cambien solo a través de sus métodos, como una caja fuerte con ventanilla.
+  - term: modificador de acceso
+    aliases: [modificadores de acceso]
+    definition: Una palabra como public o private que decide desde dónde se puede usar una clase, un atributo o un método.
+  - term: paquete
+    aliases: [paquetes]
+    definition: Una carpeta con nombre que agrupa clases relacionadas.
+  - term: getter
+    aliases: [getters]
+    definition: Un método que solo devuelve el valor de un atributo, como getNombre().
+  - term: setter
+    aliases: [setters]
+    definition: Un método que cambia el valor de un atributo, pudiendo comprobar antes que el valor es válido.
+  - term: static
+    aliases: [estático, estáticos]
+    definition: Marca algo que pertenece a la clase en sí y no a cada objeto, como el reglamento común de un club.
+  - term: enum
+    aliases: [enumeraciones]
+    definition: Un tipo con una lista cerrada de valores posibles, como los días de la semana.
+  - term: referencia
+    aliases: [referencias]
+    definition: 'Lo que guarda una variable de tipo objeto: la dirección donde vive el objeto, como un mando que apunta a una tele.'
+  - term: 'null'
+    aliases: []
+    definition: Un valor especial que indica que una referencia no apunta a ningún objeto, como una caja vacía.
+  - term: equals
+    aliases: []
+    definition: El método que compara si dos objetos tienen el mismo contenido, aunque sean objetos distintos.
+  - term: hashCode
+    aliases: []
+    definition: Un método que resume un objeto en un número; dos objetos iguales según equals deben dar el mismo número.
+  - term: toString
+    aliases: []
+    definition: El método que convierte un objeto en un texto legible, por ejemplo para mostrarlo con println.
+  - term: record
+    aliases: [records]
+    definition: Una clase de datos que se escribe en una línea; Java crea por ti el constructor, los getters, equals y toString.
+  - term: herencia
+    aliases: [heredar, hereda]
+    definition: Crear una clase a partir de otra para aprovechar lo que ya tiene, como un hijo que hereda rasgos de sus padres.
+  - term: extends
+    aliases: []
+    definition: La palabra que indica que una clase hereda de otra.
+  - term: super
+    aliases: []
+    definition: Una palabra para referirse a la clase padre, por ejemplo para llamar a su constructor o a sus métodos.
+  - term: superclase
+    aliases: [clase padre]
+    definition: La clase de la que hereda otra.
+  - term: subclase
+    aliases: [subclases, clase hija]
+    definition: Una clase que hereda de otra y puede añadir o cambiar comportamiento.
+  - term: sobrescribir
+    aliases: [sobrescritura]
+    definition: Volver a escribir en una subclase un método heredado para que haga algo distinto.
+  - term: clase abstracta
+    aliases: [clases abstractas, abstract]
+    definition: Una clase incompleta de la que no se pueden crear objetos; solo sirve para que otras hereden de ella.
+  - term: polimorfismo
+    aliases: []
+    definition: Que un mismo mensaje provoque comportamientos distintos según el objeto que lo recibe, como "haz ruido" dicho a un perro o a un gato.
+  - term: enlace dinámico
+    aliases: []
+    definition: Java decide al ejecutar, y no al compilar, qué versión de un método usar según el objeto real.
+  - term: instanceof
+    aliases: []
+    definition: Un operador que pregunta si un objeto es de un tipo concreto.
+  - term: clase sellada
+    aliases: [sealed]
+    definition: Una clase que dice exactamente qué clases pueden heredar de ella, como un club con lista cerrada de socios.
+  - term: interfaz
+    aliases: [interfaces]
+    definition: Un contrato que dice qué métodos debe tener una clase sin decir cómo hacerlos, como el enchufe que deben cumplir todos los aparatos.
+  - term: implements
+    aliases: [implementar, implementa, implementación, implementaciones]
+    definition: La palabra con la que una clase se compromete a cumplir el contrato de una interfaz.
+  - term: Comparable
+    aliases: []
+    definition: Una interfaz que permite decir cómo se ordenan tus objetos, para que Java pueda ordenarlos.
+  - term: excepción
+    aliases: [excepciones]
+    definition: Un aviso de que algo ha ido mal mientras el programa se ejecuta, como una alarma que interrumpe lo que estabas haciendo.
+  - term: try
+    aliases: []
+    definition: El bloque donde pones el código que podría fallar, para vigilarlo.
+  - term: catch
+    aliases: [capturar]
+    definition: El bloque que atrapa una excepción y decide qué hacer con ella, como una red bajo un trapecista.
+  - term: finally
+    aliases: []
+    definition: Un bloque que se ejecuta siempre al final de un try, haya error o no.
+  - term: throw
+    aliases: [lanzar]
+    definition: La instrucción que lanza una excepción para avisar de un problema.
+  - term: checked
+    aliases: []
+    definition: Una excepción que Java obliga a capturar o declarar, porque es un problema previsible como un archivo que no existe.
+  - term: unchecked
+    aliases: []
+    definition: Una excepción que Java no obliga a capturar; suele indicar un fallo de programación.
+  - term: pila de llamadas
+    aliases: [stack trace]
+    definition: La lista de métodos que se estaban ejecutando cuando ocurrió un error, como las migas de pan que llevan hasta el fallo.
+  - term: colección
+    aliases: [colecciones]
+    definition: Un objeto que guarda un grupo de elementos y puede crecer o encoger, como una mochila.
+  - term: lista
+    aliases: [listas, List]
+    definition: Una colección ordenada que admite repetidos y se consulta por posición.
+  - term: ArrayList
+    aliases: []
+    definition: La lista más usada de Java, que crece sola a medida que añades elementos.
+  - term: conjunto
+    aliases: [conjuntos, Set]
+    definition: Una colección que no admite elementos repetidos, como una lista de invitados sin nombres duplicados.
+  - term: mapa
+    aliases: [mapas, Map]
+    definition: Una colección que asocia claves con valores, como un diccionario con palabras y significados.
+  - term: clave
+    aliases: [claves]
+    definition: El dato que usas para buscar un valor en un mapa, como la palabra que buscas en un diccionario.
+  - term: genérico
+    aliases: [genéricos, genérica]
+    definition: Código escrito una vez para trabajar con cualquier tipo, indicado entre < >, como List<String>.
+  - term: parámetro de tipo
+    aliases: [parámetros de tipo]
+    definition: Una letra como T que ocupa el lugar de un tipo que se decidirá al usar una clase o un método genérico.
+  - term: lambda
+    aliases: [lambdas]
+    definition: Una función corta sin nombre que se puede pasar como valor, escrita con una flecha, como x -> x * 2.
+  - term: interfaz funcional
+    aliases: [interfaces funcionales]
+    definition: Una interfaz con un solo método por hacer, que se puede rellenar con una lambda.
+  - term: referencia a método
+    aliases: []
+    definition: Una forma abreviada de pasar un método que ya existe, escrita con dos puntos dobles, como String::length.
+  - term: stream
+    aliases: [streams]
+    definition: Un flujo de elementos que se procesa paso a paso con operaciones encadenadas, como una cinta transportadora.
+  - term: archivo
+    aliases: [archivos, ficheros]
+    definition: Un conjunto de datos guardado en el disco con un nombre, como un documento en una carpeta.
+  - term: try-with-resources
+    aliases: []
+    definition: Un try que cierra solo los recursos que abre, como un archivo, aunque haya un error.
+  - term: hilo
+    aliases: [hilos, Thread]
+    definition: Una línea de ejecución dentro de un programa; con varios hilos se hacen varias cosas a la vez, como varios cocineros en una cocina.
+  - term: condición de carrera
+    aliases: [condiciones de carrera]
+    definition: Un error que ocurre cuando dos hilos cambian el mismo dato a la vez y el resultado depende de quién llega antes.
+  - term: synchronized
+    aliases: []
+    definition: Una palabra que deja entrar a un solo hilo cada vez en un trozo de código, como el cerrojo de un baño.
+  - term: base de datos
+    aliases: [bases de datos]
+    definition: Un programa que guarda mucha información organizada en tablas y permite buscarla, como un archivador enorme.
+  - term: SQL
+    aliases: []
+    definition: El lenguaje que se usa para pedir y guardar datos en una base de datos.
+  - term: JDBC
+    aliases: []
+    definition: La parte de Java que permite conectarse a una base de datos y enviarle consultas SQL.
+  - term: test
+    aliases: [tests, pruebas automáticas]
+    definition: Una prueba automática, un pequeño programa que comprueba que otro código hace lo que debe, como un control de calidad.
+  - term: JUnit
+    aliases: []
+    definition: La herramienta más usada en Java para escribir y ejecutar pruebas automáticas.
+  - term: aserción
+    aliases: [aserciones]
+    definition: Una comprobación dentro de una prueba que falla si el resultado no es el esperado.

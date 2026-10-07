@@ -65,8 +65,9 @@ solution: |
       }
   }
 hints:
-  - Guarda los límites en constantes `private static final`.
-  - "`Math.min(MAXIMO, temperatura + grados)` sube sin pasarse del máximo."
+  - 'La idea: la temperatura nunca se sale de 10..30; si una orden se pasa, se queda pegada al límite.'
+  - 'Qué usar: constantes `private static final int MINIMO = 10, MAXIMO = 30;`, `Math.min`/`Math.max` y un `switch` sobre la orden en el `main`.'
+  - 'El plan: `subir` hace `temperatura = Math.min(MAXIMO, temperatura + grados);` y `bajar` usa `Math.max(MINIMO, ...)`. `estado()` elige el modo con dos comparaciones (`< 18` frío, `> 24` calor) y devuelve `temperatura + " °C (" + modo + ")"`.'
 tests:
   - input: "estado subir 3 estado subir 20 estado\n"
     output: |

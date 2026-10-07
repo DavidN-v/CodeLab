@@ -150,9 +150,9 @@ solution: |
       }
   }
 hints:
-  - Ejecuta primero sin cambiar nada y mira qué pruebas fallan y por qué.
-  - Comprueba el múltiplo de 15 antes que los de 3 y 5, o nunca llegarás a "FizzBuzz".
-  - "Para la última prueba, lanza `throw new IllegalArgumentException(...)` si `n <= 0`."
+  - 'La idea: las pruebas ya dicen qué debe hacer `convertir`. Ejecuta primero sin cambiar nada y lee los nombres de las que fallan: cada una es una regla que te falta.'
+  - 'Qué usar: el operador resto `%` para saber si un número es múltiplo de otro (`n % 3 == 0`), varios `if` con `return`, y `throw new IllegalArgumentException(...)` para los números no positivos.'
+  - 'El plan: primero, si `n <= 0`, lanza la excepción. Después comprueba el múltiplo de 15 (si no va primero, nunca llegarás a «FizzBuzz»), luego el de 3, luego el de 5, y si no es ninguno, devuelve `String.valueOf(n)`.'
 tests:
   - output: |
       11/11 pruebas superadas

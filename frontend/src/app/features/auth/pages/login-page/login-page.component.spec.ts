@@ -40,7 +40,9 @@ describe('LoginPageComponent', () => {
   });
 
   it('signs in and goes back to where the learner was heading', () => {
-    login.mockReturnValue(of({ id: 1, email: 'ada@example.com', displayName: 'Ada' }));
+    login.mockReturnValue(
+      of({ id: 1, email: 'ada@example.com', displayName: 'Ada', dailyGoalXp: 30 }),
+    );
     const navigate = vi.spyOn(TestBed.inject(Router), 'navigateByUrl').mockResolvedValue(true);
     fixture.componentRef.setInput('returnUrl', '/practice/hola-mundo');
 
@@ -52,7 +54,9 @@ describe('LoginPageComponent', () => {
   });
 
   it('ignores return URLs that leave the app', () => {
-    login.mockReturnValue(of({ id: 1, email: 'ada@example.com', displayName: 'Ada' }));
+    login.mockReturnValue(
+      of({ id: 1, email: 'ada@example.com', displayName: 'Ada', dailyGoalXp: 30 }),
+    );
     const navigate = vi.spyOn(TestBed.inject(Router), 'navigateByUrl').mockResolvedValue(true);
     fixture.componentRef.setInput('returnUrl', '//evil.example.com');
 

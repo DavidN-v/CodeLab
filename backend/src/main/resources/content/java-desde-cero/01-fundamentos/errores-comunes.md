@@ -1,4 +1,7 @@
-Vas a equivocarte muchas veces, y está bien: los errores son la forma en que el compilador y la JVM te dicen qué esperaban. Aprender a leerlos te ahorra horas.
+Vas a equivocarte muchas veces, y está bien: le pasa a todo el mundo, también a quien lleva años programando. Los mensajes de error no son una bronca; son el compilador diciéndote **qué esperaba y dónde**. Aprender a leerlos te ahorra horas.
+
+> [!analogia]
+> El compilador es como un corrector ortográfico muy estricto. Antes de dejarte "publicar" tu programa, lo revisa entero. Si encuentra una falta, no lo ejecuta y te subraya la línea con una explicación.
 
 ## Dos momentos, dos tipos de error
 
@@ -7,9 +10,9 @@ Vas a equivocarte muchas veces, y está bien: los errores son la forma en que el
 | **De compilación** | Al traducir el código | `javac` | No: el programa no llega a arrancar |
 | **De ejecución** (excepciones) | Mientras el programa corre | La JVM | Sí, hasta el punto del error |
 
-Hay un tercer tipo, el más traicionero: el **error lógico**. El programa compila y termina sin quejarse, pero hace otra cosa de la que querías. Contra esos te protegen los tests de los ejercicios.
+En esta lección te centras en los de compilación, los primeros que vas a ver. Los de ejecución llegan en la siguiente.
 
-## Leer un error de compilación
+## Cómo se lee un error de compilación
 
 ```java error
 public class Main {
@@ -28,62 +31,96 @@ Main.java:3: error: ';' expected
 1 error
 ```
 
-- `Main.java:3` → archivo y **línea** del problema.
-- `error: ';' expected` → qué esperaba el compilador.
-- La flecha `^` señala la posición exacta.
+- `Main.java:3` → archivo y **línea** del problema (aquí, la 3).
+- `error: ';' expected` → qué esperaba el compilador: un punto y coma.
+- La flecha `^` señala la posición exacta donde se dio cuenta.
 
-Algunos mensajes frecuentes:
+> [!prueba]
+> Copia el ejemplo en el playground y ejecútalo para ver el error con tus propios ojos. Después añade el `;` que falta al final de la línea 3 y vuelve a ejecutar: el error desaparece.
 
-| Mensaje | Causa habitual |
-| --- | --- |
-| `';' expected` | Falta un punto y coma |
-| `cannot find symbol` | Nombre mal escrito (mayúsculas incluidas) o variable no declarada |
-| `class X is public, should be declared in a file named X.java` | El nombre del archivo no coincide con la clase pública |
-| `incompatible types` | Guardas un valor de un tipo en una variable de otro |
-| `reached end of file while parsing` | Falta una llave `}` de cierre |
-| `unclosed string literal` | Falta la comilla de cierre de un texto |
+## Los errores más comunes, en palabras sencillas
 
-> **Consejo:** corrige siempre **el primer error** de la lista y vuelve a compilar. Un solo fallo (una llave que falta) puede provocar diez mensajes en cascada que desaparecen al arreglarlo.
+Los mensajes están en inglés. Aquí tienes los que más vas a ver, traducidos a lo que de verdad quieren decir:
 
-## Leer un error de ejecución
+| Mensaje | Lo que te está diciendo | Qué revisar |
+| --- | --- | --- |
+| `';' expected` | "Esperaba que terminaras la instrucción" | Falta el `;` al final de la línea (o justo antes) |
+| `unclosed string literal` | "Abriste un texto con comillas y nunca lo cerraste" | Falta la `"` de cierre |
+| `cannot find symbol` | "No sé qué es esta palabra" | Nombre mal escrito, una mayúscula distinta o una variable que no has creado |
+| `package system does not exist` | "No conozco nada llamado `system`" | Casi siempre es `System` con mayúscula |
+| `incompatible types` | "Esto no cabe en esa caja" | Guardas un texto donde va un número, o al revés |
+| `reached end of file while parsing` | "Se acabó el archivo y aún faltaba algo" | Falta una llave `}` de cierre |
+| `class X is public, should be declared in a file named X.java` | "El archivo y la clase no se llaman igual" | El nombre del archivo y el de la clase pública |
 
-```java
+Mira tres de ellos en acción:
+
+```java error
 public class Main {
     public static void main(String[] args) {
-        int total = 10;
-        int personas = 0;
-        System.out.println("Antes de dividir");
-        System.out.println(total / personas);
-        System.out.println("Esto no se imprime");
+        String nombre = "Ada";
+        System.out.println(nombr);
     }
 }
 ```
 
 ```
-Antes de dividir
-Exception in thread "main" java.lang.ArithmeticException: / by zero
-	at Main.main(Main.java:6)
+Main.java:4: error: cannot find symbol
+        System.out.println(nombr);
+                           ^
+  symbol:   variable nombr
+  location: class Main
 ```
 
-- `ArithmeticException` es el **tipo** de excepción; `/ by zero`, el detalle.
-- La línea `at Main.main(Main.java:6)` es la **traza** (*stack trace*): dónde ocurrió. Cuando haya varios métodos, verás varias líneas `at`; la primera es donde saltó el error.
-- Todo lo anterior al error sí se ejecutó.
+`nombr` no existe: falta una `e`. La línea `symbol: variable nombr` te dice exactamente qué palabra no reconoce.
 
-Otras excepciones que verás pronto:
+```java error
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("Hola);
+    }
+}
+```
 
-| Excepción | Causa habitual |
-| --- | --- |
-| `InputMismatchException` | `nextInt()` encontró algo que no es un número |
-| `NoSuchElementException` | Intentaste leer más entrada de la que había |
-| `ArrayIndexOutOfBoundsException` | Accediste a una posición que no existe en un array |
-| `NullPointerException` | Usaste una referencia que vale `null` |
+```
+Main.java:3: error: unclosed string literal
+```
 
-## Cuando se acaba el tiempo
+El texto `"Hola` empieza con comillas pero no termina con ellas. Todo texto necesita su pareja de `"`.
 
-Cada ejecución tiene un límite de tiempo. Si tu programa entra en un bucle infinito, la plataforma lo detiene y verás **Tiempo agotado**. Revisa la condición de tus bucles.
+```java error
+public class Main {
+    public static void main(String[] args) {
+        int edad = "treinta";
+    }
+}
+```
 
-## Resumen
+```
+Main.java:3: error: incompatible types: String cannot be converted to int
+```
 
-- Los errores de compilación indican archivo, línea y qué se esperaba: arregla el primero.
-- Las excepciones indican tipo, detalle y línea en la traza `at ...`.
-- Un programa que no falla también puede estar mal: los tests te lo dirán.
+En una caja para números enteros (`int`) no cabe un texto. Se arregla escribiendo `int edad = 30;`.
+
+> [!cuidado]
+> Un solo fallo (una llave que falta, una comilla sin cerrar) puede provocar varios mensajes en cascada. Corrige siempre **el primer error** de la lista y vuelve a ejecutar: muchas veces los demás desaparecen solos.
+
+## Qué hacer cuando sale un error
+
+```mermaid
+flowchart TD
+    A["Sale un error"] --> B["Lee el número de línea"]
+    B --> C["Lee qué esperaba el compilador"]
+    C --> D["Mira esa línea y la anterior"]
+    D --> E["Corrige y ejecuta otra vez"]
+    E --> F{"¿Sigue habiendo errores?"}
+    F -- Sí --> B
+    F -- No --> G["¡Funciona!"]
+```
+
+> [!idea]
+> Si en la línea indicada no ves nada raro, mira la línea **anterior**: un `;` o una `"` que falta al final de una línea se suele notar en la siguiente.
+
+> [!resumen]
+> - Un error de compilación impide que el programa arranque, pero te dice línea y motivo.
+> - `';' expected`, `unclosed string literal`, `cannot find symbol` e `incompatible types` son los más frecuentes.
+> - Corrige el primer error, vuelve a ejecutar y repite: cada error resuelto es un paso adelante.

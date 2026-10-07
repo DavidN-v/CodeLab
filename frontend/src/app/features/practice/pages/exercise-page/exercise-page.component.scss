@@ -102,3 +102,46 @@
 .panel--console {
   overflow-y: auto;
 }
+
+.statement__instruction {
+  margin-bottom: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border-left: 3px solid var(--color-accent);
+  background-color: var(--color-accent-soft);
+  font-size: var(--text-sm);
+}
+
+.review {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+  padding: var(--space-3);
+  border: 1px solid var(--color-info);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+}
+
+.review__title {
+  font-weight: 600;
+}
+
+.next-step {
+  display: flex;
+  justify-content: flex-end;
+  padding: var(--space-3) var(--space-4);
+  border-top: 1px solid var(--color-border);
+}
+
+.statement__jump {
+  margin-bottom: var(--space-3);
+
+  @include from('lg') {
+    display: none;
+  }
+}
+
+#work {
+  scroll-margin-top: calc(var(--navbar-height) + var(--space-3));
+}

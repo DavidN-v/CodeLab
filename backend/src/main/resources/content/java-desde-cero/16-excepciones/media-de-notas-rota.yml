@@ -1,0 +1,97 @@
+title: La media que se rinde
+summary: Encuentra por qué el programa deja de leer notas al primer error.
+difficulty: MEDIUM
+kind: fix
+statement: |
+  Este programa lee notas enteras, una por línea. Las líneas que no son un número deben ignorarse escribiendo `Ignorada: <línea>`, y el programa debe **seguir leyendo** las siguientes. Al final escribe:
+
+  ```
+  Válidas: <cuántas notas válidas>
+  Media: <media de las válidas con un decimal>
+  ```
+
+  Si no hay ninguna nota válida, la última línea es `Media: -`.
+
+  **El síntoma:** con la entrada `7`, `diez`, `8` debería escribir `Ignorada: diez`, `Válidas: 2` y `Media: 7.5`, pero se olvida del 8 y la media sale `3.5`. Encuentra los errores y corrígelos.
+starter: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int suma = 0;
+          int validas = 0;
+          String linea = "";
+          try {
+              while (entrada.hasNextLine()) {
+                  linea = entrada.nextLine().strip();
+                  validas++;
+                  int nota = Integer.parseInt(linea);
+                  suma += nota;
+              }
+          } catch (NumberFormatException e) {
+              System.out.println("Ignorada: " + linea);
+          }
+          System.out.println("Válidas: " + validas);
+          System.out.println(validas == 0 ? "Media: -" : String.format("Media: %.1f", (double) suma / validas));
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int suma = 0;
+          int validas = 0;
+          while (entrada.hasNextLine()) {
+              String linea = entrada.nextLine().strip();
+              try {
+                  int nota = Integer.parseInt(linea);
+                  suma += nota;
+                  validas++;
+              } catch (NumberFormatException e) {
+                  System.out.println("Ignorada: " + linea);
+              }
+          }
+          System.out.println("Válidas: " + validas);
+          System.out.println(validas == 0 ? "Media: -" : String.format("Media: %.1f", (double) suma / validas));
+      }
+  }
+hints:
+  - 'La idea: hay dos fallos. Uno hace que el programa deje de leer al primer error; el otro cuenta como válida una nota que no lo es.'
+  - 'Qué usar: piensa dónde está el `try`. Cuando se lanza la excepción, la ejecución salta al `catch` y **sale del bloque** `try` entero, y aquí el bucle está dentro de ese bloque.'
+  - 'El plan: mete el `try`/`catch` **dentro** del `while`, para que cada línea tenga su propia red. Y mueve `validas++` después de `parseInt`, para contar solo cuando la conversión ha salido bien.'
+tests:
+  - input: |
+      7
+      diez
+      8
+    output: |
+      Ignorada: diez
+      Válidas: 2
+      Media: 7.5
+    sample: true
+  - input: |
+      5
+      6
+      10
+    output: |
+      Válidas: 3
+      Media: 7.0
+  - input: |
+      hola
+    output: |
+      Ignorada: hola
+      Válidas: 0
+      Media: -
+  - input: |
+      9
+      x
+      y
+      4
+    output: |
+      Ignorada: x
+      Ignorada: y
+      Válidas: 2
+      Media: 6.5

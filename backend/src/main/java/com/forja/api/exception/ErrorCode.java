@@ -17,6 +17,7 @@ public enum ErrorCode {
 	CONFLICT("La operación entra en conflicto con el estado actual del recurso."),
 	TOO_MANY_REQUESTS("Has hecho demasiadas solicitudes seguidas. Espera un momento e inténtalo de nuevo."),
 	EXECUTION_UNAVAILABLE("El entorno de ejecución no está disponible ahora mismo. Inténtalo de nuevo en unos segundos."),
+	TUTOR_UNAVAILABLE("El tutor no está disponible ahora mismo. Inténtalo de nuevo más tarde."),
 	INTERNAL_ERROR("Ha ocurrido un error inesperado. Inténtalo de nuevo más tarde.");
 
 	private final String defaultMessage;

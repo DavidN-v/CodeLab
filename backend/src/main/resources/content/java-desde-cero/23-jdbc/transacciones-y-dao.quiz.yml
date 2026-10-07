@@ -1,0 +1,50 @@
+questions:
+  - type: choice
+    prompt: En una transacción, falla la segunda de dos operaciones. ¿Qué método deshace también la primera?
+    options:
+      - '`rollback()`'
+      - '`commit()`'
+      - '`setAutoCommit(true)`'
+      - '`close()`'
+    answer: 0
+    explanation: '`rollback()` descarta todo lo hecho desde el inicio de la transacción. `commit()` haría lo contrario: confirmar los cambios, incluida la operación a medias.'
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      import java.sql.Connection;
+      import java.sql.DriverManager;
+      import java.sql.ResultSet;
+      import java.sql.SQLException;
+      import java.sql.Statement;
+
+      public class Main {
+          public static void main(String[] args) throws SQLException {
+              try (Connection c = DriverManager.getConnection("jdbc:h2:mem:caja");
+                   Statement s = c.createStatement()) {
+                  s.execute("CREATE TABLE caja (saldo INT)");
+                  s.execute("INSERT INTO caja VALUES (100)");
+                  c.setAutoCommit(false);
+                  s.executeUpdate("UPDATE caja SET saldo = saldo - 40");
+                  c.rollback();
+                  s.executeUpdate("UPDATE caja SET saldo = saldo - 10");
+                  c.commit();
+                  c.setAutoCommit(true);
+                  try (ResultSet r = s.executeQuery("SELECT saldo FROM caja")) {
+                      r.next();
+                      System.out.println(r.getInt(1));
+                  }
+              }
+          }
+      }
+    answer: |
+      90
+    explanation: 'La resta de 40 se deshace con `rollback()`, así que el saldo vuelve a 100. Después se resta 10 y se confirma con `commit()`: 90.'
+  - type: choice
+    prompt: ¿Qué ventaja tiene encerrar el SQL de una tabla en un DAO?
+    options:
+      - El resto del programa trabaja con objetos y no necesita saber SQL
+      - Las consultas se ejecutan sin base de datos
+      - Ya no hace falta cerrar las conexiones
+      - Evita tener que crear las tablas
+    answer: 0
+    explanation: El DAO ofrece métodos con significado (`guardar`, `buscarPorId`) que devuelven objetos. Si cambia la base de datos o el SQL, solo cambias el DAO.

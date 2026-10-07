@@ -49,8 +49,9 @@ solution: |
       }
   }
 hints:
-  - "`Comparator.comparing(Jugador::puntos).reversed()` ordena de más a menos puntos."
-  - "Encadena después `.thenComparing(Jugador::partidas)` y `.thenComparing(Jugador::nombre)`."
+  - 'La idea: ordenar con tres criterios en cascada: primero puntos (de más a menos); si empatan, partidas (de menos a más); si siguen empatados, nombre.'
+  - 'Qué usar: un `record Jugador(String nombre, int puntos, int partidas)`, `Comparator.comparing(Jugador::puntos)`, `.reversed()` y `.thenComparing(...)`.'
+  - 'El plan: lee los jugadores en una lista; ordénala con `Comparator.comparing(Jugador::puntos).reversed().thenComparing(Jugador::partidas).thenComparing(Jugador::nombre)`; imprime con un `for` usando `i + 1` como posición.'
 tests:
   - input: |
       Ada 30 10

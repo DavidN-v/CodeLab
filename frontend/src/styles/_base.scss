@@ -96,3 +96,13 @@ pre {
     transition-duration: 0.01ms !important;
   }
 }
+
+// Beginners copy what they see: ">=" must look like ">=", not like a ligature.
+code,
+pre,
+kbd,
+samp,
+textarea,
+.cm-content {
+  font-variant-ligatures: none;
+}

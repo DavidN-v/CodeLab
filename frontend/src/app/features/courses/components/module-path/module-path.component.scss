@@ -1,0 +1,187 @@
+@use 'mixins' as *;
+
+:host {
+  display: block;
+}
+
+.path__summary {
+  @include mono-label;
+  margin-bottom: var(--space-4);
+  color: var(--color-text-muted);
+}
+
+.path {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  // The road: a dashed line behind the stops.
+  &::before {
+    content: '';
+    position: absolute;
+    top: 1.5rem;
+    bottom: 1.5rem;
+    left: 1.75rem;
+    border-left: 3px dashed var(--color-border-strong);
+
+    @include from('md') {
+      left: 50%;
+    }
+  }
+}
+
+.path__stop {
+  position: relative;
+  display: flex;
+
+  @include from('md') {
+    width: 50%;
+    justify-content: flex-end;
+    padding-right: 1.75rem;
+  }
+}
+
+.path__stop--right {
+  @include from('md') {
+    align-self: flex-end;
+    justify-content: flex-start;
+    padding-right: 0;
+    padding-left: 1.75rem;
+
+    .path__link {
+      flex-direction: row;
+    }
+  }
+}
+
+.path__stop:not(.path__stop--right) .path__link {
+  @include from('md') {
+    flex-direction: row-reverse;
+    text-align: right;
+  }
+}
+
+.path__link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  color: var(--color-text);
+  text-decoration: none;
+
+  &:hover .path__title {
+    color: var(--color-accent);
+  }
+}
+
+.path__node {
+  --progress: 0%;
+  position: relative;
+  z-index: 1;
+  display: grid;
+  flex-shrink: 0;
+  width: 3.5rem;
+  height: 3.5rem;
+  place-items: center;
+  border-radius: 999px;
+  // A ring that fills with the module's progress.
+  background: conic-gradient(var(--color-accent) var(--progress), var(--color-border-strong) 0);
+
+  @include from('md') {
+    position: absolute;
+    right: -1.75rem;
+
+    .path__stop--right & {
+      right: auto;
+      left: -1.75rem;
+    }
+  }
+}
+
+.path__number {
+  display: grid;
+  width: 2.9rem;
+  height: 2.9rem;
+  place-items: center;
+  border-radius: 999px;
+  background-color: var(--color-surface);
+  font-family: var(--font-mono);
+  font-weight: 700;
+}
+
+.path__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+
+  @include from('md') {
+    max-width: 22rem;
+  }
+}
+
+.path__title {
+  font-weight: 600;
+}
+
+.path__meta {
+  color: var(--color-text-subtle);
+  font-size: var(--text-xs);
+}
+
+.path__here {
+  @include mono-label;
+  color: var(--color-accent);
+}
+
+.path__stop--done {
+  .path__node {
+    background: var(--color-success);
+  }
+
+  .path__number {
+    background-color: var(--color-success);
+    color: var(--color-bg);
+  }
+}
+
+.path__stop--current {
+  .path__number {
+    background-color: var(--color-accent);
+    color: var(--color-on-accent);
+  }
+
+  .path__node {
+    animation: path-pulse 2s ease-in-out infinite;
+  }
+
+  .path__text {
+    border-color: var(--color-accent);
+  }
+}
+
+.path__stop--upcoming .path__text {
+  opacity: 0.75;
+}
+
+.path__stop--goal .path__number {
+  background-color: var(--color-surface-raised);
+}
+
+@keyframes path-pulse {
+  50% {
+    box-shadow: 0 0 0 8px var(--color-accent-soft);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .path__stop--current .path__node {
+    animation: none;
+  }
+}

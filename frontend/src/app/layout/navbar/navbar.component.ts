@@ -3,6 +3,7 @@ import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 
 import { BRAND } from '../../core/config/brand.config';
 import { AuthService } from '../../core/services/auth.service';
+import { SettingsService } from '../../core/services/settings.service';
 import { NAV_LINKS } from './navbar-links';
 
 @Component({
@@ -15,6 +16,7 @@ import { NAV_LINKS } from './navbar-links';
 export class NavbarComponent {
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
+  protected readonly settings = inject(SettingsService);
 
   protected readonly brandName = BRAND.name;
   protected readonly user = this.auth.user;

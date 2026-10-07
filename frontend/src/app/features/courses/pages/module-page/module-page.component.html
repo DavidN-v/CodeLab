@@ -85,7 +85,10 @@
                   >
                   <span class="item">
                     <span class="item__title">{{ exercise.title }}</span>
-                    <span class="item__summary">{{ exercise.summary }}</span>
+                    <span class="item__summary"
+                      >{{ kindIcons[exercise.kind] }} {{ kindLabels[exercise.kind] }} ·
+                      {{ exercise.summary }}</span
+                    >
                   </span>
                   <span class="tag" [class]="difficultyTags[exercise.difficulty]">
                     {{ difficultyLabels[exercise.difficulty] }}

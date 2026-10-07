@@ -35,6 +35,9 @@ services:
       CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:4200}
       API_DOCS_ENABLED: ${API_DOCS_ENABLED:-true}
       LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      # Optional: the AI tutor stays off without a key.
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      TUTOR_MODEL: ${TUTOR_MODEL:-claude-opus-5-5}
     depends_on:
       postgres:
         condition: service_healthy

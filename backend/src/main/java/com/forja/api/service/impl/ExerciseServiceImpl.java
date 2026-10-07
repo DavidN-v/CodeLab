@@ -9,15 +9,25 @@ import com.forja.api.dto.SampleTestResponse;
 import com.forja.api.dto.SolutionResponse;
 import com.forja.api.dto.SubmissionResultResponse;
 import com.forja.api.dto.SubmissionSummaryResponse;
+import com.forja.api.content.ContentTemplates;
+import com.forja.api.dto.CelebrationResponse;
+import com.forja.api.dto.SubmissionRequest;
+import com.forja.api.dto.TestOutcome;
+import com.forja.api.dto.TestResultResponse;
 import com.forja.api.entity.Exercise;
 import com.forja.api.entity.ExerciseHint;
+import com.forja.api.entity.ExerciseKind;
 import com.forja.api.entity.ExerciseProgress;
 import com.forja.api.entity.Submission;
 import com.forja.api.entity.SubmissionStatus;
+import com.forja.api.exception.InvalidRequestException;
 import com.forja.api.exception.ResourceNotFoundException;
 import com.forja.api.exception.TooManyRequestsException;
 import com.forja.api.learning.Grader;
 import com.forja.api.learning.Grader.Grade;
+import com.forja.api.learning.OutputComparator;
+import com.forja.api.learning.ParsonsPuzzle;
+import com.forja.api.learning.PredictionFeedback;
 import com.forja.api.learning.RateLimiter;
 import com.forja.api.learning.XpPolicy;
 import com.forja.api.mapper.RefMapper;
@@ -34,6 +44,7 @@ import org.springframework.data.domain.Limit;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
+import tools.jackson.databind.json.JsonMapper;
 
 /**
  * Transactions are opened explicitly: a submission waits seconds for the
@@ -64,10 +75,16 @@ public class ExerciseServiceImpl implements ExerciseService {
 
 	private final TransactionTemplate writeTransaction;
 
+	private final ExperienceTracker experienceTracker;
+
+	private final JsonMapper jsonMapper = JsonMapper.builder().build();
+
 	public ExerciseServiceImpl(ExerciseRepository exerciseRepository, ExerciseProgressRepository progressRepository,
 			SubmissionRepository submissionRepository, UserRepository userRepository,
 			CodeRunnerClient codeRunnerClient, @Qualifier("submissionRateLimiter") RateLimiter rateLimiter,
-			RefMapper refMapper, Clock clock, PlatformTransactionManager transactionManager) {
+			RefMapper refMapper, Clock clock, PlatformTransactionManager transactionManager,
+			ExperienceTracker experienceTracker) {
+		this.experienceTracker = experienceTracker;
 		this.exerciseRepository = exerciseRepository;
 		this.progressRepository = progressRepository;
 		this.submissionRepository = submissionRepository;
@@ -96,14 +113,19 @@ public class ExerciseServiceImpl implements ExerciseService {
 			ExerciseSummaryResponse previous = index > 0 ? refMapper.toSummary(outline.get(index - 1)) : null;
 			ExerciseSummaryResponse next = index >= 0 && index < outline.size() - 1
 					? refMapper.toSummary(outline.get(index + 1)) : null;
+			boolean predict = exercise.getKind() == ExerciseKind.PREDICT;
+			// The output of a prediction is its answer: only the input is shown.
 			List<SampleTestResponse> samples = exercise.getTestCases()
 				.stream()
-				.filter(testCase -> testCase.isSample())
-				.map(testCase -> new SampleTestResponse(testCase.getStdin(), testCase.getExpectedStdout()))
+				.filter(testCase -> predict ? !testCase.getStdin().isEmpty() : testCase.isSample())
+				.map(testCase -> new SampleTestResponse(testCase.getStdin(),
+						predict ? null : testCase.getExpectedStdout()))
 				.toList();
+			List<String> parsonsLines = exercise.getKind() == ExerciseKind.PARSONS
+					? ParsonsPuzzle.shuffled(exercise.getSlug(), parsonsData(exercise)) : null;
 			return new ExerciseDetailResponse(exercise.getId(), exercise.getSlug(), exercise.getTitle(),
-					exercise.getSummary(), exercise.getDifficulty(), exercise.getStatementMarkdown(),
-					exercise.getStarterCode(), samples, exercise.getTestCases().size(), exercise.getHints().size(),
+					exercise.getSummary(), exercise.getDifficulty(), exercise.getKind(),
+					exercise.getStatementMarkdown(), exercise.getStarterCode(), parsonsLines, samples, exercise.getTestCases().size(), exercise.getHints().size(),
 					XpPolicy.baseXp(exercise.getDifficulty()), refMapper.toRef(exercise.getModule().getCourse()),
 					refMapper.toRef(exercise.getModule()), previous, next);
 		});
@@ -139,7 +161,7 @@ public class ExerciseServiceImpl implements ExerciseService {
 	}
 
 	@Override
-	public SubmissionResultResponse submit(Long userId, String slug, String sourceCode) {
+	public SubmissionResultResponse submit(Long userId, String slug, SubmissionRequest request) {
 		if (!rateLimiter.tryAcquire(userId)) {
 			throw new TooManyRequestsException("Has enviado muchas soluciones seguidas. Espera un minuto.");
 		}
@@ -151,30 +173,82 @@ public class ExerciseServiceImpl implements ExerciseService {
 						testCase.getExpectedStdout(), testCase.isSample()))
 				.toList();
 			return new ExerciseToRun(exercise.getId(), exercise.getModule().getCourse().getLanguage().getSlug(),
-					cases);
+					exercise.getKind(), program(exercise, request), cases);
 		});
 
-		RunnerExecution.Result result = codeRunnerClient.execute(toRun.languageSlug(), sourceCode,
-				toRun.cases().stream().map(Grader.TestCase::stdin).toList());
-		Grade grade = Grader.grade(toRun.cases(), result);
+		Grade grade;
+		String feedback = null;
+		if (toRun.kind() == ExerciseKind.PREDICT) {
+			Grader.TestCase expected = toRun.cases().get(0);
+			boolean right = OutputComparator.matches(expected.expectedStdout(), toRun.program());
+			feedback = right ? null : PredictionFeedback.describe(expected.expectedStdout(), toRun.program());
+			grade = new Grade(right ? SubmissionStatus.ACCEPTED : SubmissionStatus.WRONG_ANSWER, right ? 1 : 0, 1,
+					null, null, List.of(new TestResultResponse(1, false,
+							right ? TestOutcome.PASSED : TestOutcome.WRONG_OUTPUT, null, null, null, null)));
+		}
+		else {
+			RunnerExecution.Result result = codeRunnerClient.execute(toRun.languageSlug(), toRun.program(),
+					toRun.cases().stream().map(Grader.TestCase::stdin).toList());
+			grade = Grader.grade(toRun.cases(), result);
+		}
+		String feedbackText = feedback;
 
 		return writeTransaction.execute(status -> {
-			Exercise exercise = exerciseRepository.getReferenceById(toRun.exerciseId());
+			Exercise exercise = exerciseRepository.findById(toRun.exerciseId()).orElseThrow();
 			ExerciseProgress progress = progressFor(userId, exercise);
 			progress.recordAttempt();
 			int xp = 0;
 			boolean firstSolve = false;
+			boolean reviewPassed = false;
 			if (grade.status() == SubmissionStatus.ACCEPTED) {
 				int earned = XpPolicy.exerciseXp(exercise.getDifficulty(), progress.getHintsRevealed(),
 						progress.isSolutionViewed());
+				reviewPassed = progress.passReview(clock.instant());
 				firstSolve = progress.markSolved(clock.instant(), earned);
 				xp = firstSolve ? earned : 0;
 			}
 			Submission submission = submissionRepository.save(new Submission(userRepository.getReferenceById(userId),
-					exercise, sourceCode, grade.status(), grade.passed(), grade.total(), grade.slowestRunMs()));
+					exercise, toRun.program(), grade.status(), grade.passed(), grade.total(), grade.slowestRunMs()));
+			CelebrationResponse celebration = null;
+			if (firstSolve) {
+				progressRepository.flush();
+				celebration = experienceTracker.celebrate(userId, xp, exercise.getModule());
+			}
 			return new SubmissionResultResponse(submission.getId(), grade.status(), grade.passed(), grade.total(),
-					grade.slowestRunMs(), grade.compileOutput(), grade.tests(), firstSolve, xp);
+					grade.slowestRunMs(), grade.compileOutput(), grade.tests(), firstSolve, xp, feedbackText,
+					reviewPassed, celebration);
 		});
+	}
+
+	/** The program to grade: what the learner wrote, or the starter completed with their parts. */
+	private static String program(Exercise exercise, SubmissionRequest request) {
+		List<String> parts = request.parts() == null ? List.of() : request.parts();
+		return switch (exercise.getKind()) {
+			case FILL -> {
+				int blanks = ContentTemplates.countBlanks(exercise.getStarterCode());
+				if (parts.size() != blanks) {
+					throw new InvalidRequestException("Rellena los %d huecos.".formatted(blanks));
+				}
+				yield ContentTemplates.fill(exercise.getStarterCode(), parts);
+			}
+			case PARSONS -> {
+				if (parts.isEmpty()) {
+					throw new InvalidRequestException("Coloca al menos una línea en tu programa.");
+				}
+				yield ContentTemplates.assemble(exercise.getStarterCode(), parts);
+			}
+			case PREDICT -> request.sourceCode() == null ? "" : request.sourceCode();
+			default -> {
+				if (request.sourceCode() == null || request.sourceCode().isBlank()) {
+					throw new InvalidRequestException("El código no puede estar vacío.");
+				}
+				yield request.sourceCode();
+			}
+		};
+	}
+
+	private ParsonsPuzzle.Data parsonsData(Exercise exercise) {
+		return jsonMapper.readValue(exercise.getParsonsJson(), ParsonsPuzzle.Data.class);
 	}
 
 	private Exercise findExercise(String slug) {
@@ -201,7 +275,7 @@ public class ExerciseServiceImpl implements ExerciseService {
 		List<ExerciseHint> hints = exercise.getHints();
 		if (progress == null) {
 			return new ExerciseProgressResponse(0, false, null, List.of(), hints.size(), false,
-					XpPolicy.exerciseXp(exercise.getDifficulty(), 0, false), lastCode, recent);
+					XpPolicy.exerciseXp(exercise.getDifficulty(), 0, false), lastCode, recent, false);
 		}
 		int xp = progress.isSolved() ? progress.getXpAwarded()
 				: XpPolicy.exerciseXp(exercise.getDifficulty(), progress.getHintsRevealed(), progress.isSolutionViewed());
@@ -210,10 +284,12 @@ public class ExerciseServiceImpl implements ExerciseService {
 			.map(ExerciseHint::getContent)
 			.toList();
 		return new ExerciseProgressResponse(progress.getAttempts(), progress.isSolved(), progress.getSolvedAt(),
-				revealed, hints.size(), progress.isSolutionViewed(), xp, lastCode, recent);
+				revealed, hints.size(), progress.isSolutionViewed(), xp, lastCode, recent,
+				progress.isReviewDue(clock.instant()));
 	}
 
-	private record ExerciseToRun(Long exerciseId, String languageSlug, List<Grader.TestCase> cases) {
+	private record ExerciseToRun(Long exerciseId, String languageSlug, ExerciseKind kind, String program,
+			List<Grader.TestCase> cases) {
 	}
 
 }

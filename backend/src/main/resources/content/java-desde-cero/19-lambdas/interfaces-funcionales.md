@@ -10,6 +10,9 @@ El paquete `java.util.function` trae las interfaces funcionales más comunes, pa
 | `BinaryOperator<T>` | `apply` | (T, T) → T | `(a, b) -> a + b` |
 | `BiFunction<T, U, R>` | `apply` | (T, U) → R | `(nombre, edad) -> nombre + edad` |
 
+> [!analogia]
+> Piensa en máquinas de cocina. Una `Function` es una batidora: entra fruta, sale zumo. Un `Predicate` es un colador: solo dice "pasa" o "no pasa". Un `Consumer` es el cubo de basura: se lo traga todo y no devuelve nada. Un `Supplier` es una máquina de hielo: no le das nada y te da algo.
+
 ## Usarlas
 
 ```java
@@ -35,6 +38,12 @@ public class Main {
     }
 }
 ```
+
+> [!prueba]
+> Cambia `esPar.test(7)` por `esPar.test(10)` y `"Java"` por `"programar"`. Ejecuta: ¿qué dos valores cambian?
+
+> [!cuidado]
+> Cada interfaz tiene su propio nombre de método: `apply`, `test`, `accept` o `get`. Escribir `esPar.apply(7)` no compila, porque un `Predicate` se usa con `test`.
 
 ## Métodos que reciben funciones
 
@@ -76,9 +85,15 @@ public class Main {
 
 Un mismo `filtrar` sirve para cualquier condición. Es exactamente lo que hacen los streams del siguiente módulo.
 
+> [!idea]
+> Si un método recibe una función, el que lo llama decide *qué* hacer y el método decide *cuándo* hacerlo.
+
 ## Combinar funciones
 
 Muchas interfaces traen métodos `default` para componerlas:
+
+> [!analogia]
+> `andThen` es una cadena de montaje: primero pasa por una máquina y luego por la siguiente. `compose` es la misma cadena montada al revés.
 
 ```java
 import java.util.function.Function;
@@ -100,8 +115,7 @@ public class Main {
 }
 ```
 
-## Resumen
-
-- `Function`, `Predicate`, `Consumer`, `Supplier` y los `Operator` cubren casi todos los casos.
-- Escribe métodos que reciban comportamiento como parámetro.
-- `and`, `or`, `negate`, `andThen` y `compose` combinan funciones.
+> [!resumen]
+> - `Function`, `Predicate`, `Consumer`, `Supplier` y los `Operator` cubren casi todos los casos.
+> - Escribe métodos que reciban comportamiento como parámetro.
+> - `and`, `or`, `negate`, `andThen` y `compose` combinan funciones.

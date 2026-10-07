@@ -45,7 +45,7 @@
           @for (exercise of module.exercises; track exercise.id) {
             <li>
               <a class="index__link" [routerLink]="['/practice', exercise.slug]">
-                <span class="index__bullet" aria-hidden="true">›</span>
+                <span class="index__bullet" aria-hidden="true">{{ kindIcons[exercise.kind] }}</span>
                 <span>{{ exercise.title }}</span>
               </a>
             </li>
@@ -67,8 +67,24 @@
       <app-markdown
         [content]="lesson.contentMarkdown"
         [runnable]="true"
-        (runCode)="openInPlayground($event)"
+        [glossary]="glossary.value() ?? null"
       />
+
+      @if (lesson.quiz.length > 0) {
+        <app-lesson-quiz [questions]="lesson.quiz" (finished)="onQuizFinished($event)" />
+      }
+
+      @if (auth.isAuthenticated()) {
+        <div class="lesson__tutor">
+          <p class="lesson__tutor-title">¿Algo no ha quedado claro?</p>
+          <app-tutor-panel
+            label="Explícamelo de otra forma"
+            hint="El tutor te lo explicará con otra comparación y un ejemplo distinto."
+            [withQuestion]="true"
+            [ask]="askTutor"
+          />
+        </div>
+      }
 
       <footer class="lesson__footer">
         @if (auth.isAuthenticated()) {
@@ -129,6 +145,9 @@
           }
         </ul>
       }
+      <p class="study__glossary">
+        <a [routerLink]="['/languages', languageSlug(), 'glossary']">📖 Glosario del curso</a>
+      </p>
       @if (auth.isAuthenticated()) {
         <div class="study__module-progress">
           <p class="section-title">Progreso del módulo</p>

@@ -142,3 +142,230 @@
     border-color: var(--color-accent);
   }
 }
+
+// The page is split around runnable examples and diagrams; the pieces keep the
+// prose rhythm as if they were one block.
+.prose__segment {
+  display: contents;
+}
+
+.prose__segment > * + *,
+.prose__segment + .prose__segment > :first-child {
+  margin-top: var(--space-4);
+}
+
+.prose__code--error {
+  border-color: color-mix(in srgb, var(--color-danger) 50%, var(--color-border-strong));
+}
+
+// Callouts: > [!analogia], [!idea], [!prueba], [!cuidado], [!resumen].
+.callout {
+  padding: var(--space-3) var(--space-4);
+  border-left: 3px solid var(--callout-color, var(--color-accent));
+  border-radius: var(--radius-sm);
+  background-color: color-mix(in srgb, var(--callout-color, var(--color-accent)) 9%, transparent);
+
+  > * + * {
+    margin-top: var(--space-2);
+  }
+
+  ul,
+  ol {
+    padding-left: var(--space-5);
+  }
+}
+
+.callout__title {
+  color: var(--callout-color, var(--color-accent));
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.callout--analogia {
+  --callout-color: var(--color-info);
+}
+
+.callout--idea {
+  --callout-color: var(--color-accent);
+}
+
+.callout--prueba {
+  --callout-color: var(--color-success);
+}
+
+.callout--cuidado {
+  --callout-color: var(--color-danger);
+}
+
+.callout--resumen {
+  --callout-color: var(--color-text-muted);
+}
+
+// Glossary terms: dotted underline, definition on hover or focus.
+.term {
+  position: relative;
+  border-bottom: 1px dotted var(--color-info);
+  cursor: help;
+
+  &::after {
+    content: attr(data-definition);
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 50%;
+    z-index: 20;
+    width: max-content;
+    max-width: min(18rem, 80vw);
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-surface-raised);
+    box-shadow: 0 6px 20px rgb(0 0 0 / 25%);
+    color: var(--color-text);
+    font-size: var(--text-sm);
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.45;
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, 4px);
+    transition:
+      opacity var(--transition-fast),
+      transform var(--transition-fast);
+  }
+
+  &:hover::after,
+  &:focus::after {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+
+  &:focus {
+    outline: none;
+    background-color: color-mix(in srgb, var(--color-info) 15%, transparent);
+  }
+}
+
+// ```memoria diagrams: stack on the left, heap on the right.
+.memory {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+  padding: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+
+  @media (min-width: 40rem) {
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  }
+}
+
+.memory__side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.memory__title {
+  color: var(--color-text-muted);
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.memory__frame,
+.memory__object {
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-bg);
+}
+
+.memory__frame--top {
+  border-color: var(--color-accent);
+}
+
+.memory__frame-name,
+.memory__object-head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-1);
+  font-weight: 600;
+}
+
+.memory__vars {
+  width: 100%;
+  border-collapse: collapse;
+
+  th,
+  td {
+    padding: 2px var(--space-2);
+    border-top: 1px solid var(--color-border);
+    text-align: left;
+  }
+
+  th {
+    width: 45%;
+    color: var(--color-text-muted);
+    font-weight: 500;
+  }
+}
+
+.memory__badge {
+  display: inline-grid;
+  min-width: 1.25rem;
+  height: 1.25rem;
+  place-items: center;
+  border-radius: 999px;
+  background-color: var(--color-accent);
+  color: var(--color-on-accent);
+  font-size: var(--text-xs);
+  font-weight: 700;
+}
+
+.memory__ref {
+  color: var(--color-accent);
+}
+
+.memory__string {
+  color: var(--syntax-string);
+}
+
+.memory__value {
+  color: var(--syntax-number);
+}
+
+.memory__null,
+.memory__empty {
+  color: var(--color-text-subtle);
+  font-style: italic;
+}
+
+.memory__cells {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.memory__cell {
+  display: flex;
+  min-width: 2.75rem;
+  flex-direction: column;
+  margin: 0 -1px -1px 0;
+  border: 1px solid var(--color-border-strong);
+  text-align: center;
+
+  > span {
+    padding: 2px var(--space-1);
+  }
+}
+
+.memory__index {
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text-subtle);
+  font-size: var(--text-xs);
+}

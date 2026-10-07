@@ -74,9 +74,9 @@ solution: |
       }
   }
 hints:
-  - Llama a `readLine()` una vez antes del bucle para descartar la cabecera.
-  - Un `TreeMap<String, double[]>` con `{cantidad, suma}` por categoría te da el orden alfabético y lo necesario para la media.
-  - Captura la `NumberFormatException` dentro del bucle para que una fila mala no detenga el resto.
+  - 'La idea: lee el archivo fila a fila, salta la cabecera y las líneas vacías, y ve acumulando por categoría cuántos productos hay y cuánto suman sus precios.'
+  - 'Qué usar: `Files.newBufferedReader(archivo)` dentro de `try (...)`, un `readLine()` suelto antes del bucle para descartar la cabecera, un `TreeMap<String, double[]>` con `{cantidad, suma}` y un `try`/`catch (NumberFormatException e)` para las filas malas.'
+  - 'El plan: en el bucle `while ((linea = lector.readLine()) != null)`, salta las vacías con `isBlank()`, haz `split(",")`, intenta `Double.parseDouble(partes[2].trim())`; si va bien suma en `computeIfAbsent(categoria, c -> new double[2])`, si falla incrementa `invalidas`; al final imprime cada categoría con `printf("%s: %d productos, media %.2f%n", ...)`.'
 tests:
   - input: |
       producto,categoria,precio

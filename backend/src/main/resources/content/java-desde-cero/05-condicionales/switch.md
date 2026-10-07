@@ -1,5 +1,8 @@
 Cuando comparas **una misma variable** con muchos valores concretos, una cadena de `else if` se vuelve repetitiva. Para eso existe `switch`.
 
+> [!analogia]
+> Un `switch` es como el ascensor de un edificio: pulsas un número concreto (el valor) y te lleva directamente a esa planta (el `case`). Si pulsas un botón que no existe, vas a recepción (`default`).
+
 ## El switch moderno (con flechas)
 
 Desde Java 14 la forma recomendada usa `->`:
@@ -29,6 +32,9 @@ public class Main {
 - `default` cubre todo lo demás (como el `else` final).
 - Si una rama necesita varias instrucciones, usa llaves: `case 1 -> { ...; ... }`.
 
+> [!prueba]
+> Ejecútalo con `6` y después con `9` en el panel de entrada: ¿qué rama se usa en cada caso?
+
 ## switch como expresión
 
 `switch` también puede **devolver un valor**, lo que evita repetir la asignación en cada rama:
@@ -49,6 +55,9 @@ public class Main {
 }
 ```
 
+> [!prueba]
+> Cambia `String operacion = "*";` por `"-"` y vuelve a ejecutar. Luego prueba con `"/"`: ¿por qué sale 0?
+
 Cuando una rama de un switch-expresión necesita varias instrucciones, el valor se devuelve con `yield`:
 
 ```java fragment
@@ -64,7 +73,10 @@ int dias = switch (mes) {
 
 ## Qué tipos admite
 
-`switch` funciona con `int`, `char`, `String`, los envoltorios y los `enum` (los verás más adelante). **No** funciona con `double` ni con `boolean`, ni con rangos: para "entre 5 y 7" sigue usando `if`.
+`switch` funciona con `int`, `char`, `String`, los envoltorios y los `enum` (los verás más adelante).
+
+> [!cuidado]
+> `switch` **no** funciona con `double` ni con `boolean`, ni con rangos: para "entre 5 y 7" sigue usando `if`.
 
 ## El switch clásico y el fall-through
 
@@ -91,11 +103,13 @@ public class Main {
 }
 ```
 
-Imprime `Dos` **y** `Tres`: sin `break`, la ejecución continúa por los casos siguientes (*fall-through*). Es una fuente clásica de errores, y la razón por la que la forma con flechas (que nunca cae) es preferible en código nuevo.
+Imprime `Dos` **y** `Tres`: sin `break`, la ejecución continúa por los casos siguientes (*fall-through*, «caída»).
 
-## Resumen
+> [!cuidado]
+> Olvidar un `break` en el switch clásico es un error muy común. Por eso la forma con flechas (que nunca cae) es preferible en código nuevo.
 
-- `switch` elige según el valor de una variable entre casos constantes.
-- La forma `case x ->` no necesita `break` y puede devolver un valor.
-- `yield` devuelve el valor desde una rama con bloque.
-- El switch clásico con `:` necesita `break` en cada caso para no caer al siguiente.
+> [!resumen]
+> - `switch` elige según el valor de una variable entre casos constantes.
+> - La forma `case x ->` no necesita `break` y puede devolver un valor.
+> - `yield` devuelve el valor desde una rama con bloque.
+> - El switch clásico con `:` necesita `break` en cada caso para no caer al siguiente.

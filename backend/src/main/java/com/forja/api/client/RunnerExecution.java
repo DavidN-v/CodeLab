@@ -1,8 +1,9 @@
 package com.forja.api.client;
 
 import java.util.List;
+import tools.jackson.databind.JsonNode;
 
-/** Request and response of the code-runner's {@code POST /internal/executions}. */
+/** Requests and responses of the code-runner's internal API. */
 public final class RunnerExecution {
 
 	private RunnerExecution() {
@@ -26,6 +27,17 @@ public final class RunnerExecution {
 	}
 
 	public record Compile(boolean success, String output, boolean outputTruncated, long durationMs) {
+	}
+
+	/** Request of {@code POST /internal/traces}. */
+	public record TraceRequest(String language, String sourceCode, String stdin) {
+	}
+
+	/**
+	 * @param status COMPLETED when there is a trace, COMPILATION_ERROR or TIMEOUT otherwise
+	 * @param trace the tracer's document: steps, output, exit code and uncaught exception
+	 */
+	public record TraceResult(String status, Compile compile, JsonNode trace, String error) {
 	}
 
 	public record Run(int exitCode, boolean timedOut, String stdout, boolean stdoutTruncated, String stderr,

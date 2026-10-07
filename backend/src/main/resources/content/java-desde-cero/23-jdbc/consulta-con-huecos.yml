@@ -1,0 +1,107 @@
+title: Consulta con huecos
+summary: Completa un PreparedStatement que busca productos por categoría.
+difficulty: EASY
+kind: fill
+statement: |
+  El programa crea una tabla de productos y lee una **categoría** de la entrada. Debe escribir los productos de esa categoría, del más barato al más caro, con el formato `<nombre>: <precio>`, y al final `Encontrados: <n>`.
+
+  La consulta usa un `PreparedStatement`, así que la categoría viaja como dato y nunca como SQL. Rellena los huecos:
+
+  1. El símbolo del hueco en la consulta.
+  2. El método que rellena ese hueco con un texto.
+  3. El método que ejecuta un `SELECT`.
+  4. El método que avanza a la siguiente fila.
+starter: |
+  import java.sql.Connection;
+  import java.sql.DriverManager;
+  import java.sql.PreparedStatement;
+  import java.sql.ResultSet;
+  import java.sql.SQLException;
+  import java.sql.Statement;
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) throws SQLException {
+          String categoria = new Scanner(System.in).nextLine().strip();
+          try (Connection c = DriverManager.getConnection("jdbc:h2:mem:tienda")) {
+              try (Statement s = c.createStatement()) {
+                  s.execute("CREATE TABLE productos (nombre VARCHAR(30), categoria VARCHAR(20), precio INT)");
+                  s.execute("INSERT INTO productos VALUES ('Taza', 'cocina', 6), ('Sartén', 'cocina', 25), "
+                          + "('Libro', 'ocio', 18), ('Cuchara', 'cocina', 2), ('Puzle', 'ocio', 12)");
+              }
+              String sql = "SELECT nombre, precio FROM productos WHERE categoria = {{?}} ORDER BY precio";
+              try (PreparedStatement ps = c.prepareStatement(sql)) {
+                  ps.{{?}}(1, categoria);
+                  try (ResultSet r = ps.{{?}}()) {
+                      int encontrados = 0;
+                      while (r.{{?}}()) {
+                          System.out.println(r.getString("nombre") + ": " + r.getInt("precio"));
+                          encontrados++;
+                      }
+                      System.out.println("Encontrados: " + encontrados);
+                  }
+              }
+          }
+      }
+  }
+answers:
+  - '?'
+  - setString
+  - executeQuery
+  - next
+solution: |
+  import java.sql.Connection;
+  import java.sql.DriverManager;
+  import java.sql.PreparedStatement;
+  import java.sql.ResultSet;
+  import java.sql.SQLException;
+  import java.sql.Statement;
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) throws SQLException {
+          String categoria = new Scanner(System.in).nextLine().strip();
+          try (Connection c = DriverManager.getConnection("jdbc:h2:mem:tienda")) {
+              try (Statement s = c.createStatement()) {
+                  s.execute("CREATE TABLE productos (nombre VARCHAR(30), categoria VARCHAR(20), precio INT)");
+                  s.execute("INSERT INTO productos VALUES ('Taza', 'cocina', 6), ('Sartén', 'cocina', 25), "
+                          + "('Libro', 'ocio', 18), ('Cuchara', 'cocina', 2), ('Puzle', 'ocio', 12)");
+              }
+              String sql = "SELECT nombre, precio FROM productos WHERE categoria = ? ORDER BY precio";
+              try (PreparedStatement ps = c.prepareStatement(sql)) {
+                  ps.setString(1, categoria);
+                  try (ResultSet r = ps.executeQuery()) {
+                      int encontrados = 0;
+                      while (r.next()) {
+                          System.out.println(r.getString("nombre") + ": " + r.getInt("precio"));
+                          encontrados++;
+                      }
+                      System.out.println("Encontrados: " + encontrados);
+                  }
+              }
+          }
+      }
+  }
+hints:
+  - 'La idea: la consulta tiene un hueco donde irá la categoría; hay que marcarlo, rellenarlo, ejecutar la consulta y recorrer sus filas.'
+  - 'Qué usar: en SQL el hueco se marca con `?`. Para rellenarlo con texto, `setString`; para lanzar un `SELECT`, `executeQuery`; para pasar a la siguiente fila, `next`.'
+  - 'El plan: `... WHERE categoria = ? ...`, después `ps.setString(1, categoria)`, `ps.executeQuery()` y `while (r.next())`.'
+tests:
+  - input: "cocina\n"
+    output: |
+      Cuchara: 2
+      Taza: 6
+      Sartén: 25
+      Encontrados: 3
+    sample: true
+  - input: "ocio\n"
+    output: |
+      Puzle: 12
+      Libro: 18
+      Encontrados: 2
+  - input: "jardín\n"
+    output: |
+      Encontrados: 0
+  - input: "x' OR '1'='1\n"
+    output: |
+      Encontrados: 0

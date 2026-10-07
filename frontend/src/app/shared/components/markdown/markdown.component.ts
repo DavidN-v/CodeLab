@@ -1,7 +1,15 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
+import { GlossaryTerm } from '../../../core/models/course.model';
+import { MermaidDiagramComponent } from '../mermaid-diagram/mermaid-diagram.component';
+import { RunnableExampleComponent } from '../runnable-example/runnable-example.component';
 import { Heading, renderMarkdown } from './markdown-renderer';
+
+type View =
+  | { kind: 'html'; html: SafeHtml }
+  | { kind: 'example'; code: string }
+  | { kind: 'mermaid'; source: string };
 
 /**
  * Renders first-party Markdown (lessons, statements). The renderer escapes raw
@@ -10,37 +18,50 @@ import { Heading, renderMarkdown } from './markdown-renderer';
  */
 @Component({
   selector: 'app-markdown',
-  template: '<div class="prose" [innerHTML]="html()"></div>',
+  imports: [RunnableExampleComponent, MermaidDiagramComponent],
+  template: `
+    <div class="prose">
+      @for (segment of view(); track $index) {
+        @switch (segment.kind) {
+          @case ('html') {
+            <div class="prose__segment" [innerHTML]="segment.html"></div>
+          }
+          @case ('example') {
+            <app-runnable-example [code]="segment.code" />
+          }
+          @case ('mermaid') {
+            <app-mermaid-diagram [source]="segment.source" />
+          }
+        }
+      }
+    </div>
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { '(click)': 'onClick($event)' },
 })
 export class MarkdownComponent {
   private readonly sanitizer = inject(DomSanitizer);
 
   readonly content = input.required<string>();
-  /** Offer runnable Java examples to the playground. */
+  /** Turn Java examples with a main method into runnable ones. */
   readonly runnable = input(false);
+  /** Terms explained on hover; null for none. */
+  readonly glossary = input<readonly GlossaryTerm[] | null>(null);
 
-  /** The code of the example whose "open in playground" button was pressed. */
-  readonly runCode = output<string>();
+  private readonly rendered = computed(() =>
+    renderMarkdown(this.content(), {
+      runnable: this.runnable(),
+      glossary: this.glossary() ?? undefined,
+    }),
+  );
 
-  private readonly rendered = computed(() => renderMarkdown(this.content(), this.runnable()));
-
-  protected readonly html = computed<SafeHtml>(() =>
-    this.sanitizer.bypassSecurityTrustHtml(this.rendered().html),
+  protected readonly view = computed<View[]>(() =>
+    this.rendered().segments.map((segment) =>
+      segment.kind === 'html'
+        ? { kind: 'html', html: this.sanitizer.bypassSecurityTrustHtml(segment.html) }
+        : segment,
+    ),
   );
 
   /** Second-level headings, for an index of the page. */
   readonly headings = computed<Heading[]>(() => this.rendered().headings);
-
-  protected onClick(event: MouseEvent): void {
-    const button = (event.target as HTMLElement | null)?.closest<HTMLElement>('[data-code-index]');
-    if (!button) {
-      return;
-    }
-    const code = this.rendered().runnableCode[Number(button.dataset['codeIndex'])];
-    if (code !== undefined) {
-      this.runCode.emit(code);
-    }
-  }
 }

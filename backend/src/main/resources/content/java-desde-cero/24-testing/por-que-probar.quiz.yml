@@ -1,0 +1,42 @@
+questions:
+  - type: choice
+    prompt: ¿Cuáles son, en orden, las tres partes de una prueba bien escrita?
+    options:
+      - Preparar, actuar, comprobar
+      - Comprobar, preparar, actuar
+      - Compilar, ejecutar, imprimir
+      - Actuar, comprobar, preparar
+    answer: 0
+    explanation: 'Arrange-Act-Assert: primero creas los datos, después ejecutas **una** operación y por último compruebas el resultado. Así cada prueba se lee de arriba abajo como una pequeña historia.'
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      public class Main {
+          static int doble(int n) {
+              return n + n;
+          }
+
+          static void comprobar(String nombre, int esperado, int obtenido) {
+              System.out.println((esperado == obtenido ? "OK " : "FALLA ") + nombre);
+          }
+
+          public static void main(String[] args) {
+              comprobar("doble de 3", 6, doble(3));
+              comprobar("doble de 0", 1, doble(0));
+              comprobar("doble de -2", -4, doble(-2));
+          }
+      }
+    answer: |
+      OK doble de 3
+      FALLA doble de 0
+      OK doble de -2
+    explanation: 'El doble de 0 es 0, pero la prueba esperaba 1. El código está bien: lo que está mal es la expectativa. Una prueba que falla te obliga a decidir quién tiene razón.'
+  - type: choice
+    prompt: Para probar un método que devuelve el mayor número de una lista, ¿qué caso es más probable que destape un error?
+    options:
+      - La lista vacía o con un solo elemento
+      - Una lista con cinco números positivos
+      - Otra lista con cinco números positivos distintos
+      - Una lista ya ordenada de menor a mayor
+    answer: 0
+    explanation: Los fallos se esconden en los bordes. Varias listas «normales» prueban lo mismo; la lista vacía o de un elemento obliga a pensar qué debe pasar en los extremos.

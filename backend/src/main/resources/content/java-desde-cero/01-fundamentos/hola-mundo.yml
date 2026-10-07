@@ -22,8 +22,9 @@ solution: |
       }
   }
 hints:
-  - Para escribir una línea en la consola se usa `System.out.println(...)`.
-  - El texto va entre comillas dobles y la instrucción termina en punto y coma.
+  - 'La idea: el programa solo tiene que escribir una línea de texto en la consola, exactamente igual que en el enunciado.'
+  - 'Qué usar: `System.out.println(...)` escribe un texto y salta de línea. El texto va entre comillas dobles.'
+  - 'El plan: dentro de `main`, escribe `System.out.println("...");` con el texto exacto entre las comillas. No olvides el `;` del final.'
 tests:
   - output: |
       Hola, mundo!

@@ -1,0 +1,36 @@
+questions:
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      import java.util.ArrayList;
+      import java.util.List;
+
+      public class Main {
+          public static void main(String[] args) {
+              List<String> colores = new ArrayList<>();
+              colores.add("rojo");
+              colores.add("verde");
+              colores.add(0, "azul");
+              colores.remove("verde");
+              System.out.println(colores + " " + colores.size());
+          }
+      }
+    answer: |
+      [azul, rojo] 2
+    explanation: 'Tras los dos `add`, la lista es `[rojo, verde]`. `add(0, "azul")` inserta al principio y desplaza el resto: `[azul, rojo, verde]`. `remove("verde")` lo quita por valor, así que quedan dos elementos y `size()` vale 2.'
+  - type: choice
+    prompt: Una lista tiene 4 elementos. ¿Cuál es la forma correcta de obtener el último?
+    options:
+      - lista.get(lista.size() - 1)
+      - lista.get(lista.size())
+      - lista.get(4)
+    answer: 0
+    explanation: Las posiciones empiezan en 0, así que con 4 elementos van de 0 a 3. `get(4)` y `get(size())` se salen y lanzan `IndexOutOfBoundsException`.
+  - type: choice
+    prompt: ¿Qué pasa si intentas `add` en una lista creada con `List.of("a", "b")`?
+    options:
+      - Lanza una excepción, porque `List.of` crea una lista que no se puede modificar
+      - Se añade sin problema al final
+      - Se reemplaza el primer elemento
+    answer: 0
+    explanation: '`List.of` crea listas inmutables, útiles para datos fijos. Si necesitas modificarla, cópiala con `new ArrayList<>(List.of(...))`.'

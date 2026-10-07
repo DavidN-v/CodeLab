@@ -1,0 +1,33 @@
+title: ¿Qué imprime? Cajas que cambian
+summary: Sigue el valor de cada variable línea a línea y adivina la salida.
+difficulty: EASY
+kind: predict
+statement: |
+  Lee este programa **sin ejecutarlo** y escribe exactamente lo que imprime.
+
+  Un truco que usan hasta los profesionales: coge papel y dibuja una caja por variable (`a`, `b`, `c`). Ve línea a línea y, cada vez que una variable cambie, tacha su valor y escribe el nuevo.
+
+  Recuerda: `int b = a;` copia el valor; después `a` y `b` son independientes.
+starter: |
+  public class Main {
+      public static void main(String[] args) {
+          int a = 3;
+          int b = a;
+          a = a + 4;
+          b = b * 2;
+          System.out.println("a = " + a);
+          System.out.println("b = " + b);
+          int c = a + b;
+          a = c;
+          System.out.println(a + " " + c);
+      }
+  }
+hints:
+  - 'La idea: sigue el valor de cada variable línea a línea, como si fueras el ordenador.'
+  - 'Qué usar: `=` guarda el resultado de la derecha en la variable de la izquierda y borra el valor anterior. Copiar `a` en `b` no las enlaza.'
+  - 'El plan: `a` empieza en 3 y `b` copia ese 3. Luego `a` pasa a 7 y `b` a 6. `c` es 7 + 6, y después `a` toma el valor de `c`.'
+tests:
+  - output: |
+      a = 7
+      b = 6
+      13 13

@@ -61,7 +61,14 @@
               "includePaths": [
                 "src/styles"
               ]
-            }
+            },
+            "allowedCommonJsDependencies": [
+              "@braintree/sanitize-url",
+              "dayjs",
+              "cytoscape-cose-bilkent",
+              "cytoscape-fcose",
+              "fastdom"
+            ]
           },
           "configurations": {
             "production": {
@@ -73,7 +80,7 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "6kB",
+                  "maximumWarning": "8kB",
                   "maximumError": "10kB"
                 }
               ],

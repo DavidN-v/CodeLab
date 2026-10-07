@@ -1,0 +1,51 @@
+questions:
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      interface Sonoro {
+          String sonar();
+      }
+
+      class Timbre implements Sonoro {
+          @Override
+          public String sonar() {
+              return "ring";
+          }
+      }
+
+      class Reloj implements Sonoro {
+          @Override
+          public String sonar() {
+              return "tic tac";
+          }
+      }
+
+      public class Main {
+          public static void main(String[] args) {
+              Sonoro[] cosas = {new Reloj(), new Timbre(), new Reloj()};
+              for (Sonoro s : cosas) {
+                  System.out.println(s.sonar());
+              }
+          }
+      }
+    answer: |
+      tic tac
+      ring
+      tic tac
+    explanation: 'La interfaz `Sonoro` es un tipo, así que un array de `Sonoro` puede guardar relojes y timbres. En cada vuelta se ejecuta el `sonar()` del objeto real, en el orden del array.'
+  - type: choice
+    prompt: ¿Cuál de estas declaraciones es correcta en Java?
+    options:
+      - '`class Pato extends Ave implements Nadador, Volador`'
+      - '`class Pato extends Ave, Animal`'
+      - '`class Pato implements Ave extends Nadador`'
+    answer: 0
+    explanation: Una clase puede extender **una sola** clase, pero implementar todas las interfaces que quiera. Además, `extends` va siempre antes que `implements`.
+  - type: choice
+    prompt: 'La interfaz `Volador` declara `void despegar();`. En la clase `Avion implements Volador` escribes `void despegar() { ... }` sin `public`. ¿Qué pasa?'
+    options:
+      - No compila, porque los métodos de una interfaz son públicos y tu versión no puede tener menos acceso
+      - Compila, y el método solo se puede usar dentro del paquete
+      - Compila, porque `public` es opcional al implementar
+    answer: 0
+    explanation: Todos los métodos de una interfaz son implícitamente `public`. Al implementarlos no puedes reducir el acceso, así que tienes que escribir `public` de forma explícita.

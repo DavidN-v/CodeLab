@@ -1,0 +1,73 @@
+title: Los suspensos que se escapan
+summary: Arregla un bucle que borra elementos de una lista y se salta algunos.
+difficulty: MEDIUM
+kind: fix
+statement: |
+  Este programa lee notas enteras, quita de la lista las menores que 5 y escribe:
+
+  ```
+  Aprobadas: <lista>
+  Cuántas: <número de aprobadas>
+  ```
+
+  **El síntoma:** con `5 7 10` funciona bien, pero con `3 4 8 2 9` escribe `Aprobadas: [4, 8, 9]`. ¡El 4 se ha escapado! Con `6 4 4 4 6` también se cuela algún 4. Encuentra por qué y corrígelo.
+starter: |
+  import java.util.ArrayList;
+  import java.util.List;
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          List<Integer> notas = new ArrayList<>();
+          while (entrada.hasNextInt()) {
+              notas.add(entrada.nextInt());
+          }
+          for (int i = 0; i < notas.size(); i++) {
+              if (notas.get(i) < 5) {
+                  notas.remove(i);
+              }
+          }
+          System.out.println("Aprobadas: " + notas);
+          System.out.println("Cuántas: " + notas.size());
+      }
+  }
+solution: |
+  import java.util.ArrayList;
+  import java.util.List;
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          List<Integer> notas = new ArrayList<>();
+          while (entrada.hasNextInt()) {
+              notas.add(entrada.nextInt());
+          }
+          notas.removeIf(nota -> nota < 5);
+          System.out.println("Aprobadas: " + notas);
+          System.out.println("Cuántas: " + notas.size());
+      }
+  }
+hints:
+  - 'La idea: sigue el bucle a mano con `3 4 8 2 9`. Cuando borras el elemento de la posición 0, ¿qué elemento ocupa ahora esa posición? ¿Y qué posición mira el bucle a continuación?'
+  - 'Qué usar: al hacer `remove(i)`, todos los elementos de detrás se desplazan una posición hacia delante, pero `i++` avanza igualmente, así que el siguiente elemento no se revisa. `removeIf` borra todos los que cumplen una condición sin este problema.'
+  - 'El plan: sustituye el bucle `for` entero por `notas.removeIf(nota -> nota < 5);`. Otra opción válida es recorrer la lista de atrás hacia delante, desde `notas.size() - 1` hasta 0.'
+tests:
+  - input: "3 4 8 2 9\n"
+    output: |
+      Aprobadas: [8, 9]
+      Cuántas: 2
+    sample: true
+  - input: "5 7 10\n"
+    output: |
+      Aprobadas: [5, 7, 10]
+      Cuántas: 3
+  - input: "1 2 3\n"
+    output: |
+      Aprobadas: []
+      Cuántas: 0
+  - input: "6 4 4 4 6\n"
+    output: |
+      Aprobadas: [6, 6]
+      Cuántas: 2

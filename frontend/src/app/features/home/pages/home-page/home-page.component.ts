@@ -12,13 +12,14 @@ import { withoutErrorNotification } from '../../../../core/interceptors/http-err
 import { Language } from '../../../../core/models/language.model';
 import { LoadState } from '../../../../core/models/load-state.model';
 import { LanguageService } from '../../../../core/services/language.service';
+import { ContinueCardComponent } from '../../components/continue-card/continue-card.component';
 import { HeroComponent } from '../../components/hero/hero.component';
 import { LanguageCatalogComponent } from '../../components/language-catalog/language-catalog.component';
 import { LearningFlowComponent } from '../../components/learning-flow/learning-flow.component';
 
 @Component({
   selector: 'app-home-page',
-  imports: [HeroComponent, LearningFlowComponent, LanguageCatalogComponent],
+  imports: [ContinueCardComponent, HeroComponent, LearningFlowComponent, LanguageCatalogComponent],
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

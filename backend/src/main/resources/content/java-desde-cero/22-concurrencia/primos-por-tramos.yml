@@ -91,9 +91,9 @@ solution: |
       }
   }
 hints:
-  - "El intervalo de la tarea `i` empieza en `(i-1)·n/t + 1` y termina en `i·n/t`. Usa `long` para que la multiplicación no se desborde."
-  - Las variables que captura la lambda deben ser efectivamente finales, así que calcula `desde` y `hasta` dentro del bucle, en variables nuevas en cada vuelta.
-  - "`invokeAll` devuelve los `Future` en el mismo orden que la lista de tareas."
+  - 'La idea: reparte los números de 1 a `n` en `t` intervalos, cuenta los primos de cada intervalo en una tarea que **devuelve** su cuenta, y suma las cuentas al final.'
+  - 'Qué usar: una `List<Callable<Integer>>` con una tarea por intervalo y `ejecutor.invokeAll(tareas)`, que devuelve los `Future` en el mismo orden. Calcula los límites con `long` para que `i * n` no se desborde.'
+  - 'El plan: para cada `i` de 1 a `t`, guarda en variables nuevas `desde = (i-1)·n/t + 1` y `hasta = i·n/t` (así la lambda puede usarlas) y añade una tarea que cuente con `esPrimo`. Después recorre los resultados con `get()`, imprime `Tarea i [desde-hasta]: cuenta` y acumula el total.'
 tests:
   - input: "100 4\n"
     output: |

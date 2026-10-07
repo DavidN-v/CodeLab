@@ -88,8 +88,9 @@ solution: |
       }
   }
 hints:
-  - Los métodos que implementan una interfaz deben ser `public`.
-  - "En `Sms`, si el mensaje tiene 10 caracteres o menos, `substring(0, 10)` fallaría: compruébalo antes."
+  - 'La idea: todos los canales envían el mensaje con el mismo formato (`[nombre] mensaje`); lo que cambia es cómo transforma cada uno el texto. Lo común va en la interfaz y lo que cambia, en cada clase.'
+  - 'Qué usar: `interface Canal` con dos métodos abstractos y un `default String enviar(String mensaje)`; tres clases con `implements Canal` y métodos `public`; `substring` y `toUpperCase` para transformar.'
+  - 'El plan: `enviar` devuelve `"[" + nombre() + "] " + formatear(mensaje)`. En `Sms`, si `mensaje.length() <= 10` devuélvelo igual; si no, `mensaje.substring(0, 10)`. Después quita los comentarios del `main`.'
 tests:
   - input: "Tu pedido ha llegado\n"
     output: |

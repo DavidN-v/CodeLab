@@ -1,0 +1,63 @@
+questions:
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      class Saludo {
+          String texto() {
+              return "Hola";
+          }
+      }
+
+      class SaludoFormal extends Saludo {
+          @Override
+          String texto() {
+              return super.texto() + ", buenos días";
+          }
+      }
+
+      public class Main {
+          public static void main(String[] args) {
+              System.out.println(new Saludo().texto());
+              System.out.println(new SaludoFormal().texto());
+          }
+      }
+    answer: |
+      Hola
+      Hola, buenos días
+    explanation: '`SaludoFormal` sobrescribe `texto()`, pero dentro llama a `super.texto()`, que devuelve la versión del padre ("Hola"), y le añade el resto. Así se amplía un método en vez de reescribirlo entero.'
+  - type: choice
+    prompt: ¿Para qué sirve poner `@Override` encima de un método?
+    options:
+      - Para que el compilador avise si en realidad no estás sobrescribiendo nada (por ejemplo, por un error en el nombre)
+      - Para que el método se ejecute más rápido
+      - Es obligatorio; sin él la sobrescritura no funciona
+    answer: 0
+    explanation: La sobrescritura funciona sin `@Override`, pero si te equivocas en el nombre o en los parámetros crearías un método nuevo sin darte cuenta. Con `@Override` el compilador lo detecta y te avisa.
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      class Animal {
+          String sonido() {
+              return "...";
+          }
+
+          String presentarse() {
+              return "Hago " + sonido();
+          }
+      }
+
+      class Perro extends Animal {
+          @Override
+          String sonido() {
+              return "guau";
+          }
+      }
+
+      public class Main {
+          public static void main(String[] args) {
+              System.out.println(new Perro().presentarse());
+          }
+      }
+    answer: |
+      Hago guau
+    explanation: '`presentarse()` está escrito en `Animal`, pero el objeto es un `Perro`. Cuando llama a `sonido()`, Java usa la versión del objeto real, la de `Perro`. Por eso sale "guau" y no "...".'

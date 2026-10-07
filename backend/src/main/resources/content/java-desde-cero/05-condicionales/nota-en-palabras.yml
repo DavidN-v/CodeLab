@@ -45,8 +45,9 @@ solution: |
       }
   }
 hints:
-  - Valida primero que la nota esté entre 0 y 10.
-  - Después ve de la nota más alta a la más baja con `else if`.
+  - 'La idea: es una escalera de casos. Primero descarta las notas imposibles y después baja de la calificación más alta a la más baja.'
+  - 'Qué usar: `if` para validar con `||` (`nota < 0 || nota > 10`) y una cadena de `else if` con `>=`. Como gana la primera condición verdadera, el orden importa.'
+  - 'El plan: si no es válida → Nota no válida; si no, si >= 9 → Sobresaliente; si >= 7 → Notable; si >= 6 → Bien; si >= 5 → Suficiente; si no → Insuficiente.'
 tests:
   - input: "9.5\n"
     output: "Sobresaliente\n"

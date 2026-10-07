@@ -1,5 +1,8 @@
 Cuando una lambda solo llama a un método que ya existe, puedes sustituirla por una **referencia a método** con `::`.
 
+> [!analogia]
+> En vez de explicarle a alguien la receta paso a paso ("coge harina, añade agua..."), le dices "haz la receta de la página 12". Una referencia a método es eso: señalar algo que ya está escrito en lugar de repetirlo.
+
 ## Las cuatro formas
 
 | Forma | Ejemplo | Equivale a |
@@ -34,6 +37,12 @@ public class Main {
 }
 ```
 
+> [!prueba]
+> Cambia `String::toUpperCase` por `String::length` y ejecuta: ¿qué se imprime ahora en lugar de los nombres?
+
+> [!cuidado]
+> Una referencia a método no lleva paréntesis: es `String::toUpperCase`, no `String::toUpperCase()`. Con paréntesis estarías llamando al método, no señalándolo, y no compila.
+
 ## Con comparadores
 
 Donde más brillan es al construir comparadores:
@@ -63,8 +72,10 @@ public class Main {
 
 Usa la referencia cuando sea igual de clara o más (`String::length` frente a `s -> s.length()`). Si necesitas hacer algo más que llamar al método (`s -> s.length() * 2`), escribe la lambda.
 
-## Resumen
+> [!idea]
+> `Clase::metodo` es una lambda abreviada: solo sirve cuando la lambda se limita a llamar a ese método.
 
-- `Clase::metodo` sustituye a una lambda que solo llama a ese método.
-- Cuatro formas: estático, de un objeto concreto, de instancia del parámetro y constructor (`::new`).
-- `Comparator.comparing(Tipo::campo)` con `thenComparing` y `reversed` construye órdenes legibles.
+> [!resumen]
+> - `Clase::metodo` sustituye a una lambda que solo llama a ese método.
+> - Cuatro formas: estático, de un objeto concreto, de instancia del parámetro y constructor (`::new`).
+> - `Comparator.comparing(Tipo::campo)` con `thenComparing` y `reversed` construye órdenes legibles.

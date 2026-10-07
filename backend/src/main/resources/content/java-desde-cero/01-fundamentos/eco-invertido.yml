@@ -41,8 +41,9 @@ solution: |
       }
   }
 hints:
-  - No puedes escribir la segunda línea antes de haberla leído. Lee las dos primero.
-  - Guarda cada línea en su propia variable `String`.
+  - 'La idea: no puedes escribir la segunda línea antes de haberla leído, así que primero lee las dos y luego escríbelas al revés.'
+  - 'Qué usar: `entrada.nextLine()` dos veces, guardando cada resultado en su propia variable `String`.'
+  - 'El plan: lee `primera` y `segunda`; después `println(segunda)` y por último `println(primera)`.'
 tests:
   - input: |
       primera

@@ -1,0 +1,35 @@
+questions:
+  - type: choice
+    prompt: ¿Cuál de estas excepciones es *checked* (el compilador obliga a tratarla)?
+    options:
+      - IOException
+      - NullPointerException
+      - ArithmeticException
+      - NumberFormatException
+    answer: 0
+    explanation: '`IOException` hereda de `Exception` pero no de `RuntimeException`, así que es checked: representa un problema externo, como un archivo que falta. Las otras tres heredan de `RuntimeException` y son unchecked.'
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              try {
+                  Integer.parseInt("x");
+              } catch (IllegalArgumentException e) {
+                  System.out.println("Argumento no válido");
+              }
+              System.out.println("Fin");
+          }
+      }
+    answer: |
+      Argumento no válido
+      Fin
+    explanation: '`parseInt` lanza `NumberFormatException`, que es una subclase de `IllegalArgumentException`. Un `catch` de la clase madre también captura a sus hijas.'
+  - type: choice
+    prompt: Un método lee un archivo y no sabe qué hacer si falla. ¿Qué puede hacer?
+    options:
+      - Declarar `throws IOException` en su firma para que lo trate quien lo llamó
+      - Nada; Java ignora el error automáticamente
+      - Escribir `throw IOException` en la firma
+    answer: 0
+    explanation: Con `throws` en la firma, la excepción sube al método que llamó. `throw` (sin «s») sirve para lanzar una excepción dentro del código, no para declararla.

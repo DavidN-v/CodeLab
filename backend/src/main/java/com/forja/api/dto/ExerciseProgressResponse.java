@@ -14,5 +14,6 @@ public record ExerciseProgressResponse(
 		boolean solutionViewed,
 		@Schema(description = "Experience a correct submission would earn now (or did earn).") int xp,
 		@Schema(description = "Code of the latest submission, to resume from; null if none.") String lastSubmittedCode,
-		List<SubmissionSummaryResponse> recentSubmissions) {
+		List<SubmissionSummaryResponse> recentSubmissions,
+		@Schema(description = "Solved, and due for a spaced review.") boolean reviewDue) {
 }

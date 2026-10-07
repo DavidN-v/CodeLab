@@ -2,16 +2,19 @@ lessons:
   - slug: aritmeticos
     title: Operadores aritméticos
     summary: Suma, resta, multiplicación, división, resto e incrementos.
-    minutes: 10
+    minutes: 6
   - slug: relacionales-y-logicos
     title: Comparar y combinar condiciones
     summary: Operadores relacionales, lógicos y el cortocircuito.
-    minutes: 10
+    minutes: 6
   - slug: asignacion-y-precedencia
     title: Asignación compuesta y precedencia
     summary: +=, el operador ternario y en qué orden se evalúa todo.
-    minutes: 10
+    minutes: 5
 exercises:
+  - predice-division-y-resto
+  - hora-dentro-de-n-horas
   - segundos-a-horas
   - es-bisiesto
   - cambio-en-monedas
+  - media-de-tres-notas

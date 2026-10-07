@@ -75,9 +75,9 @@ solution: |
       }
   }
 hints:
-  - "Añade a cada constante su duración: `VERDE(30), AMBAR(5), ROJO(25);` con un constructor y un campo."
-  - "`siguiente()` puede ser un `switch (this)` que devuelva la luz siguiente."
-  - Mientras el tiempo restante alcance para agotar la luz actual, réstalo, avanza a la siguiente y cuenta un cambio.
+  - 'La idea: cada luz sabe cuánto dura y cuál va después; el `main` solo va restando tiempo y avanzando de luz.'
+  - 'Qué usar: un enum con datos (`VERDE(30), AMBAR(5), ROJO(25);` más un campo, un constructor y `duracion()`), y un `switch (this)` dentro de `siguiente()`.'
+  - 'El plan: suma las duraciones de `Luz.values()` para el ciclo. Después, `while (restante >= luz.duracion())`: resta la duración, `luz = luz.siguiente();` y suma un cambio.'
 tests:
   - input: "VERDE 30\n"
     output: |

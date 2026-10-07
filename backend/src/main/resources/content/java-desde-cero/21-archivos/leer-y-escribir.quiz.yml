@@ -1,0 +1,39 @@
+questions:
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      import java.io.IOException;
+      import java.nio.file.Files;
+      import java.nio.file.Path;
+      import java.nio.file.StandardOpenOption;
+
+      public class Main {
+          public static void main(String[] args) throws IOException {
+              Path lista = Path.of("lista.txt");
+              Files.writeString(lista, "pan\n");
+              Files.writeString(lista, "leche\n", StandardOpenOption.APPEND);
+              Files.writeString(lista, "huevos\n");
+              System.out.print(Files.readString(lista));
+          }
+      }
+    answer: |
+      huevos
+    explanation: 'La segunda escritura añade `leche` al final, pero la tercera no lleva `APPEND`: sobrescribe el archivo entero y solo queda `huevos`.'
+  - type: choice
+    prompt: '¿Qué hace `Path.of("datos", "notas.txt")`?'
+    options:
+      - Construye la ruta `datos/notas.txt`, sin crear nada en el disco
+      - Crea la carpeta `datos` y el archivo `notas.txt`
+      - Lee el contenido de `datos/notas.txt`
+      - Borra el archivo si ya existía
+    answer: 0
+    explanation: Un `Path` solo es una dirección. Para crear, leer o borrar hay que usar los métodos de `Files`, como `Files.writeString` o `Files.readString`.
+  - type: choice
+    prompt: '¿Qué devuelve `Files.readAllLines(archivo)`?'
+    options:
+      - Una `List<String>` con una entrada por línea
+      - Un único `String` con todo el texto
+      - El número de líneas del archivo
+      - Un `Path` a cada línea
+    answer: 0
+    explanation: '`readAllLines` divide el texto en líneas y las guarda en una lista. Si quieres todo el texto en un único `String`, usa `Files.readString`.'

@@ -54,8 +54,9 @@ solution: |
       }
   }
 hints:
-  - "El constructor compacto se escribe `Libro { ... }`, sin paréntesis ni asignaciones."
-  - "Envuelve la creación en `try { ... } catch (IllegalArgumentException e) { ... }` para escribir `inválido`."
+  - 'La idea: un record te da gratis el constructor, los accesores y el `toString`; solo añades la validación y un método.'
+  - 'Qué usar: `record Libro(String titulo, String autor, int anio)` con un constructor compacto `Libro { ... }` y un `try`/`catch (IllegalArgumentException e)` en el `main`.'
+  - 'El plan: en el constructor compacto, `if (titulo.isBlank() || anio > 2026) throw new IllegalArgumentException(...)`. `esClasico()` devuelve `anio < 1976`. Imprime `libro + (libro.esClasico() ? " *" : "")`.'
 tests:
   - input: |
       Rayuela;Cortázar;1963

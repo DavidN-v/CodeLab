@@ -58,8 +58,9 @@ solution: |
       }
   }
 hints:
-  - "`n % 10` es la última cifra y `n / 10` quita la última cifra."
-  - Trabaja con `Math.abs(n)` para olvidarte del signo, y trata el 0 como un caso especial (tiene una cifra).
+  - 'La idea: puedes ir «arrancando» la última cifra de un número una y otra vez hasta que no quede ninguna, contando o sumando lo que arrancas.'
+  - 'Qué usar: `n % 10` da la última cifra, `n / 10` la quita, y `Math.abs(n)` olvida el signo. Un bucle `while` repite el proceso.'
+  - 'El plan: contar → `n = Math.abs(n); cifras = 1; while (n >= 10) { n /= 10; cifras++; }`. Sumar → `while (n > 0) { suma += n % 10; n /= 10; }`. Así el 0 tiene una cifra y suma 0.'
 tests:
   - input: "4721\n"
     output: |

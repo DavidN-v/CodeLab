@@ -1,0 +1,44 @@
+<div class="example">
+  <div class="example__bar">
+    <span class="example__lang">Java{{ changed() ? ' · modificado' : '' }}</span>
+    <div class="example__actions">
+      <button
+        type="button"
+        class="example__button example__button--run"
+        [disabled]="running()"
+        (click)="run()"
+      >
+        {{ running() ? 'Ejecutando…' : '▶ Ejecutar' }}
+      </button>
+      <button type="button" class="example__button" (click)="editing.set(!editing())">
+        {{ editing() ? '✓ Listo' : '✎ Editar' }}
+      </button>
+      <button type="button" class="example__button" (click)="visualize()">👣 Paso a paso</button>
+      <button type="button" class="example__button" (click)="openInPlayground()">
+        Playground ↗
+      </button>
+      @if (changed()) {
+        <button type="button" class="example__button" (click)="reset()">↺ Original</button>
+      }
+    </div>
+  </div>
+  @if (editing()) {
+    <app-code-editor
+      class="example__editor"
+      [(value)]="current"
+      label="Editar el ejemplo"
+      (run)="run()"
+    />
+  } @else {
+    <pre class="example__code"><code class="hljs" [innerHTML]="highlighted()"></code></pre>
+  }
+  @if (readsInput()) {
+    <label class="example__stdin">
+      <span>Entrada del programa (una línea por dato)</span>
+      <textarea rows="2" spellcheck="false" [value]="stdin()" (input)="onStdin($event)"></textarea>
+    </label>
+  }
+  @if (result() || running()) {
+    <app-console-output class="example__console" [result]="result()" [running]="running()" />
+  }
+</div>

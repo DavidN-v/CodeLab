@@ -2,25 +2,36 @@ lessons:
   - slug: que-es-java
     title: ¿Qué es Java?
     summary: El lenguaje, la máquina virtual y por qué el mismo programa corre en cualquier sistema.
-    minutes: 8
+    minutes: 5
   - slug: primer-programa
     title: Tu primer programa
     summary: La anatomía de un programa en Java, línea a línea, y cómo se compila y ejecuta.
-    minutes: 10
+    minutes: 6
   - slug: salida-por-consola
     title: Escribir en la consola
-    summary: print, println y printf, secuencias de escape y comentarios.
-    minutes: 10
+    summary: print y println, unir textos con +, secuencias de escape y comentarios.
+    minutes: 6
+  - slug: salida-con-formato
+    title: Salida con formato
+    summary: printf, sus marcadores y cómo controlar los decimales.
+    minutes: 4
   - slug: leer-datos
     title: Leer datos del usuario
     summary: Usar Scanner para leer texto y números de la entrada estándar.
-    minutes: 12
+    minutes: 7
   - slug: errores-comunes
-    title: Leer los errores
-    summary: Errores de compilación y de ejecución, y cómo interpretar sus mensajes.
-    minutes: 10
+    title: Leer los errores de compilación
+    summary: Qué significan los mensajes del compilador más frecuentes y cómo arreglarlos.
+    minutes: 6
+  - slug: errores-de-ejecucion
+    title: Errores de ejecución y errores lógicos
+    summary: Excepciones, cómo leer su traza y por qué un programa sin errores puede estar mal.
+    minutes: 4
 exercises:
+  - predice-print-println
+  - completa-el-saludo
   - hola-mundo
   - tarjeta-de-presentacion
   - saludo-personalizado
   - eco-invertido
+  - arregla-el-punto-y-coma

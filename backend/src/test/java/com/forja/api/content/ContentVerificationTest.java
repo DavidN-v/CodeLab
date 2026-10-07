@@ -31,9 +31,12 @@ import tools.jackson.dataformat.yaml.YAMLMapper;
 
 /**
  * Runs the course content through a real code-runner: every exercise's
- * solution must pass all its tests, every starter must compile, and every
- * lesson example with a main method must compile (examples fenced as
- * {@code java error} are meant to fail and are skipped).
+ * solution must pass all its tests (for a prediction, the program shown must
+ * print the expected output), every starter of a code exercise must compile,
+ * every lesson example with a main method must compile (examples fenced as
+ * {@code java error} are meant to fail and are skipped) and every quiz
+ * question about a program's output must match what it prints.
+ * {@code tools/verify_content.py} runs the same checks, and a few more, faster.
  *
  * <p>Needs a running code-runner, so it only runs when {@code FORJA_RUNNER_URL}
  * is set, e.g. {@code FORJA_RUNNER_URL=http://localhost:8090 ./mvnw test
@@ -67,10 +70,28 @@ class ContentVerificationTest {
 				ModuleManifest moduleManifest = yaml.readValue(manifest.toFile(), ModuleManifest.class);
 				for (String slug : moduleManifest.exercises()) {
 					ExerciseFile exercise = yaml.readValue(module.resolve(slug + ".yml").toFile(), ExerciseFile.class);
-					checks.add(() -> checkSolution(slug, exercise, problems));
-					checks.add(() -> checkCompiles("starter of " + slug, exercise.starter(), problems));
+					String kind = exercise.kind() == null ? "code" : exercise.kind();
+					String program = kind.equals("predict") ? exercise.starter() : exercise.solution();
+					checks.add(() -> checkPasses(slug, program, exercise.tests(), problems));
+					if (kind.equals("code") || kind.equals("project")) {
+						checks.add(() -> checkCompiles("starter of " + slug, exercise.starter(), problems));
+					}
 				}
 				for (ModuleManifest.LessonEntry lesson : moduleManifest.lessons()) {
+					Path quizFile = module.resolve(lesson.slug() + ".quiz.yml");
+					if (Files.exists(quizFile)) {
+						QuizFile quiz = yaml.readValue(quizFile.toFile(), QuizFile.class);
+						int number = 0;
+						for (QuizFile.Entry question : quiz.questions()) {
+							number++;
+							if ("output".equals(question.type())) {
+								String name = "%s/%s quiz %d".formatted(module.getFileName(), lesson.slug(), number);
+								ExerciseFile.TestEntry test = new ExerciseFile.TestEntry(question.input(),
+										(String) question.answer(), true);
+								checks.add(() -> checkPasses(name, question.code(), List.of(test), problems));
+							}
+						}
+					}
 					String markdown = Files.readString(module.resolve(lesson.slug() + ".md"));
 					Matcher block = JAVA_BLOCK.matcher(markdown);
 					int index = 0;
@@ -96,9 +117,9 @@ class ContentVerificationTest {
 		assertThat(problems).as("%d checks", checks.size()).isEmpty();
 	}
 
-	private void checkSolution(String slug, ExerciseFile exercise, List<String> problems) {
-		List<String> inputs = exercise.tests().stream().map(test -> Objects.requireNonNullElse(test.input(), "")).toList();
-		JsonNode result = execute(exercise.solution(), inputs);
+	private void checkPasses(String slug, String program, List<ExerciseFile.TestEntry> tests, List<String> problems) {
+		List<String> inputs = tests.stream().map(test -> Objects.requireNonNullElse(test.input(), "")).toList();
+		JsonNode result = execute(program, inputs);
 		if (result == null) {
 			problems.add(slug + ": runner request failed");
 			return;
@@ -108,13 +129,13 @@ class ContentVerificationTest {
 			return;
 		}
 		JsonNode runs = result.get("runs");
-		for (int i = 0; i < exercise.tests().size(); i++) {
+		for (int i = 0; i < tests.size(); i++) {
 			if (i >= runs.size()) {
 				problems.add("%s: test %d did not run".formatted(slug, i + 1));
 				continue;
 			}
 			JsonNode run = runs.get(i);
-			String expected = exercise.tests().get(i).output();
+			String expected = tests.get(i).output();
 			String actual = run.get("stdout").asString();
 			if (run.get("exitCode").asInt() != 0 || !OutputComparator.matches(expected, actual)) {
 				problems.add("%s: test %d failed (exit %d)%n--- expected%n%s--- actual%n%s--- stderr%n%s".formatted(slug,

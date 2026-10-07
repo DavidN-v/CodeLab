@@ -68,12 +68,16 @@ export interface LessonSummary {
 
 export type Difficulty = 'EASY' | 'MEDIUM' | 'HARD';
 
+/** What the learner does: write, repair, complete, order, predict, or build a project. */
+export type ExerciseKind = 'CODE' | 'FIX' | 'FILL' | 'PARSONS' | 'PREDICT' | 'PROJECT';
+
 export interface ExerciseSummary {
   id: number;
   slug: string;
   title: string;
   summary: string;
   difficulty: Difficulty;
+  kind: ExerciseKind;
   module: ModuleRef;
 }
 
@@ -103,4 +107,28 @@ export interface LessonDetail {
   module: ModuleRef;
   previous: LessonRef | null;
   next: LessonRef | null;
+  /** Questions at the end of the lesson; empty when it has none. */
+  quiz: QuizQuestion[];
+}
+
+/** A self-assessment question. The answer travels with it. */
+export interface QuizQuestion {
+  type: 'CHOICE' | 'OUTPUT';
+  /** CommonMark. */
+  prompt: string;
+  code: string | null;
+  /** CHOICE only. */
+  options: string[] | null;
+  correctOption: number | null;
+  /** OUTPUT only. */
+  expectedOutput: string | null;
+  input: string | null;
+  /** CommonMark. */
+  explanation: string;
+}
+
+export interface GlossaryTerm {
+  term: string;
+  aliases: string[];
+  definition: string;
 }

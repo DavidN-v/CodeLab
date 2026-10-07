@@ -46,8 +46,9 @@ solution: |
       }
   }
 hints:
-  - Supón que el mayor es `a` y guárdalo en una variable.
-  - Compara esa variable con `b` y luego con `c`, actualizándola si encuentras uno mayor.
+  - 'La idea: como cuando buscas al más alto de tres amigos, supones que el primero es el más alto y lo comparas con los otros dos.'
+  - 'Qué usar: una variable `mayor` que empieza valiendo `a`, dos `if` y un `return` al final del método.'
+  - 'El plan: `int mayor = a;` → si `b > mayor`, `mayor = b;` → si `c > mayor`, `mayor = c;` → `return mayor;`'
 tests:
   - input: "4 9 2\n"
     output: "9\n"

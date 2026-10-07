@@ -2,6 +2,9 @@
 
 Lo que has escrito hasta ahora en las clases pertenece a **cada objeto**: cada `Alumno` tiene su propio `nombre`. Lo marcado con `static` pertenece a la **clase**, y se comparte entre todos los objetos.
 
+> [!analogia]
+> En una clase de colegio, cada alumno tiene su propio cuaderno (campo de instancia), pero solo hay una pizarra para todos (campo `static`). Si alguien escribe en la pizarra, todos lo ven.
+
 ```java
 class Alumno {
     private static int totalCreados = 0;   // uno para toda la clase
@@ -36,6 +39,23 @@ public class Main {
 
 Los miembros estáticos se usan a través del **nombre de la clase**: `Alumno.getTotalCreados()`, igual que `Math.sqrt(...)` o `Integer.parseInt(...)`.
 
+> [!prueba]
+> Crea un tercer alumno, `new Alumno("Alan")`, antes del último `println` y ejecuta. ¿Qué número le toca y cuántos dice el total?
+
+```memoria
+stack main
+a: @1
+b: @2
+heap
+@1 Alumno: nombre=@3, numero=1
+@2 Alumno: nombre=@4, numero=2
+@3 String: "Ada"
+@4 String: "Grace"
+@5 Alumno (clase): totalCreados=2
+```
+
+Cada alumno guarda su `nombre` y su `numero`; `totalCreados` existe **una sola vez**, en la clase.
+
 ## Lo que puede y no puede hacer un método static
 
 Un método `static` no pertenece a ningún objeto, así que **no tiene `this`** y no puede acceder directamente a los campos de instancia:
@@ -49,6 +69,9 @@ class Ejemplo {
     }
 }
 ```
+
+> [!cuidado]
+> El error `non-static variable cannot be referenced from a static context` significa justo esto: desde un método `static` (como `main`) intentas usar un campo de instancia sin decir de qué objeto.
 
 Por eso `main` es `static` (la JVM lo llama sin crear ningún objeto) y por eso los métodos que escribiste en el módulo de Métodos llevaban `static`.
 
@@ -102,8 +125,8 @@ Evita usar campos `static` mutables para "compartir datos" entre partes del prog
 | Método | No se puede sobrescribir en subclases (módulo de Herencia) |
 | Clase | No se puede heredar de ella (como `String`) |
 
-## Resumen
-
-- `static` pertenece a la clase y se comparte; lo demás pertenece a cada objeto.
-- Los métodos `static` no tienen `this` ni acceden a campos de instancia.
-- Úsalo para constantes, utilidades y métodos de fábrica; evita el estado global mutable.
+> [!resumen]
+> - `static` pertenece a la clase y se comparte; lo demás pertenece a cada objeto.
+> - Los métodos `static` no tienen `this` ni acceden a campos de instancia.
+> - Úsalo para constantes, utilidades y métodos de fábrica; evita el estado global mutable.
+> - `final` significa «no cambia»: en variables, campos, métodos y clases.

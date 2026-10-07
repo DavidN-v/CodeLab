@@ -1,0 +1,43 @@
+questions:
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int n = 1;
+              while (n < 20) {
+                  System.out.println(n);
+                  n = n * 3;
+              }
+              System.out.println("Fin con " + n);
+          }
+      }
+    answer: |
+      1
+      3
+      9
+      Fin con 27
+    explanation: 'Antes de cada vuelta se comprueba `n < 20`: 1, 3 y 9 cumplen y se imprimen. Al llegar a 27 la condición es falsa, el bucle termina y se imprime la última línea con el valor que tiene `n`.'
+  - type: choice
+    prompt: '¿Qué le pasa a este bucle?'
+    code: |
+      int i = 0;
+      while (i < 5) {
+          System.out.println(i);
+      }
+    options:
+      - 'Nunca termina: `i` no cambia nunca'
+      - 'Imprime 0 1 2 3 4'
+      - 'No imprime nada'
+      - 'No compila'
+    answer: 0
+    explanation: 'Falta la actualización (`i++`). Como `i` siempre vale 0, `i < 5` siempre es verdadero y el bucle imprime 0 para siempre: es un bucle infinito.'
+  - type: choice
+    prompt: '¿Cuál es la diferencia principal entre `while` y `do-while`?'
+    options:
+      - '`do-while` ejecuta el bloque al menos una vez, porque comprueba la condición al final'
+      - '`do-while` es más rápido'
+      - '`while` siempre se ejecuta al menos una vez'
+      - '`do-while` no necesita condición'
+    answer: 0
+    explanation: '`while` pregunta antes de entrar, así que puede no ejecutarse nunca. `do-while` primero hace y luego pregunta: la primera vuelta siempre ocurre. Por eso es útil para menús.'

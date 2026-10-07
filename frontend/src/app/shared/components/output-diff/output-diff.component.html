@@ -1,0 +1,35 @@
+@if (diff().hint; as hint) {
+  <p class="diff__hint">💡 {{ hint }}</p>
+}
+<div class="diff" role="table" aria-label="Salida esperada y tu salida, línea a línea">
+  <div class="diff__row diff__row--head" role="row">
+    <span role="columnheader" class="diff__number">#</span>
+    <span role="columnheader">Esperado</span>
+    <span role="columnheader">Tu salida</span>
+  </div>
+  @for (row of rows(); track row.number) {
+    <div class="diff__row" role="row" [class.diff__row--bad]="!row.same">
+      <span role="cell" class="diff__number">{{ row.number }}</span>
+      <span role="cell">
+        @if (row.left.placeholder) {
+          <em class="diff__missing">{{ row.left.placeholder }}</em>
+        } @else {
+          <span>{{ row.left.same }}</span>
+          @if (row.left.different) {
+            <mark class="diff__mark">{{ row.left.different }}</mark>
+          }
+        }
+      </span>
+      <span role="cell">
+        @if (row.right.placeholder) {
+          <em class="diff__missing">{{ row.right.placeholder }}</em>
+        } @else {
+          <span>{{ row.right.same }}</span>
+          @if (row.right.different) {
+            <mark class="diff__mark diff__mark--bad">{{ row.right.different }}</mark>
+          }
+        }
+      </span>
+    </div>
+  }
+</div>

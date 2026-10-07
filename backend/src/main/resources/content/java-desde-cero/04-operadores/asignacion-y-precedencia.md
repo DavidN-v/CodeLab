@@ -2,6 +2,9 @@
 
 Actualizar una variable a partir de su propio valor es tan común que hay atajos:
 
+> [!analogia]
+> `saldo += 50` es como meter 50 € en tu hucha: no cambias la hucha, solo añades a lo que ya había dentro.
+
 | Atajo | Equivale a |
 | --- | --- |
 | `x += 5` | `x = x + 5` |
@@ -26,9 +29,23 @@ public class Main {
 }
 ```
 
+> [!prueba]
+> Cambia `saldo -= 30;` por `saldo -= 120;` y vuelve a ejecutar: ¿qué saldo queda? ¿Y si es negativo?
+
+```memoria
+stack main
+saldo: 240
+mensaje: @1
+heap
+@1 String: "Hola, mundo"
+```
+
 ## El operador ternario
 
 `condición ? valorSiVerdadero : valorSiFalso` elige entre dos valores en una sola expresión:
+
+> [!analogia]
+> El ternario es una pregunta con dos respuestas preparadas: «¿llueve? paraguas : gafas de sol». Según la respuesta, te llevas una cosa u otra.
 
 ```java
 public class Main {
@@ -44,11 +61,17 @@ public class Main {
 }
 ```
 
+> [!prueba]
+> Cambia `int edad = 15;` por `int edad = 18;` y vuelve a ejecutar: ¿qué imprime ahora la primera línea?
+
 Es ideal para elegir un valor simple. Si cada rama tiene que *hacer* varias cosas, usa un `if` (siguiente módulo).
 
 ## Precedencia: quién va primero
 
 Como en matemáticas, no todo se evalúa de izquierda a derecha. De mayor a menor prioridad:
+
+> [!analogia]
+> Es como la regla del colegio: primero multiplicaciones y divisiones, luego sumas y restas. Los paréntesis son el «esto va primero, sí o sí».
 
 | Nivel | Operadores |
 | --- | --- |
@@ -74,10 +97,13 @@ public class Main {
 }
 ```
 
-> **Consejo:** no memorices la tabla entera. Ante la duda, pon paréntesis: no cuestan nada y hacen la intención evidente para quien lea el código.
+> [!cuidado]
+> Para la media de tres números, `a + b + c / 3` está mal: solo se divide `c`. Escribe `(a + b + c) / 3`.
 
-## Resumen
+> [!idea]
+> No memorices la tabla entera. Ante la duda, pon paréntesis: no cuestan nada y hacen la intención evidente para quien lea el código.
 
-- `+=`, `-=`, `*=`, `/=` y `%=` actualizan una variable con su propio valor.
-- `cond ? a : b` elige entre dos valores.
-- `*` y `/` van antes que `+` y `-`; `&&` antes que `||`. Usa paréntesis para dejarlo claro.
+> [!resumen]
+> - `+=`, `-=`, `*=`, `/=` y `%=` actualizan una variable con su propio valor.
+> - `cond ? a : b` elige entre dos valores.
+> - `*` y `/` van antes que `+` y `-`; `&&` antes que `||`. Usa paréntesis para dejarlo claro.

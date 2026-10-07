@@ -1,0 +1,40 @@
+title: El camino de finally
+summary: Sigue paso a paso un try con catch y finally.
+difficulty: EASY
+kind: predict
+statement: |
+  Lee el programa con calma y escribe **exactamente** lo que imprime, línea a línea.
+
+  Fíjate en tres cosas: qué pasa con el resto del `try` cuando se lanza una excepción, cuándo se ejecuta `finally` aunque haya un `return`, y qué valor devuelve el método en cada llamada.
+starter: |
+  public class Main {
+      static int convertir(String texto) {
+          try {
+              System.out.println("Probando " + texto);
+              return Integer.parseInt(texto);
+          } catch (NumberFormatException e) {
+              System.out.println("No vale: " + texto);
+              return -1;
+          } finally {
+              System.out.println("Fin de " + texto);
+          }
+      }
+
+      public static void main(String[] args) {
+          int a = convertir("8");
+          int b = convertir("ocho");
+          System.out.println(a + b);
+      }
+  }
+hints:
+  - 'La idea: el método se llama dos veces; sigue cada llamada por separado y apunta las líneas que imprime en orden.'
+  - 'Qué usar: recuerda las reglas. Si `parseInt` falla, se salta al `catch`; `finally` se ejecuta siempre, justo antes de que el método devuelva su valor.'
+  - 'El plan: con "8" se imprime «Probando», después «Fin de» y devuelve 8. Con "ocho" se imprime «Probando», «No vale», «Fin de» y devuelve -1. Al final se imprime la suma 8 + (-1).'
+tests:
+  - output: |
+      Probando 8
+      Fin de 8
+      Probando ocho
+      No vale: ocho
+      Fin de ocho
+      7

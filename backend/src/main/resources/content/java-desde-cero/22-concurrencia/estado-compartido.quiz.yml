@@ -1,0 +1,44 @@
+questions:
+  - type: choice
+    prompt: ¿Por qué `contador++` puede perder incrementos si lo ejecutan dos hilos a la vez?
+    options:
+      - Porque son tres pasos (leer, sumar, escribir) y los hilos pueden intercalarse
+      - Porque los `int` no se pueden usar desde hilos
+      - Porque Java ejecuta los hilos al revés
+      - Porque `++` solo funciona en el hilo principal
+    answer: 0
+    explanation: Si los dos hilos leen el mismo valor antes de que ninguno escriba, los dos escriben el mismo resultado y un incremento se pierde. Es una condición de carrera.
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      import java.util.concurrent.atomic.AtomicInteger;
+
+      public class Main {
+          public static void main(String[] args) throws InterruptedException {
+              AtomicInteger contador = new AtomicInteger();
+              Runnable tarea = () -> {
+                  for (int i = 0; i < 500; i++) {
+                      contador.incrementAndGet();
+                  }
+              };
+              Thread a = new Thread(tarea);
+              Thread b = new Thread(tarea);
+              a.start();
+              b.start();
+              a.join();
+              b.join();
+              System.out.println(contador.get());
+          }
+      }
+    answer: |
+      1000
+    explanation: '`incrementAndGet()` es atómico: ningún incremento se pierde. Dos hilos por 500 incrementos dan 1000, y los `join` aseguran que los dos han terminado antes de imprimir.'
+  - type: choice
+    prompt: ¿Cuál es la forma más fiable de evitar condiciones de carrera?
+    options:
+      - No compartir datos que cambian; que cada tarea devuelva su resultado
+      - Poner `Thread.sleep` entre las operaciones
+      - Usar más hilos
+      - Usar `ArrayList` en vez de arrays
+    answer: 0
+    explanation: Si nadie comparte datos mutables, no hay nada que pisar. `sleep` solo hace el fallo menos frecuente (y más difícil de encontrar), y más hilos lo hacen más probable.

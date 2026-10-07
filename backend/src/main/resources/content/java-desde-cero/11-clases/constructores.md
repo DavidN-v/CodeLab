@@ -1,5 +1,8 @@
 Un objeto recién creado con campos a `null` o a `0` es un objeto a medio hacer. Un **constructor** es un bloque especial que se ejecuta al hacer `new` y deja el objeto listo y válido.
 
+> [!analogia]
+> Un constructor es como el formulario de alta de un gimnasio: no te dan el carné hasta que rellenas nombre y edad. Así nunca hay socios «a medias».
+
 ## Declarar un constructor
 
 ```java
@@ -29,9 +32,18 @@ public class Main {
 - **No** tiene tipo de retorno (ni siquiera `void`).
 - Sus parámetros son los datos que exiges para crear el objeto: ya no hay alumnos sin nombre.
 
+> [!prueba]
+> Crea un segundo alumno con `new Alumno("Alan", 41)` e imprime su presentación. Después prueba `new Alumno()` sin datos: ¿qué dice el compilador?
+
 ## this
 
 Dentro de la clase, `this` es una referencia al propio objeto. Se usa sobre todo para distinguir el campo del parámetro cuando se llaman igual: `this.nombre = nombre;` significa "guarda en **mi** campo `nombre` el parámetro `nombre`".
+
+> [!analogia]
+> `this` es como decir «yo» o «mi». Si en una reunión dos personas se llaman Ana, decir «**mi** Ana» deja claro de cuál hablas.
+
+> [!cuidado]
+> Si escribes `nombre = nombre;` sin `this`, asignas el parámetro a sí mismo y el campo se queda en `null`. Compila sin quejarse, pero el objeto queda vacío.
 
 ## Validar en el constructor
 
@@ -97,6 +109,9 @@ public class Main {
 
 `this(...)` debe ser la primera instrucción del constructor.
 
+> [!prueba]
+> Añade `System.out.println(new Rectangulo(2, 10).area());` al `main` y ejecuta. ¿Qué área esperas antes de ver el resultado?
+
 ## El constructor por defecto
 
 Si no escribes ningún constructor, Java crea uno vacío sin parámetros: por eso `new Perro()` funcionaba en el módulo anterior. En cuanto declaras uno con parámetros, ese constructor por defecto **desaparece**: si también quieres `new Rectangulo()`, tienes que escribirlo.
@@ -105,9 +120,8 @@ Si no escribes ningún constructor, Java crea uno vacío sin parámetros: por es
 
 Un campo `final` debe recibir valor en el constructor (o en su declaración) y no puede cambiar después. Los objetos cuyos campos son todos `final` se llaman **inmutables**, como `String`: son más fáciles de razonar porque nunca cambian a tus espaldas.
 
-## Resumen
-
-- El constructor se llama como la clase, no tiene tipo de retorno y se ejecuta con `new`.
-- `this.campo = parametro` distingue el campo del parámetro.
-- Valida en el constructor y lanza `IllegalArgumentException` ante datos imposibles.
-- `this(...)` encadena constructores; `final` hace campos que no cambian.
+> [!resumen]
+> - El constructor se llama como la clase, no tiene tipo de retorno y se ejecuta con `new`.
+> - `this.campo = parametro` distingue el campo del parámetro.
+> - Valida en el constructor y lanza `IllegalArgumentException` ante datos imposibles.
+> - `this(...)` encadena constructores; `final` hace campos que no cambian.

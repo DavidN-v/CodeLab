@@ -35,8 +35,9 @@ solution: |
       }
   }
 hints:
-  - Un `for` de 1 a 10, ambos incluidos, da exactamente 10 vueltas.
-  - En cada vuelta imprime una línea usando el número y el contador.
+  - 'La idea: son 10 líneas casi iguales; solo cambia el número por el que multiplicas, que va de 1 a 10.'
+  - 'Qué usar: un bucle `for` con un contador `i` de 1 a 10, ambos incluidos (`i <= 10`), y un println en cada vuelta.'
+  - 'El plan: for (i desde 1 hasta 10) → imprime n + " x " + i + " = " + n * i.'
 tests:
   - input: "7\n"
     output: |

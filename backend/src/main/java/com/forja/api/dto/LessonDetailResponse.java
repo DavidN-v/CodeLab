@@ -1,6 +1,7 @@
 package com.forja.api.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.List;
 
 @Schema(name = "LessonDetail", description = "A lesson's content and its place in the course.")
 public record LessonDetailResponse(
@@ -14,5 +15,6 @@ public record LessonDetailResponse(
 		CourseRefResponse course,
 		ModuleRefResponse module,
 		@Schema(description = "Previous lesson in reading order, crossing module boundaries.") LessonRefResponse previous,
-		@Schema(description = "Next lesson in reading order, crossing module boundaries.") LessonRefResponse next) {
+		@Schema(description = "Next lesson in reading order, crossing module boundaries.") LessonRefResponse next,
+		@Schema(description = "Questions to check understanding at the end; empty when it has none.") List<QuizQuestionResponse> quiz) {
 }

@@ -1,0 +1,81 @@
+title: La hucha que no ahorra
+summary: Encuentra por qué una hucha nunca guarda las monedas.
+difficulty: EASY
+kind: fix
+statement: |
+  La clase `Hucha` debería ir acumulando las monedas que metes. La entrada es una lista de cantidades separadas por espacios; el programa mete cada una y, al final, imprime `Total: <total>`.
+
+  Pero algo falla: da igual cuántas monedas metas, la hucha siempre dice `Total: 0`.
+
+  Encuentra el error y arréglalo sin cambiar el `main`.
+
+  **Ejemplo:** con la entrada `5 10 2` debe imprimir `Total: 17`.
+starter: |
+  import java.util.Scanner;
+
+  class Hucha {
+      private int total = 0;
+
+      void meter(int monedas) {
+          int total = 0;
+          total += monedas;
+      }
+
+      int getTotal() {
+          return total;
+      }
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          Hucha hucha = new Hucha();
+          while (entrada.hasNextInt()) {
+              hucha.meter(entrada.nextInt());
+          }
+          System.out.println("Total: " + hucha.getTotal());
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  class Hucha {
+      private int total = 0;
+
+      void meter(int monedas) {
+          total += monedas;
+      }
+
+      int getTotal() {
+          return total;
+      }
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          Hucha hucha = new Hucha();
+          while (entrada.hasNextInt()) {
+              hucha.meter(entrada.nextInt());
+          }
+          System.out.println("Total: " + hucha.getTotal());
+      }
+  }
+hints:
+  - 'La idea: las monedas se suman en algún sitio, pero no en la hucha. Busca dónde se guardan de verdad.'
+  - 'Qué usar: recuerda la diferencia entre un campo (vive en el objeto mientras exista) y una variable local (nace y muere dentro del método).'
+  - 'El plan: dentro de `meter` hay una línea `int total = 0;` que crea una variable local con el mismo nombre que el campo y lo tapa. Bórrala para que `total += monedas;` sume en el campo.'
+tests:
+  - input: "5 10 2\n"
+    output: |
+      Total: 17
+    sample: true
+  - input: "1\n"
+    output: |
+      Total: 1
+  - input: "\n"
+    output: |
+      Total: 0
+  - input: "100 200 300 400\n"
+    output: |
+      Total: 1000

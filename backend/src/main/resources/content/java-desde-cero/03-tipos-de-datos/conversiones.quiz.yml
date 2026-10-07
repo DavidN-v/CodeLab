@@ -1,0 +1,32 @@
+questions:
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int a = 7;
+              int b = 2;
+              System.out.println(a / b);
+              System.out.println(a / 2.0);
+          }
+      }
+    answer: |
+      3
+      3.5
+    explanation: 'Entero entre entero da entero: 7 / 2 es 3 y se descarta el resto. Con `2.0`, uno de los operandos es decimal y la división también: 3.5.'
+  - type: choice
+    prompt: ¿Cuánto vale `(int) 9.99`?
+    options:
+      - '`9`'
+      - '`10`'
+      - '`9.99`'
+    answer: 0
+    explanation: 'El casting a `int` corta la parte decimal, no redondea. Si quieres 10, usa `Math.round(9.99)`.'
+  - type: choice
+    prompt: 'Tienes `int suma = 17;` y quieres la media entre 2 con decimales (8.5). ¿Qué expresión sirve?'
+    options:
+      - '`(double) suma / 2`'
+      - '`(double) (suma / 2)`'
+      - '`suma / 2`'
+    answer: 0
+    explanation: '`(double) suma / 2` convierte primero `suma` a 17.0 y luego divide: 8.5. En `(double) (suma / 2)` el paréntesis hace primero la división entera (8) y después la convierte: 8.0.'

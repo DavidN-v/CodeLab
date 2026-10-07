@@ -61,6 +61,12 @@ forja:
       issuer: forja
   content:
     import-on-startup: true
+  # The AI tutor (explanations, debugging hints, code review). Off when no key is set.
+  tutor:
+    api-key: ${ANTHROPIC_API_KEY:}
+    model: ${TUTOR_MODEL:claude-opus-5-5}
+    effort: ${TUTOR_EFFORT:medium}
+    timeout: 90s
 
 logging:
   level:

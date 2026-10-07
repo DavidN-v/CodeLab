@@ -36,8 +36,9 @@ solution: |
       }
   }
 hints:
-  - Comprueba primero el caso especial (el cero).
-  - "Ojo con los negativos: `-3 % 2` vale `-1`, no `1`. Compara el resto con 0 en lugar de con 1."
+  - 'La idea: hay tres casos posibles y solo uno es verdad. Atiende primero el caso especial, el cero, para que no se cuele entre los pares.'
+  - 'Qué usar: una cadena `if` / `else if` / `else` y el resto `%`: un número es par si `n % 2 == 0`. Ojo, `-3 % 2` vale `-1`, así que no compares con 1.'
+  - 'El plan: si n == 0, imprime cero; si no, si n % 2 == 0, imprime par; si no, imprime impar.'
 tests:
   - input: "4\n"
     output: "par\n"

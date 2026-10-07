@@ -1,0 +1,35 @@
+title: El texto que no quería cambiar
+summary: Predice la salida de un programa que juega con la inmutabilidad de String.
+difficulty: MEDIUM
+kind: predict
+statement: |
+  Lee el programa y escribe **exactamente** lo que imprime.
+
+  Recuerda: un `String` nunca cambia. Sus métodos crean un texto **nuevo**, que solo sirve de algo si se guarda en una variable. Un `StringBuilder`, en cambio, sí se modifica.
+starter: |
+  public class Main {
+      public static void main(String[] args) {
+          String palabra = "  Java  ";
+          palabra.strip();
+          System.out.println("[" + palabra + "]");
+
+          palabra = palabra.strip();
+          palabra.toUpperCase();
+          String otra = palabra.replace('a', 'o');
+          System.out.println(palabra + " " + otra);
+
+          StringBuilder sb = new StringBuilder(palabra);
+          sb.append("!");
+          System.out.println(sb + " " + palabra.length());
+      }
+  }
+hints:
+  - 'La idea: sigue la pista de qué texto hay en cada variable línea a línea. Una llamada cuyo resultado no se guarda no cambia nada.'
+  - 'Qué usar: dibuja la memoria. `palabra.strip();` solo crea un String nuevo que se pierde; `palabra = palabra.strip();` mueve la flecha al nuevo. `sb.append` sí modifica el `StringBuilder`.'
+  - 'El plan: primera línea → los espacios siguen ahí. Después `palabra` es "Java" (no "JAVA": el `toUpperCase` se pierde) y `otra` es "Jovo". El `StringBuilder` termina en "Java!" y `palabra` sigue teniendo 4 letras.'
+tests:
+  - output: |
+      [  Java  ]
+      Java Jovo
+      Java! 4
+    sample: true

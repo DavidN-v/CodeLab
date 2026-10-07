@@ -17,6 +17,14 @@ export const PRACTICE_ROUTES: Routes = [
       ),
   },
   {
+    path: 'visualizer',
+    title: 'Visualizador paso a paso',
+    loadComponent: () =>
+      import('./pages/visualizer-page/visualizer-page.component').then(
+        (m) => m.VisualizerPageComponent,
+      ),
+  },
+  {
     path: ':exerciseSlug',
     title: 'Ejercicio',
     loadComponent: () =>

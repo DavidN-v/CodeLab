@@ -1,0 +1,106 @@
+title: Productos sin nombre
+summary: Un constructor que parece correcto pero deja el objeto a medias.
+difficulty: MEDIUM
+kind: fix
+statement: |
+  Una tienda guarda sus productos con la clase `Producto`. La entrada tiene líneas con el formato `nombre precio unidades` y el programa debe imprimir, para cada producto:
+
+  ```
+  <nombre>: <unidades> x <precio> = <total>
+  ```
+
+  Pero la salida sale rara: los nombres aparecen como `null` y el total es siempre `0.0`.
+
+  El programa **compila**, así que el fallo está en la lógica. Encuéntralo y arréglalo sin cambiar el `main`.
+
+  **Ejemplo:** `Lapiz 0.5 4` → `Lapiz: 4 x 0.5 = 2.0`
+starter: |
+  import java.util.Scanner;
+
+  class Producto {
+      private String nombre;
+      private double precio;
+      private int unidades;
+
+      Producto(String nombre, double precio, int unidades) {
+          nombre = nombre;
+          this.precio = precio;
+          unidades = unidades;
+      }
+
+      double total() {
+          return precio * unidades;
+      }
+
+      String linea() {
+          return nombre + ": " + unidades + " x " + precio + " = " + total();
+      }
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          while (entrada.hasNext()) {
+              String nombre = entrada.next();
+              double precio = Double.parseDouble(entrada.next());
+              int unidades = entrada.nextInt();
+              Producto p = new Producto(nombre, precio, unidades);
+              System.out.println(p.linea());
+          }
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  class Producto {
+      private String nombre;
+      private double precio;
+      private int unidades;
+
+      Producto(String nombre, double precio, int unidades) {
+          this.nombre = nombre;
+          this.precio = precio;
+          this.unidades = unidades;
+      }
+
+      double total() {
+          return precio * unidades;
+      }
+
+      String linea() {
+          return nombre + ": " + unidades + " x " + precio + " = " + total();
+      }
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          while (entrada.hasNext()) {
+              String nombre = entrada.next();
+              double precio = Double.parseDouble(entrada.next());
+              int unidades = entrada.nextInt();
+              Producto p = new Producto(nombre, precio, unidades);
+              System.out.println(p.linea());
+          }
+      }
+  }
+hints:
+  - 'La idea: el precio sí llega bien al objeto, pero el nombre y las unidades no. Compara cómo se guarda cada uno en el constructor.'
+  - 'Qué usar: cuando un parámetro se llama igual que un campo, dentro del constructor el nombre a secas es el parámetro; el campo se escribe con `this.`.'
+  - 'El plan: cambia `nombre = nombre;` por `this.nombre = nombre;` y `unidades = unidades;` por `this.unidades = unidades;`.'
+tests:
+  - input: |
+      Lapiz 0.5 4
+    output: |
+      Lapiz: 4 x 0.5 = 2.0
+    sample: true
+  - input: |
+      Libro 12.5 2
+      Taza 6.0 3
+    output: |
+      Libro: 2 x 12.5 = 25.0
+      Taza: 3 x 6.0 = 18.0
+  - input: |
+      Goma 1.25 0
+    output: |
+      Goma: 0 x 1.25 = 0.0

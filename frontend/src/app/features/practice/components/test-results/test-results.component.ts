@@ -1,11 +1,14 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 import { SubmissionResult } from '../../../../core/models/exercise.model';
+import { FriendlyErrorsComponent } from '../../../../shared/components/friendly-errors/friendly-errors.component';
+import { OutputDiffComponent } from '../../../../shared/components/output-diff/output-diff.component';
 import { SUBMISSION_LABELS, TEST_OUTCOME_LABELS } from '../../../../shared/utils/labels';
 
 /** The verdict of a submission and how each test case went. */
 @Component({
   selector: 'app-test-results',
+  imports: [FriendlyErrorsComponent, OutputDiffComponent],
   templateUrl: './test-results.component.html',
   styleUrl: './test-results.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

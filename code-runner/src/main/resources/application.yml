@@ -38,11 +38,20 @@ forja:
         # the serial collector and the C1-only JIT.
         compile-command: >-
           javac -J-Xmx192m -J-XX:+UseSerialGC -J-XX:TieredStopAtLevel=1
-          -encoding UTF-8 -Xlint:none -cp "/opt/forja/lib/*" -d classes "$FORJA_SOURCE_FILE"
+          -g -encoding UTF-8 -Xlint:none -cp "/opt/forja/lib/*" -d classes "$FORJA_SOURCE_FILE"
         run-command: >-
           java -Xmx160m -Xss1m -XX:+UseSerialGC -XX:TieredStopAtLevel=1 -XX:-UsePerfData
           -Dfile.encoding=UTF-8 -Dstdout.encoding=UTF-8 -Dstderr.encoding=UTF-8
           -cp "/sandbox/.harness/classes:/opt/forja/lib/*" "$FORJA_MAIN"
+        # The visualizer: the tracer (in the image, /opt/forja/tracer) runs the
+        # program under the debugger and prints every step as JSON.
+        trace:
+          command: >-
+            java -Xmx96m -XX:+UseSerialGC -XX:TieredStopAtLevel=1 -XX:-UsePerfData -Dfile.encoding=UTF-8
+            -cp /opt/forja/tracer ForjaTracer "$FORJA_MAIN" "/sandbox/.harness/classes:/opt/forja/lib/*:/opt/forja/tracer"
+            400 9000
+          timeout: 12s
+          output: 4MB
         limits:
           compile-timeout: 20s
           run-timeout: 5s

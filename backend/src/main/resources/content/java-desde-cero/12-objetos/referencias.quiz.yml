@@ -1,0 +1,52 @@
+questions:
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      class Vaso {
+          int ml;
+      }
+
+      public class Main {
+          public static void main(String[] args) {
+              Vaso mio = new Vaso();
+              Vaso tuyo = mio;
+              mio.ml = 200;
+              tuyo.ml = tuyo.ml - 50;
+              System.out.println(mio.ml);
+          }
+      }
+    answer: |
+      150
+    explanation: '`tuyo = mio` no crea otro vaso: copia la referencia, así que las dos variables señalan el mismo vaso. Se llena con 200 y después se le quitan 50 a través de `tuyo`: quedan 150.'
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      class Caja {
+          int valor = 1;
+      }
+
+      public class Main {
+          static void cambiar(Caja c) {
+              c.valor = 5;
+              c = new Caja();
+              c.valor = 9;
+          }
+
+          public static void main(String[] args) {
+              Caja caja = new Caja();
+              cambiar(caja);
+              System.out.println(caja.valor);
+          }
+      }
+    answer: |
+      5
+    explanation: 'El método recibe una copia de la referencia. `c.valor = 5` cambia la caja compartida. Después `c = new Caja()` solo cambia la copia local, así que el 9 va a otra caja que `main` nunca ve.'
+  - type: choice
+    prompt: '`String nombre = null;` ¿Qué pasa al ejecutar `System.out.println(nombre.length());`?'
+    options:
+      - Lanza `NullPointerException`
+      - Imprime `0`
+      - Imprime `null`
+      - No compila
+    answer: 0
+    explanation: '`null` no apunta a ningún objeto, así que no hay ningún texto al que pedirle su longitud. Compila (el compilador no sabe que valdrá `null`), pero falla al ejecutarse.'

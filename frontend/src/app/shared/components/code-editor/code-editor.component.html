@@ -1,0 +1,29 @@
+<div class="editor" #host [class.editor--ready]="ready()"></div>
+@if (!ready()) {
+  <textarea
+    class="editor__fallback"
+    spellcheck="false"
+    [attr.aria-label]="label()"
+    [value]="value()"
+    (input)="onFallbackInput($event)"
+    (keydown)="onFallbackKeydown($event)"
+  ></textarea>
+}
+<div class="editor__zoom" role="group" aria-label="Tamaño del código">
+  <button
+    type="button"
+    class="editor__zoom-button"
+    (click)="settings.changeFontSize(-1)"
+    aria-label="Letra más pequeña"
+  >
+    A−
+  </button>
+  <button
+    type="button"
+    class="editor__zoom-button"
+    (click)="settings.changeFontSize(1)"
+    aria-label="Letra más grande"
+  >
+    A+
+  </button>
+</div>

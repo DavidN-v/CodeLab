@@ -5,6 +5,8 @@ import com.forja.api.client.RunnerExecution;
 import com.forja.api.dto.ExecutionOutcome;
 import com.forja.api.dto.ExecutionRequest;
 import com.forja.api.dto.ExecutionResponse;
+import com.forja.api.dto.TraceResponse;
+import com.forja.api.dto.TraceResponse.TraceOutcome;
 import com.forja.api.exception.InvalidRequestException;
 import com.forja.api.exception.TooManyRequestsException;
 import com.forja.api.learning.RateLimiter;
@@ -32,6 +34,28 @@ public class PlaygroundServiceImpl implements PlaygroundService {
 
 	@Override
 	public ExecutionResponse run(Long userId, ExecutionRequest request) {
+		admit(userId, request);
+		RunnerExecution.Result result = codeRunnerClient.execute(request.languageSlug(), request.sourceCode(),
+				List.of(request.stdin()));
+		return toResponse(result);
+	}
+
+	@Override
+	public TraceResponse trace(Long userId, ExecutionRequest request) {
+		admit(userId, request);
+		RunnerExecution.TraceResult result = codeRunnerClient.trace(request.languageSlug(), request.sourceCode(),
+				request.stdin());
+		String compileOutput = result.compile() == null ? "" : result.compile().output();
+		if ("COMPILATION_ERROR".equals(result.status())) {
+			return new TraceResponse(TraceOutcome.COMPILATION_ERROR, compileOutput, null);
+		}
+		if (result.trace() == null || !"COMPLETED".equals(result.status())) {
+			return new TraceResponse(TraceOutcome.TOO_LONG, compileOutput, null);
+		}
+		return new TraceResponse(TraceOutcome.TRACED, compileOutput, result.trace());
+	}
+
+	private void admit(Long userId, ExecutionRequest request) {
 		boolean available = languageRepository.findBySlug(request.languageSlug())
 			.map(language -> language.isActive())
 			.orElse(false);
@@ -41,9 +65,6 @@ public class PlaygroundServiceImpl implements PlaygroundService {
 		if (!rateLimiter.tryAcquire(userId)) {
 			throw new TooManyRequestsException("Has ejecutado mucho código en poco tiempo. Espera un minuto.");
 		}
-		RunnerExecution.Result result = codeRunnerClient.execute(request.languageSlug(), request.sourceCode(),
-				List.of(request.stdin()));
-		return toResponse(result);
 	}
 
 	static ExecutionResponse toResponse(RunnerExecution.Result result) {

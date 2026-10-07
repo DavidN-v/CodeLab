@@ -1,0 +1,64 @@
+title: Entrada al cine
+summary: Completa las condiciones que eligen el precio de la entrada.
+difficulty: EASY
+kind: fill
+statement: |
+  El cine tiene tres precios según la edad:
+
+  | Edad | Salida |
+  | --- | --- |
+  | menos de 12 | `Entrada infantil: 5 euros` |
+  | 65 o más | `Entrada senior: 4 euros` |
+  | el resto | `Entrada normal: 8 euros` |
+
+  El programa lee la edad y escribe su entrada. Completa los huecos.
+starter: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int edad = entrada.nextInt();
+          if (edad {{?}} 12) {
+              System.out.println("Entrada infantil: 5 euros");
+          } {{?}} (edad >= 65) {
+              System.out.println("Entrada senior: 4 euros");
+          } {{?}} {
+              System.out.println("Entrada normal: 8 euros");
+          }
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int edad = entrada.nextInt();
+          if (edad < 12) {
+              System.out.println("Entrada infantil: 5 euros");
+          } else if (edad >= 65) {
+              System.out.println("Entrada senior: 4 euros");
+          } else {
+              System.out.println("Entrada normal: 8 euros");
+          }
+      }
+  }
+answers:
+  - <
+  - else if
+  - else
+hints:
+  - 'La idea: son tres casos y solo uno se cumple. Hay que preguntar por los niños, después por los mayores, y lo que quede es la entrada normal.'
+  - 'Qué usar: un operador de comparación para «menos de 12» y la cadena `if` / `else if` / `else`.'
+  - 'El plan: el primer hueco es el operador «menor que». El segundo encadena otra condición. El tercero es la rama para todo lo demás, que no lleva condición.'
+tests:
+  - input: "8\n"
+    output: "Entrada infantil: 5 euros\n"
+    sample: true
+  - input: "12\n"
+    output: "Entrada normal: 8 euros\n"
+  - input: "65\n"
+    output: "Entrada senior: 4 euros\n"
+  - input: "30\n"
+    output: "Entrada normal: 8 euros\n"

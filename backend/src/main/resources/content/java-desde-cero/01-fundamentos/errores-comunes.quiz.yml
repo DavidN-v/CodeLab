@@ -1,0 +1,27 @@
+questions:
+  - type: choice
+    prompt: 'El compilador dice `Main.java:5: error: '';'' expected`. ¿Qué haces?'
+    options:
+      - Miro el final de la línea 5 (o de la anterior) y añado el `;` que falta
+      - Borro la línea 5 entera
+      - Cambio el nombre de la clase
+    answer: 0
+    explanation: '`'';'' expected` significa "esperaba un punto y coma". El número 5 te dice dónde buscar. Basta con añadir el `;`.'
+  - type: choice
+    prompt: ¿Qué significa `cannot find symbol`?
+    options:
+      - Que usas un nombre que Java no conoce, a menudo por una letra o mayúscula mal escrita
+      - Que te falta una llave de cierre
+      - Que has dividido entre cero
+    answer: 0
+    explanation: '"No encuentro el símbolo" quiere decir "no sé qué es esta palabra". Suele ser un nombre mal escrito (`nombr` en vez de `nombre`) o una variable que no has creado. La llave que falta da `reached end of file while parsing`.'
+  - type: choice
+    prompt: ¿Qué error da esta línea?
+    code: |
+      System.out.println("Hola);
+    options:
+      - '`unclosed string literal`: falta cerrar las comillas'
+      - '`'';'' expected`: falta el punto y coma'
+      - Ninguno, imprime `Hola`
+    answer: 0
+    explanation: 'El texto empieza con `"` pero nunca se cierra, así que Java cree que `);` también es parte del texto. El `;` está, pero queda "dentro" del texto sin cerrar.'

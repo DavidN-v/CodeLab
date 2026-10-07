@@ -1,0 +1,32 @@
+questions:
+  - type: choice
+    prompt: ¿Cuál de estos nombres de variable es válido en Java?
+    options:
+      - '`jugadores2`'
+      - '`2jugadores`'
+      - '`precio total`'
+      - '`class`'
+    answer: 0
+    explanation: 'Un nombre no puede empezar por dígito, no puede tener espacios y no puede ser una palabra reservada como `class`. `jugadores2` cumple todo: el dígito puede ir al final.'
+  - type: choice
+    prompt: ¿Qué nombre sigue la convención de Java para una variable?
+    options:
+      - '`precioTotal`'
+      - '`PrecioTotal`'
+      - '`PRECIO_TOTAL`'
+      - '`precio_total`'
+    answer: 0
+    explanation: 'Las variables van en camelCase: primera palabra en minúscula y las siguientes con mayúscula inicial. PascalCase es para clases y MAYÚSCULAS para constantes.'
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              var total = 5;
+              var Total = 10;
+              System.out.println(total + Total);
+          }
+      }
+    answer: |
+      15
+    explanation: 'Java distingue mayúsculas: `total` y `Total` son dos variables distintas. `var` deduce que ambas son `int`, así que se suman: 5 + 10 = 15.'

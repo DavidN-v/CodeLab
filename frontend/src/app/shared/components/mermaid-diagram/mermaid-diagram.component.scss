@@ -1,0 +1,35 @@
+:host {
+  display: block;
+  margin-block: var(--space-4);
+}
+
+.diagram {
+  margin: 0;
+  padding: var(--space-3);
+  overflow-x: auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+}
+
+.diagram__svg {
+  display: none;
+  justify-content: center;
+
+  &--ready {
+    display: flex;
+  }
+
+  :deep(svg) {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+.diagram__source {
+  margin: 0;
+  color: var(--color-text-subtle);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  white-space: pre-wrap;
+}

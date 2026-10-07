@@ -50,8 +50,9 @@ solution: |
       }
   }
 hints:
-  - Si haces `a = b;` directamente, pierdes el valor original de `a`.
-  - Guarda primero `a` en una variable auxiliar, luego asigna `b` a `a` y por último la auxiliar a `b`.
+  - 'La idea: si haces `a = b;` directamente, el valor original de `a` se pierde para siempre. Necesitas guardarlo antes en algún sitio.'
+  - 'Qué usar: una tercera variable `int auxiliar` que haga de "mano libre", como cuando cambias dos vasos de sitio.'
+  - 'El plan: `auxiliar = a;` luego `a = b;` y por último `b = auxiliar;`.'
 tests:
   - input: "3 8\n"
     output: |

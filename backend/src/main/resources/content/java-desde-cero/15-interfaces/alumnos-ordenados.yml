@@ -74,8 +74,9 @@ solution: |
       }
   }
 hints:
-  - "`Integer.compare(otro.nota, nota)` (con `otro` primero) ordena de mayor a menor."
-  - "Si el resultado es 0, desempata con `nombre.compareTo(otro.nombre)`."
+  - 'La idea: `Collections.sort` necesita saber, entre dos alumnos, cuál va primero. Primero manda la nota (de mayor a menor) y, si empatan, el nombre (de la A a la Z).'
+  - 'Qué usar: `implements Comparable<Alumno>`, un método `public int compareTo(Alumno otro)`, `Integer.compare(...)` para las notas y `nombre.compareTo(otro.nombre)` para desempatar.'
+  - 'El plan: `int porNota = Integer.compare(otro.nota, nota);` (con `otro` primero para que el mayor vaya antes). Si `porNota` no es 0, devuélvelo; si es 0, devuelve `nombre.compareTo(otro.nombre)`. Por último, quita el comentario de `Collections.sort(alumnos);`.'
 tests:
   - input: |
       4

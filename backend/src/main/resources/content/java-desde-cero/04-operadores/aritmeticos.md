@@ -1,5 +1,8 @@
 Los operadores aritméticos hacen cuentas. Los conoces de las matemáticas, con un par de matices importantes.
 
+> [!analogia]
+> Un operador es como una tecla de la calculadora: `+`, `-`, `*`… Le das dos números, pulsas la tecla y te devuelve un resultado.
+
 ## Los cinco básicos
 
 | Operador | Operación | `17 ? 5` |
@@ -25,11 +28,20 @@ public class Main {
 }
 ```
 
-Recuerda la lección de conversiones: entre enteros, `/` descarta los decimales.
+> [!prueba]
+> Cambia `int b = 5;` por `int b = 4;` y vuelve a ejecutar: ¿cuánto dan ahora `a / b` y `a % b`?
+
+> [!cuidado]
+> Entre enteros, `/` descarta los decimales: `17 / 5` es `3`, no `3.4`. Si quieres decimales, al menos uno de los dos números debe ser decimal: `17.0 / 5`.
 
 ## El resto: más útil de lo que parece
 
-`a % b` es lo que sobra al dividir `a` entre `b`. Sirve para un montón de cosas:
+`a % b` es lo que sobra al dividir `a` entre `b`.
+
+> [!analogia]
+> Repartes 17 caramelos entre 5 amigos: a cada uno le tocan 3 (eso es `17 / 5`) y te sobran 2 en la mano (eso es `17 % 5`).
+
+Sirve para un montón de cosas:
 
 - **¿Es par?** `n % 2 == 0`.
 - **¿Es múltiplo de 3?** `n % 3 == 0`.
@@ -49,11 +61,15 @@ public class Main {
 
 Imprime `62 min 5 s`. División entera y resto juntos descomponen cantidades: es una técnica que usarás mucho.
 
-> **Ojo con los negativos:** en Java el resto conserva el signo del dividendo: `-7 % 3` es `-1`, no `2`.
+> [!cuidado]
+> Ojo con los negativos: en Java el resto conserva el signo del dividendo: `-7 % 3` es `-1`, no `2`.
 
 ## Incremento y decremento
 
 `++` suma 1 y `--` resta 1. Se usan sobre todo en bucles:
+
+> [!analogia]
+> `contador++` es como el clic de un contador de personas en la puerta de una tienda: cada clic, uno más.
 
 ```java
 public class Main {
@@ -81,7 +97,8 @@ public class Main {
 }
 ```
 
-> **Consejo:** úsalos solos en su propia línea (`contador++;`). Mezclados en expresiones complicadas son una fuente clásica de errores.
+> [!idea]
+> Usa `++` y `--` solos en su propia línea (`contador++;`). Mezclados en expresiones complicadas son una fuente clásica de errores.
 
 ## La clase Math
 
@@ -101,9 +118,8 @@ public class Main {
 
 Fíjate en que `Math.pow` y `Math.sqrt` devuelven `double`.
 
-## Resumen
-
-- `+ - * / %`; entre enteros, `/` es división entera.
-- `%` da el resto: pares, múltiplos, últimas cifras, descomponer cantidades.
-- `++` y `--` suman o restan 1; mejor usarlos solos.
-- `Math.pow`, `Math.sqrt`, `Math.abs`, `Math.max` y `Math.min` para lo demás.
+> [!resumen]
+> - `+ - * / %`; entre enteros, `/` es división entera.
+> - `%` da el resto: pares, múltiplos, últimas cifras, descomponer cantidades.
+> - `++` y `--` suman o restan 1; mejor usarlos solos.
+> - `Math.pow`, `Math.sqrt`, `Math.abs`, `Math.max` y `Math.min` para lo demás.

@@ -56,8 +56,9 @@ solution: |
       }
   }
 hints:
-  - Las dos primeras líneas pueden tener espacios, así que léelas con `nextLine()`.
-  - El año es un número, así que léelo con `nextInt()` y resta.
+  - 'La idea: lee los tres datos, calcula la edad restando y escribe la ficha en tres líneas.'
+  - 'Qué usar: `nextLine()` para el nombre y la ciudad (pueden tener espacios) y `nextInt()` para el año. La constante `ANIO_ACTUAL` ya está declarada.'
+  - 'El plan: `nombre = entrada.nextLine();`, `ciudad = entrada.nextLine();`, `anio = entrada.nextInt();`, `edad = ANIO_ACTUAL - anio;` y luego los tres `println`.'
 tests:
   - input: |
       Ada Lovelace

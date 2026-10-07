@@ -89,9 +89,9 @@ solution: |
       }
   }
 hints:
-  - "Un constructor de copia recibe un objeto del mismo tipo: `Marcador(Marcador otro)`."
-  - Dentro de la clase puedes leer `otro.puntos` aunque sea privado.
-  - "`alias` y `original` son el mismo objeto, así que siempre mostrarán lo mismo."
+  - 'La idea: `alias = original` no crea nada nuevo (es otro nombre para el mismo marcador); la copia tiene que ser un objeto nuevo con los mismos puntos.'
+  - 'Qué usar: un constructor que recibe otro marcador, `Marcador(Marcador otro)`. Dentro de la clase puedes leer `otro.puntos` aunque sea privado.'
+  - 'El plan: escribe `Marcador(Marcador otro) { this(otro.puntos); }` y cambia en el `main` `copia = original` por `copia = new Marcador(original)`.'
 tests:
   - input: "10 5 1\n"
     output: |

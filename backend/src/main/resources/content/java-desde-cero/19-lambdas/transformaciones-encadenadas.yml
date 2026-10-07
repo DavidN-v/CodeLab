@@ -58,8 +58,9 @@ solution: |
       }
   }
 hints:
-  - "`Function.identity()` devuelve el texto sin cambios: es un buen punto de partida."
-  - "Un método `static Function<String, String> paso(String nombre)` con un `switch` que devuelva una lambda o una referencia a método para cada nombre."
+  - 'La idea: montas una cadena de máquinas, una por cada palabra de la primera línea, y pasas cada texto por la cadena completa.'
+  - 'Qué usar: `Function.identity()` como punto de partida (no cambia nada) y `tuberia = tuberia.andThen(otraFuncion)` para añadir un paso al final.'
+  - 'El plan: escribe `static Function<String, String> paso(String nombre)` con un `switch` que devuelva, por ejemplo, `String::toUpperCase` para `"mayus"` o `s -> s + s` para `"duplicar"`; luego recorre `pasos` encadenando `paso(nombre)`.'
 tests:
   - input: |
       recortar mayus invertir

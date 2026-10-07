@@ -40,7 +40,9 @@ describe('RegisterPageComponent', () => {
   });
 
   it('creates the account and lands on the dashboard', () => {
-    register.mockReturnValue(of({ id: 1, email: 'ada@example.com', displayName: 'Ada' }));
+    register.mockReturnValue(
+      of({ id: 1, email: 'ada@example.com', displayName: 'Ada', dailyGoalXp: 30 }),
+    );
     const navigate = vi.spyOn(TestBed.inject(Router), 'navigateByUrl').mockResolvedValue(true);
 
     type('#register-name', '  Ada ');

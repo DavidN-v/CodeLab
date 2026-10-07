@@ -28,8 +28,9 @@ solution: |
       }
   }
 hints:
-  - Usa un `System.out.println` por línea.
-  - "Dentro de un texto, una comilla doble se escribe `\\\"`."
+  - 'La idea: son cuatro líneas de texto fijas; solo tienes que escribir cada una tal cual, espacios incluidos.'
+  - 'Qué usar: un `System.out.println` por línea. Para poner una comilla doble dentro de un texto, escríbela como `\"`.'
+  - 'El plan: copia cada línea del enunciado dentro de su `println`. En la tercera, escribe `\"Java\"` en lugar de `"Java"`.'
 tests:
   - output: |
       +----------------------+

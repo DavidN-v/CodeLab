@@ -7,7 +7,7 @@ import { DashboardService } from '../../../../core/services/dashboard.service';
 import { DashboardPageComponent } from './dashboard-page.component';
 
 const DASHBOARD: Dashboard = {
-  user: { id: 1, email: 'ada@example.com', displayName: 'Ada' },
+  user: { id: 1, email: 'ada@example.com', displayName: 'Ada', dailyGoalXp: 30 },
   xp: 175,
   level: { number: 2, title: 'Iniciado', currentLevelXp: 100, nextLevelXp: 250 },
   streak: { current: 3, longest: 5, activeToday: true },
@@ -51,6 +51,16 @@ const DASHBOARD: Dashboard = {
     { code: 'first-lesson', title: 'Primera chispa', description: '', earned: true },
     { code: 'streak-7', title: 'Una semana en la fragua', description: '', earned: false },
   ],
+  dailyGoal: { goalXp: 30, todayXp: 20 },
+  reviews: [
+    {
+      exerciseSlug: 'hola-mundo',
+      exerciseTitle: 'Hola, mundo',
+      moduleTitle: 'Fundamentos',
+      solvedAt: '2026-10-01T10:00:00Z',
+    },
+  ],
+  reviewsDue: 1,
 };
 
 describe('DashboardPageComponent', () => {
@@ -78,5 +88,7 @@ describe('DashboardPageComponent', () => {
     expect(element.textContent).toContain('1.6 h');
     expect(element.querySelectorAll('.achievement--earned')).toHaveLength(1);
     expect(element.querySelector('app-activity-heatmap')).not.toBeNull();
+    expect(element.querySelector('.goal__numbers')?.textContent).toContain('20 / 30 XP');
+    expect(element.querySelector('.reviews a')?.getAttribute('href')).toBe('/practice/hola-mundo');
   });
 });

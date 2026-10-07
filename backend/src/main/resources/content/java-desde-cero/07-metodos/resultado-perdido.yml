@@ -1,0 +1,70 @@
+title: El resultado perdido
+summary: Encuentra por qué el total siempre sale 0.
+difficulty: MEDIUM
+kind: fix
+statement: |
+  Este programa lee el precio de un producto y cuántas unidades se compran, y debería mostrar el total con un 10 % de descuento si se compran 10 unidades o más.
+
+  **Síntoma:** compila y se ejecuta sin errores, pero siempre escribe `Total: 0.00`, sea cual sea la entrada.
+
+  Encuentra el error y corrígelo.
+
+  **Ejemplos:**
+
+  - `2.5 4` → `Total: 10.00`
+  - `3 10` → `Total: 27.00`
+starter: |
+  import java.util.Scanner;
+
+  public class Main {
+      static double calcularTotal(double precio, int unidades) {
+          double total = precio * unidades;
+          if (unidades >= 10) {
+              total = total * 0.9;
+          }
+          return total;
+      }
+
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          double precio = entrada.nextDouble();
+          int unidades = entrada.nextInt();
+          double total = 0;
+          calcularTotal(precio, unidades);
+          System.out.printf("Total: %.2f%n", total);
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  public class Main {
+      static double calcularTotal(double precio, int unidades) {
+          double total = precio * unidades;
+          if (unidades >= 10) {
+              total = total * 0.9;
+          }
+          return total;
+      }
+
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          double precio = entrada.nextDouble();
+          int unidades = entrada.nextInt();
+          double total = calcularTotal(precio, unidades);
+          System.out.printf("Total: %.2f%n", total);
+      }
+  }
+hints:
+  - 'La idea: el método calcula bien el total y lo devuelve, pero alguien tiene que recoger ese valor. Mira qué pasa con él en `main`.'
+  - 'Qué usar: recuerda que el `total` de `calcularTotal` y el `total` de `main` son variables distintas (son locales de cada método).'
+  - 'El plan: en vez de llamar a `calcularTotal(precio, unidades);` en una línea suelta, guarda lo que devuelve: `double total = calcularTotal(precio, unidades);`'
+tests:
+  - input: "2.5 4\n"
+    output: "Total: 10.00\n"
+    sample: true
+  - input: "3 10\n"
+    output: "Total: 27.00\n"
+  - input: "1.99 1\n"
+    output: "Total: 1.99\n"
+  - input: "5 20\n"
+    output: "Total: 90.00\n"

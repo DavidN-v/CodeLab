@@ -2,16 +2,19 @@ lessons:
   - slug: if-y-else
     title: if y else
     summary: Ejecutar código solo cuando se cumple una condición.
-    minutes: 10
+    minutes: 5
   - slug: varias-ramas
     title: Varias ramas y condiciones anidadas
     summary: else if, el orden de las comprobaciones y cómo evitar el anidamiento excesivo.
-    minutes: 10
+    minutes: 6
   - slug: switch
     title: switch
     summary: Elegir entre muchos valores concretos, del switch clásico al de flechas.
-    minutes: 12
+    minutes: 6
 exercises:
+  - predice-la-rama
+  - entrada-al-cine
   - par-o-impar
   - nota-en-palabras
   - calculadora
+  - el-mayor-de-tres

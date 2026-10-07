@@ -6,5 +6,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public record UserResponse(
 		@Schema(example = "1") Long id,
 		@Schema(example = "ada@example.com") String email,
-		@Schema(example = "Ada") String displayName) {
+		@Schema(example = "Ada") String displayName,
+		@Schema(description = "Experience per day the learner aims for.", example = "30") int dailyGoalXp) {
 }

@@ -16,7 +16,20 @@ public record DashboardResponse(
 		@Schema(description = "One entry per day of the last 12 weeks, oldest first.") List<ActivityDay> activity,
 		List<CourseCard> courses,
 		List<RecentSubmission> recentSubmissions,
-		List<Achievement> achievements) {
+		List<Achievement> achievements,
+		DailyGoal dailyGoal,
+		@Schema(description = "Solved exercises due for a spaced review, the most overdue first (at most 3).") List<ReviewItem> reviews,
+		@Schema(description = "How many exercises are due for review in total.") long reviewsDue) {
+
+	@Schema(name = "DailyGoal")
+	public record DailyGoal(@Schema(example = "30") int goalXp,
+			@Schema(description = "Experience earned today, in the learner's time zone.") int todayXp) {
+	}
+
+	@Schema(name = "ReviewItem")
+	public record ReviewItem(String exerciseSlug, String exerciseTitle, String moduleTitle,
+			@Schema(description = "When it was first solved.") Instant solvedAt) {
+	}
 
 	@Schema(name = "Level")
 	public record Level(

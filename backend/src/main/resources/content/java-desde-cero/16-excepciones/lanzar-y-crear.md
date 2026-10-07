@@ -1,6 +1,9 @@
 ## throw
 
-Tu código también puede **lanzar** excepciones, normalmente para rechazar datos inválidos:
+Hasta ahora has capturado excepciones que lanzaba Java. Tu código también puede **lanzar** las suyas, normalmente para rechazar datos inválidos:
+
+> [!analogia]
+> `throw` es el árbitro que pita falta: detiene el juego en ese momento y explica por qué. Quien esté preparado (un `catch`) decide cómo seguir.
 
 ```java
 public class Main {
@@ -22,16 +25,23 @@ public class Main {
 }
 ```
 
+> [!prueba]
+> Cambia `raizCuadrada(-4)` por `raizCuadrada(25)` y ejecuta: no se lanza nada, así que el `catch` no imprime ningún error.
+
 Las dos que más usarás:
 
 - `IllegalArgumentException`: un argumento no es válido.
 - `IllegalStateException`: el objeto no está en un estado que permita la operación (retirar de una cuenta cerrada).
 
-Falla **pronto** y con un mensaje claro: es mucho mejor que dejar pasar datos malos y fallar más tarde, lejos de la causa.
+> [!idea]
+> Falla **pronto** y con un mensaje claro: es mucho mejor que dejar pasar datos malos y fallar más tarde, lejos de la causa.
 
 ## Excepciones propias
 
 Cuando el error es un concepto de tu dominio, crea tu propia excepción heredando de `RuntimeException` (o de `Exception` si quieres que sea checked):
+
+> [!analogia]
+> Es como tener un formulario de reclamación específico de tu tienda en vez de una hoja en blanco: dice exactamente qué ha pasado y trae los datos útiles (aquí, cuánto dinero falta).
 
 ```java
 class SaldoInsuficienteException extends RuntimeException {
@@ -77,9 +87,15 @@ public class Main {
 
 `super(mensaje)` guarda el mensaje que devolverá `getMessage()`.
 
+> [!cuidado]
+> Olvidar la palabra `new` es un error típico: se escribe `throw new MiExcepcion(...)`, porque primero creas el objeto excepción y después lo lanzas.
+
 ## finally
 
 El bloque `finally` se ejecuta **siempre**, haya excepción o no, incluso si el `try` hace `return`. Sirve para liberar recursos:
+
+> [!analogia]
+> `finally` es apagar la luz al salir de casa: da igual si has salido con prisa o tranquilo, siempre lo haces.
 
 ```java
 public class Main {
@@ -101,6 +117,8 @@ public class Main {
 }
 ```
 
+Fíjate en el orden de la salida: «Operación terminada» aparece **antes** que el 5, porque `finally` se ejecuta justo antes de que el método devuelva el valor.
+
 Para archivos y conexiones existe una forma mejor, `try-with-resources`, que cierra los recursos automáticamente. La verás en el módulo de Archivos.
 
 ## Envolver excepciones
@@ -117,9 +135,8 @@ try {
 
 La traza mostrará ambas, así no se pierde información.
 
-## Resumen
-
-- `throw new TipoDeExcepcion("mensaje")` lanza una excepción; falla pronto y con mensaje claro.
-- Crea excepciones propias heredando de `RuntimeException` para errores de tu dominio.
-- `finally` se ejecuta siempre; úsalo para liberar recursos.
-- Al envolver una excepción, pasa la original como causa.
+> [!resumen]
+> - `throw new TipoDeExcepcion("mensaje")` lanza una excepción; falla pronto y con mensaje claro.
+> - Crea excepciones propias heredando de `RuntimeException` para errores de tu dominio.
+> - `finally` se ejecuta siempre; úsalo para liberar recursos.
+> - Al envolver una excepción, pasa la original como causa.

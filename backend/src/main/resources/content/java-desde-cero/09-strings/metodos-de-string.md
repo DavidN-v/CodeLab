@@ -1,5 +1,17 @@
 Casi todos los programas manipulan texto: nombres, mensajes, ficheros, datos que llegan de la red. La clase `String` trae decenas de métodos; estos son los que usarás a diario.
 
+> [!analogia]
+> Un `String` es como un collar de cuentas con letras: cada cuenta (carácter) está en una posición numerada, empezando por 0. Los métodos de `String` son las herramientas para contar cuentas, buscar una letra o copiar un trozo del collar.
+
+Como los arrays, un `String` es un objeto: vive en el montón y la variable guarda una referencia a él.
+
+```memoria
+stack main
+frase: @1
+heap
+@1 String: "Aprender Java es divertido"
+```
+
 ## Consultar
 
 ```java
@@ -21,6 +33,12 @@ public class Main {
 
 Como en los arrays, las posiciones empiezan en 0 y la última es `length() - 1`.
 
+> [!cuidado]
+> En un String, `length()` lleva paréntesis porque es un método. En un array, `length` va sin paréntesis. Confundirlos es un error de compilación muy habitual.
+
+> [!prueba]
+> Cambia `frase.indexOf("Java")` por `frase.indexOf("java")` (en minúscula) y ejecuta. ¿Por qué sale -1?
+
 ## Extraer
 
 `substring(inicio, fin)` devuelve el trozo desde `inicio` **incluido** hasta `fin` **excluido**:
@@ -36,6 +54,9 @@ public class Main {
     }
 }
 ```
+
+> [!idea]
+> En `substring(inicio, fin)` el carácter de la posición `fin` no entra. Así, `fin - inicio` es justo la longitud del trozo.
 
 ## Transformar
 
@@ -74,6 +95,9 @@ public class Main {
 
 `compareTo` sirve para ordenar alfabéticamente: devuelve un número negativo, cero o positivo.
 
+> [!cuidado]
+> Compara textos con `equals`, nunca con `==`. El `==` compara las flechas (si son el mismo objeto en memoria), no las letras, y a veces da `false` con dos textos iguales.
+
 ## Recorrer los caracteres
 
 ```java
@@ -99,9 +123,8 @@ public class Main {
 
 La clase `Character` ayuda a clasificar caracteres: `isLetter`, `isDigit`, `isWhitespace`, `isUpperCase`, `toLowerCase`…
 
-## Resumen
-
-- Consultar: `length`, `charAt`, `indexOf`, `contains`, `startsWith`, `isBlank`.
-- Extraer: `substring(inicio, fin)` con `fin` excluido.
-- Transformar: `strip`, `toUpperCase`, `toLowerCase`, `replace`, `repeat`; siempre devuelven un String nuevo.
-- Comparar con `equals`, `equalsIgnoreCase` y `compareTo`.
+> [!resumen]
+> - Consultar: `length`, `charAt`, `indexOf`, `contains`, `startsWith`, `isBlank`.
+> - Extraer: `substring(inicio, fin)` con `fin` excluido.
+> - Transformar: `strip`, `toUpperCase`, `toLowerCase`, `replace`, `repeat`; siempre devuelven un String nuevo.
+> - Comparar con `equals`, `equalsIgnoreCase` y `compareTo`, nunca con `==`.

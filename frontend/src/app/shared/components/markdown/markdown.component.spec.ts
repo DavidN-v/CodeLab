@@ -1,7 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 
 import { MarkdownComponent } from './markdown.component';
-import { slugify } from './markdown-renderer';
+import { glossaryLinker, renderMarkdown, slugify } from './markdown-renderer';
 
 const LESSON = `Intro con \`código\`.
 
@@ -35,7 +36,10 @@ describe('MarkdownComponent', () => {
   }
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({ imports: [MarkdownComponent] }).compileComponents();
+    await TestBed.configureTestingModule({
+      imports: [MarkdownComponent],
+      providers: [provideRouter([])],
+    }).compileComponents();
     fixture = TestBed.createComponent(MarkdownComponent);
     element = fixture.nativeElement as HTMLElement;
   });
@@ -51,28 +55,17 @@ describe('MarkdownComponent', () => {
     ]);
   });
 
-  it('highlights Java and offers only complete programs to the playground', () => {
+  it('turns only complete programs into runnable examples', () => {
     render(LESSON);
 
+    expect(element.querySelectorAll('app-runnable-example')).toHaveLength(1);
     expect(element.querySelectorAll('.hljs-keyword').length).toBeGreaterThan(0);
-    expect(element.querySelectorAll('.prose__run')).toHaveLength(1);
   });
 
-  it('emits the code of the example that was opened', () => {
-    render(LESSON);
-    const emitted: string[] = [];
-    fixture.componentInstance.runCode.subscribe((code) => emitted.push(code));
-
-    element.querySelector<HTMLButtonElement>('.prose__run')!.click();
-
-    expect(emitted).toHaveLength(1);
-    expect(emitted[0]).toContain('System.out.println("Hola");');
-  });
-
-  it('shows no run buttons when not runnable', () => {
+  it('shows no runnable examples when not runnable', () => {
     render(LESSON, false);
 
-    expect(element.querySelector('.prose__run')).toBeNull();
+    expect(element.querySelector('app-runnable-example')).toBeNull();
   });
 
   it('escapes raw HTML instead of rendering it', () => {
@@ -84,5 +77,52 @@ describe('MarkdownComponent', () => {
 
   it('slugifies accented headings', () => {
     expect(slugify('¿Qué es `Java`?')).toBe('que-es-java');
+  });
+});
+
+describe('renderMarkdown', () => {
+  const html = (source: string) =>
+    renderMarkdown(source)
+      .segments.map((segment) => (segment.kind === 'html' ? segment.html : ''))
+      .join('');
+
+  it('turns [!tipo] quotes into titled callouts and leaves plain quotes alone', () => {
+    const rendered = html('> [!analogia]\n> Una variable es una caja.\n\n> Una cita.');
+
+    expect(rendered).toContain('<aside class="callout callout--analogia">');
+    expect(rendered).toContain('Piénsalo así');
+    expect(rendered).toContain('<p>Una variable es una caja.</p>');
+    expect(rendered).toContain('<blockquote>');
+  });
+
+  it('draws memoria blocks with numbered references', () => {
+    const rendered = html('```memoria\nstack main\nnombre: @a\nheap\n@a String: "Ana"\n```');
+
+    expect(rendered).toContain('class="memory"');
+    expect(rendered).toContain('memory__badge">1');
+    expect(rendered).toContain('&quot;Ana&quot;');
+  });
+
+  it('keeps mermaid diagrams apart for their component', () => {
+    const { segments } = renderMarkdown('Texto\n\n```mermaid\nflowchart TD\nA-->B\n```');
+
+    expect(segments.map((segment) => segment.kind)).toEqual(['html', 'mermaid']);
+  });
+});
+
+describe('glossaryLinker', () => {
+  const explain = glossaryLinker([
+    { term: 'variable', aliases: ['variables'], definition: 'Una caja con nombre.' },
+  ]);
+
+  it('explains the first appearance only, outside code and headings', () => {
+    const result = explain(
+      '<h2>Variables</h2><p>Una <code>variable</code> es… Las variables y otra variable.</p>',
+    );
+
+    expect(result.match(/class="term"/g)).toHaveLength(1);
+    expect(result).toContain('<h2>Variables</h2>');
+    expect(result).toContain('<code>variable</code>');
+    expect(result).toContain('data-definition="Una caja con nombre.">variables</span>');
   });
 });

@@ -1,3 +1,8 @@
+Un programa no solo lee y escribe archivos sueltos: también organiza carpetas, recorre lo que hay dentro y hace limpieza. `Files` tiene una operación para cada cosa.
+
+> [!analogia]
+> Las carpetas son cajones dentro de cajones de un armario. Una ruta como `proyecto/src/main` dice "armario proyecto, cajón src, cajoncito main". `Files` es quien abre, crea, vacía o cambia de sitio esos cajones.
+
 ## Crear directorios
 
 ```java
@@ -18,7 +23,13 @@ public class Main {
 
 `createDirectory` crea solo una carpeta y falla si su padre no existe; `createDirectories` crea toda la ruta y no falla si ya existe. `resolve` añade un nombre a una ruta.
 
+> [!prueba]
+> Cambia `Files.createDirectories(carpeta)` por `Files.createDirectory(carpeta)` y ejecuta: ¿qué excepción aparece y por qué?
+
 ## Listar y recorrer
+
+> [!analogia]
+> `Files.list` es abrir un cajón y mirar lo que hay encima. `Files.walk` es vaciar el armario entero, cajón por cajón, incluidos los cajoncitos de dentro.
 
 ```java
 import java.io.IOException;
@@ -47,6 +58,9 @@ public class Main {
 ```
 
 `Files.list` y `Files.walk` devuelven streams que hay que cerrar. El orden en que el sistema devuelve los archivos no está garantizado: ordénalos si te importa.
+
+> [!cuidado]
+> Si quitas el `.sorted()`, el programa puede funcionar en tu ordenador y dar otro orden en otro. No confíes en el orden del sistema de archivos.
 
 ## Copiar, mover y borrar
 
@@ -82,8 +96,7 @@ public class Main {
 
 Todas heredan de `IOException`.
 
-## Resumen
-
-- `createDirectories` crea rutas completas; `resolve` construye rutas hijas.
-- `Files.list` recorre un nivel y `Files.walk` todos; ciérralos y ordénalos.
-- `copy`, `move`, `delete` y `deleteIfExists` para gestionar archivos.
+> [!resumen]
+> - `createDirectories` crea rutas completas; `resolve` construye rutas hijas.
+> - `Files.list` recorre un nivel y `Files.walk` todos; ciérralos y ordénalos.
+> - `copy`, `move`, `delete` y `deleteIfExists` para gestionar archivos.

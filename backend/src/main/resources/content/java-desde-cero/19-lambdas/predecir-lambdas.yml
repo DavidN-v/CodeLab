@@ -1,0 +1,39 @@
+title: ¿Qué hace cada lambda?
+summary: Sigue un Predicate y una Function paso a paso.
+difficulty: EASY
+kind: predict
+statement: |
+  Lee el programa con calma y escribe **exactamente** lo que imprime.
+
+  Pistas para leerlo:
+
+  - `removeIf` quita de la lista los elementos que cumplen la condición.
+  - `negate()` da la condición contraria.
+  - `andThen` aplica una función y después la otra.
+starter: |
+  import java.util.ArrayList;
+  import java.util.List;
+  import java.util.function.Function;
+  import java.util.function.Predicate;
+
+  public class Main {
+      public static void main(String[] args) {
+          Predicate<String> corta = s -> s.length() <= 3;
+          Function<String, String> marcar = s -> "*" + s + "*";
+
+          List<String> palabras = new ArrayList<>(List.of("sol", "luna", "mar", "estrella"));
+          palabras.removeIf(corta.negate());
+          palabras.replaceAll(s -> marcar.apply(s));
+          System.out.println(palabras);
+
+          System.out.println(marcar.andThen(String::toUpperCase).apply("hola"));
+      }
+  }
+hints:
+  - 'La idea: sigue los datos línea a línea, como si fueras el ordenador, y apunta cómo queda la lista tras cada paso.'
+  - 'Qué usar: `corta.negate()` es "no es corta", es decir, más de 3 letras; `removeIf` borra justo esas.'
+  - 'El plan: tras `removeIf` quedan `sol` y `mar`; `marcar` les pone asteriscos; en la última línea, primero se marca `hola` y después se pasa a mayúsculas.'
+tests:
+  - output: |
+      [*sol*, *mar*]
+      *HOLA*

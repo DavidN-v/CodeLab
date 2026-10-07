@@ -2,17 +2,20 @@ lessons:
   - slug: list
     title: List y ArrayList
     summary: Listas que crecen, con orden y posiciones.
-    minutes: 12
+    minutes: 7
   - slug: set
     title: Set
     summary: Colecciones sin repetidos y las tres implementaciones.
-    minutes: 10
+    minutes: 6
   - slug: map
     title: Map
     summary: Asociar claves con valores para buscar al instante.
-    minutes: 14
+    minutes: 7
 exercises:
+  - votos-con-map
   - lista-de-la-compra
   - palabras-unicas
   - frecuencia-de-palabras
   - agenda-telefonica
+  - quitar-suspensos
+  - juego-de-cartas

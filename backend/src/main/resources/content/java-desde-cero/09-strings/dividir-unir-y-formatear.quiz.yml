@@ -1,0 +1,33 @@
+questions:
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              String datos = "rojo;verde;azul";
+              String[] colores = datos.split(";");
+              System.out.println(colores.length);
+              System.out.println(String.join("-", colores));
+          }
+      }
+    answer: |
+      3
+      rojo-verde-azul
+    explanation: '`split(";")` corta por cada punto y coma y devuelve un array de 3 textos. `String.join("-", ...)` los vuelve a unir poniendo un guion entre cada dos.'
+  - type: choice
+    prompt: '¿Qué devuelve `String.format("%05d", 42)`?'
+    options:
+      - '`"00042"`'
+      - '`"42000"`'
+      - '`"   42"`'
+      - '`"42.00000"`'
+    answer: 0
+    explanation: '`%05d` es un entero en 5 posiciones rellenado con ceros **por la izquierda**. Sin el 0 (`%5d`) se rellenaría con espacios.'
+  - type: choice
+    prompt: '¿Qué imprime `System.out.println("4" + "5");`?'
+    options:
+      - '`45`'
+      - '`9`'
+      - No compila
+    answer: 0
+    explanation: 'Con textos, `+` pega uno detrás de otro. Para sumar hay que convertirlos antes: `Integer.parseInt("4") + Integer.parseInt("5")` da 9.'

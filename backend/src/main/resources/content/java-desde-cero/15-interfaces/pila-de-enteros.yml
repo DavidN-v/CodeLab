@@ -145,9 +145,9 @@ solution: |
       }
   }
 hints:
-  - "`cantidad` es a la vez el número de elementos y la posición donde irá el siguiente."
-  - "Cuando `cantidad == datos.length`, crea uno más grande con `Arrays.copyOf(datos, datos.length * 2)`."
-  - "`desapilar` puede reutilizar `cima()` (que ya comprueba si está vacía) y después decrementar `cantidad`."
+  - 'La idea: una pila es como un montón de platos: pones arriba y quitas de arriba. `cantidad` dice cuántos platos hay y, a la vez, en qué posición va el siguiente.'
+  - 'Qué usar: el array `datos`, `Arrays.copyOf(datos, datos.length * 2)` para hacerlo crecer y `throw new IllegalStateException(...)` cuando la pila está vacía.'
+  - 'El plan: `apilar`: si `cantidad == datos.length`, duplica el array; luego `datos[cantidad] = x; cantidad++;`. `cima`: si `estaVacia()`, lanza la excepción; si no, devuelve `datos[cantidad - 1]`. `desapilar`: guarda `cima()`, resta 1 a `cantidad` y devuelve el valor guardado.'
 tests:
   - input: "push 1 push 2 push 3 top size pop pop pop pop\n"
     output: |

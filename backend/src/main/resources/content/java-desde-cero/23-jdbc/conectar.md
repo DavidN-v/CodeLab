@@ -1,6 +1,12 @@
 Casi todas las aplicaciones guardan sus datos en una base de datos relacional (PostgreSQL, MySQL, Oracle…). **JDBC** (*Java Database Connectivity*) es la API estándar de Java para hablar con ellas, con la misma interfaz para todas.
 
+> [!analogia]
+> Una base de datos es como un gran archivador con cajones (las **tablas**), y cada ficha del cajón es una **fila**. JDBC es el idioma con el que tu programa le pide fichas al archivador: «dame todas las fichas del cajón productos ordenadas por precio».
+
 ## Las piezas
+
+> [!analogia]
+> El **driver** es como un adaptador de enchufe de viaje: tu programa siempre «enchufa» JDBC, y el adaptador lo convierte al enchufe de cada país (PostgreSQL, MySQL, H2…).
 
 | Pieza | Qué es |
 | --- | --- |
@@ -14,6 +20,7 @@ Casi todas las aplicaciones guardan sus datos en una base de datos relacional (P
 
 En esta plataforma tienes disponible **H2**, una base de datos escrita en Java que puede vivir en memoria. Es perfecta para aprender y para tests: se crea al conectar y desaparece al terminar el programa. Su URL es `jdbc:h2:mem:<nombre>`.
 
+> [!idea]
 > Fuera de la plataforma, para usar H2 o cualquier otra base de datos tienes que añadir su driver a tu proyecto (por ejemplo, como dependencia de Maven).
 
 ## Tu primera conexión
@@ -49,7 +56,16 @@ public class Main {
 - `Connection`, `Statement` y `ResultSet` son **recursos**: ciérralos siempre con try-with-resources.
 - Casi todo lanza `SQLException`, una checked exception.
 
+> [!prueba]
+> Añade otra línea `sentencia.executeUpdate("INSERT INTO productos VALUES (3, 'Lápiz', 0.90)");` y vuelve a ejecutar: ¿en qué posición sale el lápiz? Después cambia `ORDER BY precio` por `ORDER BY nombre`.
+
+> [!cuidado]
+> Si olvidas cerrar la conexión (por no usar try-with-resources), en un programa real se van acumulando conexiones abiertas hasta que la base de datos deja de aceptar más.
+
 ## Recorrer un ResultSet
+
+> [!analogia]
+> Un `ResultSet` es como el dedo con el que recorres una lista en papel: empieza **por encima** de la primera línea, y cada `next()` lo baja una línea.
 
 Un `ResultSet` es un cursor que empieza **antes** de la primera fila. `next()` avanza y devuelve `false` cuando no quedan filas. Para leer cada columna hay un getter por tipo, por nombre o por posición (empezando en 1):
 
@@ -90,9 +106,8 @@ public class Main {
 }
 ```
 
-## Resumen
-
-- JDBC es la API estándar; cada base de datos aporta su driver.
-- `DriverManager.getConnection(url)` → `Statement` → `executeQuery`/`executeUpdate`.
-- Recorre el `ResultSet` con `while (filas.next())` y lee con `getInt`, `getString`…
-- Cierra conexión, sentencia y resultados con try-with-resources.
+> [!resumen]
+> - JDBC es la API estándar; cada base de datos aporta su driver.
+> - `DriverManager.getConnection(url)` → `Statement` → `executeQuery`/`executeUpdate`.
+> - Recorre el `ResultSet` con `while (filas.next())` y lee con `getInt`, `getString`…
+> - Cierra conexión, sentencia y resultados con try-with-resources.

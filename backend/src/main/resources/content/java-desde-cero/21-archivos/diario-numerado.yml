@@ -54,8 +54,9 @@ solution: |
       }
   }
 hints:
-  - "`Files.write(diario, lineas)` escribe cada elemento de la lista en una línea, terminada en salto de línea."
-  - "El tamaño cuenta los bytes en UTF-8: las letras con tilde ocupan 2."
+  - 'La idea: guarda las líneas en un archivo y después haz como si no las tuvieras: léelas de nuevo desde el disco y numéralas.'
+  - 'Qué usar: `Files.write(diario, lineas)` para escribir (cada elemento en una línea), `Files.readAllLines(diario)` para leer y `Files.size(diario)` para el tamaño en bytes (las letras con tilde ocupan 2).'
+  - 'El plan: escribe la lista; guarda en `leidas` lo que devuelve `readAllLines`; recórrela con `for (int i = 0; i < leidas.size(); i++)` imprimiendo `(i + 1) + ". " + leidas.get(i)`; termina con `"Archivo: " + Files.size(diario) + " bytes"`.'
 tests:
   - input: |
       Hoy aprendí Java

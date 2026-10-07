@@ -66,9 +66,9 @@ solution: |
       }
   }
 hints:
-  - "Crea la tabla con `statement.execute(\"CREATE TABLE ...\")`."
-  - Un único `PreparedStatement` de inserción se reutiliza en cada vuelta cambiando los parámetros.
-  - "`ORDER BY puntuacion DESC, anio` ordena por dos criterios."
+  - 'La idea: primero guardas todas las películas en una tabla y después le pides a la base de datos que filtre, ordene y cuente por ti con SQL.'
+  - 'Qué usar: `statement.execute("CREATE TABLE ...")` para crear la tabla, un único `PreparedStatement` con `INSERT INTO peliculas VALUES (?, ?, ?)` reutilizado en cada línea, y un `SELECT` con `WHERE puntuacion >= 7 ORDER BY puntuacion DESC, anio`.'
+  - 'El plan: crea la tabla; por cada línea, `split(";")`, rellena los tres huecos con `setString`/`setInt` y llama a `executeUpdate()`. Después recorre el `SELECT` con `while (r.next())` imprimiendo cada película, y termina con `SELECT COUNT(*) FROM peliculas` para el total.'
 tests:
   - input: |
       Amélie;2001;8

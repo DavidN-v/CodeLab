@@ -2,16 +2,18 @@ lessons:
   - slug: por-que-objetos
     title: ¿Por qué programar con objetos?
     summary: Del código suelto a piezas que agrupan datos y comportamiento.
-    minutes: 10
+    minutes: 6
   - slug: clases-y-objetos
     title: Clases y objetos
     summary: El molde y las piezas, estado y comportamiento.
-    minutes: 12
+    minutes: 7
   - slug: encapsulacion-y-responsabilidad
     title: Encapsulación y responsabilidades
     summary: Proteger el estado y repartir el trabajo entre objetos.
-    minutes: 12
+    minutes: 7
 exercises:
+  - que-imprime-el-perro
   - contador-de-clics
   - cuenta-bancaria-basica
   - termostato
+  - arreglar-hucha

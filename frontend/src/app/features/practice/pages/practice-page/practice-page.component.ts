@@ -4,12 +4,22 @@ import { RouterLink } from '@angular/router';
 import { switchMap } from 'rxjs';
 
 import { withoutErrorNotification } from '../../../../core/interceptors/http-error.interceptor';
-import { Difficulty, ExerciseSummary, ModuleRef } from '../../../../core/models/course.model';
+import {
+  Difficulty,
+  ExerciseKind,
+  ExerciseSummary,
+  ModuleRef,
+} from '../../../../core/models/course.model';
 import { AuthService } from '../../../../core/services/auth.service';
 import { CourseService } from '../../../../core/services/course.service';
 import { ProgressService } from '../../../../core/services/progress.service';
 import { ProgressBarComponent } from '../../../../shared/components/progress-bar/progress-bar.component';
-import { DIFFICULTY_LABELS, DIFFICULTY_TAGS } from '../../../../shared/utils/labels';
+import {
+  DIFFICULTY_LABELS,
+  DIFFICULTY_TAGS,
+  KIND_ICONS,
+  KIND_LABELS,
+} from '../../../../shared/utils/labels';
 
 /** The only active course for now; the page is built per language for when there are more. */
 const LANGUAGE = 'java';
@@ -37,6 +47,16 @@ export class PracticePageComponent {
   protected readonly difficultyLabels = DIFFICULTY_LABELS;
   protected readonly difficultyTags = DIFFICULTY_TAGS;
   protected readonly difficulties: Difficulty[] = ['EASY', 'MEDIUM', 'HARD'];
+  protected readonly kindLabels = KIND_LABELS;
+  protected readonly kindIcons = KIND_ICONS;
+  protected readonly kinds: ExerciseKind[] = [
+    'PREDICT',
+    'FILL',
+    'PARSONS',
+    'CODE',
+    'FIX',
+    'PROJECT',
+  ];
 
   protected readonly catalog = rxResource({
     stream: () =>
@@ -58,6 +78,7 @@ export class PracticePageComponent {
   protected readonly query = signal('');
   protected readonly difficulty = signal<Difficulty | 'ALL'>('ALL');
   protected readonly status = signal<StatusFilter>('all');
+  protected readonly kind = signal<ExerciseKind | 'ALL'>('ALL');
 
   private readonly solved = computed(
     () => new Set(this.progress.value()?.solvedExerciseSlugs ?? []),
@@ -77,7 +98,9 @@ export class PracticePageComponent {
         normalize(exercise.title).includes(query) ||
         normalize(exercise.summary).includes(query) ||
         normalize(exercise.module.title).includes(query);
-      const matchesDifficulty = difficulty === 'ALL' || exercise.difficulty === difficulty;
+      const matchesDifficulty =
+        (difficulty === 'ALL' || exercise.difficulty === difficulty) &&
+        (this.kind() === 'ALL' || exercise.kind === this.kind());
       const isSolved = this.solved().has(exercise.slug);
       const matchesStatus = status === 'all' || (status === 'solved' ? isSolved : !isSolved);
       if (matchesQuery && matchesDifficulty && matchesStatus) {
@@ -108,6 +131,10 @@ export class PracticePageComponent {
 
   protected onDifficulty(event: Event): void {
     this.difficulty.set((event.target as HTMLSelectElement).value as Difficulty | 'ALL');
+  }
+
+  protected onKind(event: Event): void {
+    this.kind.set((event.target as HTMLSelectElement).value as ExerciseKind | 'ALL');
   }
 
   protected onStatus(event: Event): void {

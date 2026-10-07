@@ -3,8 +3,9 @@
     <p class="page__eyebrow">Práctica · Java</p>
     <h1 id="practice-heading" class="page__title">Ejercicios</h1>
     <p class="page__lead">
-      Cada ejercicio se corrige solo: tu código se ejecuta contra pruebas visibles y ocultas en un
-      entorno aislado. Resuélvelos para ganar experiencia.
+      Cada ejercicio se corrige solo. Hay varios tipos para ir de menos a más: adivinar qué imprime
+      un programa, completar huecos, ordenar líneas, arreglar errores, escribir programas enteros y
+      proyectos.
     </p>
   </header>
 
@@ -12,6 +13,12 @@
     <a class="playground-card" routerLink="/practice/playground">
       <span class="playground-card__title">Playground ▸</span>
       <span class="playground-card__text">Un editor libre para probar cualquier idea en Java.</span>
+    </a>
+    <a class="playground-card" routerLink="/practice/visualizer">
+      <span class="playground-card__title">👣 Visualizador ▸</span>
+      <span class="playground-card__text"
+        >Mira un programa ejecutarse línea a línea, con sus variables.</span
+      >
     </a>
     @if (progress.value()) {
       <div class="practice__progress">
@@ -38,6 +45,15 @@
         <option value="ALL">Todas</option>
         @for (level of difficulties; track level) {
           <option [value]="level">{{ difficultyLabels[level] }}</option>
+        }
+      </select>
+    </div>
+    <div class="field">
+      <label class="field__label" for="practice-kind">Tipo</label>
+      <select id="practice-kind" class="input" (change)="onKind($event)">
+        <option value="ALL">Todos</option>
+        @for (option of kinds; track option) {
+          <option [value]="option">{{ kindIcons[option] }} {{ kindLabels[option] }}</option>
         }
       </select>
     </div>
@@ -90,7 +106,10 @@
                 >
                 <span class="exercise">
                   <span class="exercise__title">{{ exercise.title }}</span>
-                  <span class="exercise__summary">{{ exercise.summary }}</span>
+                  <span class="exercise__summary"
+                    >{{ kindIcons[exercise.kind] }} {{ kindLabels[exercise.kind] }} ·
+                    {{ exercise.summary }}</span
+                  >
                 </span>
                 <span class="tag" [class]="difficultyTags[exercise.difficulty]">{{
                   difficultyLabels[exercise.difficulty]

@@ -80,8 +80,9 @@ solution: |
       }
   }
 hints:
-  - Guarda los valores anteriores en una pila; `ArrayDeque` con `push` y `pop` sirve perfectamente.
-  - "El texto de `cambiar` es el resto de la línea: `linea.substring(\"cambiar \".length())`."
+  - 'La idea: la clase recuerda todos los valores anteriores como una pila de platos: el último que guardas es el primero que recuperas al deshacer.'
+  - 'Qué usar: una clase genérica `Historial<T>` con un campo `T actual` y una `Deque<T>` creada con `new ArrayDeque<>()`; `push` guarda arriba, `pop` saca el de arriba y `size` dice cuántos hay.'
+  - 'El plan: `cambiar` hace `anteriores.push(actual); actual = nuevo;`. `deshacer` devuelve `false` si la pila está vacía; si no, `actual = anteriores.pop();` y `true`. En el `main`, el texto de `cambiar` es `linea.substring("cambiar ".length())`.'
 tests:
   - input: |
       ver

@@ -1,0 +1,35 @@
+questions:
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int[] v = {3, 8, 2, 8, 5};
+              int pos = -1;
+              for (int i = 0; i < v.length; i++) {
+                  if (v[i] == 8) {
+                      pos = i;
+                  }
+              }
+              System.out.println(pos);
+          }
+      }
+    answer: |
+      3
+    explanation: 'El bucle no se detiene al encontrar el primer 8 (no hay `return` ni `break`), así que `pos` se sobrescribe y se queda con la **última** aparición: la posición 3.'
+  - type: choice
+    prompt: 'Para buscar el máximo de `{-4, -9, -1}`, ¿con qué valor debe empezar la variable `maximo`?'
+    options:
+      - 'Con el primer elemento, `datos[0]`'
+      - 'Con `0`'
+      - 'Con `datos.length`'
+    answer: 0
+    explanation: 'Si empiezas con 0, ningún valor negativo lo supera y el resultado sería 0, que ni está en el array. Empezar con `datos[0]` garantiza que el máximo es uno de los datos.'
+  - type: choice
+    prompt: '¿Qué imprime `System.out.println(datos)` si `datos` es un `int[]`?'
+    options:
+      - 'Algo como `[I@1b6d3586`, no el contenido'
+      - 'El contenido, por ejemplo `[1, 2, 3]`'
+      - 'Solo el primer elemento'
+    answer: 0
+    explanation: 'Un array no sabe imprimirse bonito: `println` muestra su tipo y una especie de dirección. Para ver el contenido usa `Arrays.toString(datos)`.'

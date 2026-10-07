@@ -7,6 +7,7 @@ import { AuthService } from '../../../../core/services/auth.service';
 import { CodeHandoffService } from '../../../../core/services/code-handoff.service';
 import { CourseService } from '../../../../core/services/course.service';
 import { ProgressService } from '../../../../core/services/progress.service';
+import { TutorService } from '../../../../core/services/tutor.service';
 import { LessonPageComponent } from './lesson-page.component';
 
 const COURSE_REF = {
@@ -27,6 +28,7 @@ const LESSON: LessonDetail = {
   position: 1,
   contentMarkdown:
     '## La clase\n\n```java\npublic class Main {\n    public static void main(String[] args) {}\n}\n```\n',
+  quiz: [],
   course: COURSE_REF,
   module: MODULE_REF,
   previous: null,
@@ -73,16 +75,15 @@ describe('LessonPageComponent', () => {
   let navigate: ReturnType<typeof vi.spyOn>;
 
   beforeEach(async () => {
-    completeLesson = vi
-      .fn()
-      .mockReturnValue(
-        of({
-          lessonId: 10,
-          completedAt: '2026-10-06T10:00:00Z',
-          newlyCompleted: true,
-          xpAwarded: 10,
-        }),
-      );
+    completeLesson = vi.fn().mockReturnValue(
+      of({
+        lessonId: 10,
+        completedAt: '2026-10-06T10:00:00Z',
+        newlyCompleted: true,
+        xpAwarded: 10,
+        celebration: null,
+      }),
+    );
     await TestBed.configureTestingModule({
       imports: [LessonPageComponent],
       providers: [
@@ -93,6 +94,7 @@ describe('LessonPageComponent', () => {
             getPrimaryCourse: () => of({ id: 1 }),
             getLesson: () => of(LESSON),
             getModule: () => of(MODULE),
+            getGlossary: () => of([]),
           },
         },
         {
@@ -100,6 +102,7 @@ describe('LessonPageComponent', () => {
           useValue: { getCourseProgress: () => of({ completedLessonIds: [] }), completeLesson },
         },
         { provide: AuthService, useValue: { isAuthenticated: () => true } },
+        { provide: TutorService, useValue: { isEnabled: () => of(false) } },
       ],
     }).compileComponents();
     navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
@@ -130,7 +133,9 @@ describe('LessonPageComponent', () => {
   });
 
   it('hands runnable examples to the playground', () => {
-    element.querySelector<HTMLButtonElement>('.prose__run')!.click();
+    Array.from(element.querySelectorAll<HTMLButtonElement>('app-runnable-example button'))
+      .find((button) => button.textContent?.includes('Playground'))!
+      .click();
 
     expect(TestBed.inject(CodeHandoffService).take()).toContain('public class Main');
     expect(navigate).toHaveBeenCalledWith(['/practice/playground']);

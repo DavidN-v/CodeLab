@@ -67,8 +67,9 @@ solution: |
       }
   }
 hints:
-  - "`Collectors.groupingBy(Cliente::ciudad, TreeMap::new, Collectors.toList())` agrupa en un mapa ordenado por ciudad."
-  - Para cada grupo, `mapToInt(...).sum()` da el total y un `sorted` con dos criterios seguido de `findFirst()` da el mejor.
+  - 'La idea: haz un montón de clientes por ciudad, con las ciudades en orden alfabético, y para cada montón calcula cuántos son, cuánto suman y quién gasta más.'
+  - 'Qué usar: `Collectors.groupingBy(Cliente::ciudad, TreeMap::new, Collectors.toList())` para el mapa ordenado; dentro de cada grupo, `mapToInt(...).sum()`, `Comparator.comparingInt(Cliente::gasto).reversed().thenComparing(Cliente::nombre)` y `Collectors.joining(", ")`.'
+  - 'El plan: recorre el mapa con `porCiudad.forEach((ciudad, grupo) -> { ... })`; el mejor es `grupo.stream().sorted(comparador).findFirst().orElseThrow()`; imprime la línea resumen y después `"  "` más los nombres ordenados unidos con `", "`.'
 tests:
   - input: |
       Ada,Madrid,120

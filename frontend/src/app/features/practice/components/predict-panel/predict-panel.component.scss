@@ -1,0 +1,66 @@
+@use 'mixins' as *;
+
+:host {
+  display: block;
+  overflow: auto;
+}
+
+.predict {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4) var(--space-4);
+}
+
+.predict__code {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--font-mono);
+  font-size: var(--editor-font-size, var(--text-sm));
+  line-height: 1.7;
+
+  li {
+    display: flex;
+    white-space: pre;
+  }
+}
+
+.predict__number {
+  flex: 0 0 2.5rem;
+  padding-right: var(--space-3);
+  color: var(--color-text-subtle);
+  text-align: right;
+  user-select: none;
+}
+
+.predict__label {
+  @include mono-label;
+  color: var(--color-text-muted);
+}
+
+.predict__stdin pre {
+  margin-top: var(--space-1);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-surface);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+}
+
+.predict__answer {
+  min-height: 7rem;
+  padding: var(--space-3);
+  border: 1px solid var(--color-accent);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-console-bg);
+  color: var(--color-text);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  resize: vertical;
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--color-accent-soft);
+  }
+}

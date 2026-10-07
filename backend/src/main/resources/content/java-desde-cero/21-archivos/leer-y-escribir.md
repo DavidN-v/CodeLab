@@ -1,5 +1,8 @@
 Los programas reales guardan datos entre ejecuciones: configuraciones, registros, exportaciones. La API moderna para archivos es `java.nio.file`, con dos protagonistas: `Path` (una ruta) y `Files` (las operaciones).
 
+> [!analogia]
+> Un `Path` es la dirección de una casa: dice dónde está, pero no abre la puerta ni mira dentro. `Files` es el cartero: con esa dirección puede dejar cartas (escribir), recogerlas (leer) o comprobar si la casa existe.
+
 ## Path
 
 ```java
@@ -19,6 +22,9 @@ public class Main {
 `Path.of` une las partes con el separador del sistema (`/` en Linux y macOS, `\` en Windows): no escribas los separadores a mano.
 
 Las rutas **relativas** como `notas.txt` se resuelven desde el directorio de trabajo del programa. En esta plataforma cada ejecución tiene su propio directorio vacío y temporal: puedes crear archivos en él, pero desaparecen al terminar.
+
+> [!cuidado]
+> Crear un `Path` no crea ningún archivo. `Path.of("notas.txt")` solo apunta una dirección; el archivo existe cuando escribes en él con `Files`.
 
 ## Escribir y leer de una vez
 
@@ -44,6 +50,9 @@ public class Main {
 }
 ```
 
+> [!prueba]
+> Añade `"azúcar"` a la lista de la compra (`List.of("pan", "leche", "huevos", "azúcar")`) y ejecuta: ¿cuántas líneas dice ahora que tiene el archivo?
+
 - `writeString` y `write` **crean** el archivo o **sobrescriben** su contenido.
 - `readString` devuelve todo el texto; `readAllLines`, una lista con una entrada por línea.
 - Todos usan UTF-8 por defecto.
@@ -52,6 +61,9 @@ public class Main {
 ## Añadir al final
 
 Para no sobrescribir, pasa una opción:
+
+> [!analogia]
+> Escribir sin opciones es arrancar la hoja del cuaderno y empezar una nueva. `APPEND` es seguir escribiendo debajo de lo que ya había.
 
 ```java
 import java.io.IOException;
@@ -69,6 +81,9 @@ public class Main {
     }
 }
 ```
+
+> [!prueba]
+> Quita `, StandardOpenOption.APPEND` de la última escritura y ejecuta: ¿qué queda en el registro?
 
 ## Comprobar antes
 
@@ -88,9 +103,8 @@ public class Main {
 }
 ```
 
-## Resumen
-
-- `Path.of(...)` construye rutas portables; `Files` hace las operaciones.
-- `Files.writeString`/`write` escriben (sobrescribiendo); `readString`/`readAllLines` leen.
-- `StandardOpenOption.APPEND` añade al final.
-- Las operaciones de archivo lanzan `IOException`.
+> [!resumen]
+> - `Path.of(...)` construye rutas portables; `Files` hace las operaciones.
+> - `Files.writeString`/`write` escriben (sobrescribiendo); `readString`/`readAllLines` leen.
+> - `StandardOpenOption.APPEND` añade al final.
+> - Las operaciones de archivo lanzan `IOException`.

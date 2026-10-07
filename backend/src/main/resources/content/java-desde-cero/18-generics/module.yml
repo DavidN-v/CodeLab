@@ -2,16 +2,18 @@ lessons:
   - slug: clases-genericas
     title: Clases genéricas
     summary: Escribir una clase una vez y usarla con cualquier tipo, con seguridad.
-    minutes: 12
+    minutes: 6
   - slug: metodos-genericos-y-limites
     title: Métodos genéricos y límites
     summary: Parámetros de tipo en métodos y restricciones con extends.
-    minutes: 12
+    minutes: 6
   - slug: comodines
     title: Comodines
     summary: "? extends, ? super y cuándo usar cada uno."
-    minutes: 10
+    minutes: 6
 exercises:
+  - que-imprime-la-caja
   - par-generico
   - maximo-generico
   - caja-de-historial
+  - pila-generica-rota

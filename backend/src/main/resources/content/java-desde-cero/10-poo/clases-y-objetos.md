@@ -2,6 +2,9 @@
 
 Una **clase** describe cómo son y qué saben hacer los objetos de un tipo. Un **objeto** (o instancia) es una pieza concreta creada a partir de ese molde. Una clase `Perro` hay una; perros, tantos como crees.
 
+> [!analogia]
+> Una clase es un molde de galletas; los objetos son las galletas. Con un solo molde haces muchas galletas con la misma forma, y cada una puede llevar su propio glaseado: todas son `Perro`, pero una se llama Toby y otra Luna.
+
 ```java
 class Perro {
     // Campos: el estado de cada perro
@@ -40,11 +43,30 @@ public class Main {
 - El operador **punto** accede a los campos y métodos de un objeto concreto: `toby.nombre`, `luna.ladrar()`.
 - Cada objeto tiene **sus propios** valores: cambiar el nombre de `toby` no afecta a `luna`.
 
+> [!prueba]
+> Añade al final `toby.edad = 10;` y `System.out.println(toby.edadHumana());`. ¿Cambia algo en `luna`?
+
+Así queda la memoria justo antes de los `println`: dos variables en la pila, cada una con una flecha hacia su propio perro en el montón.
+
+```memoria
+stack main
+toby: @1
+luna: @2
+heap
+@1 Perro: nombre=@3, edad=3
+@2 Perro: nombre=@4, edad=5
+@3 String: "Toby"
+@4 String: "Luna"
+```
+
 Fíjate en que los métodos de `Perro` **no** llevan `static`: pertenecen a cada perro, y dentro de ellos `nombre` se refiere al nombre del perro sobre el que se llamó.
 
 ## Varias clases en un archivo
 
 En un proyecto real cada clase pública va en su propio archivo (`Perro.java`, `Main.java`). En esta plataforma trabajas en un único archivo, así que pon las clases auxiliares **sin** `public` antes o después de la clase `Main`. Así lo harán todos los ejercicios de estos módulos.
+
+> [!cuidado]
+> Si escribes `public class Perro` en el mismo archivo que `public class Main`, el programa no compila: solo puede haber una clase `public` por archivo.
 
 ## Valores por defecto
 
@@ -81,9 +103,11 @@ public class Main {
 
 `new Producto[2]` crea el array, pero sus dos posiciones valen `null` hasta que creas los productos.
 
-## Resumen
+> [!analogia]
+> Un array de objetos es una fila de taquillas vacías. `new Producto[2]` monta las taquillas; cada `new Producto()` mete una galleta dentro.
 
-- La clase define campos (estado) y métodos (comportamiento); `new` crea objetos.
-- El punto accede al estado y al comportamiento de un objeto concreto.
-- Cada objeto tiene sus propios valores de los campos.
-- En un único archivo, las clases auxiliares van sin `public`.
+> [!resumen]
+> - La clase es el molde: define campos (estado) y métodos (comportamiento); `new` crea objetos.
+> - El punto accede al estado y al comportamiento de un objeto concreto.
+> - Cada objeto tiene sus propios valores de los campos.
+> - En un único archivo, las clases auxiliares van sin `public`.

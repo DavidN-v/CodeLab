@@ -2,16 +2,19 @@ lessons:
   - slug: que-es-una-variable
     title: ¿Qué es una variable?
     summary: Declarar, inicializar y reasignar valores con nombre.
-    minutes: 10
+    minutes: 6
   - slug: nombres-y-convenciones
     title: Nombres y convenciones
     summary: Qué nombres admite Java, cuáles son buenos y cuándo usar var.
-    minutes: 8
+    minutes: 5
   - slug: ambito-y-constantes
     title: Ámbito y constantes
     summary: Dónde existe una variable y cómo impedir que cambie con final.
-    minutes: 10
+    minutes: 5
 exercises:
+  - predice-la-variable
+  - ordena-la-cuenta
   - intercambiar-valores
   - area-del-rectangulo
   - ficha-de-usuario
+  - arregla-el-saldo

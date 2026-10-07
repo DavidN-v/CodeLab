@@ -1,5 +1,8 @@
 Hasta ahora tus programas ejecutaban todas sus líneas, siempre. Con `if` decides **qué** se ejecuta según una condición.
 
+> [!analogia]
+> Un `if` es como una bifurcación en un camino con un cartel: «si llueve, coge el paraguas». Según la respuesta a la pregunta, vas por un lado o por otro.
+
 ## if
 
 ```java
@@ -16,9 +19,21 @@ public class Main {
 
 La condición va entre paréntesis y debe ser un `boolean`. Si es `true`, se ejecuta el bloque entre llaves; si es `false`, se salta.
 
+> [!prueba]
+> Cambia `int temperatura = 32;` por `int temperatura = 20;` y vuelve a ejecutar: ¿qué línea desaparece y cuál se imprime igualmente?
+
 ## else
 
 `else` indica qué hacer cuando la condición es falsa. Siempre se ejecuta exactamente una de las dos ramas:
+
+```mermaid
+flowchart TD
+    A["Lee la edad"] --> B{"edad >= 18"}
+    B -- "true" --> C["Puedes votar."]
+    B -- "false" --> D["Te faltan ... años"]
+    C --> E["Fin"]
+    D --> E
+```
 
 ```java
 import java.util.Scanner;
@@ -36,7 +51,8 @@ public class Main {
 }
 ```
 
-Prueba en el playground con distintas edades en el panel de entrada.
+> [!prueba]
+> Ejecútalo con `18` en el panel de entrada y después con `15`: ¿qué rama se ejecuta cada vez?
 
 ## Las llaves
 
@@ -54,7 +70,8 @@ if (saldo < 0)
     bloquearCuenta();   // ¡se ejecuta siempre!
 ```
 
-> **Regla:** pon siempre llaves, aunque el bloque tenga una línea.
+> [!cuidado]
+> La sangría no decide qué está dentro del `if`: lo deciden las llaves. Pon siempre llaves, aunque el bloque tenga una sola línea.
 
 ## Condiciones compuestas
 
@@ -85,9 +102,11 @@ if (tieneDescuento == true) { ... }  // redundante
 if (!tieneDescuento) { ... }         // en vez de == false
 ```
 
-## Resumen
+> [!cuidado]
+> `if (edad = 18)` no compila: `=` asigna. Para comparar se usa `==`.
 
-- `if (condición) { ... }` ejecuta el bloque solo si la condición es `true`.
-- `else { ... }` cubre el caso contrario: se ejecuta exactamente una de las dos ramas.
-- Usa llaves siempre.
-- Una variable `boolean` ya es una condición: no la compares con `true`.
+> [!resumen]
+> - `if (condición) { ... }` ejecuta el bloque solo si la condición es `true`.
+> - `else { ... }` cubre el caso contrario: se ejecuta exactamente una de las dos ramas.
+> - Usa llaves siempre.
+> - Una variable `boolean` ya es una condición: no la compares con `true`.

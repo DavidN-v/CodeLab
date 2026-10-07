@@ -2,6 +2,9 @@
 
 Desde Java 8 una interfaz puede incluir métodos **con cuerpo**, marcados con `default`. Las clases que la implementan los heredan y pueden sobrescribirlos si quieren:
 
+> [!analogia]
+> Es como un contrato de alquiler que trae una cláusula ya redactada: «la limpieza la hace el inquilino». Si no dices nada, se aplica tal cual. Si lo pactas de otra forma, tu versión la sustituye.
+
 ```java
 interface Saludador {
     String nombre();
@@ -38,7 +41,31 @@ public class Main {
 }
 ```
 
+> [!prueba]
+> Borra el método `saludar()` de `Mayordomo` y vuelve a ejecutar: ahora Alfred saluda como el robot, con la versión `default` de la interfaz.
+
+```mermaid
+classDiagram
+    Saludador <|.. Robot
+    Saludador <|.. Mayordomo
+    class Saludador {
+        <<interface>>
+        +nombre()* String
+        +saludar() String
+    }
+    class Robot {
+        +nombre() String
+    }
+    class Mayordomo {
+        +nombre() String
+        +saludar() String
+    }
+```
+
 Los métodos `default` se inventaron para poder **ampliar** interfaces existentes sin romper las clases que ya las implementaban. Por ejemplo, `List` ganó `forEach` y `removeIf` así. Úsalos para comportamiento que se pueda expresar a partir de los métodos abstractos de la interfaz.
+
+> [!cuidado]
+> Un método `default` no puede usar campos de la clase, porque la interfaz no los conoce. Solo puede apoyarse en otros métodos de la interfaz, como hace `saludar()` con `nombre()`.
 
 ## Métodos static
 
@@ -76,6 +103,9 @@ Los campos de una interfaz son siempre `public static final`. Se pueden usar par
 
 Una interfaz con **un solo** método abstracto se llama **funcional** y puede implementarse con una lambda. Puedes marcarla con `@FunctionalInterface` para que el compilador lo compruebe:
 
+> [!analogia]
+> Una interfaz funcional es como un hueco con forma de una sola pieza: cualquier pieza que encaje vale, y una lambda es la forma más rápida de fabricarla.
+
 ```java
 @FunctionalInterface
 interface Operacion {
@@ -92,8 +122,7 @@ public class Main {
 }
 ```
 
-## Resumen
-
-- `default` añade métodos con cuerpo que las clases heredan y pueden sobrescribir.
-- `static` en una interfaz da utilidades y fábricas: `Moneda.euros(10)`.
-- Una interfaz con un solo método abstracto es funcional y se implementa con una lambda.
+> [!resumen]
+> - `default` añade métodos con cuerpo que las clases heredan y pueden sobrescribir.
+> - `static` en una interfaz da utilidades y fábricas: `Moneda.euros(10)`.
+> - Una interfaz con un solo método abstracto es funcional y se implementa con una lambda.

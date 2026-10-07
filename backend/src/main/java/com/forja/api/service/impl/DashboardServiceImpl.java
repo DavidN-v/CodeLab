@@ -5,6 +5,8 @@ import com.forja.api.dto.DashboardResponse;
 import com.forja.api.dto.DashboardResponse.Achievement;
 import com.forja.api.dto.DashboardResponse.ActivityDay;
 import com.forja.api.dto.DashboardResponse.CourseCard;
+import com.forja.api.dto.DashboardResponse.DailyGoal;
+import com.forja.api.dto.DashboardResponse.ReviewItem;
 import com.forja.api.dto.DashboardResponse.Level;
 import com.forja.api.dto.DashboardResponse.RecentSubmission;
 import com.forja.api.dto.DashboardResponse.Streak;
@@ -55,6 +57,8 @@ public class DashboardServiceImpl implements DashboardService {
 
 	private static final int RECENT_SUBMISSIONS = 6;
 
+	private static final int REVIEWS_SHOWN = 3;
+
 	private final AuthService authService;
 
 	private final CourseRepository courseRepository;
@@ -75,11 +79,14 @@ public class DashboardServiceImpl implements DashboardService {
 
 	private final Clock clock;
 
+	private final ExperienceTracker experienceTracker;
+
 	public DashboardServiceImpl(AuthService authService, CourseRepository courseRepository,
 			LessonRepository lessonRepository, ExerciseRepository exerciseRepository,
 			LessonProgressRepository lessonProgressRepository, ExerciseProgressRepository exerciseProgressRepository,
 			SubmissionRepository submissionRepository, CourseProgressCalculator calculator, RefMapper refMapper,
-			Clock clock) {
+			Clock clock, ExperienceTracker experienceTracker) {
+		this.experienceTracker = experienceTracker;
 		this.authService = authService;
 		this.courseRepository = courseRepository;
 		this.lessonRepository = lessonRepository;
@@ -167,7 +174,15 @@ public class DashboardServiceImpl implements DashboardService {
 		return new DashboardResponse(user, xp,
 				new Level(level.number(), level.title(), level.minXp(), level.nextLevelXp()),
 				new Streak(streak.current(), streak.longest(), streak.activeToday()), totals, activity, courses, recent,
-				achievements(lessonProgress, exerciseProgress, streak, progressByCourse));
+				achievements(lessonProgress, exerciseProgress, streak, progressByCourse),
+				new DailyGoal(user.dailyGoalXp(),
+						experienceTracker.xpSince(userId, today.atStartOfDay(zone).toInstant())),
+				exerciseProgressRepository.findDueReviews(userId, clock.instant(), Limit.of(REVIEWS_SHOWN))
+					.stream()
+					.map(progress -> new ReviewItem(progress.getExercise().getSlug(), progress.getExercise().getTitle(),
+							progress.getExercise().getModule().getTitle(), progress.getSolvedAt()))
+					.toList(),
+				exerciseProgressRepository.countDueReviews(userId, clock.instant()));
 	}
 
 	private static List<Achievement> achievements(List<LessonProgress> lessons, List<ExerciseProgress> exercises,

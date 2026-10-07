@@ -1,0 +1,90 @@
+title: Completa la conversión
+summary: Convierte textos en números y quita los céntimos con un casting.
+difficulty: EASY
+kind: fill
+statement: |
+  Una caja registradora recibe dos líneas de **texto**: el número de unidades (un entero) y el precio de cada una (con decimales). Rellena los huecos para:
+
+  1. Convertir el primer texto en un `int`.
+  2. Convertir el segundo texto en un `double`.
+  3. Quitar los céntimos del total con un casting.
+
+  **Ejemplo:** con la entrada
+
+  ```
+  3
+  19.95
+  ```
+
+  la salida es:
+
+  ```
+  Total: 59.85
+  Sin céntimos: 59
+  ```
+starter: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          String textoUnidades = entrada.nextLine();
+          String textoPrecio = entrada.nextLine();
+          int unidades = Integer.{{?}}(textoUnidades.trim());
+          double precio = Double.{{?}}(textoPrecio.trim());
+          double total = unidades * precio;
+          int euros = ({{?}}) total;
+          System.out.printf("Total: %.2f%n", total);
+          System.out.println("Sin céntimos: " + euros);
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          String textoUnidades = entrada.nextLine();
+          String textoPrecio = entrada.nextLine();
+          int unidades = Integer.parseInt(textoUnidades.trim());
+          double precio = Double.parseDouble(textoPrecio.trim());
+          double total = unidades * precio;
+          int euros = (int) total;
+          System.out.printf("Total: %.2f%n", total);
+          System.out.println("Sin céntimos: " + euros);
+      }
+  }
+answers:
+  - parseInt
+  - parseDouble
+  - int
+hints:
+  - 'La idea: los datos llegan como texto y hay que convertirlos en números para poder multiplicarlos. Al final, el total decimal se pasa a entero.'
+  - 'Qué usar: los envoltorios `Integer` y `Double` tienen métodos `parse...` que convierten texto en número. Para pasar de `double` a `int` se escribe el tipo entre paréntesis.'
+  - 'El plan: `Integer.parseInt(...)`, `Double.parseDouble(...)` y `(int) total`.'
+tests:
+  - input: |
+      3
+      19.95
+    output: |
+      Total: 59.85
+      Sin céntimos: 59
+    sample: true
+  - input: |
+      2
+      0.5
+    output: |
+      Total: 1.00
+      Sin céntimos: 1
+  - input: |
+      4
+      2.75
+    output: |
+      Total: 11.00
+      Sin céntimos: 11
+  - input: |
+      0
+      5
+    output: |
+      Total: 0.00
+      Sin céntimos: 0

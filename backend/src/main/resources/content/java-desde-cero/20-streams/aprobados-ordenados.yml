@@ -52,8 +52,9 @@ solution: |
       }
   }
 hints:
-  - "`filter(a -> a.nota() >= 5)` y después `sorted(...)` con un comparador que use `reversed()` y `thenComparing`."
-  - "`Collectors.joining(\", \")` une los nombres; `mapToDouble(Alumno::nota).average()` da la media."
+  - 'La idea: una sola tubería que se queda con los aprobados, los ordena y saca sus nombres; la media se calcula sobre esos mismos aprobados.'
+  - 'Qué usar: `filter(a -> a.nota() >= 5)`, `sorted(...)` con `Comparator.comparing(Alumno::nota).reversed().thenComparing(Alumno::nombre)`, `Collectors.joining(", ")` y `mapToDouble(Alumno::nota).average()`.'
+  - 'El plan: guarda los aprobados ordenados en una lista con `toList()`; si está vacía, imprime `Ninguno` y `Media de aprobados: -`; si no, une sus nombres con `joining` y formatea la media con `String.format("%.2f", ...)`.'
 tests:
   - input: |
       Ada 9.5

@@ -47,6 +47,14 @@ public class Exercise extends BaseEntity {
 	@Column(name = "solution_code", nullable = false, columnDefinition = "text")
 	private String solutionCode;
 
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false, length = 10)
+	private ExerciseKind kind = ExerciseKind.CODE;
+
+	/** PARSONS only: the lines in order and the distractors, as JSON. */
+	@Column(name = "parsons_json", columnDefinition = "text")
+	private String parsonsJson;
+
 	@Column(nullable = false)
 	private boolean published;
 
@@ -70,8 +78,11 @@ public class Exercise extends BaseEntity {
 	}
 
 	public void update(CourseModule module, String title, String summary, Difficulty difficulty,
-			String statementMarkdown, String starterCode, String solutionCode, int displayOrder) {
+			ExerciseKind kind, String statementMarkdown, String starterCode, String solutionCode, String parsonsJson,
+			int displayOrder) {
 		this.module = module;
+		this.kind = kind;
+		this.parsonsJson = parsonsJson;
 		this.title = title;
 		this.summary = summary;
 		this.difficulty = difficulty;
@@ -131,6 +142,14 @@ public class Exercise extends BaseEntity {
 
 	public Difficulty getDifficulty() {
 		return difficulty;
+	}
+
+	public ExerciseKind getKind() {
+		return kind;
+	}
+
+	public String getParsonsJson() {
+		return parsonsJson;
 	}
 
 	public String getStatementMarkdown() {

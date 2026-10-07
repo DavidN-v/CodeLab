@@ -1,0 +1,43 @@
+questions:
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      class Caja<T> {
+          private T contenido;
+
+          void guardar(T valor) {
+              contenido = valor;
+          }
+
+          T sacar() {
+              return contenido;
+          }
+      }
+
+      public class Main {
+          public static void main(String[] args) {
+              Caja<Integer> caja = new Caja<>();
+              caja.guardar(4);
+              caja.guardar(caja.sacar() * 10);
+              System.out.println(caja.sacar() + 1);
+          }
+      }
+    answer: |
+      41
+    explanation: '`sacar()` devuelve un `Integer`, así que se puede multiplicar sin conversiones: la caja pasa de 4 a 40. Después `40 + 1` es una suma de números (no de textos), y sale 41.'
+  - type: choice
+    prompt: ¿Cuál de estas declaraciones **no** compila?
+    options:
+      - Caja<int> caja = new Caja<>();
+      - Caja<Integer> caja = new Caja<>();
+      - Caja<String> caja = new Caja<String>();
+    answer: 0
+    explanation: Los parámetros de tipo solo admiten tipos objeto. Para enteros se usa el envoltorio `Integer`. La tercera opción compila, aunque el diamante `<>` permite no repetir `String`.
+  - type: choice
+    prompt: ¿Cuál es la principal ventaja de `List<String>` frente a una `List` sin tipo?
+    options:
+      - Los errores de tipo aparecen al compilar, no al ejecutar
+      - El programa se ejecuta mucho más rápido
+      - La lista puede guardar cualquier tipo de objeto
+    answer: 0
+    explanation: Con el tipo indicado, el compilador impide meter un número en una lista de textos y no hace falta convertir al sacar. Sin genéricos, el error salta en ejecución con una `ClassCastException`.

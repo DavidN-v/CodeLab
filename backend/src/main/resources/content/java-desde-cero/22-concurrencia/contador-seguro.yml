@@ -67,8 +67,9 @@ solution: |
       }
   }
 hints:
-  - "`contador++` sobre un campo compartido es leer, sumar y escribir: dos hilos pueden pisarse."
-  - "Cambia el campo por `static final AtomicLong contador = new AtomicLong();` y usa `incrementAndGet()` y `get()`."
+  - 'La idea: varios hilos hacen `contador++` sobre el mismo campo, y ese `++` son tres pasos (leer, sumar, escribir) en los que un hilo puede pisar a otro. Tienes que hacer que cada incremento sea indivisible.'
+  - 'Qué usar: un `AtomicLong` (de `java.util.concurrent.atomic`), cuyo método `incrementAndGet()` suma 1 de forma atómica. Otra opción es un método `synchronized`.'
+  - 'El plan: cambia el campo por `static final AtomicLong contador = new AtomicLong();`, sustituye `contador++` por `contador.incrementAndGet()` y, al imprimir, usa `contador.get()`.'
 tests:
   - input: "2 1000\n"
     output: |

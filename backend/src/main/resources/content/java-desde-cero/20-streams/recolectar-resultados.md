@@ -1,6 +1,11 @@
+Al final de la cinta hay que meter los elementos en algún sitio o resumirlos en un número. Esta lección muestra las operaciones terminales que **resumen**: sumar, contar, agrupar y combinar.
+
 ## Streams numéricos
 
 `mapToInt`, `mapToDouble` y `mapToLong` convierten a streams de primitivos, que traen estadísticas listas:
+
+> [!analogia]
+> Es como pasar los tickets de la compra por una calculadora: en cuanto solo quedan números, te da la suma, la media, el máximo y el mínimo sin que tengas que hacer las cuentas.
 
 ```java
 import java.util.List;
@@ -21,6 +26,9 @@ public class Main {
     }
 }
 ```
+
+> [!cuidado]
+> `average()` devuelve un `OptionalDouble`, no un número: si la lista está vacía no hay media. Ábrelo con `orElse(0)` (o el valor que tenga sentido) antes de usarlo.
 
 ## collect y Collectors
 
@@ -47,9 +55,15 @@ public class Main {
 }
 ```
 
+> [!prueba]
+> Cambia `Collectors.joining(", ", "[", "]")` por `Collectors.joining(" - ")` y ejecuta: ¿cómo cambia la segunda línea?
+
 ## groupingBy: agrupar
 
 El collector más potente: agrupa los elementos en un `Map` según una clave.
+
+> [!analogia]
+> `groupingBy` es repartir la ropa limpia en montones: uno por cada dueño. La clave (`Alumno::curso`) dice a qué montón va cada prenda.
 
 ```java
 import java.util.List;
@@ -87,6 +101,9 @@ public class Main {
 
 `reduce` combina todos los elementos en uno con una operación:
 
+> [!analogia]
+> `reduce` es una bola de nieve que rueda: empieza con un valor inicial y va absorbiendo cada elemento hasta quedar una sola bola.
+
 ```java
 import java.util.List;
 
@@ -102,9 +119,8 @@ public class Main {
 
 El primer argumento es el valor inicial (el neutro de la operación). Para sumas usa mejor `mapToInt(...).sum()`.
 
-## Resumen
-
-- `mapToInt` y compañía dan `sum`, `average`, `max` y `summaryStatistics`.
-- `collect(Collectors.toSet() / joining / toMap)` reúne en otras estructuras.
-- `groupingBy` agrupa en un mapa; `partitioningBy` separa en verdadero/falso.
-- `reduce` combina todo en un único valor.
+> [!resumen]
+> - `mapToInt` y compañía dan `sum`, `average`, `max` y `summaryStatistics`.
+> - `collect(Collectors.toSet() / joining / toMap)` reúne en otras estructuras.
+> - `groupingBy` agrupa en un mapa; `partitioningBy` separa en verdadero/falso.
+> - `reduce` combina todo en un único valor.

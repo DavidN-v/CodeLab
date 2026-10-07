@@ -1,0 +1,48 @@
+title: ¿Qué imprime? Dos nombres, un objeto
+summary: Predice la salida cuando dos variables señalan el mismo objeto.
+difficulty: MEDIUM
+kind: predict
+statement: |
+  Lee el programa y escribe **exactamente** lo que imprime, línea por línea.
+
+  Pista para leerlo: dibuja en un papel cada objeto que se crea con `new` y una flecha desde cada variable hasta el objeto al que apunta. Cuando una variable cambia de flecha, tacha la vieja.
+starter: |
+  class Globo {
+      String color;
+      int aire;
+
+      Globo(String color) {
+          this.color = color;
+      }
+
+      void inflar(int soplos) {
+          aire += soplos;
+      }
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Globo a = new Globo("rojo");
+          Globo b = a;
+          Globo c = new Globo("azul");
+
+          a.inflar(3);
+          b.inflar(2);
+          c.inflar(1);
+          b = c;
+          b.inflar(4);
+
+          System.out.println(a.color + " " + a.aire);
+          System.out.println(b.color + " " + b.aire);
+          System.out.println(a == b);
+      }
+  }
+hints:
+  - 'La idea: solo hay dos globos (dos `new`), pero tres variables. Lo importante es a qué globo señala cada variable en cada momento.'
+  - 'Qué usar: `b = a` copia la flecha, no el globo; `a == b` es `true` solo si las dos señalan el mismo globo.'
+  - 'El plan: al principio `a` y `b` señalan el rojo, que recibe 3 + 2 soplos. Después `b = c` hace que `b` señale el azul, que tenía 1 y recibe 4 más.'
+tests:
+  - output: |
+      rojo 5
+      azul 5
+      false

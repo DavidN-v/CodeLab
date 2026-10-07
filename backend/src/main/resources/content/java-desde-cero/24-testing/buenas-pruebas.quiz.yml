@@ -1,0 +1,57 @@
+questions:
+  - type: choice
+    prompt: ¿Cuál es el orden del ciclo de TDD?
+    options:
+      - Rojo (prueba que falla), verde (código mínimo), refactorizar
+      - Verde, rojo, refactorizar
+      - Escribir todo el código y después las pruebas
+      - Refactorizar, rojo, verde
+    answer: 0
+    explanation: 'Primero escribes una prueba y compruebas que falla (si pasara, no probaría nada). Después el código mínimo para que pase, y por último lo limpias con las pruebas como red de seguridad.'
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      import static org.junit.jupiter.api.Assertions.assertEquals;
+      import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+
+      import org.junit.jupiter.params.ParameterizedTest;
+      import org.junit.jupiter.params.provider.CsvSource;
+      import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
+      import org.junit.platform.launcher.core.LauncherFactory;
+      import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
+
+      class Paridad {
+          static boolean esPar(int n) {
+              return n % 2 == 0;
+          }
+      }
+
+      class ParidadTest {
+          @ParameterizedTest
+          @CsvSource({"2, true", "7, false", "0, true", "9, true"})
+          void detectaLosPares(int n, boolean esperado) {
+              assertEquals(esperado, Paridad.esPar(n));
+          }
+      }
+
+      public class Main {
+          public static void main(String[] args) {
+              var peticion = LauncherDiscoveryRequestBuilder.request().selectors(selectClass(ParidadTest.class)).build();
+              var resumen = new SummaryGeneratingListener();
+              LauncherFactory.create().execute(peticion, resumen);
+              System.out.println(resumen.getSummary().getTestsSucceededCount() + "/"
+                      + resumen.getSummary().getTestsFoundCount() + " pruebas superadas");
+          }
+      }
+    answer: |
+      3/4 pruebas superadas
+    explanation: 'Cada fila de `@CsvSource` es una prueba distinta: 4 en total. La fila `"9, true"` está mal escrita (9 es impar), así que esa falla y pasan 3.'
+  - type: choice
+    prompt: Una prueba usa `LocalDate.now()` y pasa hoy, pero falla mañana. ¿Qué propiedad de una buena prueba incumple?
+    options:
+      - Repetible
+      - Rápida
+      - Clara
+      - Parametrizada
+    answer: 0
+    explanation: Una prueba repetible da el mismo resultado siempre. Si depende de la fecha actual, cambia de un día a otro; la solución es usar una fecha fija o un `Clock` fijo.

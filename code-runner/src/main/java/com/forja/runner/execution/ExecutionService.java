@@ -2,7 +2,10 @@ package com.forja.runner.execution;
 
 import com.forja.runner.config.RunnerProperties;
 import com.forja.runner.config.SandboxLimits;
+import com.forja.runner.config.TraceProperties;
+import com.forja.runner.execution.ExecutionResult.RunResult;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import org.springframework.stereotype.Service;
@@ -42,6 +45,42 @@ public class ExecutionService {
 		finally {
 			slots.release();
 		}
+	}
+
+	/** Runs the program once under the tracer, for the step-by-step visualizer. */
+	public TraceResult trace(TraceRequest request) {
+		LanguageRuntime runtime = runtimeRegistry.find(request.language())
+			.orElseThrow(() -> new ExecutionRejectedException(
+					"Language '%s' is not supported by this runner".formatted(request.language())));
+		TraceProperties trace = runtime.properties().trace();
+		if (trace == null) {
+			throw new ExecutionRejectedException("Language '%s' cannot be traced".formatted(request.language()));
+		}
+		checkLimits(new ExecutionRequest(request.language(), request.sourceCode(), List.of(request.stdin())),
+				runtime.limits());
+
+		ExecutionResult result;
+		acquireSlot();
+		try {
+			result = sandbox.execute(runtime, request.sourceCode(), List.of(request.stdin()),
+					new DockerSandbox.RunPlan(trace.command(), trace.timeout(), trace.output()));
+		}
+		finally {
+			slots.release();
+		}
+		if (result.status() == ExecutionStatus.COMPILATION_ERROR) {
+			return new TraceResult(ExecutionStatus.COMPILATION_ERROR, result.compile(), null, null);
+		}
+		if (result.runs().isEmpty() || result.runs().get(0).timedOut()) {
+			return new TraceResult(ExecutionStatus.TIMEOUT, result.compile(), null, "The tracer did not finish");
+		}
+		RunResult run = result.runs().get(0);
+		String json = run.stdout().strip();
+		if (run.stdoutTruncated() || !json.startsWith("{") || !json.endsWith("}")) {
+			return new TraceResult(ExecutionStatus.TIMEOUT, result.compile(), null,
+					"Unusable trace (exit %d): %s".formatted(run.exitCode(), run.stderr()));
+		}
+		return new TraceResult(ExecutionStatus.COMPLETED, result.compile(), json, null);
 	}
 
 	private static void checkLimits(ExecutionRequest request, SandboxLimits limits) {

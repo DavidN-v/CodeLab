@@ -2,6 +2,9 @@
 
 ¿Qué área tiene una "figura"? Ninguna en concreto: solo los círculos, rectángulos o triángulos tienen área. Una clase **abstracta** representa un concepto general que nunca se instancia directamente, solo a través de sus subclases.
 
+> [!analogia]
+> En una tienda no puedes comprar «una fruta» en general: compras manzanas, peras o plátanos. «Fruta» es una idea que agrupa lo común; las piezas reales son siempre de un tipo concreto. Una clase abstracta es esa idea general.
+
 ```java
 abstract class Figura {
     private final String nombre;
@@ -55,13 +58,45 @@ public class Main {
 }
 ```
 
+> [!prueba]
+> Quita las barras `//` de la última línea del `main` y ejecuta: el compilador se queja de que `Figura` es abstracta. Vuelve a ponerlas y cambia `new Circulo(1)` por `new Circulo(2)`: el área se multiplica por cuatro.
+
+```mermaid
+classDiagram
+    Figura <|-- Circulo
+    Figura <|-- Rectangulo
+    class Figura {
+        <<abstract>>
+        -String nombre
+        +area()* double
+        +describir() String
+    }
+    class Circulo {
+        -double radio
+        +area() double
+    }
+    class Rectangulo {
+        -double ancho
+        -double alto
+        +area() double
+    }
+```
+
+En el diagrama, `<<abstract>>` marca la clase abstracta y el asterisco `*` marca el método abstracto.
+
 - `abstract class` no se puede instanciar con `new`.
 - Un **método abstracto** no tiene cuerpo (termina en `;`) y obliga a cada subclase concreta a implementarlo. Si una subclase no lo hace, también tiene que ser abstracta.
 - Una clase abstracta **sí** puede tener campos, constructores y métodos normales.
 
+> [!cuidado]
+> Si una subclase olvida implementar un método abstracto, no compila: «Circulo is not abstract and does not override abstract method area()». El mensaje te dice exactamente qué método falta.
+
 ## El patrón plantilla
 
 `describir()` es un **método plantilla**: fija los pasos generales y deja que las subclases rellenen el detalle (`area()`). Es una de las formas más útiles de la herencia: el algoritmo vive en un sitio y lo que varía, en las subclases.
+
+> [!analogia]
+> Es como un formulario con huecos: el texto fijo está impreso (`describir`) y cada persona rellena su hueco (`area`).
 
 ## protected
 
@@ -86,9 +121,8 @@ En el módulo de Interfaces verás otra forma de definir "lo que algo debe saber
 - Una **clase abstracta** puede tener estado (campos) y constructores, pero solo se puede extender una.
 - Una **interfaz** define capacidades sin estado, y una clase puede implementar muchas.
 
-## Resumen
-
-- `abstract class` representa un concepto general que no se instancia.
-- Los métodos `abstract` no tienen cuerpo y obligan a las subclases a implementarlos.
-- El método plantilla fija el algoritmo y delega los detalles en las subclases.
-- `protected` abre acceso a las subclases; prefiere campos `private` con métodos `protected`.
+> [!resumen]
+> - `abstract class` representa un concepto general que no se instancia.
+> - Los métodos `abstract` no tienen cuerpo y obligan a las subclases a implementarlos.
+> - El método plantilla fija el algoritmo y delega los detalles en las subclases.
+> - `protected` abre acceso a las subclases; prefiere campos `private` con métodos `protected`.

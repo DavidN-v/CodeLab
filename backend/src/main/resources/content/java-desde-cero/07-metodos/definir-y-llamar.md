@@ -1,5 +1,8 @@
 A medida que un programa crece, meterlo todo en `main` se vuelve inmanejable. Un **método** es un bloque de código con nombre que puedes ejecutar (llamar) tantas veces como quieras.
 
+> [!analogia]
+> Un método es como una receta de cocina. La escribes una vez con un nombre («tortilla») y, cada vez que quieres una, solo dices «haz una tortilla». No vuelves a explicar todos los pasos.
+
 ## Tu primer método
 
 ```java
@@ -24,9 +27,18 @@ public class Main {
 
 Cuando Java encuentra una llamada, salta al método, ejecuta su cuerpo y vuelve justo después de la llamada.
 
+> [!prueba]
+> Añade una tercera llamada `saludar();` al final de `main` y vuelve a ejecutar: ¿cuántas veces aparece ahora «Bienvenido a Forja.»?
+
+> [!cuidado]
+> Si escribes un método **dentro** de `main`, el programa no compila. Cada método va suelto dentro de la clase, uno detrás de otro.
+
 ## Con parámetros
 
 Los **parámetros** son variables que el método recibe al ser llamado:
+
+> [!analogia]
+> Los parámetros son los ingredientes que le das a la receta. La receta «saludar» es siempre la misma, pero puedes darle un nombre distinto cada vez.
 
 ```java
 public class Main {
@@ -45,9 +57,15 @@ public class Main {
 
 Los valores que pasas en la llamada (`"Ada"`, `2`) se llaman **argumentos**. Se asignan a los parámetros en orden, y deben coincidir en número y tipo.
 
+> [!prueba]
+> Cambia `saludar("Grace", 1);` por `saludar(1, "Grace");` y ejecuta: ¿qué error da? El orden importa.
+
 ## Con valor de retorno
 
 Un método puede calcular algo y **devolverlo** con `return`. En lugar de `void`, se indica el tipo del resultado:
+
+> [!analogia]
+> Un método con `return` es como una máquina de zumos: le das naranjas (los argumentos) y te devuelve un vaso de zumo (el resultado), que puedes beberte, guardar o mezclar con otra cosa.
 
 ```java
 public class Main {
@@ -89,6 +107,9 @@ public class Main {
 }
 ```
 
+> [!cuidado]
+> Llamar a un método que devuelve algo y no usar el resultado no da error, pero el valor se pierde: `cuadrado(7);` solo, en una línea, calcula 49 y lo tira.
+
 ## Por qué usar métodos
 
 - **Reutilizar:** escribes la lógica una vez y la llamas donde haga falta.
@@ -96,11 +117,11 @@ public class Main {
 - **Probar por partes:** cada método se puede comprobar por separado.
 - **Cambiar en un solo sitio:** si la regla cambia, se corrige una vez.
 
-> **Regla práctica:** un método debería hacer **una sola cosa** y su nombre debería decir cuál. Si te cuesta ponerle nombre, probablemente hace demasiado.
+> [!idea]
+> Un método debería hacer **una sola cosa** y su nombre debería decir cuál. Si te cuesta ponerle nombre, probablemente hace demasiado.
 
-## Resumen
-
-- `static tipo nombre(parámetros) { ... }` declara un método.
-- `void` si no devuelve nada; si devuelve, `return valor;` en todos los caminos.
-- Los argumentos se asignan a los parámetros en orden.
-- Métodos cortos, con un nombre que diga lo que hacen.
+> [!resumen]
+> - `static tipo nombre(parámetros) { ... }` declara un método.
+> - `void` si no devuelve nada; si devuelve, `return valor;` en todos los caminos.
+> - Los argumentos se asignan a los parámetros en orden.
+> - Métodos cortos, con un nombre que diga lo que hacen.

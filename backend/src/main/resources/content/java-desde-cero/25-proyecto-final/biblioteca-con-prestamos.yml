@@ -163,9 +163,9 @@ solution: |
       }
   }
 hints:
-  - Guarda los importes en céntimos (enteros) y formatea los euros solo al escribir; evitarás problemas de redondeo con `double`.
-  - "`fecha.plusDays(14)` calcula el vencimiento y `ChronoUnit.DAYS.between(vence, devolucion)` los días de retraso."
-  - Comprueba las reglas en el orden del enunciado y lanza excepciones con el mensaje exacto; el `main` solo tiene que añadir `Error:` delante.
+  - 'La idea: es un gestor como el de tareas, con libros, socios y préstamos. Ve orden a orden: primero `libro` y `socio`, después `prestar` y `devolver`, y al final `pagar` y `estado`. Prueba cada una antes de seguir.'
+  - 'Qué usar: mapas para libros y socios, `fecha.plusDays(14)` para el vencimiento y `ChronoUnit.DAYS.between(vence, devolucion)` para los días de retraso. Guarda los importes en céntimos (enteros) y formatea los euros solo al escribir, para evitar errores de redondeo con `double`.'
+  - 'El plan: una clase `Biblioteca` con un método por orden que compruebe las reglas en el orden del enunciado y lance excepciones con el mensaje exacto. El `main` lee cada línea, llama al método que toca y, si hay excepción, escribe `Error: ` + el mensaje.'
 tests:
   - input: |
       libro L1 El Quijote

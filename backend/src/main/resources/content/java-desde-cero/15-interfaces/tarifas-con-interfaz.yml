@@ -1,0 +1,118 @@
+title: Tarifas de alquiler
+summary: Completa una interfaz con un método default y dos clases que la implementan.
+difficulty: EASY
+kind: fill
+statement: |
+  Una empresa alquila patinetes con dos tarifas: la **plana** cuesta siempre 10 € y la **por minuto** cuesta 2 € cada minuto.
+
+  La interfaz `Tarifa` declara `precio(minutos)` y trae un método `default` que construye el ticket. Rellena los huecos para que:
+
+  - `Tarifa` sea una interfaz.
+  - `TarifaPlana` se comprometa a cumplir el contrato de `Tarifa`.
+  - Su método `precio` tenga el acceso correcto.
+  - El `main` imprima el ticket de cada viaje.
+
+  La entrada tiene líneas `<tipo> <minutos>`, con el tipo `plana` o `minuto`. Por cada una se escribe `<minutos> min: <precio> €`.
+starter: |
+  import java.util.Scanner;
+
+  {{?}} Tarifa {
+      int precio(int minutos);
+
+      default String ticket(int minutos) {
+          return minutos + " min: " + precio(minutos) + " €";
+      }
+  }
+
+  class TarifaPlana {{?}} Tarifa {
+      @Override
+      {{?}} int precio(int minutos) {
+          return 10;
+      }
+  }
+
+  class TarifaPorMinuto implements Tarifa {
+      @Override
+      public int precio(int minutos) {
+          return minutos * 2;
+      }
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          while (entrada.hasNext()) {
+              String tipo = entrada.next();
+              int minutos = entrada.nextInt();
+              Tarifa tarifa = tipo.equals("plana") ? new TarifaPlana() : new TarifaPorMinuto();
+              System.out.println(tarifa.{{?}}(minutos));
+          }
+      }
+  }
+answers:
+  - interface
+  - implements
+  - public
+  - ticket
+solution: |
+  import java.util.Scanner;
+
+  interface Tarifa {
+      int precio(int minutos);
+
+      default String ticket(int minutos) {
+          return minutos + " min: " + precio(minutos) + " €";
+      }
+  }
+
+  class TarifaPlana implements Tarifa {
+      @Override
+      public int precio(int minutos) {
+          return 10;
+      }
+  }
+
+  class TarifaPorMinuto implements Tarifa {
+      @Override
+      public int precio(int minutos) {
+          return minutos * 2;
+      }
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          while (entrada.hasNext()) {
+              String tipo = entrada.next();
+              int minutos = entrada.nextInt();
+              Tarifa tarifa = tipo.equals("plana") ? new TarifaPlana() : new TarifaPorMinuto();
+              System.out.println(tarifa.ticket(minutos));
+          }
+      }
+  }
+hints:
+  - 'La idea: `Tarifa` es un contrato, `TarifaPlana` lo firma y el `main` pide a cada tarifa su ticket ya formateado.'
+  - 'Qué usar: la palabra que declara un contrato, la que usa una clase para cumplirlo (fíjate en `TarifaPorMinuto`), el acceso que tienen siempre los métodos de una interfaz y el método `default` que devuelve el texto completo.'
+  - 'El plan: los huecos son, en orden, `interface`, `implements`, `public` y `ticket`.'
+tests:
+  - input: |
+      plana 30
+      minuto 3
+    output: |
+      30 min: 10 €
+      3 min: 6 €
+    sample: true
+  - input: |
+      minuto 0
+      plana 0
+    output: |
+      0 min: 0 €
+      0 min: 10 €
+  - input: |
+      minuto 12
+      minuto 5
+      plana 90
+    output: |
+      12 min: 24 €
+      5 min: 10 €
+      90 min: 10 €

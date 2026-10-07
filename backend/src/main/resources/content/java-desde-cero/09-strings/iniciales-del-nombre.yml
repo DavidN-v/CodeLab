@@ -1,0 +1,60 @@
+title: Iniciales del nombre
+summary: Completa un programa que saca las iniciales con split y StringBuilder.
+difficulty: EASY
+kind: fill
+statement: |
+  Completa los huecos para que el programa lea un nombre completo (las palabras pueden estar separadas por varios espacios y venir en minúscula) y escriba sus iniciales en mayúscula, cada una seguida de un punto.
+
+  **Ejemplos:**
+
+  - `ada king lovelace` → `A.K.L.`
+  - `  Grace   hopper ` → `G.H.`
+starter: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          String nombre = entrada.nextLine();
+          String[] partes = nombre.strip().split({{?}});
+          StringBuilder iniciales = {{?}};
+          for (String parte : partes) {
+              char primera = parte.{{?}}(0);
+              iniciales.append(Character.toUpperCase(primera)).append('.');
+          }
+          System.out.println(iniciales.{{?}}());
+      }
+  }
+answers:
+  - '"\\s+"'
+  - new StringBuilder()
+  - charAt
+  - toString
+solution: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          String nombre = entrada.nextLine();
+          String[] partes = nombre.strip().split("\\s+");
+          StringBuilder iniciales = new StringBuilder();
+          for (String parte : partes) {
+              char primera = parte.charAt(0);
+              iniciales.append(Character.toUpperCase(primera)).append('.');
+          }
+          System.out.println(iniciales.toString());
+      }
+  }
+hints:
+  - 'La idea: parte el nombre en palabras, quédate con la primera letra de cada una y ve pegándolas en un texto que crece.'
+  - 'Qué usar: `split` con la expresión que significa «uno o más espacios», un `StringBuilder` vacío para ir construyendo, `charAt` para sacar una letra y `toString` para obtener el texto final.'
+  - 'El plan: `split("\\s+")` → `new StringBuilder()` → `parte.charAt(0)` → `iniciales.toString()`.'
+tests:
+  - input: "ada king lovelace\n"
+    output: "A.K.L.\n"
+    sample: true
+  - input: "  Grace   hopper \n"
+    output: "G.H.\n"
+  - input: "Linus\n"
+    output: "L.\n"

@@ -68,9 +68,9 @@ solution: |
       }
   }
 hints:
-  - "`sealed interface Descuento permits Porcentaje, Fijo, DosPorUno {}` y cada record con `implements Descuento`."
-  - "En el switch: `case Porcentaje p -> ...` y usa `p.porcentaje()`."
-  - Con dos por uno pagas `unidades - unidades / 2` unidades.
+  - 'La idea: hay exactamente tres tipos de descuento, y cada uno cambia el precio de una forma. Una lista cerrada de tipos encaja con una interfaz sellada.'
+  - 'Qué usar: `sealed interface Descuento permits Porcentaje, Fijo, DosPorUno {}`, tres `record` con `implements Descuento`, y un `switch (d)` con patrones como `case Porcentaje p -> ...`.'
+  - 'El plan: calcula `bruto = precioUnidad * unidades`. Porcentaje: `bruto - bruto * p.porcentaje() / 100`. Fijo: `Math.max(0, bruto - f.cantidad())`. Dos por uno: pagas `unidades - unidades / 2` unidades.'
 tests:
   - input: |
       100 3 porcentaje 10
