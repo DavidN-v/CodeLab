@@ -1,0 +1,104 @@
+title: Canales de aviso
+summary: Una interfaz con método default y varias implementaciones.
+difficulty: EASY
+statement: |
+  Declara una interfaz `Canal` con:
+
+  - `String nombre()`, abstracto.
+  - `String formatear(String mensaje)`, abstracto.
+  - un método `default String enviar(String mensaje)` que devuelva `"[" + nombre() + "] " + formatear(mensaje)`.
+
+  Implementa tres canales:
+
+  - `Email`: nombre `email`, deja el mensaje igual.
+  - `Sms`: nombre `sms`, recorta el mensaje a sus primeros 10 caracteres.
+  - `Altavoz`: nombre `altavoz`, lo pasa a mayúsculas y añade `!`.
+
+  La entrada es un mensaje (una línea). Envíalo por los tres canales, en ese orden, y escribe cada resultado.
+starter: |
+  import java.util.List;
+  import java.util.Scanner;
+
+  // Declara la interfaz Canal y sus implementaciones
+
+  public class Main {
+      public static void main(String[] args) {
+          String mensaje = new Scanner(System.in).nextLine();
+          // List<Canal> canales = List.of(new Email(), new Sms(), new Altavoz());
+          // for (Canal canal : canales) System.out.println(canal.enviar(mensaje));
+      }
+  }
+solution: |
+  import java.util.List;
+  import java.util.Scanner;
+
+  interface Canal {
+      String nombre();
+
+      String formatear(String mensaje);
+
+      default String enviar(String mensaje) {
+          return "[" + nombre() + "] " + formatear(mensaje);
+      }
+  }
+
+  class Email implements Canal {
+      @Override
+      public String nombre() {
+          return "email";
+      }
+
+      @Override
+      public String formatear(String mensaje) {
+          return mensaje;
+      }
+  }
+
+  class Sms implements Canal {
+      @Override
+      public String nombre() {
+          return "sms";
+      }
+
+      @Override
+      public String formatear(String mensaje) {
+          return mensaje.length() <= 10 ? mensaje : mensaje.substring(0, 10);
+      }
+  }
+
+  class Altavoz implements Canal {
+      @Override
+      public String nombre() {
+          return "altavoz";
+      }
+
+      @Override
+      public String formatear(String mensaje) {
+          return mensaje.toUpperCase() + "!";
+      }
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          String mensaje = new Scanner(System.in).nextLine();
+          List<Canal> canales = List.of(new Email(), new Sms(), new Altavoz());
+          for (Canal canal : canales) {
+              System.out.println(canal.enviar(mensaje));
+          }
+      }
+  }
+hints:
+  - Los métodos que implementan una interfaz deben ser `public`.
+  - "En `Sms`, si el mensaje tiene 10 caracteres o menos, `substring(0, 10)` fallaría: compruébalo antes."
+tests:
+  - input: "Tu pedido ha llegado\n"
+    output: |
+      [email] Tu pedido ha llegado
+      [sms] Tu pedido
+      [altavoz] TU PEDIDO HA LLEGADO!
+    sample: true
+  - input: "Hola\n"
+    output: |
+      [email] Hola
+      [sms] Hola
+      [altavoz] HOLA!

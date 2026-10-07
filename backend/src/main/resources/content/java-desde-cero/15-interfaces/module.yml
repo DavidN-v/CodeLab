@@ -1,0 +1,17 @@
+lessons:
+  - slug: contratos
+    title: Interfaces como contratos
+    summary: Definir qué debe saber hacer un tipo sin decir cómo.
+    minutes: 12
+  - slug: default-y-static
+    title: Métodos default y static
+    summary: Interfaces que traen comportamiento y utilidades.
+    minutes: 10
+  - slug: comparable-y-diseno
+    title: Comparable y el diseño con interfaces
+    summary: Ordenar tus propios objetos y depender de abstracciones.
+    minutes: 12
+exercises:
+  - alumnos-ordenados
+  - canales-de-aviso
+  - pila-de-enteros

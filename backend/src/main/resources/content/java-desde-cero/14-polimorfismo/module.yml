@@ -1,0 +1,17 @@
+lessons:
+  - slug: enlace-dinamico
+    title: Un mensaje, muchos comportamientos
+    summary: Variables del tipo general, objetos del tipo concreto y enlace dinámico.
+    minutes: 12
+  - slug: instanceof-y-conversiones
+    title: instanceof y conversiones de tipo
+    summary: Upcasting, downcasting y pattern matching.
+    minutes: 10
+  - slug: clases-selladas
+    title: Clases selladas y switch con patrones
+    summary: Jerarquías cerradas que el compilador puede comprobar.
+    minutes: 12
+exercises:
+  - coro-de-animales
+  - nomina-polimorfica
+  - descuentos-sellados

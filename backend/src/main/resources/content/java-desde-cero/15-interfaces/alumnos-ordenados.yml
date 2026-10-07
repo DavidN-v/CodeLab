@@ -1,0 +1,100 @@
+title: Clasificación de alumnos
+summary: Implementa Comparable con un criterio de desempate.
+difficulty: MEDIUM
+statement: |
+  Haz que `Alumno` implemente `Comparable<Alumno>` para ordenar de **mayor a menor nota** y, a igual nota, por **nombre alfabético**.
+
+  La entrada empieza con `n` y sigue con `n` líneas `<nombre> <nota>` (nota entera). El `main` ya ordena con `Collections.sort` e imprime la clasificación con el formato `<posición>. <nombre> - <nota>`.
+starter: |
+  import java.util.ArrayList;
+  import java.util.Collections;
+  import java.util.List;
+  import java.util.Scanner;
+
+  class Alumno {
+      final String nombre;
+      final int nota;
+
+      Alumno(String nombre, int nota) {
+          this.nombre = nombre;
+          this.nota = nota;
+      }
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int n = entrada.nextInt();
+          List<Alumno> alumnos = new ArrayList<>();
+          for (int i = 0; i < n; i++) {
+              alumnos.add(new Alumno(entrada.next(), entrada.nextInt()));
+          }
+          // Collections.sort(alumnos);  ← funciona cuando Alumno implemente Comparable
+          for (int i = 0; i < alumnos.size(); i++) {
+              Alumno a = alumnos.get(i);
+              System.out.println((i + 1) + ". " + a.nombre + " - " + a.nota);
+          }
+      }
+  }
+solution: |
+  import java.util.ArrayList;
+  import java.util.Collections;
+  import java.util.List;
+  import java.util.Scanner;
+
+  class Alumno implements Comparable<Alumno> {
+      final String nombre;
+      final int nota;
+
+      Alumno(String nombre, int nota) {
+          this.nombre = nombre;
+          this.nota = nota;
+      }
+
+      @Override
+      public int compareTo(Alumno otro) {
+          int porNota = Integer.compare(otro.nota, nota);
+          return porNota != 0 ? porNota : nombre.compareTo(otro.nombre);
+      }
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int n = entrada.nextInt();
+          List<Alumno> alumnos = new ArrayList<>();
+          for (int i = 0; i < n; i++) {
+              alumnos.add(new Alumno(entrada.next(), entrada.nextInt()));
+          }
+          Collections.sort(alumnos);
+          for (int i = 0; i < alumnos.size(); i++) {
+              Alumno a = alumnos.get(i);
+              System.out.println((i + 1) + ". " + a.nombre + " - " + a.nota);
+          }
+      }
+  }
+hints:
+  - "`Integer.compare(otro.nota, nota)` (con `otro` primero) ordena de mayor a menor."
+  - "Si el resultado es 0, desempata con `nombre.compareTo(otro.nombre)`."
+tests:
+  - input: |
+      4
+      Grace 8
+      Ada 9
+      Alan 8
+      Linus 6
+    output: |
+      1. Ada - 9
+      2. Alan - 8
+      3. Grace - 8
+      4. Linus - 6
+    sample: true
+  - input: |
+      3
+      Zoe 5
+      Ana 5
+      Eva 5
+    output: |
+      1. Ana - 5
+      2. Eva - 5
+      3. Zoe - 5

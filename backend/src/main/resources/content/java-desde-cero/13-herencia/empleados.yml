@@ -1,0 +1,131 @@
+title: Nómina de empleados
+summary: Una subclase que extiende el constructor y sobrescribe un método.
+difficulty: EASY
+statement: |
+  La clase `Empleado` ya calcula el sueldo con `sueldo()`, que devuelve el sueldo base. Crea una subclase `Gerente` que:
+
+  - Reciba además un `bonus` en su constructor y llame a `super(...)`.
+  - Sobrescriba `sueldo()` para devolver el sueldo base más el bonus.
+
+  La entrada tiene líneas `empleado <nombre> <base>` o `gerente <nombre> <base> <bonus>`. El `main` crea el objeto adecuado e imprime `<nombre>: <sueldo>`, y al final `Total: <suma de sueldos>`.
+starter: |
+  import java.util.Scanner;
+
+  class Empleado {
+      private final String nombre;
+      private final int base;
+
+      Empleado(String nombre, int base) {
+          this.nombre = nombre;
+          this.base = base;
+      }
+
+      String getNombre() {
+          return nombre;
+      }
+
+      int sueldo() {
+          return base;
+      }
+  }
+
+  // Crea aquí la clase Gerente
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int total = 0;
+          while (entrada.hasNext()) {
+              String tipo = entrada.next();
+              String nombre = entrada.next();
+              int base = entrada.nextInt();
+              Empleado e;
+              if (tipo.equals("gerente")) {
+                  int bonus = entrada.nextInt();
+                  e = new Empleado(nombre, base); // cámbialo por new Gerente(nombre, base, bonus)
+              } else {
+                  e = new Empleado(nombre, base);
+              }
+              System.out.println(e.getNombre() + ": " + e.sueldo());
+              total += e.sueldo();
+          }
+          System.out.println("Total: " + total);
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  class Empleado {
+      private final String nombre;
+      private final int base;
+
+      Empleado(String nombre, int base) {
+          this.nombre = nombre;
+          this.base = base;
+      }
+
+      String getNombre() {
+          return nombre;
+      }
+
+      int sueldo() {
+          return base;
+      }
+  }
+
+  class Gerente extends Empleado {
+      private final int bonus;
+
+      Gerente(String nombre, int base, int bonus) {
+          super(nombre, base);
+          this.bonus = bonus;
+      }
+
+      @Override
+      int sueldo() {
+          return super.sueldo() + bonus;
+      }
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int total = 0;
+          while (entrada.hasNext()) {
+              String tipo = entrada.next();
+              String nombre = entrada.next();
+              int base = entrada.nextInt();
+              Empleado e;
+              if (tipo.equals("gerente")) {
+                  int bonus = entrada.nextInt();
+                  e = new Gerente(nombre, base, bonus);
+              } else {
+                  e = new Empleado(nombre, base);
+              }
+              System.out.println(e.getNombre() + ": " + e.sueldo());
+              total += e.sueldo();
+          }
+          System.out.println("Total: " + total);
+      }
+  }
+hints:
+  - "`class Gerente extends Empleado` y, en su constructor, `super(nombre, base);` como primera línea."
+  - "En el `sueldo()` sobrescrito, `super.sueldo()` te da el sueldo base."
+tests:
+  - input: |
+      empleado Ada 2000
+      gerente Grace 3000 500
+    output: |
+      Ada: 2000
+      Grace: 3500
+      Total: 5500
+    sample: true
+  - input: |
+      gerente Linus 1000 0
+      empleado Alan 1500
+      gerente Margaret 4000 1200
+    output: |
+      Linus: 1000
+      Alan: 1500
+      Margaret: 5200
+      Total: 7700

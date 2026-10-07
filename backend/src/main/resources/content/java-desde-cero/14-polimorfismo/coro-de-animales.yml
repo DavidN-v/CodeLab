@@ -1,0 +1,147 @@
+title: Coro de animales
+summary: Un array del tipo padre y una llamada que cada objeto resuelve a su manera.
+difficulty: EASY
+statement: |
+  La clase abstracta `Animal` tiene un nombre y un método abstracto `String sonido()`, y un método `String cantar()` que devuelve `"<nombre> hace <sonido>"`.
+
+  Crea las subclases `Perro` (`guau`), `Gato` (`miau`), `Vaca` (`muu`) y `Pato` (`cuac`).
+
+  La entrada tiene líneas `<tipo> <nombre>` (con el tipo en minúsculas). El `main` guarda los animales en una lista y después imprime lo que canta cada uno.
+starter: |
+  import java.util.ArrayList;
+  import java.util.List;
+  import java.util.Scanner;
+
+  abstract class Animal {
+      private final String nombre;
+
+      Animal(String nombre) {
+          this.nombre = nombre;
+      }
+
+      abstract String sonido();
+
+      String cantar() {
+          return nombre + " hace " + sonido();
+      }
+  }
+
+  // Crea aquí las cuatro subclases
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          List<Animal> coro = new ArrayList<>();
+          while (entrada.hasNext()) {
+              String tipo = entrada.next();
+              String nombre = entrada.next();
+              // coro.add(...) según el tipo
+          }
+          for (Animal animal : coro) {
+              System.out.println(animal.cantar());
+          }
+      }
+  }
+solution: |
+  import java.util.ArrayList;
+  import java.util.List;
+  import java.util.Scanner;
+
+  abstract class Animal {
+      private final String nombre;
+
+      Animal(String nombre) {
+          this.nombre = nombre;
+      }
+
+      abstract String sonido();
+
+      String cantar() {
+          return nombre + " hace " + sonido();
+      }
+  }
+
+  class Perro extends Animal {
+      Perro(String nombre) {
+          super(nombre);
+      }
+
+      @Override
+      String sonido() {
+          return "guau";
+      }
+  }
+
+  class Gato extends Animal {
+      Gato(String nombre) {
+          super(nombre);
+      }
+
+      @Override
+      String sonido() {
+          return "miau";
+      }
+  }
+
+  class Vaca extends Animal {
+      Vaca(String nombre) {
+          super(nombre);
+      }
+
+      @Override
+      String sonido() {
+          return "muu";
+      }
+  }
+
+  class Pato extends Animal {
+      Pato(String nombre) {
+          super(nombre);
+      }
+
+      @Override
+      String sonido() {
+          return "cuac";
+      }
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          List<Animal> coro = new ArrayList<>();
+          while (entrada.hasNext()) {
+              String tipo = entrada.next();
+              String nombre = entrada.next();
+              coro.add(switch (tipo) {
+                  case "perro" -> new Perro(nombre);
+                  case "gato" -> new Gato(nombre);
+                  case "vaca" -> new Vaca(nombre);
+                  default -> new Pato(nombre);
+              });
+          }
+          for (Animal animal : coro) {
+              System.out.println(animal.cantar());
+          }
+      }
+  }
+hints:
+  - Cada subclase solo necesita un constructor que llame a `super(nombre)` y sobrescribir `sonido()`.
+  - "Un `switch` con flechas puede devolver directamente el animal creado: `coro.add(switch (tipo) { ... });`."
+tests:
+  - input: |
+      perro Toby
+      gato Luna
+      vaca Lola
+      pato Donald
+    output: |
+      Toby hace guau
+      Luna hace miau
+      Lola hace muu
+      Donald hace cuac
+    sample: true
+  - input: |
+      gato Michi
+      gato Garfield
+    output: |
+      Michi hace miau
+      Garfield hace miau

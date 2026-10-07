@@ -1,0 +1,17 @@
+lessons:
+  - slug: extends-y-super
+    title: extends y super
+    summary: Crear una clase a partir de otra y reutilizar su código.
+    minutes: 12
+  - slug: sobrescribir-metodos
+    title: Sobrescribir métodos
+    summary: Especializar el comportamiento heredado y la clase Object.
+    minutes: 12
+  - slug: clases-abstractas
+    title: Clases abstractas y protected
+    summary: Clases que solo existen para ser heredadas.
+    minutes: 12
+exercises:
+  - empleados
+  - figuras-abstractas
+  - cuenta-de-ahorro
