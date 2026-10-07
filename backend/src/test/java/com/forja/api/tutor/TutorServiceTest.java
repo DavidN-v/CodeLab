@@ -39,7 +39,7 @@ class TutorServiceTest {
 		when(exercise.getTitle()).thenReturn("Contar hasta diez");
 		when(exercise.getStatementMarkdown()).thenReturn("Imprime del 1 al 10.");
 		when(exercises.findPublishedBySlug("contar")).thenReturn(Optional.of(exercise));
-		service = new TutorService(model, new TutorProperties("key", "claude-opus-5-5", "medium", Duration.ofSeconds(5), null),
+		service = new TutorService(model, new TutorProperties("key", "claude-opus-5-5", "medium", Duration.ofSeconds(5), null, null),
 				mock(LessonRepository.class), exercises, new RateLimiter(2, Duration.ofMinutes(1), Clock.systemUTC()),
 				mock(PlatformTransactionManager.class));
 	}

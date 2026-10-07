@@ -38,6 +38,7 @@ services:
       # Optional: the AI tutor stays off without a key.
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
       TUTOR_MODEL: ${TUTOR_MODEL:-claude-opus-5-5}
+      ANTHROPIC_WORKSPACE_ID: ${ANTHROPIC_WORKSPACE_ID:-}
     depends_on:
       postgres:
         condition: service_healthy

@@ -48,6 +48,9 @@ public class ClaudeTutorModel implements TutorModel {
 		if (properties.baseUrl() != null && !properties.baseUrl().isBlank()) {
 			builder.baseUrl(properties.baseUrl());
 		}
+		if (properties.workspaceId() != null && !properties.workspaceId().isBlank()) {
+			builder.putHeader("anthropic-workspace-id", properties.workspaceId());
+		}
 		this.client = builder.build();
 	}
 
@@ -128,6 +131,11 @@ public class ClaudeTutorModel implements TutorModel {
 		else if (ex instanceof NotFoundException) {
 			message = "El modelo %s no está disponible para tu cuenta. Prueba con TUTOR_MODEL=claude-sonnet-5-5 en el .env."
 				.formatted(properties.model());
+		}
+		else if (String.valueOf(ex.getMessage()).contains("anthropic-workspace-id")) {
+			message = "Tu clave no pertenece a ningún workspace. Añade ANTHROPIC_WORKSPACE_ID=<id del workspace> "
+					+ "al .env (lo ves en console.anthropic.com → Settings → Workspaces) o crea la clave dentro "
+					+ "de un workspace, y reinicia con docker compose up -d.";
 		}
 		else if (ex instanceof AnthropicServiceException service && service.statusCode() == 402
 				|| String.valueOf(ex.getMessage()).contains("credit balance")) {

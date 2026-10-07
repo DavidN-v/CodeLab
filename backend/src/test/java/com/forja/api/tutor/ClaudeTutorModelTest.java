@@ -42,7 +42,8 @@ class ClaudeTutorModelTest {
 		server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
 		server.createContext("/", exchange -> {
 			requests.add(new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8)
-					+ "\nbeta: " + exchange.getRequestHeaders().getFirst("anthropic-beta"));
+					+ "\nbeta: " + exchange.getRequestHeaders().getFirst("anthropic-beta")
+					+ "\nworkspace: " + exchange.getRequestHeaders().getFirst("anthropic-workspace-id"));
 			Reply reply = replies.isEmpty() ? new Reply(500, "{}") : replies.poll();
 			byte[] body = reply.body().getBytes(StandardCharsets.UTF_8);
 			exchange.getResponseHeaders().add("Content-Type", "application/json");
@@ -52,7 +53,7 @@ class ClaudeTutorModelTest {
 		});
 		server.start();
 		model = new ClaudeTutorModel(new TutorProperties("sk-test", "claude-opus-5-5", "low", Duration.ofSeconds(10),
-				"http://127.0.0.1:" + server.getAddress().getPort()));
+				"http://127.0.0.1:" + server.getAddress().getPort(), "wrkspc_test"));
 	}
 
 	@AfterEach
@@ -66,7 +67,7 @@ class ClaudeTutorModelTest {
 
 		assertThat(model.answer("Eres un tutor.", "¿Qué es una variable?")).isEqualTo("Una variable es una caja.");
 		assertThat(requests.get(0)).contains("\"model\":\"claude-opus-5-5\"", "\"fallbacks\":\"default\"",
-				"\"effort\":\"low\"", "beta: server-side-fallback-2026-07-01");
+				"\"effort\":\"low\"", "beta: server-side-fallback-2026-07-01", "workspace: wrkspc_test");
 	}
 
 	@Test
@@ -104,6 +105,15 @@ class ClaudeTutorModelTest {
 	}
 
 	@Test
+	void aKeyWithoutWorkspaceExplainsHowToSetOne() {
+		replies.add(new Reply(400, error("invalid_request_error",
+				"This API key is not scoped to a workspace, so this request must include the anthropic-workspace-id header.")));
+
+		assertThatThrownBy(() -> model.answer("s", "p")).isInstanceOfSatisfying(TutorUnavailableException.class,
+				ex -> assertThat(ex.userMessage()).contains("ANTHROPIC_WORKSPACE_ID"));
+	}
+
+	@Test
 	void anUnexpectedReplyStillGivesAReadableMessage() {
 		replies.add(new Reply(200, "not json"));
 
@@ -114,7 +124,7 @@ class ClaudeTutorModelTest {
 	@Test
 	void aKeyPastedWithQuotesAndACarriageReturnIsCleaned() {
 		TutorProperties properties = new TutorProperties(" \"sk-test\"\r", "claude-opus-5-5\r", "low",
-				Duration.ofSeconds(1), null);
+				Duration.ofSeconds(1), null, null);
 
 		assertThat(properties.apiKey()).isEqualTo("sk-test");
 		assertThat(properties.model()).isEqualTo("claude-opus-5-5");

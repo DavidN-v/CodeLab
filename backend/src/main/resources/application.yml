@@ -68,6 +68,8 @@ forja:
     # Short explanations for beginners: low effort answers fast and well.
     effort: ${TUTOR_EFFORT:low}
     timeout: 90s
+    # Only for API keys that are not scoped to a workspace.
+    workspace-id: ${ANTHROPIC_WORKSPACE_ID:}
 
 logging:
   level:
