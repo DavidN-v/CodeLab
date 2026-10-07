@@ -1,0 +1,83 @@
+title: Contador de clics
+summary: Tu primera clase con estado y métodos.
+difficulty: EASY
+statement: |
+  Completa la clase `Contador` con:
+
+  - un campo privado con la cuenta, que empieza en 0,
+  - `void clic()`, que suma 1,
+  - `void reiniciar()`, que vuelve a 0,
+  - `int valor()`, que devuelve la cuenta.
+
+  El `main` ya lee una línea de órdenes separadas por espacios (`clic`, `reiniciar` o `ver`) y llama a tus métodos; con `ver` imprime el valor actual.
+starter: |
+  import java.util.Scanner;
+
+  class Contador {
+      // Completa la clase
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          Contador contador = new Contador();
+          while (entrada.hasNext()) {
+              String orden = entrada.next();
+              switch (orden) {
+                  // case "clic" -> contador.clic();
+                  // case "reiniciar" -> contador.reiniciar();
+                  // case "ver" -> System.out.println(contador.valor());
+                  default -> { }
+              }
+          }
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  class Contador {
+      private int cuenta = 0;
+
+      void clic() {
+          cuenta++;
+      }
+
+      void reiniciar() {
+          cuenta = 0;
+      }
+
+      int valor() {
+          return cuenta;
+      }
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          Contador contador = new Contador();
+          while (entrada.hasNext()) {
+              String orden = entrada.next();
+              switch (orden) {
+                  case "clic" -> contador.clic();
+                  case "reiniciar" -> contador.reiniciar();
+                  case "ver" -> System.out.println(contador.valor());
+                  default -> { }
+              }
+          }
+      }
+  }
+hints:
+  - "Declara el campo dentro de la clase: `private int cuenta = 0;`."
+  - Cuando tengas los tres métodos, quita los comentarios de los `case` del `main`.
+tests:
+  - input: "clic clic ver clic ver\n"
+    output: |
+      2
+      3
+    sample: true
+  - input: "ver\n"
+    output: "0\n"
+  - input: "clic clic clic reiniciar ver clic ver\n"
+    output: |
+      0
+      1

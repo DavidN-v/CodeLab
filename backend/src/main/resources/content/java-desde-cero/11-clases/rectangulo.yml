@@ -1,0 +1,107 @@
+title: Rectángulo
+summary: Constructor con validación, sobrecarga y métodos de consulta.
+difficulty: EASY
+statement: |
+  Escribe una clase `Rectangulo` con:
+
+  - Dos campos privados y `final`, `ancho` y `alto`.
+  - Un constructor `Rectangulo(int ancho, int alto)`.
+  - Un constructor `Rectangulo(int lado)` que cree un cuadrado (usa `this(...)`).
+  - Métodos `int area()`, `int perimetro()` y `boolean esCuadrado()`.
+
+  La entrada tiene uno o dos números. Con uno, crea un cuadrado; con dos, un rectángulo. Escribe:
+
+  ```
+  Área: <área>
+  Perímetro: <perímetro>
+  Cuadrado: <true|false>
+  ```
+starter: |
+  import java.util.Scanner;
+
+  class Rectangulo {
+
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int primero = entrada.nextInt();
+          Rectangulo r = null;
+          if (entrada.hasNextInt()) {
+              int segundo = entrada.nextInt();
+              // r = new Rectangulo(primero, segundo);
+          } else {
+              // r = new Rectangulo(primero);
+          }
+          // System.out.println("Área: " + r.area());
+          // System.out.println("Perímetro: " + r.perimetro());
+          // System.out.println("Cuadrado: " + r.esCuadrado());
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  class Rectangulo {
+      private final int ancho;
+      private final int alto;
+
+      Rectangulo(int ancho, int alto) {
+          this.ancho = ancho;
+          this.alto = alto;
+      }
+
+      Rectangulo(int lado) {
+          this(lado, lado);
+      }
+
+      int area() {
+          return ancho * alto;
+      }
+
+      int perimetro() {
+          return 2 * (ancho + alto);
+      }
+
+      boolean esCuadrado() {
+          return ancho == alto;
+      }
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int primero = entrada.nextInt();
+          Rectangulo r;
+          if (entrada.hasNextInt()) {
+              int segundo = entrada.nextInt();
+              r = new Rectangulo(primero, segundo);
+          } else {
+              r = new Rectangulo(primero);
+          }
+          System.out.println("Área: " + r.area());
+          System.out.println("Perímetro: " + r.perimetro());
+          System.out.println("Cuadrado: " + r.esCuadrado());
+      }
+  }
+hints:
+  - "El constructor de un lado puede delegar en el otro: `this(lado, lado);`."
+  - "`esCuadrado` puede devolver directamente la comparación `ancho == alto`."
+tests:
+  - input: "3 4\n"
+    output: |
+      Área: 12
+      Perímetro: 14
+      Cuadrado: false
+    sample: true
+  - input: "5\n"
+    output: |
+      Área: 25
+      Perímetro: 20
+      Cuadrado: true
+    sample: true
+  - input: "6 6\n"
+    output: |
+      Área: 36
+      Perímetro: 24
+      Cuadrado: true

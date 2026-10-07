@@ -1,0 +1,75 @@
+title: Biblioteca con records
+summary: Modela datos con un record y valida en su constructor compacto.
+difficulty: EASY
+statement: |
+  Declara un `record Libro(String titulo, String autor, int anio)` que:
+
+  - En su constructor compacto lance `IllegalArgumentException` si el título está en blanco o si el año es mayor que 2026.
+  - Tenga un método `boolean esClasico()` que devuelva `true` si el libro tiene más de 50 años (es decir, si `anio < 1976`).
+
+  La entrada tiene líneas con el formato `titulo;autor;año`. Para cada línea escribe el libro con su `toString` automático y, si es clásico, añade ` *`. Si la línea no es válida, escribe `inválido`.
+
+  **Ejemplo:** `Rayuela;Cortázar;1963` → `Libro[titulo=Rayuela, autor=Cortázar, anio=1963] *`
+starter: |
+  import java.util.Scanner;
+
+  // Declara aquí el record Libro
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          while (entrada.hasNextLine()) {
+              String[] partes = entrada.nextLine().split(";");
+              // Crea el libro con new Libro(partes[0], partes[1], Integer.parseInt(partes[2]))
+          }
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  record Libro(String titulo, String autor, int anio) {
+      Libro {
+          if (titulo.isBlank() || anio > 2026) {
+              throw new IllegalArgumentException("Libro no válido");
+          }
+      }
+
+      boolean esClasico() {
+          return anio < 1976;
+      }
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          while (entrada.hasNextLine()) {
+              String[] partes = entrada.nextLine().split(";");
+              try {
+                  Libro libro = new Libro(partes[0], partes[1], Integer.parseInt(partes[2]));
+                  System.out.println(libro + (libro.esClasico() ? " *" : ""));
+              } catch (IllegalArgumentException e) {
+                  System.out.println("inválido");
+              }
+          }
+      }
+  }
+hints:
+  - "El constructor compacto se escribe `Libro { ... }`, sin paréntesis ni asignaciones."
+  - "Envuelve la creación en `try { ... } catch (IllegalArgumentException e) { ... }` para escribir `inválido`."
+tests:
+  - input: |
+      Rayuela;Cortázar;1963
+      Klara y el Sol;Ishiguro;2021
+    output: |
+      Libro[titulo=Rayuela, autor=Cortázar, anio=1963] *
+      Libro[titulo=Klara y el Sol, autor=Ishiguro, anio=2021]
+    sample: true
+  - input: " ;Nadie;2000\nFuturo;Alguien;2099\nFicciones;Borges;1944\n"
+    output: |
+      inválido
+      inválido
+      Libro[titulo=Ficciones, autor=Borges, anio=1944] *
+  - input: |
+      Límite;Autora;1976
+    output: |
+      Libro[titulo=Límite, autor=Autora, anio=1976]

@@ -1,0 +1,104 @@
+title: Cuenta bancaria
+summary: Encapsula el saldo y valida cada operación.
+difficulty: MEDIUM
+statement: |
+  Completa la clase `Cuenta` para que el saldo sea privado y solo cambie a través de:
+
+  - `boolean ingresar(int cantidad)`: suma la cantidad si es positiva; devuelve si se hizo.
+  - `boolean retirar(int cantidad)`: resta si es positiva y hay saldo suficiente; devuelve si se hizo.
+  - `int getSaldo()`.
+
+  La entrada es una serie de operaciones, una por línea: `ingresar <n>` o `retirar <n>`. El `main` imprime `ok` o `rechazada` según lo que devuelvan tus métodos y, al final, `Saldo: <saldo>`.
+starter: |
+  import java.util.Scanner;
+
+  class Cuenta {
+
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          Cuenta cuenta = new Cuenta();
+          while (entrada.hasNext()) {
+              String operacion = entrada.next();
+              int cantidad = entrada.nextInt();
+              boolean hecha = false;
+              // hecha = operacion.equals("ingresar") ? cuenta.ingresar(cantidad) : cuenta.retirar(cantidad);
+              System.out.println(hecha ? "ok" : "rechazada");
+          }
+          // System.out.println("Saldo: " + cuenta.getSaldo());
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  class Cuenta {
+      private int saldo = 0;
+
+      boolean ingresar(int cantidad) {
+          if (cantidad <= 0) {
+              return false;
+          }
+          saldo += cantidad;
+          return true;
+      }
+
+      boolean retirar(int cantidad) {
+          if (cantidad <= 0 || cantidad > saldo) {
+              return false;
+          }
+          saldo -= cantidad;
+          return true;
+      }
+
+      int getSaldo() {
+          return saldo;
+      }
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          Cuenta cuenta = new Cuenta();
+          while (entrada.hasNext()) {
+              String operacion = entrada.next();
+              int cantidad = entrada.nextInt();
+              boolean hecha = operacion.equals("ingresar") ? cuenta.ingresar(cantidad) : cuenta.retirar(cantidad);
+              System.out.println(hecha ? "ok" : "rechazada");
+          }
+          System.out.println("Saldo: " + cuenta.getSaldo());
+      }
+  }
+hints:
+  - Cada método comprueba primero las condiciones que lo harían inválido y devuelve `false`.
+  - Recuerda quitar los comentarios del `main` cuando tus métodos existan.
+tests:
+  - input: |
+      ingresar 100
+      retirar 30
+      retirar 200
+    output: |
+      ok
+      ok
+      rechazada
+      Saldo: 70
+    sample: true
+  - input: |
+      retirar 10
+      ingresar -5
+      ingresar 0
+    output: |
+      rechazada
+      rechazada
+      rechazada
+      Saldo: 0
+  - input: |
+      ingresar 50
+      retirar 50
+      ingresar 25
+    output: |
+      ok
+      ok
+      ok
+      Saldo: 25

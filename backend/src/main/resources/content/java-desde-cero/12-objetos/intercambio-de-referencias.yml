@@ -1,0 +1,106 @@
+title: Copiar o compartir
+summary: Distingue entre copiar una referencia y copiar un objeto.
+difficulty: MEDIUM
+statement: |
+  La clase `Marcador` guarda los puntos de un equipo. Añade un **constructor de copia** `Marcador(Marcador otro)` que cree un marcador nuevo con los mismos puntos.
+
+  El `main` lee tres números `a b c` y hace lo siguiente:
+
+  1. Crea `original` con `a` puntos.
+  2. `alias = original` (misma referencia) y `copia = new Marcador(original)`.
+  3. Suma `b` puntos a `alias` y `c` puntos a `copia`.
+  4. Imprime los puntos de `original`, `alias` y `copia`.
+
+  Solo tienes que escribir el constructor de copia; el resto ya está.
+starter: |
+  import java.util.Scanner;
+
+  class Marcador {
+      private int puntos;
+
+      Marcador(int puntos) {
+          this.puntos = puntos;
+      }
+
+      // Constructor de copia aquí
+
+      void sumar(int cantidad) {
+          puntos += cantidad;
+      }
+
+      int getPuntos() {
+          return puntos;
+      }
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int a = entrada.nextInt();
+          int b = entrada.nextInt();
+          int c = entrada.nextInt();
+          Marcador original = new Marcador(a);
+          Marcador alias = original;
+          Marcador copia = original; // cámbialo por new Marcador(original)
+          alias.sumar(b);
+          copia.sumar(c);
+          System.out.println("original: " + original.getPuntos());
+          System.out.println("alias: " + alias.getPuntos());
+          System.out.println("copia: " + copia.getPuntos());
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  class Marcador {
+      private int puntos;
+
+      Marcador(int puntos) {
+          this.puntos = puntos;
+      }
+
+      Marcador(Marcador otro) {
+          this(otro.puntos);
+      }
+
+      void sumar(int cantidad) {
+          puntos += cantidad;
+      }
+
+      int getPuntos() {
+          return puntos;
+      }
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int a = entrada.nextInt();
+          int b = entrada.nextInt();
+          int c = entrada.nextInt();
+          Marcador original = new Marcador(a);
+          Marcador alias = original;
+          Marcador copia = new Marcador(original);
+          alias.sumar(b);
+          copia.sumar(c);
+          System.out.println("original: " + original.getPuntos());
+          System.out.println("alias: " + alias.getPuntos());
+          System.out.println("copia: " + copia.getPuntos());
+      }
+  }
+hints:
+  - "Un constructor de copia recibe un objeto del mismo tipo: `Marcador(Marcador otro)`."
+  - Dentro de la clase puedes leer `otro.puntos` aunque sea privado.
+  - "`alias` y `original` son el mismo objeto, así que siempre mostrarán lo mismo."
+tests:
+  - input: "10 5 1\n"
+    output: |
+      original: 15
+      alias: 15
+      copia: 11
+    sample: true
+  - input: "0 0 7\n"
+    output: |
+      original: 0
+      alias: 0
+      copia: 7
