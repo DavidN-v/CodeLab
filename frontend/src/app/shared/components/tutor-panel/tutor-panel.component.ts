@@ -6,8 +6,8 @@ import { TutorService } from '../../../core/services/tutor.service';
 import { MarkdownComponent } from '../markdown/markdown.component';
 
 /**
- * A button that asks the AI tutor something, and its answer. Hidden when the
- * server has no tutor configured.
+ * A button that asks the AI tutor something, and its answer. When the server
+ * has no tutor configured, it says so and how to turn it on.
  */
 @Component({
   selector: 'app-tutor-panel',
@@ -28,7 +28,8 @@ export class TutorPanelComponent {
   /** Makes the request; receives the learner's question, if any. */
   readonly ask = input.required<(question: string) => Observable<string>>();
 
-  protected readonly enabled = toSignal(inject(TutorService).isEnabled(), { initialValue: false });
+  /** Undefined while the server is being asked; then whether the tutor is configured. */
+  protected readonly enabled = toSignal(inject(TutorService).isEnabled());
   protected readonly loading = signal(false);
   protected readonly answer = signal<string | null>(null);
   protected readonly question = signal('');

@@ -75,7 +75,7 @@
       }
 
       @if (auth.isAuthenticated()) {
-        <div class="lesson__tutor">
+        <div class="lesson__tutor" id="tutor">
           <p class="lesson__tutor-title">¿Algo no ha quedado claro?</p>
           <app-tutor-panel
             label="Explícamelo de otra forma"
@@ -149,6 +149,9 @@
         <a [routerLink]="['/languages', languageSlug(), 'glossary']">📖 Glosario del curso</a>
       </p>
       @if (auth.isAuthenticated()) {
+        <p class="study__glossary">
+          <a [href]="router.url.split('#')[0] + '#tutor'">✦ Pregunta al tutor</a>
+        </p>
         <div class="study__module-progress">
           <p class="section-title">Progreso del módulo</p>
           <app-progress-bar [percent]="modulePercent()" label="Progreso del módulo" />

@@ -1,8 +1,8 @@
-@if (enabled()) {
-  <section class="tutor" aria-label="Tutor">
-    @if (heading()) {
-      <h2 class="tutor__heading">{{ heading() }}</h2>
-    }
+<section class="tutor" aria-label="Tutor">
+  @if (heading()) {
+    <h2 class="tutor__heading">{{ heading() }}</h2>
+  }
+  @if (enabled() === true) {
     <div class="tutor__ask">
       @if (withQuestion()) {
         <input
@@ -33,5 +33,11 @@
         <app-markdown [content]="text" />
       </div>
     }
-  </section>
-}
+  } @else if (enabled() === false) {
+    <p class="tutor__off">
+      <span aria-hidden="true">✦</span> El tutor con IA no está activado en este servidor. Para
+      activarlo, añade <code>ANTHROPIC_API_KEY=tu-clave</code> al archivo <code>.env</code> y
+      reinicia con <code>docker compose up -d</code>.
+    </p>
+  }
+</section>

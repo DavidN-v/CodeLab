@@ -193,6 +193,7 @@
   padding: var(--space-4);
   border: 1px dashed var(--color-border-strong);
   border-radius: var(--radius-md);
+  scroll-margin-top: calc(var(--navbar-height) + var(--space-4));
 }
 
 .lesson__tutor-title {
