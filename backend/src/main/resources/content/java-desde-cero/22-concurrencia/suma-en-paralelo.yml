@@ -1,0 +1,95 @@
+title: Suma en paralelo
+summary: Reparte un cálculo entre tareas con ExecutorService y Future.
+difficulty: MEDIUM
+statement: |
+  La entrada es `k` seguido de una lista de enteros. Divide la lista en `k` tramos consecutivos lo más iguales posible (los primeros tramos se quedan con un elemento más si la división no es exacta) y suma cada tramo en una **tarea distinta** enviada a un `ExecutorService`.
+
+  Escribe la suma de cada tramo en orden, `Tramo <i>: <suma>` (empezando en 1), y al final `Total: <suma total>`.
+
+  **Ejemplo:** con `k = 3` y los números `1 2 3 4 5 6 7`, los tramos son `[1 2 3]`, `[4 5]` y `[6 7]`.
+starter: |
+  import java.util.ArrayList;
+  import java.util.List;
+  import java.util.Scanner;
+  import java.util.concurrent.ExecutorService;
+  import java.util.concurrent.Executors;
+  import java.util.concurrent.Future;
+
+  public class Main {
+      public static void main(String[] args) throws Exception {
+          Scanner entrada = new Scanner(System.in);
+          int k = entrada.nextInt();
+          List<Integer> numeros = new ArrayList<>();
+          while (entrada.hasNextInt()) {
+              numeros.add(entrada.nextInt());
+          }
+
+      }
+  }
+solution: |
+  import java.util.ArrayList;
+  import java.util.List;
+  import java.util.Scanner;
+  import java.util.concurrent.ExecutorService;
+  import java.util.concurrent.Executors;
+  import java.util.concurrent.Future;
+
+  public class Main {
+      public static void main(String[] args) throws Exception {
+          Scanner entrada = new Scanner(System.in);
+          int k = entrada.nextInt();
+          List<Integer> numeros = new ArrayList<>();
+          while (entrada.hasNextInt()) {
+              numeros.add(entrada.nextInt());
+          }
+          int base = numeros.size() / k;
+          int sobran = numeros.size() % k;
+          List<Future<Long>> parciales = new ArrayList<>();
+          try (ExecutorService ejecutor = Executors.newFixedThreadPool(k)) {
+              int inicio = 0;
+              for (int i = 0; i < k; i++) {
+                  int fin = inicio + base + (i < sobran ? 1 : 0);
+                  List<Integer> tramo = numeros.subList(inicio, fin);
+                  parciales.add(ejecutor.submit(() -> {
+                      long suma = 0;
+                      for (int n : tramo) {
+                          suma += n;
+                      }
+                      return suma;
+                  }));
+                  inicio = fin;
+              }
+              long total = 0;
+              for (int i = 0; i < k; i++) {
+                  long suma = parciales.get(i).get();
+                  System.out.println("Tramo " + (i + 1) + ": " + suma);
+                  total += suma;
+              }
+              System.out.println("Total: " + total);
+          }
+      }
+  }
+hints:
+  - "Cada tramo tiene `size / k` elementos, y los `size % k` primeros tramos uno más."
+  - "`lista.subList(inicio, fin)` te da el tramo sin copiarlo; pásaselo a una lambda que devuelva su suma."
+  - Recorre los `Future` en el orden en que los creaste para escribir los tramos en orden.
+tests:
+  - input: "3\n1 2 3 4 5 6 7\n"
+    output: |
+      Tramo 1: 6
+      Tramo 2: 9
+      Tramo 3: 13
+      Total: 28
+    sample: true
+  - input: "2\n10 -10 5 5\n"
+    output: |
+      Tramo 1: 0
+      Tramo 2: 10
+      Total: 10
+  - input: "4\n1 1 1 1 1\n"
+    output: |
+      Tramo 1: 2
+      Tramo 2: 1
+      Tramo 3: 1
+      Tramo 4: 1
+      Total: 5

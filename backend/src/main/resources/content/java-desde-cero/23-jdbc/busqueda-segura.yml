@@ -1,0 +1,90 @@
+title: Búsqueda a prueba de inyección
+summary: Sustituye una consulta concatenada por un PreparedStatement.
+difficulty: MEDIUM
+statement: |
+  El programa crea una tabla de usuarios y busca por nombre cada línea de la entrada. Tal como está, **concatena** el texto en el SQL: con un nombre como `x' OR '1'='1` devuelve todos los usuarios, y con una comilla suelta lanza una excepción.
+
+  Reescribe el método `buscar` con un `PreparedStatement` para que cualquier texto se trate como un nombre literal. Para cada búsqueda debe escribirse `<nombre buscado>: <rol>` si existe o `<nombre buscado>: no encontrado`.
+starter: |
+  import java.sql.Connection;
+  import java.sql.DriverManager;
+  import java.sql.PreparedStatement;
+  import java.sql.ResultSet;
+  import java.sql.SQLException;
+  import java.sql.Statement;
+  import java.util.Scanner;
+
+  public class Main {
+      static String buscar(Connection c, String nombre) throws SQLException {
+          try (Statement s = c.createStatement();
+               ResultSet r = s.executeQuery("SELECT rol FROM usuarios WHERE nombre = '" + nombre + "'")) {
+              return r.next() ? r.getString("rol") : "no encontrado";
+          }
+      }
+
+      public static void main(String[] args) throws SQLException {
+          Scanner entrada = new Scanner(System.in);
+          try (Connection c = DriverManager.getConnection("jdbc:h2:mem:usuarios")) {
+              try (Statement s = c.createStatement()) {
+                  s.execute("CREATE TABLE usuarios (nombre VARCHAR(50), rol VARCHAR(20))");
+                  s.execute("INSERT INTO usuarios VALUES ('ada', 'admin'), ('alan', 'alumno'), ('o''brien', 'profesor')");
+              }
+              while (entrada.hasNextLine()) {
+                  String nombre = entrada.nextLine();
+                  System.out.println(nombre + ": " + buscar(c, nombre));
+              }
+          }
+      }
+  }
+solution: |
+  import java.sql.Connection;
+  import java.sql.DriverManager;
+  import java.sql.PreparedStatement;
+  import java.sql.ResultSet;
+  import java.sql.SQLException;
+  import java.sql.Statement;
+  import java.util.Scanner;
+
+  public class Main {
+      static String buscar(Connection c, String nombre) throws SQLException {
+          try (PreparedStatement ps = c.prepareStatement("SELECT rol FROM usuarios WHERE nombre = ?")) {
+              ps.setString(1, nombre);
+              try (ResultSet r = ps.executeQuery()) {
+                  return r.next() ? r.getString("rol") : "no encontrado";
+              }
+          }
+      }
+
+      public static void main(String[] args) throws SQLException {
+          Scanner entrada = new Scanner(System.in);
+          try (Connection c = DriverManager.getConnection("jdbc:h2:mem:usuarios")) {
+              try (Statement s = c.createStatement()) {
+                  s.execute("CREATE TABLE usuarios (nombre VARCHAR(50), rol VARCHAR(20))");
+                  s.execute("INSERT INTO usuarios VALUES ('ada', 'admin'), ('alan', 'alumno'), ('o''brien', 'profesor')");
+              }
+              while (entrada.hasNextLine()) {
+                  String nombre = entrada.nextLine();
+                  System.out.println(nombre + ": " + buscar(c, nombre));
+              }
+          }
+      }
+  }
+hints:
+  - "Escribe la consulta con un hueco: `\"SELECT rol FROM usuarios WHERE nombre = ?\"`."
+  - "Rellénalo con `ps.setString(1, nombre)` y ejecuta `ps.executeQuery()`."
+tests:
+  - input: |
+      ada
+      x' OR '1'='1
+    output: |
+      ada: admin
+      x' OR '1'='1: no encontrado
+    sample: true
+  - input: |
+      o'brien
+      alan
+      ADA
+    output: |
+      o'brien: profesor
+      alan: alumno
+      ADA: no encontrado

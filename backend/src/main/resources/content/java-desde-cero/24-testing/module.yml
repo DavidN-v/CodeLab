@@ -1,0 +1,17 @@
+lessons:
+  - slug: por-que-probar
+    title: ¿Por qué escribir pruebas?
+    summary: Pruebas automáticas, el patrón Arrange-Act-Assert y qué casos probar.
+    minutes: 10
+  - slug: junit
+    title: Pruebas con JUnit
+    summary: "@Test, las aserciones y el ciclo de vida de una prueba."
+    minutes: 14
+  - slug: buenas-pruebas
+    title: Pruebas parametrizadas y TDD
+    summary: Probar muchos casos sin repetir código y escribir la prueba primero.
+    minutes: 12
+exercises:
+  - fizzbuzz-con-pruebas
+  - validar-contrasenas
+  - cazar-mutantes

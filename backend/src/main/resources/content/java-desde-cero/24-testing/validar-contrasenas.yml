@@ -1,0 +1,199 @@
+title: Validar contraseñas
+summary: Implementa reglas de validación hasta que pasen las pruebas con assertThrows.
+difficulty: MEDIUM
+statement: |
+  `Contrasena.validar(String)` no devuelve nada: si la contraseña es válida termina sin más, y si no, lanza `IllegalArgumentException` con un mensaje que indica la **primera** regla incumplida, en este orden:
+
+  | Regla | Mensaje |
+  | --- | --- |
+  | No puede ser `null` ni estar vacía | `vacía` |
+  | Al menos 8 caracteres | `corta` |
+  | Sin espacios | `con espacios` |
+  | Al menos una mayúscula | `sin mayúscula` |
+  | Al menos un dígito | `sin dígito` |
+  | Al menos un carácter que no sea letra ni dígito | `sin símbolo` |
+
+  Las pruebas de `ContrasenaTest` comprueban cada regla. Completa `validar` hasta obtener `8/8 pruebas superadas`.
+starter: |
+  import static org.junit.jupiter.api.Assertions.*;
+  import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+
+  import org.junit.jupiter.api.Test;
+  import org.junit.jupiter.params.ParameterizedTest;
+  import org.junit.jupiter.params.provider.CsvSource;
+  import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
+  import org.junit.platform.launcher.core.LauncherFactory;
+  import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
+
+  class Contrasena {
+      static void validar(String texto) {
+          if (texto.length() < 8) {
+              throw new IllegalArgumentException("corta");
+          }
+      }
+  }
+
+  class ContrasenaTest {
+      @Test
+      void aceptaUnaContrasenaCorrecta() {
+          assertDoesNotThrow(() -> Contrasena.validar("Forja2026!"));
+      }
+
+      @Test
+      void rechazaLaNula() {
+          IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> Contrasena.validar(null));
+          assertEquals("vacía", e.getMessage());
+      }
+
+      @Test
+      void rechazaLaCorta() {
+          IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> Contrasena.validar("Ab1!"));
+          assertEquals("corta", e.getMessage());
+      }
+
+      @Test
+      void exigeUnaMayuscula() {
+          IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> Contrasena.validar("forja2026!"));
+          assertEquals("sin mayúscula", e.getMessage());
+      }
+
+      @Test
+      void exigeUnDigito() {
+          IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> Contrasena.validar("Forjadora!"));
+          assertEquals("sin dígito", e.getMessage());
+      }
+
+      @Test
+      void exigeUnSimbolo() {
+          IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> Contrasena.validar("Forja2026"));
+          assertEquals("sin símbolo", e.getMessage());
+      }
+
+      @Test
+      void noAdmiteEspacios() {
+          IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> Contrasena.validar("Forja 2026!"));
+          assertEquals("con espacios", e.getMessage());
+      }
+
+      @Test
+      void laLongitudMinimaEsOcho() {
+          assertDoesNotThrow(() -> Contrasena.validar("Abcdef1!"));
+      }
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          var peticion = LauncherDiscoveryRequestBuilder.request().selectors(selectClass(ContrasenaTest.class)).build();
+          var resumen = new SummaryGeneratingListener();
+          LauncherFactory.create().execute(peticion, resumen);
+          var resultado = resumen.getSummary();
+          System.out.println(resultado.getTestsSucceededCount() + "/" + resultado.getTestsFoundCount() + " pruebas superadas");
+          resultado.getFailures().stream()
+              .map(fallo -> "FALLA " + fallo.getTestIdentifier().getDisplayName())
+              .sorted()
+              .forEach(System.out::println);
+      }
+  }
+solution: |
+  import static org.junit.jupiter.api.Assertions.*;
+  import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+
+  import org.junit.jupiter.api.Test;
+  import org.junit.jupiter.params.ParameterizedTest;
+  import org.junit.jupiter.params.provider.CsvSource;
+  import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
+  import org.junit.platform.launcher.core.LauncherFactory;
+  import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
+
+  class Contrasena {
+      static void validar(String texto) {
+          if (texto == null || texto.isEmpty()) {
+              throw new IllegalArgumentException("vacía");
+          }
+          if (texto.length() < 8) {
+              throw new IllegalArgumentException("corta");
+          }
+          if (texto.chars().anyMatch(Character::isWhitespace)) {
+              throw new IllegalArgumentException("con espacios");
+          }
+          if (texto.chars().noneMatch(Character::isUpperCase)) {
+              throw new IllegalArgumentException("sin mayúscula");
+          }
+          if (texto.chars().noneMatch(Character::isDigit)) {
+              throw new IllegalArgumentException("sin dígito");
+          }
+          if (texto.chars().allMatch(Character::isLetterOrDigit)) {
+              throw new IllegalArgumentException("sin símbolo");
+          }
+      }
+  }
+
+  class ContrasenaTest {
+      @Test
+      void aceptaUnaContrasenaCorrecta() {
+          assertDoesNotThrow(() -> Contrasena.validar("Forja2026!"));
+      }
+
+      @Test
+      void rechazaLaNula() {
+          IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> Contrasena.validar(null));
+          assertEquals("vacía", e.getMessage());
+      }
+
+      @Test
+      void rechazaLaCorta() {
+          IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> Contrasena.validar("Ab1!"));
+          assertEquals("corta", e.getMessage());
+      }
+
+      @Test
+      void exigeUnaMayuscula() {
+          IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> Contrasena.validar("forja2026!"));
+          assertEquals("sin mayúscula", e.getMessage());
+      }
+
+      @Test
+      void exigeUnDigito() {
+          IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> Contrasena.validar("Forjadora!"));
+          assertEquals("sin dígito", e.getMessage());
+      }
+
+      @Test
+      void exigeUnSimbolo() {
+          IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> Contrasena.validar("Forja2026"));
+          assertEquals("sin símbolo", e.getMessage());
+      }
+
+      @Test
+      void noAdmiteEspacios() {
+          IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> Contrasena.validar("Forja 2026!"));
+          assertEquals("con espacios", e.getMessage());
+      }
+
+      @Test
+      void laLongitudMinimaEsOcho() {
+          assertDoesNotThrow(() -> Contrasena.validar("Abcdef1!"));
+      }
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          var peticion = LauncherDiscoveryRequestBuilder.request().selectors(selectClass(ContrasenaTest.class)).build();
+          var resumen = new SummaryGeneratingListener();
+          LauncherFactory.create().execute(peticion, resumen);
+          var resultado = resumen.getSummary();
+          System.out.println(resultado.getTestsSucceededCount() + "/" + resultado.getTestsFoundCount() + " pruebas superadas");
+          resultado.getFailures().stream()
+              .map(fallo -> "FALLA " + fallo.getTestIdentifier().getDisplayName())
+              .sorted()
+              .forEach(System.out::println);
+      }
+  }
+hints:
+  - Comprueba primero `null`; si no, `texto.length()` lanzaría una `NullPointerException` en lugar de tu excepción.
+  - "`texto.chars().anyMatch(Character::isUpperCase)` dice si hay alguna mayúscula."
+  - Respeta el orden de la tabla, porque una contraseña puede incumplir varias reglas a la vez.
+tests:
+  - output: |
+      8/8 pruebas superadas
+    sample: true

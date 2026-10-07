@@ -1,0 +1,17 @@
+lessons:
+  - slug: hilos
+    title: Hilos
+    summary: Hacer varias cosas a la vez con Thread y Runnable.
+    minutes: 12
+  - slug: estado-compartido
+    title: Los peligros del estado compartido
+    summary: Condiciones de carrera, synchronized y las clases atómicas.
+    minutes: 14
+  - slug: ejecutores-y-futuros
+    title: Ejecutores y futuros
+    summary: ExecutorService, Future y CompletableFuture en lugar de hilos a mano.
+    minutes: 14
+exercises:
+  - contador-seguro
+  - suma-en-paralelo
+  - primos-por-tramos

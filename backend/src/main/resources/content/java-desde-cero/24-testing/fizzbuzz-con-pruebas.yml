@@ -1,0 +1,159 @@
+title: FizzBuzz guiado por pruebas
+summary: Haz pasar un conjunto de pruebas de JUnit ya escritas.
+difficulty: EASY
+statement: |
+  El clásico FizzBuzz: para un número positivo devuelve `Fizz` si es múltiplo de 3, `Buzz` si es múltiplo de 5, `FizzBuzz` si es múltiplo de ambos y, si no, el propio número como texto. Para 0 o negativos debe lanzar `IllegalArgumentException`.
+
+  Las pruebas ya están escritas en `FizzBuzzTest` y el `main` las ejecuta con JUnit. Ahora mismo solo pasan algunas. Modifica **únicamente** `FizzBuzz.convertir` hasta que la salida sea:
+
+  ```
+  11/11 pruebas superadas
+  ```
+
+  Lee los nombres de las pruebas que fallan: te dicen qué falta.
+starter: |
+  import static org.junit.jupiter.api.Assertions.*;
+  import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+
+  import org.junit.jupiter.api.Test;
+  import org.junit.jupiter.params.ParameterizedTest;
+  import org.junit.jupiter.params.provider.CsvSource;
+  import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
+  import org.junit.platform.launcher.core.LauncherFactory;
+  import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
+
+  class FizzBuzz {
+      static String convertir(int n) {
+          return String.valueOf(n);
+      }
+  }
+
+  class FizzBuzzTest {
+      @Test
+      void unNumeroNormalSeEscribeTalCual() {
+          assertEquals("1", FizzBuzz.convertir(1));
+      }
+
+      @Test
+      void losMultiplosDeTresSonFizz() {
+          assertEquals("Fizz", FizzBuzz.convertir(9));
+      }
+
+      @Test
+      void losMultiplosDeCincoSonBuzz() {
+          assertEquals("Buzz", FizzBuzz.convertir(10));
+      }
+
+      @Test
+      void losMultiplosDeQuinceSonFizzBuzz() {
+          assertEquals("FizzBuzz", FizzBuzz.convertir(30));
+      }
+
+      @ParameterizedTest
+      @CsvSource({"2, 2", "3, Fizz", "5, Buzz", "15, FizzBuzz", "98, 98", "99, Fizz"})
+      void variosCasos(int numero, String esperado) {
+          assertEquals(esperado, FizzBuzz.convertir(numero));
+      }
+
+      @Test
+      void rechazaLosNumerosNoPositivos() {
+          assertThrows(IllegalArgumentException.class, () -> FizzBuzz.convertir(0));
+      }
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          var peticion = LauncherDiscoveryRequestBuilder.request().selectors(selectClass(FizzBuzzTest.class)).build();
+          var resumen = new SummaryGeneratingListener();
+          LauncherFactory.create().execute(peticion, resumen);
+          var resultado = resumen.getSummary();
+          System.out.println(resultado.getTestsSucceededCount() + "/" + resultado.getTestsFoundCount() + " pruebas superadas");
+          resultado.getFailures().stream()
+              .map(fallo -> "FALLA " + fallo.getTestIdentifier().getDisplayName())
+              .sorted()
+              .forEach(System.out::println);
+      }
+  }
+solution: |
+  import static org.junit.jupiter.api.Assertions.*;
+  import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+
+  import org.junit.jupiter.api.Test;
+  import org.junit.jupiter.params.ParameterizedTest;
+  import org.junit.jupiter.params.provider.CsvSource;
+  import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
+  import org.junit.platform.launcher.core.LauncherFactory;
+  import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
+
+  class FizzBuzz {
+      static String convertir(int n) {
+          if (n <= 0) {
+              throw new IllegalArgumentException("Solo números positivos");
+          }
+          if (n % 15 == 0) {
+              return "FizzBuzz";
+          }
+          if (n % 3 == 0) {
+              return "Fizz";
+          }
+          if (n % 5 == 0) {
+              return "Buzz";
+          }
+          return String.valueOf(n);
+      }
+  }
+
+  class FizzBuzzTest {
+      @Test
+      void unNumeroNormalSeEscribeTalCual() {
+          assertEquals("1", FizzBuzz.convertir(1));
+      }
+
+      @Test
+      void losMultiplosDeTresSonFizz() {
+          assertEquals("Fizz", FizzBuzz.convertir(9));
+      }
+
+      @Test
+      void losMultiplosDeCincoSonBuzz() {
+          assertEquals("Buzz", FizzBuzz.convertir(10));
+      }
+
+      @Test
+      void losMultiplosDeQuinceSonFizzBuzz() {
+          assertEquals("FizzBuzz", FizzBuzz.convertir(30));
+      }
+
+      @ParameterizedTest
+      @CsvSource({"2, 2", "3, Fizz", "5, Buzz", "15, FizzBuzz", "98, 98", "99, Fizz"})
+      void variosCasos(int numero, String esperado) {
+          assertEquals(esperado, FizzBuzz.convertir(numero));
+      }
+
+      @Test
+      void rechazaLosNumerosNoPositivos() {
+          assertThrows(IllegalArgumentException.class, () -> FizzBuzz.convertir(0));
+      }
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          var peticion = LauncherDiscoveryRequestBuilder.request().selectors(selectClass(FizzBuzzTest.class)).build();
+          var resumen = new SummaryGeneratingListener();
+          LauncherFactory.create().execute(peticion, resumen);
+          var resultado = resumen.getSummary();
+          System.out.println(resultado.getTestsSucceededCount() + "/" + resultado.getTestsFoundCount() + " pruebas superadas");
+          resultado.getFailures().stream()
+              .map(fallo -> "FALLA " + fallo.getTestIdentifier().getDisplayName())
+              .sorted()
+              .forEach(System.out::println);
+      }
+  }
+hints:
+  - Ejecuta primero sin cambiar nada y mira qué pruebas fallan y por qué.
+  - Comprueba el múltiplo de 15 antes que los de 3 y 5, o nunca llegarás a "FizzBuzz".
+  - "Para la última prueba, lanza `throw new IllegalArgumentException(...)` si `n <= 0`."
+tests:
+  - output: |
+      11/11 pruebas superadas
+    sample: true
