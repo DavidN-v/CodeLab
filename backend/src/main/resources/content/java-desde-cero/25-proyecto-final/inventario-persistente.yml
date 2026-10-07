@@ -1,0 +1,184 @@
+title: Inventario que se guarda
+summary: Guarda el estado en un archivo, vuelve a cargarlo y genera informes.
+difficulty: HARD
+statement: |
+  Un inventario guarda productos con nombre, categoría y stock. Procesa órdenes, una por línea:
+
+  | Orden | Efecto |
+  | --- | --- |
+  | `alta <nombre> <categoria> <stock>` | Crea el producto. Si ya existe, `Error: <nombre> ya existe`. |
+  | `entrada <nombre> <cantidad>` | Suma stock. |
+  | `salida <nombre> <cantidad>` | Resta stock; si no hay suficiente, `Error: stock insuficiente de <nombre>`. |
+  | `guardar` | Escribe el inventario en `inventario.csv` (una línea `nombre,categoria,stock` por producto) y escribe `Guardado: <n> productos`. |
+  | `reiniciar` | Vacía el inventario en memoria (el archivo no se toca). |
+  | `cargar` | Sustituye el inventario en memoria por el contenido de `inventario.csv` y escribe `Cargado: <n> productos`. |
+  | `informe` | Por cada categoría en orden alfabético: `<categoria>: <total de stock>`, y después `Bajo mínimos: <productos con stock < 5, ordenados, separados por comas>` o `Bajo mínimos: ninguno`. |
+
+  Cualquier orden sobre un producto que no existe escribe `Error: no existe <nombre>`.
+starter: |
+  import java.io.IOException;
+  import java.nio.file.Files;
+  import java.nio.file.Path;
+  import java.util.Map;
+  import java.util.Scanner;
+  import java.util.TreeMap;
+
+  public class Main {
+      public static void main(String[] args) throws IOException {
+          Scanner entrada = new Scanner(System.in);
+          Path archivo = Path.of("inventario.csv");
+          while (entrada.hasNext()) {
+              String orden = entrada.next();
+          }
+      }
+  }
+solution: |
+  import java.io.IOException;
+  import java.nio.file.Files;
+  import java.nio.file.Path;
+  import java.util.ArrayList;
+  import java.util.List;
+  import java.util.Map;
+  import java.util.Scanner;
+  import java.util.TreeMap;
+  import java.util.stream.Collectors;
+
+  class Producto {
+      final String nombre;
+      final String categoria;
+      int stock;
+
+      Producto(String nombre, String categoria, int stock) {
+          this.nombre = nombre;
+          this.categoria = categoria;
+          this.stock = stock;
+      }
+  }
+
+  class Inventario {
+      private final Map<String, Producto> productos = new TreeMap<>();
+
+      void alta(String nombre, String categoria, int stock) {
+          if (productos.containsKey(nombre)) {
+              throw new IllegalArgumentException(nombre + " ya existe");
+          }
+          productos.put(nombre, new Producto(nombre, categoria, stock));
+      }
+
+      void entrada(String nombre, int cantidad) {
+          buscar(nombre).stock += cantidad;
+      }
+
+      void salida(String nombre, int cantidad) {
+          Producto p = buscar(nombre);
+          if (p.stock < cantidad) {
+              throw new IllegalArgumentException("stock insuficiente de " + nombre);
+          }
+          p.stock -= cantidad;
+      }
+
+      int guardar(Path archivo) throws IOException {
+          List<String> lineas = new ArrayList<>();
+          for (Producto p : productos.values()) {
+              lineas.add(p.nombre + "," + p.categoria + "," + p.stock);
+          }
+          Files.write(archivo, lineas);
+          return lineas.size();
+      }
+
+      int cargar(Path archivo) throws IOException {
+          productos.clear();
+          for (String linea : Files.readAllLines(archivo)) {
+              String[] partes = linea.split(",");
+              alta(partes[0], partes[1], Integer.parseInt(partes[2]));
+          }
+          return productos.size();
+      }
+
+      void reiniciar() {
+          productos.clear();
+      }
+
+      void informe() {
+          Map<String, Integer> porCategoria = productos.values().stream()
+              .collect(Collectors.groupingBy(p -> p.categoria, TreeMap::new, Collectors.summingInt(p -> p.stock)));
+          porCategoria.forEach((categoria, total) -> System.out.println(categoria + ": " + total));
+          String bajos = productos.values().stream()
+              .filter(p -> p.stock < 5)
+              .map(p -> p.nombre)
+              .collect(Collectors.joining(", "));
+          System.out.println("Bajo mínimos: " + (bajos.isEmpty() ? "ninguno" : bajos));
+      }
+
+      private Producto buscar(String nombre) {
+          Producto p = productos.get(nombre);
+          if (p == null) {
+              throw new IllegalArgumentException("no existe " + nombre);
+          }
+          return p;
+      }
+  }
+
+  public class Main {
+      public static void main(String[] args) throws IOException {
+          Scanner entrada = new Scanner(System.in);
+          Path archivo = Path.of("inventario.csv");
+          Inventario inventario = new Inventario();
+          while (entrada.hasNext()) {
+              String orden = entrada.next();
+              try {
+                  switch (orden) {
+                      case "alta" -> inventario.alta(entrada.next(), entrada.next(), entrada.nextInt());
+                      case "entrada" -> inventario.entrada(entrada.next(), entrada.nextInt());
+                      case "salida" -> inventario.salida(entrada.next(), entrada.nextInt());
+                      case "guardar" -> System.out.println("Guardado: " + inventario.guardar(archivo) + " productos");
+                      case "reiniciar" -> inventario.reiniciar();
+                      case "cargar" -> System.out.println("Cargado: " + inventario.cargar(archivo) + " productos");
+                      case "informe" -> inventario.informe();
+                      default -> { }
+                  }
+              } catch (IllegalArgumentException e) {
+                  System.out.println("Error: " + e.getMessage());
+              }
+          }
+      }
+  }
+hints:
+  - Guarda los productos en un `TreeMap` por nombre; así cualquier listado sale ya ordenado.
+  - "`Files.write(archivo, lineas)` para guardar y `Files.readAllLines(archivo)` para cargar; al cargar, vacía primero el mapa."
+  - "Para el informe, `Collectors.groupingBy(categoria, TreeMap::new, Collectors.summingInt(stock))`."
+tests:
+  - input: |
+      alta tornillos ferreteria 100
+      alta tuercas ferreteria 3
+      alta martillo herramientas 4
+      alta tornillos ferreteria 1
+      salida martillo 10
+      salida martillo 2
+      entrada tuercas 10
+      guardar
+      reiniciar
+      informe
+      cargar
+      informe
+      salida llave 1
+    output: |
+      Error: tornillos ya existe
+      Error: stock insuficiente de martillo
+      Guardado: 3 productos
+      Bajo mínimos: ninguno
+      Cargado: 3 productos
+      ferreteria: 113
+      herramientas: 2
+      Bajo mínimos: martillo
+      Error: no existe llave
+    sample: true
+  - input: |
+      alta a x 1
+      alta b x 2
+      alta c y 9
+      informe
+    output: |
+      x: 3
+      y: 9
+      Bajo mínimos: a, b

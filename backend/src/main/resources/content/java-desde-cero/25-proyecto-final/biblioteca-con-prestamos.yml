@@ -1,0 +1,218 @@
+title: Biblioteca con préstamos
+summary: Reglas de negocio con fechas, límites por socio y multas por retraso.
+difficulty: HARD
+statement: |
+  Gestiona los préstamos de una biblioteca. Cada préstamo dura **14 días**: si se devuelve más tarde, la multa es de **0,50 € por día** de retraso. Un socio no puede tener más de **3 libros** prestados a la vez ni pedir libros si tiene multas sin pagar.
+
+  Órdenes, una por línea:
+
+  | Orden | Efecto y salida |
+  | --- | --- |
+  | `libro <código> <título>` | Da de alta un libro (el título puede tener espacios). |
+  | `socio <nombre>` | Da de alta un socio. |
+  | `prestar <código> <socio> <fecha>` | Presta el libro. Escribe `Prestado <código> a <socio> hasta <fecha + 14 días>`. |
+  | `devolver <código> <fecha>` | Escribe `Devuelto <código>` y, si hay retraso, ` con <días> días de retraso, multa <importe con 2 decimales> €`. La multa se suma a la deuda del socio. |
+  | `pagar <socio>` | Pone su deuda a 0 y escribe `<socio> paga <importe> €`. |
+  | `estado <socio>` | Escribe `<socio>: <n> libros, deuda <importe> €` y, debajo, los títulos que tiene, ordenados, con dos espacios de sangría. |
+
+  Errores, con el formato `Error: <mensaje>`: `libro no disponible` (ya prestado), `límite de préstamos`, `multas pendientes`, `libro no prestado` (al devolver), `no existe <código o nombre>`.
+starter: |
+  import java.time.LocalDate;
+  import java.time.temporal.ChronoUnit;
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          while (entrada.hasNextLine()) {
+              String linea = entrada.nextLine();
+          }
+      }
+  }
+solution: |
+  import java.time.LocalDate;
+  import java.time.temporal.ChronoUnit;
+  import java.util.HashMap;
+  import java.util.Map;
+  import java.util.Scanner;
+  import java.util.TreeSet;
+
+  class Biblioteca {
+      private static final int DIAS_PRESTAMO = 14;
+      private static final int MAXIMO_LIBROS = 3;
+      private static final int MULTA_CENTIMOS_POR_DIA = 50;
+
+      private record Prestamo(String socio, LocalDate vence) {}
+
+      private final Map<String, String> libros = new HashMap<>();
+      private final Map<String, Integer> deudas = new HashMap<>();
+      private final Map<String, Prestamo> prestamos = new HashMap<>();
+
+      void libro(String codigo, String titulo) {
+          libros.put(codigo, titulo);
+      }
+
+      void socio(String nombre) {
+          deudas.put(nombre, 0);
+      }
+
+      LocalDate prestar(String codigo, String socio, LocalDate fecha) {
+          existeLibro(codigo);
+          existeSocio(socio);
+          if (prestamos.containsKey(codigo)) {
+              throw new IllegalStateException("libro no disponible");
+          }
+          if (deudas.get(socio) > 0) {
+              throw new IllegalStateException("multas pendientes");
+          }
+          long prestados = prestamos.values().stream().filter(p -> p.socio().equals(socio)).count();
+          if (prestados >= MAXIMO_LIBROS) {
+              throw new IllegalStateException("límite de préstamos");
+          }
+          LocalDate vence = fecha.plusDays(DIAS_PRESTAMO);
+          prestamos.put(codigo, new Prestamo(socio, vence));
+          return vence;
+      }
+
+      String devolver(String codigo, LocalDate fecha) {
+          existeLibro(codigo);
+          Prestamo prestamo = prestamos.remove(codigo);
+          if (prestamo == null) {
+              throw new IllegalStateException("libro no prestado");
+          }
+          long retraso = ChronoUnit.DAYS.between(prestamo.vence(), fecha);
+          if (retraso <= 0) {
+              return "Devuelto " + codigo;
+          }
+          int multa = (int) retraso * MULTA_CENTIMOS_POR_DIA;
+          deudas.merge(prestamo.socio(), multa, Integer::sum);
+          return "Devuelto " + codigo + " con " + retraso + " días de retraso, multa " + euros(multa) + " €";
+      }
+
+      String pagar(String socio) {
+          existeSocio(socio);
+          int deuda = deudas.put(socio, 0);
+          return socio + " paga " + euros(deuda) + " €";
+      }
+
+      String estado(String socio) {
+          existeSocio(socio);
+          TreeSet<String> titulos = new TreeSet<>();
+          prestamos.forEach((codigo, p) -> {
+              if (p.socio().equals(socio)) {
+                  titulos.add(libros.get(codigo));
+              }
+          });
+          StringBuilder texto = new StringBuilder(socio + ": " + titulos.size() + " libros, deuda "
+                  + euros(deudas.get(socio)) + " €");
+          for (String titulo : titulos) {
+              texto.append("\n  ").append(titulo);
+          }
+          return texto.toString();
+      }
+
+      private void existeLibro(String codigo) {
+          if (!libros.containsKey(codigo)) {
+              throw new IllegalArgumentException("no existe " + codigo);
+          }
+      }
+
+      private void existeSocio(String nombre) {
+          if (!deudas.containsKey(nombre)) {
+              throw new IllegalArgumentException("no existe " + nombre);
+          }
+      }
+
+      private static String euros(int centimos) {
+          return String.format("%d.%02d", centimos / 100, centimos % 100);
+      }
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          Biblioteca biblioteca = new Biblioteca();
+          while (entrada.hasNextLine()) {
+              String[] partes = entrada.nextLine().strip().split(" ", 2);
+              String orden = partes[0];
+              String resto = partes.length > 1 ? partes[1] : "";
+              try {
+                  switch (orden) {
+                      case "libro" -> {
+                          String[] datos = resto.split(" ", 2);
+                          biblioteca.libro(datos[0], datos[1]);
+                      }
+                      case "socio" -> biblioteca.socio(resto);
+                      case "prestar" -> {
+                          String[] datos = resto.split(" ");
+                          LocalDate vence = biblioteca.prestar(datos[0], datos[1], LocalDate.parse(datos[2]));
+                          System.out.println("Prestado " + datos[0] + " a " + datos[1] + " hasta " + vence);
+                      }
+                      case "devolver" -> {
+                          String[] datos = resto.split(" ");
+                          System.out.println(biblioteca.devolver(datos[0], LocalDate.parse(datos[1])));
+                      }
+                      case "pagar" -> System.out.println(biblioteca.pagar(resto));
+                      case "estado" -> System.out.println(biblioteca.estado(resto));
+                      default -> { }
+                  }
+              } catch (IllegalArgumentException | IllegalStateException e) {
+                  System.out.println("Error: " + e.getMessage());
+              }
+          }
+      }
+  }
+hints:
+  - Guarda los importes en céntimos (enteros) y formatea los euros solo al escribir; evitarás problemas de redondeo con `double`.
+  - "`fecha.plusDays(14)` calcula el vencimiento y `ChronoUnit.DAYS.between(vence, devolucion)` los días de retraso."
+  - Comprueba las reglas en el orden del enunciado y lanza excepciones con el mensaje exacto; el `main` solo tiene que añadir `Error:` delante.
+tests:
+  - input: |
+      libro L1 El Quijote
+      libro L2 Rayuela
+      libro L3 Ficciones
+      libro L4 Pedro Páramo
+      socio ana
+      socio luis
+      prestar L1 ana 2026-10-01
+      prestar L1 luis 2026-10-02
+      prestar L2 ana 2026-10-01
+      prestar L3 ana 2026-10-01
+      prestar L4 ana 2026-10-01
+      estado ana
+      devolver L2 2026-10-15
+      devolver L1 2026-10-20
+      prestar L4 ana 2026-10-20
+      pagar ana
+      prestar L4 ana 2026-10-20
+      devolver L2 2026-10-21
+      estado ana
+    output: |
+      Prestado L1 a ana hasta 2026-10-15
+      Error: libro no disponible
+      Prestado L2 a ana hasta 2026-10-15
+      Prestado L3 a ana hasta 2026-10-15
+      Error: límite de préstamos
+      ana: 3 libros, deuda 0.00 €
+        El Quijote
+        Ficciones
+        Rayuela
+      Devuelto L2
+      Devuelto L1 con 5 días de retraso, multa 2.50 €
+      Error: multas pendientes
+      ana paga 2.50 €
+      Prestado L4 a ana hasta 2026-11-03
+      Error: libro no prestado
+      ana: 2 libros, deuda 0.00 €
+        Ficciones
+        Pedro Páramo
+    sample: true
+  - input: |
+      socio eva
+      prestar L9 eva 2026-01-01
+      estado nadie
+      estado eva
+    output: |
+      Error: no existe L9
+      Error: no existe nadie
+      eva: 0 libros, deuda 0.00 €
