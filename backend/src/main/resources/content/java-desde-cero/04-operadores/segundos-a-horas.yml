@@ -1,0 +1,47 @@
+title: Segundos a horas, minutos y segundos
+summary: Descompón una cantidad con división entera y resto.
+difficulty: EASY
+statement: |
+  Lee un número entero de segundos y escríbelo como horas, minutos y segundos:
+
+  ```
+  <h> h <m> min <s> s
+  ```
+
+  **Ejemplo:** `3725` → `1 h 2 min 5 s`.
+starter: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int total = entrada.nextInt();
+
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int total = entrada.nextInt();
+          int horas = total / 3600;
+          int minutos = total % 3600 / 60;
+          int segundos = total % 60;
+          System.out.println(horas + " h " + minutos + " min " + segundos + " s");
+      }
+  }
+hints:
+  - Una hora tiene 3600 segundos; `total / 3600` da las horas completas.
+  - Lo que sobra tras quitar las horas es `total % 3600`; divídelo entre 60 para los minutos.
+tests:
+  - input: "3725\n"
+    output: "1 h 2 min 5 s\n"
+    sample: true
+  - input: "59\n"
+    output: "0 h 0 min 59 s\n"
+  - input: "86399\n"
+    output: "23 h 59 min 59 s\n"
+  - input: "7200\n"
+    output: "2 h 0 min 0 s\n"

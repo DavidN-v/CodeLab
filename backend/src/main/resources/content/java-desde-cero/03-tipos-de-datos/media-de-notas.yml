@@ -1,0 +1,55 @@
+title: Media de tres notas
+summary: Evita la división entera al calcular una media.
+difficulty: EASY
+statement: |
+  Lee tres notas enteras y escribe su media con **dos decimales**:
+
+  ```
+  Media: <media>
+  ```
+
+  **Ejemplo:** con `7 8 10` la salida es `Media: 8.33`.
+
+  Cuidado: si divides tres enteros entre otro entero, Java hace división entera y perderás los decimales.
+starter: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int nota1 = entrada.nextInt();
+          int nota2 = entrada.nextInt();
+          int nota3 = entrada.nextInt();
+
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int nota1 = entrada.nextInt();
+          int nota2 = entrada.nextInt();
+          int nota3 = entrada.nextInt();
+          double media = (nota1 + nota2 + nota3) / 3.0;
+          System.out.printf("Media: %.2f%n", media);
+      }
+  }
+hints:
+  - "`(nota1 + nota2 + nota3) / 3` es una división entera."
+  - Divide entre `3.0`, o convierte la suma con `(double)` antes de dividir.
+tests:
+  - input: "7 8 10\n"
+    output: |
+      Media: 8.33
+    sample: true
+  - input: "5 5 6\n"
+    output: |
+      Media: 5.33
+  - input: "10 10 10\n"
+    output: |
+      Media: 10.00
+  - input: "0 1 1\n"
+    output: |
+      Media: 0.67

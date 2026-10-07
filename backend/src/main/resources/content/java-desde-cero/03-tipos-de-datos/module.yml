@@ -1,0 +1,17 @@
+lessons:
+  - slug: tipos-primitivos
+    title: Los tipos primitivos
+    summary: Los ocho tipos básicos, sus rangos y cómo escribir sus valores.
+    minutes: 12
+  - slug: conversiones
+    title: Conversiones entre tipos
+    summary: Conversión automática, casting y la división entera.
+    minutes: 12
+  - slug: string-y-envoltorios
+    title: String, char y las clases envoltorio
+    summary: El texto en Java y cómo pasar de texto a número y al revés.
+    minutes: 12
+exercises:
+  - celsius-a-fahrenheit
+  - media-de-notas
+  - sumar-textos

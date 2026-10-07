@@ -1,0 +1,68 @@
+title: Nota en palabras
+summary: Ordena bien las condiciones y valida la entrada.
+difficulty: EASY
+statement: |
+  Lee una nota decimal entre 0 y 10 y escribe su calificación:
+
+  | Nota | Salida |
+  | --- | --- |
+  | menor que 0 o mayor que 10 | `Nota no válida` |
+  | 9 o más | `Sobresaliente` |
+  | 7 o más | `Notable` |
+  | 6 o más | `Bien` |
+  | 5 o más | `Suficiente` |
+  | menos de 5 | `Insuficiente` |
+starter: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          double nota = entrada.nextDouble();
+
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          double nota = entrada.nextDouble();
+          if (nota < 0 || nota > 10) {
+              System.out.println("Nota no válida");
+          } else if (nota >= 9) {
+              System.out.println("Sobresaliente");
+          } else if (nota >= 7) {
+              System.out.println("Notable");
+          } else if (nota >= 6) {
+              System.out.println("Bien");
+          } else if (nota >= 5) {
+              System.out.println("Suficiente");
+          } else {
+              System.out.println("Insuficiente");
+          }
+      }
+  }
+hints:
+  - Valida primero que la nota esté entre 0 y 10.
+  - Después ve de la nota más alta a la más baja con `else if`.
+tests:
+  - input: "9.5\n"
+    output: "Sobresaliente\n"
+    sample: true
+  - input: "4.99\n"
+    output: "Insuficiente\n"
+    sample: true
+  - input: "7\n"
+    output: "Notable\n"
+  - input: "6.5\n"
+    output: "Bien\n"
+  - input: "5\n"
+    output: "Suficiente\n"
+  - input: "10\n"
+    output: "Sobresaliente\n"
+  - input: "11\n"
+    output: "Nota no válida\n"
+  - input: "-1\n"
+    output: "Nota no válida\n"
