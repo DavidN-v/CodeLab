@@ -69,8 +69,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 	@ExceptionHandler(TutorUnavailableException.class)
 	public ResponseEntity<Object> handleTutorUnavailable(TutorUnavailableException ex, WebRequest request) {
 		log.warn("Tutor unavailable on {}: {}", pathOf(request), ex.getMessage());
-		return respond(HttpStatus.SERVICE_UNAVAILABLE, ErrorCode.TUTOR_UNAVAILABLE,
-				ErrorCode.TUTOR_UNAVAILABLE.defaultMessage(), List.of(), request);
+		String message = ex.userMessage() != null ? ex.userMessage() : ErrorCode.TUTOR_UNAVAILABLE.defaultMessage();
+		return respond(HttpStatus.SERVICE_UNAVAILABLE, ErrorCode.TUTOR_UNAVAILABLE, message, List.of(), request);
 	}
 
 	@ExceptionHandler(ConstraintViolationException.class)

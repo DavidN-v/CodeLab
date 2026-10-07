@@ -8,9 +8,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @param model Claude model that answers
  * @param effort how much the model thinks: low, medium, high, xhigh or max
  * @param timeout longest wait for one answer
+ * @param baseUrl API endpoint; null for Anthropic's (tests point it elsewhere)
  */
 @ConfigurationProperties("forja.tutor")
-public record TutorProperties(String apiKey, String model, String effort, Duration timeout) {
+public record TutorProperties(String apiKey, String model, String effort, Duration timeout, String baseUrl) {
 
 	public boolean enabled() {
 		return apiKey != null && !apiKey.isBlank();

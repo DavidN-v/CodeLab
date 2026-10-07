@@ -59,3 +59,11 @@
   margin-top: var(--space-5);
   color: var(--color-text-muted);
 }
+
+.tutor__error {
+  padding: var(--space-2) var(--space-3);
+  border-left: 3px solid var(--color-danger);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-danger-soft);
+  font-size: var(--text-sm);
+}

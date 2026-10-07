@@ -38,8 +38,13 @@ export class TutorService {
   }
 
   private ask(mode: string, body: object): Observable<string> {
-    return this.http
-      .post<{ answer: string }>(`${this.tutorUrl}/${mode}`, body)
-      .pipe(map((response) => response.answer));
+    return (
+      this.http
+        // The panel shows the failure inline, where the learner is looking.
+        .post<{ answer: string }>(`${this.tutorUrl}/${mode}`, body, {
+          context: withoutErrorNotification(),
+        })
+        .pipe(map((response) => response.answer))
+    );
   }
 }

@@ -65,7 +65,8 @@ forja:
   tutor:
     api-key: ${ANTHROPIC_API_KEY:}
     model: ${TUTOR_MODEL:claude-opus-5-5}
-    effort: ${TUTOR_EFFORT:medium}
+    # Short explanations for beginners: low effort answers fast and well.
+    effort: ${TUTOR_EFFORT:low}
     timeout: 90s
 
 logging:

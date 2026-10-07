@@ -27,6 +27,9 @@
     @if (hint() && !answer()) {
       <p class="tutor__hint">{{ hint() }}</p>
     }
+    @if (error(); as message) {
+      <p class="tutor__error" role="alert">⚠ {{ message }}</p>
+    }
     @if (answer(); as text) {
       <div class="tutor__answer" aria-live="polite">
         <p class="tutor__by">✦ Tutor</p>
