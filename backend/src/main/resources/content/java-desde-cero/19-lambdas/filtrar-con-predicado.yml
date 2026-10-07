@@ -1,0 +1,73 @@
+title: Filtro reutilizable
+summary: Un método que recibe la condición como Predicate.
+difficulty: EASY
+statement: |
+  Escribe un método `static List<Integer> filtrar(List<Integer> numeros, Predicate<Integer> condicion)` que devuelva los números que cumplen la condición, en el mismo orden.
+
+  La entrada es una lista de enteros en una línea. Usa tu método con **lambdas** para escribir:
+
+  ```
+  Pares: [...]
+  Positivos: [...]
+  Múltiplos de 3 o 5: [...]
+  ```
+starter: |
+  import java.util.ArrayList;
+  import java.util.List;
+  import java.util.Scanner;
+  import java.util.function.Predicate;
+
+  public class Main {
+
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          List<Integer> numeros = new ArrayList<>();
+          while (entrada.hasNextInt()) {
+              numeros.add(entrada.nextInt());
+          }
+
+      }
+  }
+solution: |
+  import java.util.ArrayList;
+  import java.util.List;
+  import java.util.Scanner;
+  import java.util.function.Predicate;
+
+  public class Main {
+      static List<Integer> filtrar(List<Integer> numeros, Predicate<Integer> condicion) {
+          List<Integer> resultado = new ArrayList<>();
+          for (int n : numeros) {
+              if (condicion.test(n)) {
+                  resultado.add(n);
+              }
+          }
+          return resultado;
+      }
+
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          List<Integer> numeros = new ArrayList<>();
+          while (entrada.hasNextInt()) {
+              numeros.add(entrada.nextInt());
+          }
+          System.out.println("Pares: " + filtrar(numeros, n -> n % 2 == 0));
+          System.out.println("Positivos: " + filtrar(numeros, n -> n > 0));
+          System.out.println("Múltiplos de 3 o 5: " + filtrar(numeros, n -> n % 3 == 0 || n % 5 == 0));
+      }
+  }
+hints:
+  - "Dentro de `filtrar`, `condicion.test(n)` devuelve si `n` cumple la condición."
+  - "Cada llamada pasa una lambda distinta: `filtrar(numeros, n -> n % 2 == 0)`."
+tests:
+  - input: "3 -4 10 7 -15 0 9\n"
+    output: |
+      Pares: [-4, 10, 0]
+      Positivos: [3, 10, 7, 9]
+      Múltiplos de 3 o 5: [3, 10, -15, 0, 9]
+    sample: true
+  - input: "1 7 11\n"
+    output: |
+      Pares: []
+      Positivos: [1, 7, 11]
+      Múltiplos de 3 o 5: []

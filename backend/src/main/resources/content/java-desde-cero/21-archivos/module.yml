@@ -1,0 +1,17 @@
+lessons:
+  - slug: leer-y-escribir
+    title: Leer y escribir archivos
+    summary: Files y Path para trabajar con archivos de texto en pocas líneas.
+    minutes: 12
+  - slug: try-with-resources
+    title: try-with-resources y archivos grandes
+    summary: Leer línea a línea y cerrar los recursos siempre.
+    minutes: 12
+  - slug: rutas-y-directorios
+    title: Rutas y directorios
+    summary: Crear, listar, recorrer, copiar y borrar.
+    minutes: 10
+exercises:
+  - diario-numerado
+  - resumen-de-csv
+  - arbol-de-carpetas

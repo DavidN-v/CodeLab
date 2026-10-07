@@ -23,7 +23,7 @@
 exec 2>/dev/null
 
 harness=/sandbox/.harness
-work=/sandbox/work
+work=/sandbox/runs
 mkdir -p "$harness/classes" "$work" || exit 70
 
 now_ms() {
@@ -52,11 +52,11 @@ if [ "$code" -ne 0 ]; then
   exit 0
 fi
 
-# Programs run from an empty directory of their own, so file exercises see
-# only the files they create.
-cd "$work" || exit 70
+# Each run starts in an empty directory of its own, so a file written while
+# processing one input is never seen by the next.
 i=0
 while [ "$i" -lt "$FORJA_RUNS" ]; do
+  mkdir -p "$work/$i" && cd "$work/$i" || exit 70
   eval "printf '%s' \"\$FORJA_STDIN_$i\"" > "$harness/stdin"
   start=$(now_ms)
   # exec replaces the subshell with the program, so when a timeout kills it the

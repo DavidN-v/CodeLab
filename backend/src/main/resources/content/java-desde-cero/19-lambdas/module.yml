@@ -1,0 +1,17 @@
+lessons:
+  - slug: funciones-como-valores
+    title: Funciones como valores
+    summary: Qué es una lambda y cómo se escribe.
+    minutes: 12
+  - slug: interfaces-funcionales
+    title: Las interfaces funcionales de Java
+    summary: Function, Predicate, Consumer, Supplier y sus combinaciones.
+    minutes: 12
+  - slug: referencias-a-metodos
+    title: Referencias a métodos
+    summary: La forma más corta de pasar un método existente.
+    minutes: 8
+exercises:
+  - filtrar-con-predicado
+  - transformaciones-encadenadas
+  - ordenar-con-comparadores

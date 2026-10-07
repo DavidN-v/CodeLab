@@ -1,0 +1,114 @@
+title: Árbol de carpetas
+summary: Crea una estructura de directorios y recórrela con Files.walk.
+difficulty: HARD
+statement: |
+  Cada línea de la entrada es una ruta relativa de un **archivo** con `/` como separador, por ejemplo `src/main/App.java`. Para cada una:
+
+  - crea las carpetas necesarias con `Files.createDirectories`,
+  - crea el archivo con el texto de la propia ruta como contenido.
+
+  Todo debe ir dentro de una carpeta raíz `proyecto`. Después recorre `proyecto` con `Files.walk` y escribe el árbol ordenado alfabéticamente por ruta, con dos espacios de sangría por nivel y una `/` tras el nombre de las carpetas (la raíz incluida, sin sangría). Termina con `<carpetas> carpetas, <archivos> archivos` (la raíz cuenta como carpeta).
+
+  **Ejemplo:** con `src/App.java` y `README.md`:
+
+  ```
+  proyecto/
+    README.md
+    src/
+      App.java
+  2 carpetas, 2 archivos
+  ```
+starter: |
+  import java.io.IOException;
+  import java.nio.file.Files;
+  import java.nio.file.Path;
+  import java.util.List;
+  import java.util.Scanner;
+  import java.util.stream.Stream;
+
+  public class Main {
+      public static void main(String[] args) throws IOException {
+          Scanner entrada = new Scanner(System.in);
+          Path raiz = Path.of("proyecto");
+          Files.createDirectories(raiz);
+          while (entrada.hasNextLine()) {
+              String ruta = entrada.nextLine().strip();
+          }
+
+      }
+  }
+solution: |
+  import java.io.IOException;
+  import java.nio.file.Files;
+  import java.nio.file.Path;
+  import java.util.List;
+  import java.util.Scanner;
+  import java.util.stream.Stream;
+
+  public class Main {
+      public static void main(String[] args) throws IOException {
+          Scanner entrada = new Scanner(System.in);
+          Path raiz = Path.of("proyecto");
+          Files.createDirectories(raiz);
+          while (entrada.hasNextLine()) {
+              String ruta = entrada.nextLine().strip();
+              if (ruta.isEmpty()) {
+                  continue;
+              }
+              Path archivo = raiz.resolve(ruta);
+              Files.createDirectories(archivo.getParent());
+              Files.writeString(archivo, ruta);
+          }
+          List<Path> rutas;
+          try (Stream<Path> recorrido = Files.walk(raiz)) {
+              rutas = recorrido.sorted().toList();
+          }
+          int carpetas = 0;
+          int archivos = 0;
+          for (Path ruta : rutas) {
+              int nivel = raiz.relativize(ruta).getNameCount();
+              boolean esRaiz = ruta.equals(raiz);
+              String sangria = esRaiz ? "" : "  ".repeat(nivel);
+              if (Files.isDirectory(ruta)) {
+                  carpetas++;
+                  System.out.println(sangria + ruta.getFileName() + "/");
+              } else {
+                  archivos++;
+                  System.out.println(sangria + ruta.getFileName());
+              }
+          }
+          System.out.println(carpetas + " carpetas, " + archivos + " archivos");
+      }
+  }
+hints:
+  - "`raiz.resolve(\"src/App.java\")` construye la ruta completa, y `getParent()` la carpeta que hay que crear."
+  - "`Files.walk(raiz)` incluye la propia raíz; ordénalo con `sorted()` y ciérralo con try-with-resources."
+  - "`raiz.relativize(ruta).getNameCount()` te dice a cuántos niveles de la raíz está cada ruta."
+tests:
+  - input: |
+      src/App.java
+      README.md
+    output: |
+      proyecto/
+        README.md
+        src/
+          App.java
+      2 carpetas, 2 archivos
+    sample: true
+  - input: |
+      src/main/java/App.java
+      src/main/resources/config.yml
+      src/test/AppTest.java
+      pom.xml
+    output: |
+      proyecto/
+        pom.xml
+        src/
+          main/
+            java/
+              App.java
+            resources/
+              config.yml
+          test/
+            AppTest.java
+      6 carpetas, 4 archivos

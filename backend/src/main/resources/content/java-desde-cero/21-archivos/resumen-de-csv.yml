@@ -1,0 +1,99 @@
+title: Resumen de un CSV
+summary: Lee un archivo línea a línea con BufferedReader y try-with-resources.
+difficulty: MEDIUM
+statement: |
+  La entrada es un archivo CSV con una cabecera (`producto,categoria,precio`) y una fila por producto. El programa debe:
+
+  1. Copiar la entrada tal cual a `productos.csv`.
+  2. Leer `productos.csv` con un `BufferedReader` dentro de un **try-with-resources**, saltándose la cabecera y las líneas vacías.
+  3. Escribir, por categoría en orden alfabético: `<categoria>: <número de productos> productos, media <precio medio con 2 decimales>`.
+  4. Si una fila tiene un precio que no es un número, ignorarla y contarla; al final escribe `Filas inválidas: <n>`.
+starter: |
+  import java.io.BufferedReader;
+  import java.io.IOException;
+  import java.nio.file.Files;
+  import java.nio.file.Path;
+  import java.util.Map;
+  import java.util.Scanner;
+  import java.util.TreeMap;
+
+  public class Main {
+      public static void main(String[] args) throws IOException {
+          Scanner entrada = new Scanner(System.in);
+          StringBuilder csv = new StringBuilder();
+          while (entrada.hasNextLine()) {
+              csv.append(entrada.nextLine()).append('\n');
+          }
+          Path archivo = Path.of("productos.csv");
+          Files.writeString(archivo, csv);
+
+      }
+  }
+solution: |
+  import java.io.BufferedReader;
+  import java.io.IOException;
+  import java.nio.file.Files;
+  import java.nio.file.Path;
+  import java.util.Map;
+  import java.util.Scanner;
+  import java.util.TreeMap;
+
+  public class Main {
+      public static void main(String[] args) throws IOException {
+          Scanner entrada = new Scanner(System.in);
+          StringBuilder csv = new StringBuilder();
+          while (entrada.hasNextLine()) {
+              csv.append(entrada.nextLine()).append('\n');
+          }
+          Path archivo = Path.of("productos.csv");
+          Files.writeString(archivo, csv);
+
+          Map<String, double[]> porCategoria = new TreeMap<>();
+          int invalidas = 0;
+          try (BufferedReader lector = Files.newBufferedReader(archivo)) {
+              lector.readLine();
+              String linea;
+              while ((linea = lector.readLine()) != null) {
+                  if (linea.isBlank()) {
+                      continue;
+                  }
+                  String[] partes = linea.split(",");
+                  try {
+                      double precio = Double.parseDouble(partes[2].trim());
+                      double[] acumulado = porCategoria.computeIfAbsent(partes[1].trim(), c -> new double[2]);
+                      acumulado[0]++;
+                      acumulado[1] += precio;
+                  } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+                      invalidas++;
+                  }
+              }
+          }
+          porCategoria.forEach((categoria, datos) -> System.out.printf("%s: %d productos, media %.2f%n",
+                  categoria, (int) datos[0], datos[1] / datos[0]));
+          System.out.println("Filas inválidas: " + invalidas);
+      }
+  }
+hints:
+  - Llama a `readLine()` una vez antes del bucle para descartar la cabecera.
+  - Un `TreeMap<String, double[]>` con `{cantidad, suma}` por categoría te da el orden alfabético y lo necesario para la media.
+  - Captura la `NumberFormatException` dentro del bucle para que una fila mala no detenga el resto.
+tests:
+  - input: |
+      producto,categoria,precio
+      Taza,hogar,6.5
+      Libro,cultura,18
+      Lámpara,hogar,25
+      Disco,cultura,abc
+
+      Cuaderno,cultura,3.25
+    output: |
+      cultura: 2 productos, media 10.63
+      hogar: 2 productos, media 15.75
+      Filas inválidas: 1
+    sample: true
+  - input: |
+      producto,categoria,precio
+      Uno,a,1
+    output: |
+      a: 1 productos, media 1.00
+      Filas inválidas: 0

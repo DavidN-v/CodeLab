@@ -1,0 +1,72 @@
+title: Diario numerado
+summary: Escribe la entrada en un archivo y vuelve a leerlo.
+difficulty: EASY
+statement: |
+  Lee todas las líneas de la entrada y guárdalas en un archivo `diario.txt` con `Files.write`. Después **lee el archivo** (no la lista que ya tienes) con `Files.readAllLines` y escribe cada línea numerada:
+
+  ```
+  1. <línea>
+  2. <línea>
+  ```
+
+  Termina con una línea `Archivo: <tamaño en bytes> bytes` usando `Files.size`.
+starter: |
+  import java.io.IOException;
+  import java.nio.file.Files;
+  import java.nio.file.Path;
+  import java.util.ArrayList;
+  import java.util.List;
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) throws IOException {
+          Scanner entrada = new Scanner(System.in);
+          List<String> lineas = new ArrayList<>();
+          while (entrada.hasNextLine()) {
+              lineas.add(entrada.nextLine());
+          }
+          Path diario = Path.of("diario.txt");
+
+      }
+  }
+solution: |
+  import java.io.IOException;
+  import java.nio.file.Files;
+  import java.nio.file.Path;
+  import java.util.ArrayList;
+  import java.util.List;
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) throws IOException {
+          Scanner entrada = new Scanner(System.in);
+          List<String> lineas = new ArrayList<>();
+          while (entrada.hasNextLine()) {
+              lineas.add(entrada.nextLine());
+          }
+          Path diario = Path.of("diario.txt");
+          Files.write(diario, lineas);
+          List<String> leidas = Files.readAllLines(diario);
+          for (int i = 0; i < leidas.size(); i++) {
+              System.out.println((i + 1) + ". " + leidas.get(i));
+          }
+          System.out.println("Archivo: " + Files.size(diario) + " bytes");
+      }
+  }
+hints:
+  - "`Files.write(diario, lineas)` escribe cada elemento de la lista en una línea, terminada en salto de línea."
+  - "El tamaño cuenta los bytes en UTF-8: las letras con tilde ocupan 2."
+tests:
+  - input: |
+      Hoy aprendí Java
+      Mañana, streams
+    output: |
+      1. Hoy aprendí Java
+      2. Mañana, streams
+      Archivo: 35 bytes
+    sample: true
+  - input: |
+      a
+    output: |
+      1. a
+      Archivo: 2 bytes
