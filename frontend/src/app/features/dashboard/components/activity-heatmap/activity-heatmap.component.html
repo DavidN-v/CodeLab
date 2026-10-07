@@ -13,7 +13,7 @@
     }
   </div>
   <figcaption class="heatmap__caption">
-    <span>{{ activeDays() }} días activos · últimas 12 semanas</span>
+    <span>{{ activeDays() }} {{ activeDays() === 1 ? 'día activo' : 'días activos' }} · últimas 12 semanas</span>
     <span class="heatmap__legend" aria-hidden="true">
       Menos
       @for (level of [0, 1, 2, 3, 4]; track level) {

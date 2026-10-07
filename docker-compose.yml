@@ -94,6 +94,8 @@ services:
     image: tecnativa/docker-socket-proxy:v0.4.2
     restart: unless-stopped
     environment:
+      # IPv4 only: the default also binds IPv6 and fails where Docker has it disabled.
+      DISABLE_IPV6: 1
       CONTAINERS: 1
       IMAGES: 1
       POST: 1
