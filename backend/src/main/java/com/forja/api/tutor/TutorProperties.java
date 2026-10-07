@@ -13,6 +13,19 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties("forja.tutor")
 public record TutorProperties(String apiKey, String model, String effort, Duration timeout, String baseUrl) {
 
+	/** A key pasted into a Windows .env often brings quotes, spaces or a carriage return with it. */
+	public TutorProperties {
+		apiKey = clean(apiKey);
+		model = clean(model);
+	}
+
+	private static String clean(String value) {
+		if (value == null) {
+			return null;
+		}
+		return value.strip().replaceAll("^[\"']+|[\"']+$", "").strip();
+	}
+
 	public boolean enabled() {
 		return apiKey != null && !apiKey.isBlank();
 	}

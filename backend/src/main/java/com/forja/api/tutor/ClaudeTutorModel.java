@@ -111,11 +111,12 @@ public class ClaudeTutorModel implements TutorModel {
 		if (ex instanceof AnthropicServiceException || ex instanceof AnthropicIoException) {
 			return unavailable(ex);
 		}
-		return ex;
+		// Anything else (a malformed key, an unexpected response) still deserves an answer the learner can read.
+		return unavailable(ex);
 	}
 
 	private TutorUnavailableException unavailable(RuntimeException ex) {
-		log.warn("Tutor request failed: {}", ex.getMessage());
+		log.warn("Tutor request failed: {}", ex.getMessage(), ex);
 		String message;
 		if (ex instanceof UnauthorizedException) {
 			message = "La clave ANTHROPIC_API_KEY no es válida. Revísala en el archivo .env (sin espacios ni "

@@ -103,6 +103,23 @@ class ClaudeTutorModelTest {
 				ex -> assertThat(ex.userMessage()).contains("TUTOR_MODEL"));
 	}
 
+	@Test
+	void anUnexpectedReplyStillGivesAReadableMessage() {
+		replies.add(new Reply(200, "not json"));
+
+		assertThatThrownBy(() -> model.answer("s", "p")).isInstanceOfSatisfying(TutorUnavailableException.class,
+				ex -> assertThat(ex.userMessage()).startsWith("El tutor no ha podido responder"));
+	}
+
+	@Test
+	void aKeyPastedWithQuotesAndACarriageReturnIsCleaned() {
+		TutorProperties properties = new TutorProperties(" \"sk-test\"\r", "claude-opus-5-5\r", "low",
+				Duration.ofSeconds(1), null);
+
+		assertThat(properties.apiKey()).isEqualTo("sk-test");
+		assertThat(properties.model()).isEqualTo("claude-opus-5-5");
+	}
+
 	private static String error(String type, String message) {
 		return "{\"type\":\"error\",\"error\":{\"type\":\"%s\",\"message\":\"%s\"}}".formatted(type, message);
 	}
