@@ -35,7 +35,12 @@ export function toAppError(failure: unknown): AppError {
 
   const body = isApiErrorBody(failure.error) ? failure.error : null;
   const code = body?.error ?? `HTTP_${failure.status}`;
-  return new AppError(failure.status, code, resolveMessage(failure.status, body), body?.fieldErrors ?? []);
+  return new AppError(
+    failure.status,
+    code,
+    resolveMessage(failure.status, body),
+    body?.fieldErrors ?? [],
+  );
 }
 
 /** 5xx codes whose message is written for learners and safe to show as is. */

@@ -18,7 +18,10 @@ describe('NavbarComponent', () => {
     await TestBed.configureTestingModule({
       imports: [NavbarComponent],
       // Every link needs somewhere to go, or clicking it ends in a navigation error.
-      providers: [provideHttpClient(), provideRouter([{ path: '**', component: DestinationStubComponent }])],
+      providers: [
+        provideHttpClient(),
+        provideRouter([{ path: '**', component: DestinationStubComponent }]),
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(NavbarComponent);

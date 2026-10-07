@@ -12,7 +12,11 @@ describe('CourseService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(), provideHttpClientTesting(), { provide: API_BASE_URL, useValue: '/api' }],
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        { provide: API_BASE_URL, useValue: '/api' },
+      ],
     });
     service = TestBed.inject(CourseService);
     http = TestBed.inject(HttpTestingController);
@@ -33,7 +37,9 @@ describe('CourseService', () => {
 
   it('fails with a not-found error when the language has no course', () => {
     let error: unknown;
-    service.getPrimaryCourse('python').subscribe({ error: (failure: unknown) => (error = failure) });
+    service
+      .getPrimaryCourse('python')
+      .subscribe({ error: (failure: unknown) => (error = failure) });
     http.expectOne('/api/courses?language=python').flush([]);
 
     expect(error).toBeInstanceOf(AppError);

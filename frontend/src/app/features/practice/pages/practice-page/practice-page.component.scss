@@ -1,0 +1,74 @@
+@use 'mixins' as *;
+
+.practice__top {
+  display: grid;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+
+  @include from('md') {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
+  }
+}
+
+.playground-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-4) var(--space-5);
+  border: 1px solid var(--color-border-strong);
+  border-left: 3px solid var(--color-accent);
+  border-radius: var(--radius-md);
+  background-color: var(--color-code-bg);
+  text-decoration: none;
+
+  &:hover {
+    background-color: var(--color-surface);
+  }
+}
+
+.playground-card__title {
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  font-weight: 500;
+}
+
+.playground-card__text {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.practice__progress .section-title {
+  margin-bottom: var(--space-2);
+}
+
+.filters {
+  display: grid;
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+
+  @include from('sm') {
+    grid-template-columns: 2fr 1fr 1fr;
+  }
+}
+
+.group + .group {
+  margin-top: var(--space-6);
+}
+
+.exercise {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.exercise__title {
+  font-weight: 500;
+}
+
+.exercise__summary {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}

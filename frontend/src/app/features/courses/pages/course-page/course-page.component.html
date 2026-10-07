@@ -4,7 +4,9 @@
   <section class="page">
     <div class="state state--error" role="alert">
       <p>No hemos podido cargar este curso.</p>
-      <button type="button" class="button button--secondary" (click)="course.reload()">Reintentar</button>
+      <button type="button" class="button button--secondary" (click)="course.reload()">
+        Reintentar
+      </button>
       <a class="button button--ghost" routerLink="/languages">Ver lenguajes</a>
     </div>
   </section>
@@ -12,7 +14,8 @@
   <section class="page" aria-labelledby="course-heading">
     <header class="page__header">
       <p class="page__eyebrow">
-        <a routerLink="/languages">Lenguajes</a> / {{ detail.language.name }} {{ detail.language.version }}
+        <a routerLink="/languages">Lenguajes</a> / {{ detail.language.name }}
+        {{ detail.language.version }}
       </p>
       <h1 id="course-heading" class="page__title">{{ detail.title }}</h1>
       <p class="page__lead">{{ detail.summary }}</p>
@@ -20,10 +23,18 @@
         <p class="course__description">{{ detail.description }}</p>
       }
       <ul class="course__stats" aria-label="Contenido del curso">
-        <li><strong>{{ totals().modules }}</strong> módulos</li>
-        <li><strong>{{ totals().lessons }}</strong> lecciones</li>
-        <li><strong>{{ totals().exercises }}</strong> ejercicios</li>
-        <li>~<strong>{{ totals().hours }}</strong> h de estudio</li>
+        <li>
+          <strong>{{ totals().modules }}</strong> módulos
+        </li>
+        <li>
+          <strong>{{ totals().lessons }}</strong> lecciones
+        </li>
+        <li>
+          <strong>{{ totals().exercises }}</strong> ejercicios
+        </li>
+        <li>
+          ~<strong>{{ totals().hours }}</strong> h de estudio
+        </li>
       </ul>
     </header>
 
@@ -49,14 +60,17 @@
         }
       } @else {
         @if (firstModule(); as first) {
-          <a class="button button--primary" [routerLink]="['/languages', detail.language.slug, 'modules', first.slug]">
+          <a
+            class="button button--primary"
+            [routerLink]="['/languages', detail.language.slug, 'modules', first.slug]"
+          >
             Empezar por {{ first.title }}
           </a>
         }
         @if (!auth.isAuthenticated()) {
           <p class="course__hint">
-            <a routerLink="/register">Crea una cuenta</a> para guardar tu progreso, ejecutar código y
-            resolver ejercicios.
+            <a routerLink="/register">Crea una cuenta</a> para guardar tu progreso, ejecutar código
+            y resolver ejercicios.
           </p>
         }
       }

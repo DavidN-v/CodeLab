@@ -25,7 +25,10 @@ describe('LanguagesPageComponent', () => {
         provideRouter([]),
         {
           provide: LanguageService,
-          useValue: { getLanguages: () => of([JAVA, { ...JAVA, id: 2, slug: 'python', name: 'Python', active: false }]) },
+          useValue: {
+            getLanguages: () =>
+              of([JAVA, { ...JAVA, id: 2, slug: 'python', name: 'Python', active: false }]),
+          },
         },
       ],
     }).compileComponents();
@@ -36,7 +39,9 @@ describe('LanguagesPageComponent', () => {
     const element = fixture.nativeElement as HTMLElement;
 
     expect(element.querySelectorAll('.language')).toHaveLength(2);
-    expect(element.querySelector('a.language__action')?.getAttribute('href')).toBe('/languages/java');
+    expect(element.querySelector('a.language__action')?.getAttribute('href')).toBe(
+      '/languages/java',
+    );
     expect(element.querySelector('.language--upcoming')?.textContent).toContain('Próximamente');
   });
 });

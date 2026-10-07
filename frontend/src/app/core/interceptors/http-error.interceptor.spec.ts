@@ -34,7 +34,14 @@ describe('httpErrorInterceptor', () => {
   }
 
   function apiError(status: number, error: string, message: string, extra: object = {}): object {
-    return { timestamp: '2026-01-01T00:00:00Z', status, error, message, path: '/api/resource', ...extra };
+    return {
+      timestamp: '2026-01-01T00:00:00Z',
+      status,
+      error,
+      message,
+      path: '/api/resource',
+      ...extra,
+    };
   }
 
   function shownMessages(): string[] {
@@ -44,7 +51,10 @@ describe('httpErrorInterceptor', () => {
   beforeEach(() => {
     vi.useFakeTimers();
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(withInterceptors([httpErrorInterceptor])), provideHttpClientTesting()],
+      providers: [
+        provideHttpClient(withInterceptors([httpErrorInterceptor])),
+        provideHttpClientTesting(),
+      ],
     });
     http = TestBed.inject(HttpClient);
     backend = TestBed.inject(HttpTestingController);
@@ -68,7 +78,10 @@ describe('httpErrorInterceptor', () => {
 
   it('keeps the field errors and the server message of a 400', () => {
     const fieldErrors = [{ field: 'email', message: 'no es válido' }];
-    const error = failRequest(400, apiError(400, 'VALIDATION_ERROR', 'Revisa el formulario.', { fieldErrors }));
+    const error = failRequest(
+      400,
+      apiError(400, 'VALIDATION_ERROR', 'Revisa el formulario.', { fieldErrors }),
+    );
 
     expect(error.status).toBe(400);
     expect(error.code).toBe('VALIDATION_ERROR');
@@ -89,7 +102,10 @@ describe('httpErrorInterceptor', () => {
     failRequest(404, apiError(404, 'RESOURCE_NOT_FOUND', "No existe el lenguaje 'cobol'."));
     failRequest(409, apiError(409, 'CONFLICT', 'Ese ejercicio ya está resuelto.'));
 
-    expect(shownMessages()).toEqual(["No existe el lenguaje 'cobol'.", 'Ese ejercicio ya está resuelto.']);
+    expect(shownMessages()).toEqual([
+      "No existe el lenguaje 'cobol'.",
+      'Ese ejercicio ya está resuelto.',
+    ]);
   });
 
   it('falls back to a generic message when the body is not an API error', () => {
@@ -100,7 +116,10 @@ describe('httpErrorInterceptor', () => {
   });
 
   it('never exposes the details of a server failure', () => {
-    const error = failRequest(500, apiError(500, 'INTERNAL_ERROR', 'NullPointerException at Foo.java:42'));
+    const error = failRequest(
+      500,
+      apiError(500, 'INTERNAL_ERROR', 'NullPointerException at Foo.java:42'),
+    );
 
     expect(error.status).toBe(500);
     expect(error.message).not.toContain('NullPointerException');
@@ -129,7 +148,9 @@ describe('httpErrorInterceptor', () => {
   });
 
   it('still fails the request but stays quiet when the caller opts out', () => {
-    const error = failRequest(404, apiError(404, 'RESOURCE_NOT_FOUND', 'No existe.'), { silent: true });
+    const error = failRequest(404, apiError(404, 'RESOURCE_NOT_FOUND', 'No existe.'), {
+      silent: true,
+    });
 
     expect(error.status).toBe(404);
     expect(shownMessages()).toEqual([]);

@@ -1,0 +1,105 @@
+<section class="page" aria-labelledby="practice-heading">
+  <header class="page__header">
+    <p class="page__eyebrow">Práctica · Java</p>
+    <h1 id="practice-heading" class="page__title">Ejercicios</h1>
+    <p class="page__lead">
+      Cada ejercicio se corrige solo: tu código se ejecuta contra pruebas visibles y ocultas en un
+      entorno aislado. Resuélvelos para ganar experiencia.
+    </p>
+  </header>
+
+  <div class="practice__top">
+    <a class="playground-card" routerLink="/practice/playground">
+      <span class="playground-card__title">Playground ▸</span>
+      <span class="playground-card__text">Un editor libre para probar cualquier idea en Java.</span>
+    </a>
+    @if (progress.value()) {
+      <div class="practice__progress">
+        <p class="section-title">{{ totals().solved }} de {{ totals().total }} resueltos</p>
+        <app-progress-bar [percent]="totals().percent" label="Ejercicios resueltos" />
+      </div>
+    }
+  </div>
+
+  <div class="filters" role="search">
+    <div class="field filters__search">
+      <label class="field__label" for="practice-query">Buscar</label>
+      <input
+        id="practice-query"
+        class="input"
+        type="search"
+        placeholder="bucles, arrays, saludo…"
+        (input)="onQuery($event)"
+      />
+    </div>
+    <div class="field">
+      <label class="field__label" for="practice-difficulty">Dificultad</label>
+      <select id="practice-difficulty" class="input" (change)="onDifficulty($event)">
+        <option value="ALL">Todas</option>
+        @for (level of difficulties; track level) {
+          <option [value]="level">{{ difficultyLabels[level] }}</option>
+        }
+      </select>
+    </div>
+    @if (auth.isAuthenticated()) {
+      <div class="field">
+        <label class="field__label" for="practice-status">Estado</label>
+        <select id="practice-status" class="input" (change)="onStatus($event)">
+          <option value="all">Todos</option>
+          <option value="pending">Pendientes</option>
+          <option value="solved">Resueltos</option>
+        </select>
+      </div>
+    }
+  </div>
+
+  @if (catalog.isLoading()) {
+    <p class="state" role="status">Cargando ejercicios…</p>
+  } @else if (catalog.error()) {
+    <div class="state state--error" role="alert">
+      <p>No hemos podido cargar los ejercicios.</p>
+      <button type="button" class="button button--secondary" (click)="catalog.reload()">
+        Reintentar
+      </button>
+    </div>
+  } @else if (groups().length === 0) {
+    <p class="state">Ningún ejercicio coincide con los filtros.</p>
+  } @else {
+    @for (group of groups(); track group.module.id) {
+      <section class="group" [attr.aria-labelledby]="'group-' + group.module.id">
+        <h2 class="section-title" [id]="'group-' + group.module.id">
+          {{ group.module.position }}. {{ group.module.title }}
+        </h2>
+        <ul class="rows">
+          @for (exercise of group.exercises; track exercise.id) {
+            @let state = exerciseState(exercise.slug);
+            <li>
+              <a class="row-link" [routerLink]="['/practice', exercise.slug]">
+                <span
+                  class="check"
+                  [class.check--done]="state === 'solved'"
+                  [class.check--partial]="state === 'attempted'"
+                  [attr.aria-label]="
+                    state === 'solved'
+                      ? 'Resuelto'
+                      : state === 'attempted'
+                        ? 'Intentado'
+                        : 'Sin intentar'
+                  "
+                  >{{ state === 'solved' ? '✓' : state === 'attempted' ? '•' : '' }}</span
+                >
+                <span class="exercise">
+                  <span class="exercise__title">{{ exercise.title }}</span>
+                  <span class="exercise__summary">{{ exercise.summary }}</span>
+                </span>
+                <span class="tag" [class]="difficultyTags[exercise.difficulty]">{{
+                  difficultyLabels[exercise.difficulty]
+                }}</span>
+              </a>
+            </li>
+          }
+        </ul>
+      </section>
+    }
+  }
+</section>

@@ -32,13 +32,17 @@ describe('authInterceptor', () => {
   it('sends the token to the API', () => {
     http.get('/api/dashboard').subscribe();
 
-    expect(backend.expectOne('/api/dashboard').request.headers.get('Authorization')).toBe('Bearer abc');
+    expect(backend.expectOne('/api/dashboard').request.headers.get('Authorization')).toBe(
+      'Bearer abc',
+    );
   });
 
   it('never sends the token anywhere else', () => {
     http.get('https://example.com/data').subscribe();
 
-    expect(backend.expectOne('https://example.com/data').request.headers.has('Authorization')).toBe(false);
+    expect(backend.expectOne('https://example.com/data').request.headers.has('Authorization')).toBe(
+      false,
+    );
   });
 
   it('sends nothing when signed out', () => {

@@ -30,7 +30,9 @@ export class CoursePageComponent {
   protected readonly course = rxResource({
     params: () => this.languageSlug(),
     stream: ({ params: slug }) =>
-      this.courses.getPrimaryCourse(slug).pipe(switchMap((course) => this.courses.getCourse(course.id))),
+      this.courses
+        .getPrimaryCourse(slug)
+        .pipe(switchMap((course) => this.courses.getCourse(course.id))),
   });
 
   protected readonly progress = rxResource({

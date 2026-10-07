@@ -1,0 +1,43 @@
+<section class="workbench" aria-labelledby="playground-heading">
+  <header class="workbench__header">
+    <div>
+      <p class="page__eyebrow"><a routerLink="/practice">Práctica</a> / Playground</p>
+      <h1 id="playground-heading" class="workbench__title">Playground de Java</h1>
+    </div>
+    <div class="workbench__actions">
+      <button type="button" class="button button--ghost" (click)="reset()">Restablecer</button>
+      <button type="button" class="button button--primary" [disabled]="running()" (click)="run()">
+        {{
+          running() ? 'Ejecutando…' : auth.isAuthenticated() ? 'Ejecutar ▸' : 'Entrar para ejecutar'
+        }}
+      </button>
+    </div>
+  </header>
+
+  <div class="workbench__grid">
+    <div class="panel panel--editor">
+      <div class="panel__bar">
+        <span class="panel__label">Main.java</span
+        ><span class="panel__hint">Ctrl + Enter para ejecutar</span>
+      </div>
+      <app-code-editor class="panel__fill" [(value)]="code" (run)="run()" />
+    </div>
+
+    <div class="workbench__side">
+      <div class="panel">
+        <div class="panel__bar">
+          <label class="panel__label" for="playground-stdin">Entrada (stdin)</label>
+        </div>
+        <textarea
+          id="playground-stdin"
+          class="panel__input"
+          spellcheck="false"
+          placeholder="Lo que leerá tu Scanner, una línea por cada dato"
+          [value]="stdin()"
+          (input)="onStdin($event)"
+        ></textarea>
+      </div>
+      <app-console-output class="panel panel--console" [result]="result()" [running]="running()" />
+    </div>
+  </div>
+</section>

@@ -11,6 +11,8 @@ export class PageTitleStrategy extends TitleStrategy {
 
   override updateTitle(snapshot: RouterStateSnapshot): void {
     const routeTitle = this.buildTitle(snapshot);
-    this.title.setTitle(routeTitle ? `${routeTitle} · ${BRAND.name}` : `${BRAND.name} — ${BRAND.tagline}`);
+    this.title.setTitle(
+      routeTitle ? `${routeTitle} · ${BRAND.name}` : `${BRAND.name} — ${BRAND.tagline}`,
+    );
   }
 }

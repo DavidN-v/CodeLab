@@ -35,7 +35,10 @@
             <p class="language__description">{{ language.description }}</p>
           }
           @if (language.active) {
-            <a class="button button--primary language__action" [routerLink]="['/languages', language.slug]">
+            <a
+              class="button button--primary language__action"
+              [routerLink]="['/languages', language.slug]"
+            >
               Ver el curso de {{ language.name }}
             </a>
           }

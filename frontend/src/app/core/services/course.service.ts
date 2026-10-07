@@ -33,7 +33,11 @@ export class CourseService {
         .pipe(
           map((courses) => {
             if (courses.length === 0) {
-              throw new AppError(404, 'RESOURCE_NOT_FOUND', 'Este lenguaje todavía no tiene cursos.');
+              throw new AppError(
+                404,
+                'RESOURCE_NOT_FOUND',
+                'Este lenguaje todavía no tiene cursos.',
+              );
             }
             return courses[0];
           }),

@@ -1,0 +1,169 @@
+@if (dashboard.isLoading()) {
+  <section class="page"><p class="state" role="status">Cargando tu panel…</p></section>
+} @else if (dashboard.error()) {
+  <section class="page">
+    <div class="state state--error" role="alert">
+      <p>No hemos podido cargar tu panel.</p>
+      <button type="button" class="button button--secondary" (click)="dashboard.reload()">
+        Reintentar
+      </button>
+    </div>
+  </section>
+} @else if (dashboard.value(); as panel) {
+  <section class="page" aria-labelledby="dashboard-heading">
+    <header class="page__header">
+      <p class="page__eyebrow">Panel</p>
+      <h1 id="dashboard-heading" class="page__title">
+        {{ greeting() }}, {{ panel.user.displayName }}
+      </h1>
+    </header>
+
+    <div class="overview">
+      <div class="card level">
+        <p class="section-title">Nivel {{ panel.level.number }}</p>
+        <p class="level__title">{{ panel.level.title }}</p>
+        <app-progress-bar [percent]="levelPercent()" label="Progreso hacia el siguiente nivel" />
+        <p class="card__detail">
+          <strong>{{ panel.xp }} XP</strong>
+          @if (panel.level.nextLevelXp !== null) {
+            · {{ panel.level.nextLevelXp - panel.xp }} para el siguiente nivel
+          } @else {
+            · nivel máximo
+          }
+        </p>
+      </div>
+
+      <div class="card streak" [class.streak--active]="panel.streak.activeToday">
+        <p class="section-title">Racha</p>
+        <p class="streak__value">
+          <span aria-hidden="true">🔥</span> {{ panel.streak.current }}
+          {{ panel.streak.current === 1 ? 'día' : 'días' }}
+        </p>
+        <p class="card__detail">
+          @if (panel.streak.activeToday) {
+            Hoy ya has practicado.
+          } @else if (panel.streak.current > 0) {
+            Practica hoy para no perderla.
+          } @else {
+            Completa una lección o envía un ejercicio para empezar una.
+          }
+          Mejor racha: {{ panel.streak.longest }}.
+        </p>
+      </div>
+
+      <ul class="stats" aria-label="Totales">
+        <li class="stat">
+          <span class="stat__value">{{ panel.totals.lessonsCompleted }}</span> lecciones
+        </li>
+        <li class="stat">
+          <span class="stat__value">{{ panel.totals.exercisesSolved }}</span> ejercicios resueltos
+        </li>
+        <li class="stat">
+          <span class="stat__value">{{ panel.totals.submissions }}</span> envíos
+        </li>
+        <li class="stat">
+          <span class="stat__value">{{ hours(panel.totals.learningMinutes) }}</span> de estudio
+        </li>
+      </ul>
+    </div>
+
+    <div class="columns">
+      <div class="columns__main">
+        <h2 class="section-title">Tus cursos</h2>
+        @for (card of panel.courses; track card.course.id) {
+          <article class="card course-card">
+            <div class="course-card__head">
+              <h3 class="course-card__title">
+                <a [routerLink]="['/languages', card.course.languageSlug]">{{
+                  card.course.title
+                }}</a>
+              </h3>
+              <span class="course-card__percent">{{ card.percent }} %</span>
+            </div>
+            <app-progress-bar
+              [percent]="card.percent"
+              [label]="'Progreso en ' + card.course.title"
+            />
+            <p class="card__detail">
+              {{ card.completedLessons }}/{{ card.totalLessons }} lecciones ·
+              {{ card.solvedExercises }}/{{ card.totalExercises }} ejercicios
+              @if (card.currentModule; as module) {
+                · Módulo actual: {{ module.position }}. {{ module.title }}
+              }
+            </p>
+            @if (card.nextLesson; as next) {
+              <a
+                class="button button--primary course-card__action"
+                [routerLink]="['/learn', card.course.languageSlug, next.moduleSlug, next.slug]"
+              >
+                Continuar: {{ next.title }}
+              </a>
+            } @else {
+              <a class="button button--secondary course-card__action" routerLink="/practice"
+                >Seguir practicando</a
+              >
+            }
+          </article>
+        }
+
+        <h2 class="section-title columns__heading">Actividad</h2>
+        <div class="card">
+          <app-activity-heatmap [days]="panel.activity" />
+        </div>
+
+        <h2 class="section-title columns__heading">Envíos recientes</h2>
+        @if (panel.recentSubmissions.length === 0) {
+          <p class="state">
+            Aún no has enviado ninguna solución. <a routerLink="/practice">Elige un ejercicio</a>.
+          </p>
+        } @else {
+          <ul class="rows">
+            @for (submission of panel.recentSubmissions; track $index) {
+              <li>
+                <a class="row-link" [routerLink]="['/practice', submission.exerciseSlug]">
+                  <span
+                    class="check"
+                    [class.check--done]="submission.status === 'ACCEPTED'"
+                    aria-hidden="true"
+                    >{{ submission.status === 'ACCEPTED' ? '✓' : '✗' }}</span
+                  >
+                  <span class="submission">
+                    <span>{{ submission.exerciseTitle }}</span>
+                    <span class="submission__meta">
+                      {{ submissionLabels[submission.status] }} · {{ submission.passedTests }}/{{
+                        submission.totalTests
+                      }}
+                    </span>
+                  </span>
+                  <span class="submission__time">{{ timeAgo(submission.createdAt) }}</span>
+                </a>
+              </li>
+            }
+          </ul>
+        }
+      </div>
+
+      <aside class="columns__side" aria-labelledby="achievements-heading">
+        <h2 id="achievements-heading" class="section-title">
+          Logros · {{ earnedCount() }}/{{ panel.achievements.length }}
+        </h2>
+        <ul class="achievements">
+          @for (achievement of panel.achievements; track achievement.code) {
+            <li class="achievement" [class.achievement--earned]="achievement.earned">
+              <span class="achievement__icon" aria-hidden="true">{{
+                achievement.earned ? '★' : '☆'
+              }}</span>
+              <span>
+                <span class="achievement__title">{{ achievement.title }}</span>
+                <span class="achievement__description">{{ achievement.description }}</span>
+              </span>
+              <span class="visually-hidden">{{
+                achievement.earned ? 'Conseguido' : 'Pendiente'
+              }}</span>
+            </li>
+          }
+        </ul>
+      </aside>
+    </div>
+  </section>
+}

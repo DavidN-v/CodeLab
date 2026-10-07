@@ -71,7 +71,9 @@ describe('AuthService', () => {
 
   it('registers and signs in in one step', () => {
     const service = createService();
-    service.register({ email: 'ada@example.com', password: 'secreta123', displayName: 'Ada' }).subscribe();
+    service
+      .register({ email: 'ada@example.com', password: 'secreta123', displayName: 'Ada' })
+      .subscribe();
 
     const request = http.expectOne('/api/auth/register');
     expect(request.request.body.displayName).toBe('Ada');

@@ -6,7 +6,9 @@ export const COURSES_ROUTES: Routes = [
     path: '',
     title: 'Lenguajes',
     loadComponent: () =>
-      import('./pages/languages-page/languages-page.component').then((m) => m.LanguagesPageComponent),
+      import('./pages/languages-page/languages-page.component').then(
+        (m) => m.LanguagesPageComponent,
+      ),
   },
   {
     path: ':languageSlug',

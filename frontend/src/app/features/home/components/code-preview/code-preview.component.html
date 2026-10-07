@@ -11,7 +11,11 @@
     @for (line of lines; track $index) {
       <li class="preview__line">
         <!-- Tokens sit on one line: inside white-space: pre, stray whitespace would render. -->
-        <code>@for (token of line; track $index) {<span [class]="'token token--' + token.kind">{{ token.text }}</span>}</code>
+        <code>
+          @for (token of line; track $index) {
+            <span [class]="'token token--' + token.kind">{{ token.text }}</span>
+          }
+        </code>
       </li>
     }
   </ol>

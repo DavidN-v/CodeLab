@@ -34,9 +34,13 @@ describe('ModuleRowComponent', () => {
     fixture.componentRef.setInput('module', MODULE);
     fixture.detectChanges();
 
-    expect(element.querySelector('a')?.getAttribute('href')).toBe('/languages/java/modules/variables');
+    expect(element.querySelector('a')?.getAttribute('href')).toBe(
+      '/languages/java/modules/variables',
+    );
     expect(element.querySelector('.module__position')?.textContent).toBe('02');
-    expect(element.querySelector('.module__meta')?.textContent).toBe('3 lecciones · 1 ejercicio · 30 min');
+    expect(element.querySelector('.module__meta')?.textContent).toBe(
+      '3 lecciones · 1 ejercicio · 30 min',
+    );
   });
 
   it('marks a finished module as done', () => {
@@ -52,7 +56,9 @@ describe('ModuleRowComponent', () => {
     });
     fixture.detectChanges();
 
-    expect(element.querySelector('.check--done')?.getAttribute('aria-label')).toBe('Módulo completado');
+    expect(element.querySelector('.check--done')?.getAttribute('aria-label')).toBe(
+      'Módulo completado',
+    );
   });
 
   it('does not link an unpublished module', () => {

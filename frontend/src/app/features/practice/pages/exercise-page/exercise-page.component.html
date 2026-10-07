@@ -1,0 +1,203 @@
+@if (exercise.isLoading() && !exercise.value()) {
+  <section class="page"><p class="state" role="status">Cargando el ejercicio…</p></section>
+} @else if (exercise.error()) {
+  <section class="page">
+    <div class="state state--error" role="alert">
+      <p>No hemos podido cargar este ejercicio.</p>
+      <button type="button" class="button button--secondary" (click)="exercise.reload()">
+        Reintentar
+      </button>
+      <a class="button button--ghost" routerLink="/practice">Ver todos los ejercicios</a>
+    </div>
+  </section>
+} @else if (exercise.value(); as detail) {
+  @let state = progress.value();
+  <section class="workbench" aria-labelledby="exercise-heading">
+    <header class="workbench__header">
+      <div>
+        <p class="page__eyebrow">
+          <a routerLink="/practice">Práctica</a> /
+          <a
+            [routerLink]="['/languages', detail.course.languageSlug, 'modules', detail.module.slug]"
+          >
+            Módulo {{ detail.module.position }} · {{ detail.module.title }}
+          </a>
+        </p>
+        <h1 id="exercise-heading" class="workbench__title">{{ detail.title }}</h1>
+      </div>
+      <div class="workbench__actions">
+        <button type="button" class="button button--ghost" (click)="reset()">Restablecer</button>
+        <button
+          type="button"
+          class="button button--secondary"
+          [disabled]="busy() !== null"
+          (click)="run()"
+        >
+          {{ busy() === 'run' ? 'Ejecutando…' : 'Ejecutar ▸' }}
+        </button>
+        <button
+          type="button"
+          class="button button--primary"
+          [disabled]="busy() !== null"
+          (click)="submit()"
+        >
+          {{
+            busy() === 'submit'
+              ? 'Corrigiendo…'
+              : auth.isAuthenticated()
+                ? 'Enviar solución'
+                : 'Entrar para enviar'
+          }}
+        </button>
+      </div>
+    </header>
+
+    <div class="workbench__grid">
+      <article class="panel statement" aria-label="Enunciado">
+        <div class="statement__body">
+          <p class="statement__tags">
+            <span class="tag" [class]="difficultyTags[detail.difficulty]">{{
+              difficultyLabels[detail.difficulty]
+            }}</span>
+            <span class="tag">{{ detail.totalTests }} pruebas</span>
+            @if (solved()) {
+              <span class="tag tag--done">Resuelto · {{ state?.xp ?? 0 }} XP</span>
+            } @else {
+              <span class="tag tag--accent">{{ state?.xp ?? detail.xp }} XP</span>
+            }
+          </p>
+
+          <app-markdown [content]="detail.statementMarkdown" />
+
+          @if (detail.samples.length > 0) {
+            <h2 class="statement__heading">Ejemplos</h2>
+            @for (sample of detail.samples; track $index) {
+              <div class="sample">
+                @if (sample.input) {
+                  <div>
+                    <p class="sample__caption">Entrada</p>
+                    <pre>{{ sample.input }}</pre>
+                  </div>
+                }
+                <div>
+                  <p class="sample__caption">Salida esperada</p>
+                  <pre>{{ sample.expectedOutput }}</pre>
+                </div>
+              </div>
+            }
+            @if (detail.totalTests > detail.samples.length) {
+              <p class="statement__note">
+                Además hay {{ detail.totalTests - detail.samples.length }} pruebas ocultas con otros
+                datos.
+              </p>
+            }
+          }
+
+          @if (detail.hintCount > 0) {
+            <h2 class="statement__heading">Pistas</h2>
+            @if (state?.hints; as hints) {
+              <ol class="hints">
+                @for (hint of hints; track $index) {
+                  <li class="hint"><app-markdown [content]="hint" /></li>
+                }
+              </ol>
+            }
+            @if ((state?.hints?.length ?? 0) < detail.hintCount) {
+              <button
+                type="button"
+                class="button button--ghost button--small"
+                [disabled]="revealing()"
+                (click)="revealHint()"
+              >
+                Ver pista {{ (state?.hints?.length ?? 0) + 1 }} de {{ detail.hintCount }}
+                @if (!solved()) {
+                  (−5 XP)
+                }
+              </button>
+            }
+          }
+
+          <h2 class="statement__heading">Solución</h2>
+          @if (solution(); as solutionCode) {
+            <pre class="solution">{{ solutionCode }}</pre>
+          } @else {
+            <button
+              type="button"
+              class="button button--ghost button--small"
+              (click)="revealSolution()"
+            >
+              Ver la solución
+            </button>
+          }
+
+          @if (state && state.recentSubmissions.length > 0) {
+            <h2 class="statement__heading">Tus envíos</h2>
+            <ul class="submissions">
+              @for (sent of state.recentSubmissions; track sent.id) {
+                <li [class.submissions__ok]="sent.status === 'ACCEPTED'">
+                  {{ submissionLabels[sent.status] }} · {{ sent.passedTests }}/{{ sent.totalTests }}
+                </li>
+              }
+            </ul>
+          }
+
+          <nav class="statement__nav" aria-label="Ejercicios">
+            @if (detail.previous; as previous) {
+              <a
+                class="button button--ghost button--small"
+                [routerLink]="['/practice', previous.slug]"
+                >← {{ previous.title }}</a
+              >
+            }
+            @if (detail.next; as next) {
+              <a
+                class="button button--secondary button--small"
+                [routerLink]="['/practice', next.slug]"
+                >{{ next.title }} →</a
+              >
+            }
+          </nav>
+        </div>
+      </article>
+
+      <div class="workbench__side">
+        <div class="panel panel--editor">
+          <div class="panel__bar">
+            <span class="panel__label">Tu código</span
+            ><span class="panel__hint">Ctrl + Enter para ejecutar</span>
+          </div>
+          <app-code-editor class="panel__fill" [(value)]="code" (run)="run()" />
+        </div>
+
+        <div class="panel">
+          <div class="panel__bar">
+            <label class="panel__label" for="exercise-stdin">Entrada para Ejecutar</label>
+          </div>
+          <textarea
+            id="exercise-stdin"
+            class="panel__input"
+            spellcheck="false"
+            [value]="customInput()"
+            (input)="onCustomInput($event)"
+          ></textarea>
+        </div>
+
+        @if (submission(); as result) {
+          <div class="panel panel--console"><app-test-results [result]="result" /></div>
+        } @else if (busy() === 'submit') {
+          <div class="panel panel--console">
+            <p class="statement__note statement__body">
+              Ejecutando tu solución contra todas las pruebas…
+            </p>
+          </div>
+        } @else {
+          <app-console-output
+            class="panel panel--console"
+            [result]="runResult()"
+            [running]="busy() === 'run'"
+          />
+        }
+      </div>
+    </div>
+  </section>
+}

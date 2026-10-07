@@ -14,10 +14,30 @@ const MODULE: ModuleDetail = {
   title: 'Fundamentos',
   summary: 'Primeros pasos.',
   position: 1,
-  course: { id: 1, slug: 'java-desde-cero', title: 'Java desde cero', languageSlug: 'java', languageName: 'Java' },
+  course: {
+    id: 1,
+    slug: 'java-desde-cero',
+    title: 'Java desde cero',
+    languageSlug: 'java',
+    languageName: 'Java',
+  },
   lessons: [
-    { id: 10, slug: 'que-es-java', title: '¿Qué es Java?', summary: '', estimatedMinutes: 8, position: 1 },
-    { id: 11, slug: 'primer-programa', title: 'Tu primer programa', summary: '', estimatedMinutes: 10, position: 2 },
+    {
+      id: 10,
+      slug: 'que-es-java',
+      title: '¿Qué es Java?',
+      summary: '',
+      estimatedMinutes: 8,
+      position: 1,
+    },
+    {
+      id: 11,
+      slug: 'primer-programa',
+      title: 'Tu primer programa',
+      summary: '',
+      estimatedMinutes: 10,
+      position: 2,
+    },
   ],
   exercises: [
     {
@@ -47,7 +67,11 @@ describe('ModulePageComponent', () => {
           provide: ProgressService,
           useValue: {
             getCourseProgress: () =>
-              of({ completedLessonIds: [10], solvedExerciseSlugs: ['hola-mundo'], attemptedExerciseSlugs: [] }),
+              of({
+                completedLessonIds: [10],
+                solvedExerciseSlugs: ['hola-mundo'],
+                attemptedExerciseSlugs: [],
+              }),
           },
         },
         { provide: AuthService, useValue: { isAuthenticated: () => true } },
@@ -65,7 +89,9 @@ describe('ModulePageComponent', () => {
     expect(resume?.getAttribute('href')).toBe('/learn/java/fundamentos/primer-programa');
     expect(resume?.textContent).toContain('Continuar');
     expect(element.querySelectorAll('.check--done')).toHaveLength(2);
-    expect(element.querySelector('a[href="/practice/hola-mundo"] .tag')?.textContent?.trim()).toBe('Fácil');
+    expect(element.querySelector('a[href="/practice/hola-mundo"] .tag')?.textContent?.trim()).toBe(
+      'Fácil',
+    );
     expect(element.querySelector('.module__nav .button--secondary')?.getAttribute('href')).toBe(
       '/languages/java/modules/variables',
     );

@@ -1,0 +1,55 @@
+@let submission = result();
+
+<section class="results" aria-label="Resultado de la corrección" aria-live="polite">
+  <header class="results__verdict" [class.results__verdict--ok]="submission.status === 'ACCEPTED'">
+    <p class="results__status">{{ statusLabels[submission.status] }}</p>
+    <p class="results__count">
+      {{ submission.passedTests }} / {{ submission.totalTests }} pruebas superadas
+    </p>
+    @if (submission.firstSolve) {
+      <p class="tag tag--accent">+{{ submission.xpAwarded }} XP</p>
+    }
+  </header>
+
+  @if (submission.compileOutput) {
+    <pre class="results__compile">{{ submission.compileOutput }}</pre>
+  }
+
+  <ol class="results__tests">
+    @for (test of submission.tests; track test.position) {
+      <li class="test" [class.test--passed]="test.outcome === 'PASSED'">
+        <p class="test__head">
+          <span class="test__mark" aria-hidden="true">{{
+            test.outcome === 'PASSED' ? '✓' : '✗'
+          }}</span>
+          Prueba {{ test.position }}{{ test.sample ? '' : ' (oculta)' }} ·
+          {{ outcomeLabels[test.outcome] }}
+        </p>
+        @if (test.sample && test.outcome !== 'PASSED' && test.outcome !== 'NOT_RUN') {
+          <div class="test__detail">
+            @if (test.input) {
+              <div>
+                <p class="test__caption">Entrada</p>
+                <pre>{{ test.input }}</pre>
+              </div>
+            }
+            <div>
+              <p class="test__caption">Esperado</p>
+              <pre>{{ test.expectedOutput }}</pre>
+            </div>
+            <div>
+              <p class="test__caption">Tu salida</p>
+              <pre>{{ test.actualOutput || '(nada)' }}</pre>
+            </div>
+            @if (test.stderr) {
+              <div class="test__stderr">
+                <p class="test__caption">Errores</p>
+                <pre>{{ test.stderr }}</pre>
+              </div>
+            }
+          </div>
+        }
+      </li>
+    }
+  </ol>
+</section>

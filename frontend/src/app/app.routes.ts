@@ -12,11 +12,13 @@ export const routes: Routes = [
   },
   {
     path: 'learn',
-    loadChildren: () => import('./features/learning/learning.routes').then((m) => m.LEARNING_ROUTES),
+    loadChildren: () =>
+      import('./features/learning/learning.routes').then((m) => m.LEARNING_ROUTES),
   },
   {
     path: 'practice',
-    loadChildren: () => import('./features/practice/practice.routes').then((m) => m.PRACTICE_ROUTES),
+    loadChildren: () =>
+      import('./features/practice/practice.routes').then((m) => m.PRACTICE_ROUTES),
   },
   {
     path: 'dashboard',

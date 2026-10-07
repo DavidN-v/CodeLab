@@ -4,8 +4,12 @@
   <section class="page">
     <div class="state state--error" role="alert">
       <p>No hemos podido cargar este módulo.</p>
-      <button type="button" class="button button--secondary" (click)="module.reload()">Reintentar</button>
-      <a class="button button--ghost" [routerLink]="['/languages', languageSlug()]">Volver al curso</a>
+      <button type="button" class="button button--secondary" (click)="module.reload()">
+        Reintentar
+      </button>
+      <a class="button button--ghost" [routerLink]="['/languages', languageSlug()]"
+        >Volver al curso</a
+      >
     </div>
   </section>
 } @else if (module.value(); as detail) {
@@ -19,7 +23,10 @@
       <p class="page__lead">{{ detail.summary }}</p>
       @if (nextLesson(); as next) {
         <div>
-          <a class="button button--primary" [routerLink]="['/learn', languageSlug(), detail.slug, next.slug]">
+          <a
+            class="button button--primary"
+            [routerLink]="['/learn', languageSlug(), detail.slug, next.slug]"
+          >
             {{ started() ? 'Continuar' : 'Empezar' }}: {{ next.title }}
           </a>
         </div>
@@ -32,7 +39,10 @@
         <ol class="rows">
           @for (lesson of detail.lessons; track lesson.id) {
             <li>
-              <a class="row-link" [routerLink]="['/learn', languageSlug(), detail.slug, lesson.slug]">
+              <a
+                class="row-link"
+                [routerLink]="['/learn', languageSlug(), detail.slug, lesson.slug]"
+              >
                 <span
                   class="check"
                   [class.check--done]="isCompleted(lesson.id)"
@@ -64,7 +74,13 @@
                     class="check"
                     [class.check--done]="state === 'solved'"
                     [class.check--partial]="state === 'attempted'"
-                    [attr.aria-label]="state === 'solved' ? 'Resuelto' : state === 'attempted' ? 'Intentado' : 'Sin intentar'"
+                    [attr.aria-label]="
+                      state === 'solved'
+                        ? 'Resuelto'
+                        : state === 'attempted'
+                          ? 'Intentado'
+                          : 'Sin intentar'
+                    "
                     >{{ state === 'solved' ? '✓' : state === 'attempted' ? '•' : '' }}</span
                   >
                   <span class="item">
@@ -84,14 +100,20 @@
 
     <nav class="module__nav" aria-label="Módulos">
       @if (detail.previous; as previous) {
-        <a class="button button--ghost" [routerLink]="['/languages', languageSlug(), 'modules', previous.slug]">
+        <a
+          class="button button--ghost"
+          [routerLink]="['/languages', languageSlug(), 'modules', previous.slug]"
+        >
           ← {{ previous.position }}. {{ previous.title }}
         </a>
       } @else {
         <span></span>
       }
       @if (detail.next; as next) {
-        <a class="button button--secondary" [routerLink]="['/languages', languageSlug(), 'modules', next.slug]">
+        <a
+          class="button button--secondary"
+          [routerLink]="['/languages', languageSlug(), 'modules', next.slug]"
+        >
           {{ next.position }}. {{ next.title }} →
         </a>
       }

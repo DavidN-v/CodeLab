@@ -26,11 +26,7 @@ export interface ExerciseDetail {
 }
 
 export type SubmissionStatus =
-  | 'ACCEPTED'
-  | 'WRONG_ANSWER'
-  | 'COMPILATION_ERROR'
-  | 'RUNTIME_ERROR'
-  | 'TIME_LIMIT_EXCEEDED';
+  'ACCEPTED' | 'WRONG_ANSWER' | 'COMPILATION_ERROR' | 'RUNTIME_ERROR' | 'TIME_LIMIT_EXCEEDED';
 
 export type TestOutcome = 'PASSED' | 'WRONG_OUTPUT' | 'RUNTIME_ERROR' | 'TIMEOUT' | 'NOT_RUN';
 

@@ -22,5 +22,7 @@ export class ProgressBarComponent {
   readonly percent = input.required<number>();
   readonly label = input('Progreso');
 
-  protected readonly clamped = computed(() => Math.max(0, Math.min(100, Math.round(this.percent()))));
+  protected readonly clamped = computed(() =>
+    Math.max(0, Math.min(100, Math.round(this.percent()))),
+  );
 }

@@ -49,7 +49,12 @@ export function renderMarkdown(source: string, runnable: boolean): RenderedMarkd
           language === 'java' ? hljs.highlight(text, { language: 'java' }).value : escapeHtml(text);
         const label = language === 'java' ? 'Java' : language || 'texto';
         let action = '';
-        if (runnable && language === 'java' && variant === '' && text.includes('static void main')) {
+        if (
+          runnable &&
+          language === 'java' &&
+          variant === '' &&
+          text.includes('static void main')
+        ) {
           runnableCode.push(text);
           action = `<button type="button" class="prose__run" data-code-index="${runnableCode.length - 1}">Abrir en el playground</button>`;
         }

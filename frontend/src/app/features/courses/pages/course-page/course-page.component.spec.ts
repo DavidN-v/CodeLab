@@ -62,7 +62,13 @@ const PROGRESS: CourseProgress = {
   solvedExerciseSlugs: ['hola-mundo'],
   attemptedExerciseSlugs: [],
   modules: [],
-  nextLesson: { id: 3, slug: 'salida', title: 'Escribir en la consola', moduleSlug: 'fundamentos', moduleTitle: 'Fundamentos' },
+  nextLesson: {
+    id: 3,
+    slug: 'salida',
+    title: 'Escribir en la consola',
+    moduleSlug: 'fundamentos',
+    moduleTitle: 'Fundamentos',
+  },
 };
 
 describe('CoursePageComponent', () => {

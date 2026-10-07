@@ -1,0 +1,140 @@
+@if (page.isLoading() && !page.value()) {
+  <section class="page"><p class="state" role="status">Cargando la lección…</p></section>
+} @else if (page.error()) {
+  <section class="page">
+    <div class="state state--error" role="alert">
+      <p>No hemos podido cargar esta lección.</p>
+      <button type="button" class="button button--secondary" (click)="page.reload()">
+        Reintentar
+      </button>
+      <a class="button button--ghost" [routerLink]="['/languages', languageSlug()]"
+        >Volver al curso</a
+      >
+    </div>
+  </section>
+} @else if (page.value(); as value) {
+  @let lesson = value.lesson;
+  @let module = value.module;
+  <div class="study">
+    <aside class="study__index" aria-label="Lecciones del módulo">
+      <p class="section-title">
+        <a [routerLink]="['/languages', languageSlug(), 'modules', module.slug]">
+          Módulo {{ module.position }} · {{ module.title }}
+        </a>
+      </p>
+      <ol class="index">
+        @for (item of module.lessons; track item.id) {
+          <li>
+            <a
+              class="index__link"
+              [class.index__link--current]="item.id === lesson.id"
+              [attr.aria-current]="item.id === lesson.id ? 'page' : null"
+              [routerLink]="['/learn', languageSlug(), module.slug, item.slug]"
+            >
+              <span class="check" [class.check--done]="lessonDone(item.id)" aria-hidden="true">{{
+                lessonDone(item.id) ? '✓' : ''
+              }}</span>
+              <span>{{ item.title }}</span>
+            </a>
+          </li>
+        }
+      </ol>
+      @if (module.exercises.length > 0) {
+        <p class="section-title index__exercises-title">Practica</p>
+        <ul class="index">
+          @for (exercise of module.exercises; track exercise.id) {
+            <li>
+              <a class="index__link" [routerLink]="['/practice', exercise.slug]">
+                <span class="index__bullet" aria-hidden="true">›</span>
+                <span>{{ exercise.title }}</span>
+              </a>
+            </li>
+          }
+        </ul>
+      }
+    </aside>
+
+    <article class="study__content" aria-labelledby="lesson-heading">
+      <header class="lesson__header">
+        <p class="page__eyebrow">
+          Lección {{ lesson.position }} de {{ module.lessons.length }} ·
+          {{ lesson.estimatedMinutes }} min
+        </p>
+        <h1 id="lesson-heading" class="page__title">{{ lesson.title }}</h1>
+        <p class="page__lead">{{ lesson.summary }}</p>
+      </header>
+
+      <app-markdown
+        [content]="lesson.contentMarkdown"
+        [runnable]="true"
+        (runCode)="openInPlayground($event)"
+      />
+
+      <footer class="lesson__footer">
+        @if (auth.isAuthenticated()) {
+          <button
+            type="button"
+            class="button button--primary"
+            [disabled]="completing()"
+            (click)="completeAndContinue()"
+          >
+            @if (isCompleted()) {
+              {{ lesson.next ? 'Siguiente lección →' : 'Volver al curso' }}
+            } @else {
+              {{ lesson.next ? 'Completar y continuar →' : 'Completar lección' }}
+            }
+          </button>
+        } @else {
+          <p class="lesson__login">
+            <a routerLink="/login" [queryParams]="{ returnUrl: router.url }">Entra</a> para guardar
+            tu progreso.
+          </p>
+        }
+
+        <nav class="lesson__nav" aria-label="Lecciones">
+          @if (lesson.previous; as previous) {
+            <a
+              class="lesson__nav-link"
+              [routerLink]="['/learn', languageSlug(), previous.moduleSlug, previous.slug]"
+            >
+              <span class="lesson__nav-label">← Anterior</span>
+              <span>{{ previous.title }}</span>
+            </a>
+          }
+          @if (lesson.next; as next) {
+            <a
+              class="lesson__nav-link lesson__nav-link--next"
+              [routerLink]="['/learn', languageSlug(), next.moduleSlug, next.slug]"
+            >
+              <span class="lesson__nav-label">
+                Siguiente{{ next.moduleSlug !== module.slug ? ' · ' + next.moduleTitle : '' }} →
+              </span>
+              <span>{{ next.title }}</span>
+            </a>
+          }
+        </nav>
+      </footer>
+    </article>
+
+    <aside class="study__aside" aria-label="En esta lección">
+      @if (headings().length > 0) {
+        <p class="section-title">En esta lección</p>
+        <ul class="toc">
+          @for (heading of headings(); track heading.id) {
+            <li>
+              <a class="toc__link" [href]="router.url.split('#')[0] + '#' + heading.id">{{
+                heading.text
+              }}</a>
+            </li>
+          }
+        </ul>
+      }
+      @if (auth.isAuthenticated()) {
+        <div class="study__module-progress">
+          <p class="section-title">Progreso del módulo</p>
+          <app-progress-bar [percent]="modulePercent()" label="Progreso del módulo" />
+        </div>
+      }
+    </aside>
+  </div>
+}
