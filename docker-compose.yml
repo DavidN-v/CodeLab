@@ -31,6 +31,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-forja}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Define POSTGRES_PASSWORD en el archivo .env}
       CODE_RUNNER_URL: http://code-runner:8090
+      JWT_SECRET: ${JWT_SECRET:?Define JWT_SECRET en el archivo .env}
       CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:4200}
       API_DOCS_ENABLED: ${API_DOCS_ENABLED:-true}
       LOG_LEVEL: ${LOG_LEVEL:-INFO}

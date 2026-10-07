@@ -1,0 +1,15 @@
+# Desarrollo: publica el code-runner en 127.0.0.1:8090 para que un backend
+# ejecutado fuera de Docker (./mvnw spring-boot:run) pueda usarlo.
+#
+#   docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d postgres code-runner
+#
+# La red runner es interna y no admite puertos publicados, así que en desarrollo
+# el runner se une también a edge. El código de los alumnos sigue ejecutándose
+# en contenedores sin red; solo cambia el acceso al propio runner.
+services:
+  code-runner:
+    ports:
+      - "127.0.0.1:8090:8090"
+    networks:
+      - runner
+      - edge

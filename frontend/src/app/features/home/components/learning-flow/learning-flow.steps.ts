@@ -22,6 +22,6 @@ export const LEARNING_STEPS: readonly LearningStep[] = [
   },
   {
     label: 'Domina',
-    description: 'Supera el desafío y la evaluación del módulo para desbloquear el siguiente.',
+    description: 'Resuelve los ejercicios del módulo, gana experiencia y mantén tu racha en el panel.',
   },
 ];
