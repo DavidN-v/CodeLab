@@ -1,0 +1,53 @@
+title: Pirámide de asteriscos
+summary: Dibuja una pirámide centrada con bucles anidados.
+difficulty: HARD
+statement: |
+  Lee un entero `n` (la altura) y dibuja una pirámide centrada de asteriscos. La fila `i` (empezando en 1) tiene `n - i` espacios seguidos de `2 * i - 1` asteriscos, sin espacios al final.
+
+  **Ejemplo** con `4`:
+
+  ```
+     *
+    ***
+   *****
+  *******
+  ```
+starter: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int n = entrada.nextInt();
+
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int n = entrada.nextInt();
+          for (int fila = 1; fila <= n; fila++) {
+              for (int i = 0; i < n - fila; i++) {
+                  System.out.print(" ");
+              }
+              for (int i = 0; i < 2 * fila - 1; i++) {
+                  System.out.print("*");
+              }
+              System.out.println();
+          }
+      }
+  }
+hints:
+  - Un bucle exterior para las filas; dentro, un bucle para los espacios y otro para los asteriscos.
+  - No olvides el `System.out.println()` al terminar cada fila.
+tests:
+  - input: "4\n"
+    output: "   *\n  ***\n *****\n*******\n"
+    sample: true
+  - input: "1\n"
+    output: "*\n"
+  - input: "6\n"
+    output: "     *\n    ***\n   *****\n  *******\n *********\n***********\n"

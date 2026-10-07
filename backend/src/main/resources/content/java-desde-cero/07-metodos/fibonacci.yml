@@ -1,0 +1,63 @@
+title: Fibonacci rápido
+summary: Calcula términos grandes de Fibonacci sin recursión ingenua.
+difficulty: HARD
+statement: |
+  La sucesión de Fibonacci empieza con `F(0) = 0` y `F(1) = 1`, y cada término es la suma de los dos anteriores: 0, 1, 1, 2, 3, 5, 8, 13…
+
+  Escribe un método `static long fibonacci(int n)` y úsalo para imprimir `F(n)` para el `n` de la entrada (`0 <= n <= 90`).
+
+  Ojo: la versión recursiva directa `fib(n-1) + fib(n-2)` es correcta pero tarda muchísimo con `n` grandes y no pasará las pruebas a tiempo. Usa un bucle que vaya guardando los dos últimos términos.
+starter: |
+  import java.util.Scanner;
+
+  public class Main {
+      static long fibonacci(int n) {
+          return 0;
+      }
+
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int n = entrada.nextInt();
+          System.out.println(fibonacci(n));
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  public class Main {
+      static long fibonacci(int n) {
+          long anterior = 0;
+          long actual = 1;
+          if (n == 0) {
+              return 0;
+          }
+          for (int i = 2; i <= n; i++) {
+              long siguiente = anterior + actual;
+              anterior = actual;
+              actual = siguiente;
+          }
+          return actual;
+      }
+
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int n = entrada.nextInt();
+          System.out.println(fibonacci(n));
+      }
+  }
+hints:
+  - Guarda dos variables, `anterior` y `actual`, que empiecen en `F(0)` y `F(1)`.
+  - En cada vuelta calcula el siguiente término y desplaza las dos variables una posición.
+  - Usa `long`; `F(90)` no cabe en un `int`.
+tests:
+  - input: "10\n"
+    output: "55\n"
+    sample: true
+  - input: "0\n"
+    output: "0\n"
+  - input: "1\n"
+    output: "1\n"
+  - input: "50\n"
+    output: "12586269025\n"
+  - input: "90\n"
+    output: "2880067194370816120\n"

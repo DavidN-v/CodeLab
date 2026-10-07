@@ -1,0 +1,79 @@
+title: Estadísticas hasta el cero
+summary: Lee números hasta un centinela y calcula cantidad, suma, máximo y mínimo.
+difficulty: MEDIUM
+statement: |
+  La entrada es una secuencia de enteros que termina en `0` (el 0 no cuenta). Escribe:
+
+  ```
+  Cantidad: <cuántos números>
+  Suma: <suma>
+  Máximo: <mayor>
+  Mínimo: <menor>
+  ```
+
+  Si el primer número ya es 0, escribe solo `Sin datos`.
+
+  **Ejemplo:** `4 -2 9 1 0` → cantidad 4, suma 12, máximo 9, mínimo -2.
+starter: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int cantidad = 0;
+          int suma = 0;
+          int maximo = Integer.MIN_VALUE;
+          int minimo = Integer.MAX_VALUE;
+          int numero = entrada.nextInt();
+          while (numero != 0) {
+              cantidad++;
+              suma += numero;
+              maximo = Math.max(maximo, numero);
+              minimo = Math.min(minimo, numero);
+              numero = entrada.nextInt();
+          }
+          if (cantidad == 0) {
+              System.out.println("Sin datos");
+          } else {
+              System.out.println("Cantidad: " + cantidad);
+              System.out.println("Suma: " + suma);
+              System.out.println("Máximo: " + maximo);
+              System.out.println("Mínimo: " + minimo);
+          }
+      }
+  }
+hints:
+  - Lee el primer número antes del `while` y el siguiente al final de cada vuelta.
+  - Para el máximo, empieza con `Integer.MIN_VALUE` (así cualquier número será mayor); para el mínimo, con `Integer.MAX_VALUE`.
+tests:
+  - input: "4 -2 9 1 0\n"
+    output: |
+      Cantidad: 4
+      Suma: 12
+      Máximo: 9
+      Mínimo: -2
+    sample: true
+  - input: "0\n"
+    output: "Sin datos\n"
+    sample: true
+  - input: "5 0\n"
+    output: |
+      Cantidad: 1
+      Suma: 5
+      Máximo: 5
+      Mínimo: 5
+  - input: "-1 -8 -3 0\n"
+    output: |
+      Cantidad: 3
+      Suma: -12
+      Máximo: -1
+      Mínimo: -8

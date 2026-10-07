@@ -1,0 +1,81 @@
+title: Contar y sumar cifras
+summary: Recorre las cifras de un número con / y %.
+difficulty: MEDIUM
+statement: |
+  Escribe dos métodos:
+
+  - `static int contarCifras(long n)` que devuelva cuántas cifras tiene `n`.
+  - `static int sumarCifras(long n)` que devuelva la suma de sus cifras.
+
+  Ambos deben funcionar con negativos (ignorando el signo) y con el 0, que tiene una cifra.
+
+  La entrada es un número; escribe:
+
+  ```
+  Cifras: <cantidad>
+  Suma: <suma>
+  ```
+starter: |
+  import java.util.Scanner;
+
+  public class Main {
+
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          long n = entrada.nextLong();
+
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  public class Main {
+      static int contarCifras(long n) {
+          n = Math.abs(n);
+          int cifras = 1;
+          while (n >= 10) {
+              n /= 10;
+              cifras++;
+          }
+          return cifras;
+      }
+
+      static int sumarCifras(long n) {
+          n = Math.abs(n);
+          int suma = 0;
+          while (n > 0) {
+              suma += n % 10;
+              n /= 10;
+          }
+          return suma;
+      }
+
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          long n = entrada.nextLong();
+          System.out.println("Cifras: " + contarCifras(n));
+          System.out.println("Suma: " + sumarCifras(n));
+      }
+  }
+hints:
+  - "`n % 10` es la última cifra y `n / 10` quita la última cifra."
+  - Trabaja con `Math.abs(n)` para olvidarte del signo, y trata el 0 como un caso especial (tiene una cifra).
+tests:
+  - input: "4721\n"
+    output: |
+      Cifras: 4
+      Suma: 14
+    sample: true
+  - input: "0\n"
+    output: |
+      Cifras: 1
+      Suma: 0
+    sample: true
+  - input: "-905\n"
+    output: |
+      Cifras: 3
+      Suma: 14
+  - input: "9999999999\n"
+    output: |
+      Cifras: 10
+      Suma: 90
