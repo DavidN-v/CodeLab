@@ -1,0 +1,25 @@
+questions:
+  - type: choice
+    prompt: ¿Cuál es la diferencia principal entre una librería y un framework?
+    options:
+      - A una librería la llamas tú cuando quieres; un framework marca la estructura y llama a tu código
+      - Las librerías son gratuitas y los frameworks son de pago
+      - Un framework solo sirve para dar estilos
+    answer: 0
+    explanation: 'Con una librería, tú tienes el control y la usas como una herramienta. Con un framework, él pone la estructura y las reglas y ejecuta tu código cuando toca.'
+  - type: choice
+    prompt: 'En el contador hecho con Angular, ¿quién actualiza el texto `Clics: 3` en la pantalla?'
+    options:
+      - Tu código, con `textContent`
+      - El servidor, que envía una página nueva
+      - Angular, cuando cambia el dato
+    answer: 2
+    explanation: 'Tu código solo cambia el dato (`clics`). Angular sabe qué parte del DOM depende de ese dato y la actualiza por ti.'
+  - type: choice
+    prompt: Encuentras un tutorial que usa `ng-app` y `$scope`. ¿Qué es?
+    options:
+      - Angular 22 con sintaxis avanzada
+      - AngularJS, el framework antiguo y ya sin soporte
+      - React
+    answer: 1
+    explanation: '`ng-app` y `$scope` son de AngularJS (2010). El Angular actual es otro framework, escrito en TypeScript y con otra forma de trabajar.'

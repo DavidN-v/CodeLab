@@ -1,0 +1,27 @@
+lessons:
+  - slug: node-y-npm
+    title: Node.js y npm
+    summary: Por qué Angular necesita Node aunque tu app corra en el navegador, y qué es npm.
+    minutes: 7
+  - slug: package-json
+    title: El package.json
+    summary: La lista de ingredientes del proyecto, dependencies frente a devDependencies y los scripts.
+    minutes: 7
+  - slug: node-modules-y-versiones
+    title: node_modules, package-lock y versiones
+    summary: Qué descarga npm install, cómo leer ^ y ~ y para qué sirve package-lock.json.
+    minutes: 9
+  - slug: angular-cli
+    title: La Angular CLI
+    summary: Instalar ng, comprobar versiones y conocer las órdenes que usarás todos los días.
+    minutes: 7
+  - slug: el-editor
+    title: El editor y sus extensiones
+    summary: VS Code, la extensión Angular Language Service, la carpeta .vscode y Prettier.
+    minutes: 7
+exercises:
+  - ng-predice-el-script
+  - ng-completa-los-scripts
+  - ng-ingredientes-o-utensilios
+  - ng-ordena-la-instalacion
+  - ng-predice-la-version

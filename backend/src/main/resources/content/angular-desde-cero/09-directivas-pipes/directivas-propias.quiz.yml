@@ -1,0 +1,25 @@
+questions:
+  - type: choice
+    prompt: ¿Qué significa el selector `[appResaltar]`?
+    options:
+      - Que la directiva se activa en cualquier elemento con el atributo `appResaltar`
+      - Que la directiva crea una etiqueta nueva `<appResaltar>`
+      - Que la directiva solo funciona dentro de un `@for`
+    answer: 0
+    explanation: 'Los corchetes en un selector CSS significan «elemento con este atributo». Por eso se escribe `<p appResaltar>`.'
+  - type: choice
+    prompt: 'En `host: { ''(click)'': ''contar()'' }`, ¿qué hace `''(click)''`?'
+    options:
+      - Escucha el clic sobre el elemento anfitrión y llama a `contar()`
+      - Enlaza la propiedad `click` del elemento con el valor de `contar()`
+      - Crea un evento de salida llamado `click` para el componente padre
+    answer: 0
+    explanation: 'En `host` se usa la misma sintaxis que en la plantilla: paréntesis para escuchar eventos y corchetes para enlazar propiedades.'
+  - type: choice
+    prompt: ¿Cuándo tiene sentido usar `inject(ElementRef)` en una directiva?
+    options:
+      - Cuando necesitas llamar a un método del elemento real, como `focus()`
+      - Siempre que quieras cambiar un estilo
+      - Para insertar HTML escrito por el usuario con `innerHTML`
+    answer: 0
+    explanation: 'Los estilos y eventos se resuelven con `host`. `ElementRef` se reserva para lo que `host` no puede hacer, y meter HTML del usuario con `innerHTML` es una puerta a ataques XSS.'

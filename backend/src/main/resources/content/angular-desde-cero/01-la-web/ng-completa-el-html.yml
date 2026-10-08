@@ -1,0 +1,63 @@
+title: Completa la página
+summary: Rellena las etiquetas que faltan en un documento HTML.
+difficulty: EASY
+kind: fill
+statement: |
+  Esta página debería mostrar un título, un párrafo y una lista con dos tallas, y en la pestaña del navegador el texto `Zapatillas`. Faltan algunas etiquetas. Completa cada hueco con **el nombre de la etiqueta** (sin `<` ni `>`).
+
+  Así debería verse la página:
+
+  ```text
+  Zapatillas Nube
+  Ligeras y cómodas.
+  • Talla 40
+  • Talla 42
+  ```
+starter: |
+  <!doctype html>
+  <html lang="es">
+    <head>
+      <meta charset="utf-8" />
+      <{{?}}>Zapatillas</title>
+    </head>
+    <{{?}}>
+      <h1>Zapatillas Nube</{{?}}>
+      <p>Ligeras y cómodas.</p>
+      <ul>
+        <{{?}}>Talla 40</li>
+        <li>Talla 42</li>
+      </ul>
+    </body>
+  </html>
+answers:
+  - title
+  - body
+  - h1
+  - li
+solution: |
+  <!doctype html>
+  <html lang="es">
+    <head>
+      <meta charset="utf-8" />
+      <title>Zapatillas</title>
+    </head>
+    <body>
+      <h1>Zapatillas Nube</h1>
+      <p>Ligeras y cómodas.</p>
+      <ul>
+        <li>Talla 40</li>
+        <li>Talla 42</li>
+      </ul>
+    </body>
+  </html>
+hints:
+  - 'La idea: casi toda etiqueta que se abre se cierra con el mismo nombre. Mira la pareja de cada hueco.'
+  - 'Qué usar: el texto de la pestaña va en `<title>`; lo visible va dentro de `<body>`; cada elemento de una lista `<ul>` es un `<li>`.'
+  - 'El plan: el primer hueco abre lo que cierra `</title>`; el segundo abre lo que cierra `</body>`; el tercero cierra lo que abre `<h1>`; el cuarto abre lo que cierra `</li>`.'
+tests:
+  - output: |
+      Zapatillas Nube
+      Ligeras y cómodas.
+      • Talla 40
+      • Talla 42
+    sample: true

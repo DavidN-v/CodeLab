@@ -1,0 +1,25 @@
+questions:
+  - type: choice
+    prompt: 'Escribes `h2 { color: red; }` en `tarjeta.css`, la hoja del componente `Tarjeta`. ¿Qué títulos `h2` se ven en rojo?'
+    options:
+      - Solo los `h2` de la plantilla de `Tarjeta`
+      - Todos los `h2` de la página
+      - Ninguno, porque falta `ViewEncapsulation.None`
+    answer: 0
+    explanation: 'Por defecto la encapsulación es `Emulated`: Angular marca los elementos de la plantilla con un atributo `_ngcontent-…` y reescribe el selector para exigirlo. Los `h2` de otros componentes no llevan ese atributo.'
+  - type: choice
+    prompt: Quieres que todos los botones de la app usen la misma tipografía. ¿Dónde lo escribes?
+    options:
+      - En `src/styles.css`, la hoja global
+      - En `app.css`, porque `App` es el componente raíz
+      - En cada componente, con `ViewEncapsulation.ShadowDom`
+    answer: 0
+    explanation: '`src/styles.css` aparece en `"styles"` de `angular.json` y se aplica a toda la página. `app.css` está encapsulado: solo afecta a la plantilla de `App`, no a los botones de sus hijos.'
+  - type: choice
+    prompt: '¿Qué hace `encapsulation: ViewEncapsulation.None` en un componente?'
+    options:
+      - Sus estilos se copian sin atributos y afectan a toda la página
+      - El componente se muestra sin ningún estilo
+      - Aísla el componente con el Shadow DOM del navegador
+    answer: 0
+    explanation: 'Con `None` Angular no reescribe los selectores: la regla llega tal cual al documento y afecta a cualquier elemento que encaje, esté en el componente que esté.'

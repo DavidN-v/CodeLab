@@ -1,0 +1,43 @@
+questions:
+  - type: output
+    prompt: ¿Qué aparece en la consola?
+    code: |
+      class Marcador {
+        private puntos = 0;
+
+        anotar(): void {
+          this.puntos = this.puntos + 3;
+        }
+
+        ver(): number {
+          return this.puntos;
+        }
+      }
+
+      const local = new Marcador();
+      const visitante = new Marcador();
+      local.anotar();
+      local.anotar();
+      visitante.anotar();
+      console.log(local.ver());
+      console.log(visitante.ver());
+    answer: |
+      6
+      3
+    explanation: 'Cada `new` crea un objeto con sus propios `puntos`. `local` anota dos veces (6) y `visitante` una (3): no se mezclan.'
+  - type: choice
+    prompt: 'Con `private saldo = 0;` dentro de la clase `Cuenta`, ¿qué pasa al escribir `cuenta.saldo = 500;` fuera de la clase?'
+    options:
+      - Funciona, porque 500 es un número
+      - TypeScript da un error, porque `saldo` solo se puede usar dentro de la clase
+      - El saldo pasa a valer 0
+    answer: 1
+    explanation: '`private` impide usar la propiedad desde fuera. Para cambiar el saldo hay que usar los métodos de la clase, que son los que ponen las reglas.'
+  - type: choice
+    prompt: ¿Para qué sirve `@Component({...})` encima de `class App`?
+    options:
+      - Para crear un objeto `App` nada más arrancar el archivo
+      - Para comentar la clase; Angular lo ignora
+      - Para decirle a Angular que esa clase es un componente y darle su selector, plantilla y estilos
+    answer: 2
+    explanation: '`@Component` es un decorador: una función que añade a la clase la información que Angular necesita para tratarla como componente.'

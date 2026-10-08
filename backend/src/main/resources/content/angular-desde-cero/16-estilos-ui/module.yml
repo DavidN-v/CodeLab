@@ -1,0 +1,27 @@
+lessons:
+  - slug: estilos-y-encapsulacion
+    title: Estilos globales y de componente
+    summary: Dónde escribir CSS, cómo lo aísla Angular y los modos de encapsulación.
+    minutes: 8
+  - slug: host-y-temas
+    title: ':host y temas con variables CSS'
+    summary: Estilizar la etiqueta del componente y cambiar de tema en un solo sitio.
+    minutes: 9
+  - slug: cdk-y-material
+    title: Angular CDK y Angular Material
+    summary: Qué ofrece cada librería y qué cambia ng add @angular/material en tu proyecto.
+    minutes: 8
+  - slug: animaciones
+    title: Animaciones con animate.enter y animate.leave
+    summary: Animar la entrada y la salida de elementos con CSS y la API de Angular 22.
+    minutes: 9
+  - slug: accesibilidad
+    title: 'Accesibilidad: una app para todos'
+    summary: Semántica, ARIA, foco y contraste para que nadie se quede fuera.
+    minutes: 9
+exercises:
+  - ng-predice-color-encapsulado
+  - ng-completa-host-tema
+  - ng-completa-animacion-lista
+  - ng-completa-buscador-accesible
+  - ng-ordena-panel-accesible

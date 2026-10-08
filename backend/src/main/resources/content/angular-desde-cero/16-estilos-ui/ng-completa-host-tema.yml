@@ -1,0 +1,39 @@
+title: Una insignia con el color del tema
+summary: Usa :host y var() para estilizar la etiqueta del componente con una variable CSS.
+difficulty: EASY
+kind: fill
+statement: |
+  El componente `Insignia` muestra una etiqueta pequeña tipo «píldora», como `Nuevo`. Queremos que el estilo se aplique a la **propia etiqueta** `<app-insignia>` y que el fondo use el color de acento del tema, la variable CSS `--color-acento` definida en `styles.css`.
+
+  Completa los dos huecos de `insignia.css`:
+
+  1. El selector que apunta al elemento anfitrión del componente.
+  2. La función de CSS que lee el valor de una variable.
+starter: |
+  /* src/app/insignia/insignia.css */
+  {{?}} {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 999px;
+    background: {{?}}(--color-acento);
+    color: white;
+  }
+solution: |
+  /* src/app/insignia/insignia.css */
+  :host {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 999px;
+    background: var(--color-acento);
+    color: white;
+  }
+answers:
+  - ':host'
+  - var
+hints:
+  - 'La idea: la etiqueta `<app-insignia>` no está dentro de la plantilla del componente, así que necesitas un selector especial para ella. Y el color no se escribe: se lee de una variable.'
+  - 'Qué usar: el pseudoselector que Angular traduce a `[_nghost-…]` y la función de CSS que recibe `--nombre` entre paréntesis.'
+  - 'El plan: el primer hueco es `:host` (con los dos puntos) y el segundo `var`.'
+tests:
+  - output: 'La etiqueta <app-insignia> se ve como una píldora con el color de acento del tema.'
+    sample: true

@@ -1,0 +1,31 @@
+questions:
+  - type: choice
+    prompt: ¿Qué diferencia hay entre `ng add @angular/material` y `npm install @angular/material`?
+    options:
+      - '`ng add` instala el paquete y además ejecuta su instalador, que configura el tema, las fuentes y `angular.json`'
+      - Ninguna, son dos nombres para el mismo comando
+      - '`ng add` instala el paquete solo para desarrollo, en `devDependencies`'
+    answer: 0
+    explanation: '`npm install` solo descarga el paquete y lo apunta en `package.json`. `ng add` hace eso y después ejecuta el *schematic* `ng-add` de la librería, que en Material crea `material-theme.scss`, lo añade a `"styles"` y enlaza las fuentes en `index.html`.'
+  - type: choice
+    prompt: Quieres una lista reordenable con arrastrar y soltar, pero con tu propio diseño, sin el aspecto de Material. ¿Qué usas?
+    options:
+      - 'El CDK: `@angular/cdk/drag-drop`'
+      - Angular Material, y luego tapas sus estilos
+      - '`@angular/animations`'
+    answer: 0
+    explanation: 'El CDK da el comportamiento (arrastrar, soltar, reordenar) sin ningún estilo. Material añade un diseño concreto encima, y `@angular/animations` no tiene nada que ver con arrastrar.'
+  - type: choice
+    prompt: 'En un componente escribes `<button matButton="filled">Guardar</button>` pero el botón se ve como uno normal del navegador. ¿Qué falta lo más probable?'
+    code: |
+      @Component({
+        selector: 'app-guardar',
+        template: `<button matButton="filled">Guardar</button>`,
+      })
+      export class Guardar {}
+    options:
+      - Añadir `MatButton` a `imports` del componente (importado de `@angular/material/button`)
+      - 'Poner `encapsulation: ViewEncapsulation.None`'
+      - Cambiar `filled` por `primary`
+    answer: 0
+    explanation: 'Un componente independiente solo entiende las directivas que tiene en `imports`. Sin `MatButton`, `matButton` es un atributo cualquiera y Angular no le aplica nada.'

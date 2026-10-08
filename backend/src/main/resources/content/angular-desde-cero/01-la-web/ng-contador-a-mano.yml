@@ -1,0 +1,36 @@
+title: El contador que dobla
+summary: Sigue un script que cambia el DOM en cada clic y predice la pantalla.
+difficulty: MEDIUM
+kind: predict
+statement: |
+  Esta página tiene un botón que **dobla** los puntos en cada clic. El usuario abre la página y pulsa **Doblar tres veces**.
+
+  Escribe el texto que se ve en la página después del tercer clic, **una línea por elemento**: el título, los dos párrafos y el texto del botón, en ese orden.
+starter: |
+  <body>
+    <h1>Juego</h1>
+    <p id="puntos">Puntos: 1</p>
+    <p id="aviso">Pulsa el botón</p>
+    <button id="doblar">Doblar</button>
+
+    <script>
+      let puntos = 1;
+      const boton = document.querySelector('#doblar');
+      const texto = document.querySelector('#puntos');
+
+      boton.addEventListener('click', () => {
+        puntos = puntos * 2;
+        texto.textContent = 'Puntos: ' + puntos;
+      });
+    </script>
+  </body>
+hints:
+  - 'La idea: cada clic ejecuta la función entera una vez. Lo que no toque la función se queda como estaba en el HTML.'
+  - 'Qué usar: una tabla con el valor de `puntos` antes y después de cada clic. Fíjate en qué elementos cambia `textContent` y cuáles no se tocan nunca.'
+  - 'El plan: puntos pasa de 1 a 2, luego a 4 y luego a 8. Solo cambia el párrafo `#puntos`; el aviso y el botón siguen igual.'
+tests:
+  - output: |
+      Juego
+      Puntos: 8
+      Pulsa el botón
+      Doblar

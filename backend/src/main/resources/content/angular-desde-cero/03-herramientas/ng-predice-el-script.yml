@@ -1,0 +1,31 @@
+title: ¿Qué hace este script?
+summary: Lee la sección scripts de un package.json y predice la salida de npm run.
+difficulty: EASY
+kind: predict
+statement: |
+  Este es el `package.json` de una tienda. En la carpeta del proyecto, alguien ejecuta en la terminal:
+
+  ```bash
+  npm run bienvenida
+  ```
+
+  npm primero escribe dos líneas que empiezan por `>` (el nombre del proyecto y la orden que va a ejecutar). **Ignóralas**: escribe solo lo que aparece **después**, es decir, la salida de la orden. (`echo` es una orden de la terminal que escribe el texto que le sigue.)
+starter: |
+  {
+    "name": "tienda",
+    "version": "1.0.0",
+    "scripts": {
+      "start": "ng serve",
+      "build": "ng build",
+      "bienvenida": "echo Bienvenida a la tienda",
+      "despedida": "echo Hasta pronto"
+    },
+    "private": true
+  }
+hints:
+  - 'La idea: `npm run <nombre>` busca ese nombre dentro de `"scripts"` y ejecuta la orden que tiene al lado.'
+  - 'Qué usar: localiza la clave `"bienvenida"` y mira su valor. `echo` escribe en la terminal el texto que va detrás.'
+  - 'El plan: la orden es `echo Bienvenida a la tienda`, así que la salida es el texto que sigue a `echo`.'
+tests:
+  - output: |
+      Bienvenida a la tienda

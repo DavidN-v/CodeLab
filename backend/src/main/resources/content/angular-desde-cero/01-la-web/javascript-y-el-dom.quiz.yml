@@ -1,0 +1,32 @@
+questions:
+  - type: choice
+    prompt: ¿Qué es el DOM?
+    options:
+      - El archivo `index.html` tal como está en el servidor
+      - El árbol de objetos que el navegador construye a partir del HTML, y que es lo que se ve en pantalla
+      - Un lenguaje de programación para dar estilo a la página
+    answer: 1
+    explanation: 'El navegador lee el HTML y construye el DOM en memoria. Si JavaScript cambia el DOM, la pantalla cambia, aunque el archivo HTML siga igual.'
+  - type: output
+    prompt: El usuario pulsa el botón dos veces. ¿Qué texto muestra el párrafo?
+    code: |
+      <p id="msg">Hola</p>
+      <button id="b">Pulsa</button>
+      <script>
+        let veces = 0;
+        document.querySelector('#b').addEventListener('click', () => {
+          veces = veces + 1;
+          document.querySelector('#msg').textContent = 'Pulsado ' + veces;
+        });
+      </script>
+    answer: |
+      Pulsado 2
+    explanation: 'Cada clic ejecuta la función: `veces` pasa a 1 y luego a 2, y cada vez se reescribe el texto del párrafo. Tras dos clics queda `Pulsado 2`.'
+  - type: choice
+    prompt: En el contador hecho a mano, ¿qué tienes que hacer tú cada vez que cambia la variable?
+    options:
+      - Nada, el navegador actualiza la pantalla solo
+      - Recargar la página con F5
+      - Actualizar también el DOM, por ejemplo con `textContent`
+    answer: 2
+    explanation: 'Sin un framework, cambiar la variable no cambia la pantalla: tienes que tocar el DOM tú. Angular automatiza justo esa parte.'

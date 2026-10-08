@@ -1,0 +1,46 @@
+title: Pinta la oferta
+summary: Une una regla CSS con el elemento al que debe aplicarse.
+difficulty: EASY
+kind: fill
+statement: |
+  Queremos que el párrafo de la oferta tenga el **texto en rojo** y el **fondo amarillo**, y que no afecte a los demás párrafos. La regla CSS usa un selector de **clase** llamado `oferta`.
+
+  Completa los huecos:
+
+  1. el nombre de la propiedad CSS que cambia el **color del texto**;
+  2. el atributo de HTML que asigna una clase a un elemento;
+  3. el nombre de la clase que debe llevar el párrafo.
+starter: |
+  /* estilos.css */
+  .oferta {
+    {{?}}: red;
+    background-color: yellow;
+  }
+
+  <!-- index.html -->
+  <h1>Zapatillas Nube</h1>
+  <p>Las más ligeras del mercado.</p>
+  <p {{?}}="{{?}}">¡Hoy, 20 % de descuento!</p>
+answers:
+  - color
+  - class
+  - oferta
+solution: |
+  /* estilos.css */
+  .oferta {
+    color: red;
+    background-color: yellow;
+  }
+
+  <!-- index.html -->
+  <h1>Zapatillas Nube</h1>
+  <p>Las más ligeras del mercado.</p>
+  <p class="oferta">¡Hoy, 20 % de descuento!</p>
+hints:
+  - 'La idea: la regla `.oferta` solo se aplica a los elementos que «llevan puesta» esa clase. Hay que decir el color en la regla y marcar el párrafo.'
+  - 'Qué usar: la propiedad del color del texto es la misma que viste para el `<h1>` azul. Las clases se asignan con un atributo de HTML.'
+  - 'El plan: el primer hueco es `color`; en el párrafo escribe el atributo `class` y, como valor, el nombre de la clase sin el punto.'
+tests:
+  - output: |
+      Solo el párrafo «¡Hoy, 20 % de descuento!» sale en rojo sobre fondo amarillo.
+    sample: true

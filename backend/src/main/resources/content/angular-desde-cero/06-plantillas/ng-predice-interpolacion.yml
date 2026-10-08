@@ -1,0 +1,40 @@
+title: Predice la ficha del libro
+summary: Lee una plantilla con interpolaciones y escribe lo que se ve en la página.
+difficulty: EASY
+kind: predict
+statement: |
+  Este componente pinta la ficha de un libro. Léelo **sin ejecutarlo** y escribe el texto que se ve en la página, **una línea por elemento** (`h1` y cada `p`), en orden.
+
+  Recuerda: cada `{{ }}` se sustituye por el valor de su expresión, y los signals se leen con `()`.
+starter: |
+  // src/app/ficha/ficha.ts
+  import { Component, signal } from '@angular/core';
+
+  @Component({
+    selector: 'app-ficha',
+    template: `
+      <h1>{{ titulo.toUpperCase() }}</h1>
+      <p>{{ autor }} ({{ anio }})</p>
+      <p>En 2037 cumplirá {{ 2037 - anio }} años</p>
+      <p>{{ precio() > 20 ? 'Caro' : 'Barato' }}: {{ precio() }} €</p>
+      <p>{{ etiquetas.length }} etiquetas, la última: {{ etiquetas[etiquetas.length - 1] }}</p>
+    `,
+  })
+  export class Ficha {
+    protected readonly titulo = 'El Hobbit';
+    protected readonly autor = 'Tolkien';
+    protected readonly anio = 1937;
+    protected readonly precio = signal(18);
+    protected readonly etiquetas = ['aventura', 'fantasía', 'clásico'];
+  }
+hints:
+  - 'La idea: el texto fijo se copia tal cual y cada `{{ }}` se cambia por un valor de la clase. Hay 5 elementos, así que son 5 líneas.'
+  - 'Qué usar: `toUpperCase()` pasa a mayúsculas; `precio()` lee el signal (vale 18); un array de 3 elementos tiene su último en la posición `length - 1`.'
+  - 'El plan: línea 1, el título en mayúsculas; línea 2, autor y año; línea 3, 2037 - 1937; línea 4, decide el ternario con 18 > 20; línea 5, cuenta las etiquetas y toma la de la posición 2.'
+tests:
+  - output: |
+      EL HOBBIT
+      Tolkien (1937)
+      En 2037 cumplirá 100 años
+      Barato: 18 €
+      3 etiquetas, la última: clásico

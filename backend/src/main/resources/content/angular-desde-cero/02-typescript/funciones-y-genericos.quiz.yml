@@ -1,0 +1,32 @@
+questions:
+  - type: output
+    prompt: ¿Qué aparece en la consola?
+    code: |
+      const triple = (n: number): number => n * 3;
+      const saludo = (nombre: string): string => `Hola, ${nombre}`;
+      console.log(triple(4));
+      console.log(saludo('Ada'));
+    answer: |
+      12
+      Hola, Ada
+    explanation: '`triple(4)` devuelve 4 * 3. La plantilla de texto inserta el valor de `nombre` donde está `${nombre}`.'
+  - type: choice
+    prompt: ¿Qué valor tiene `resultado`?
+    code: |
+      const edades = [12, 30, 17, 45];
+      const resultado = edades.filter((e) => e >= 18);
+    options:
+      - '`[12, 17]`'
+      - '`[30, 45]`'
+      - '`true`'
+      - '`[true, false]`'
+    answer: 1
+    explanation: '`filter` se queda con los elementos para los que la función devuelve `true`: los mayores o iguales que 18.'
+  - type: choice
+    prompt: 'En `function ultimo<T>(lista: T[]): T | undefined`, ¿qué es `T`?'
+    options:
+      - Un tipo que se decide al llamar a la función, según la lista que pases
+      - Una abreviatura de `text`, así que la lista debe ser de textos
+      - Una variable que guarda el último elemento
+    answer: 0
+    explanation: '`T` es un parámetro de tipo (genérico). Con una lista de números, `T` es `number`; con una de productos, `T` es `Producto`.'

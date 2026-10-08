@@ -1,0 +1,25 @@
+questions:
+  - type: choice
+    prompt: Un usuario abre tu app Angular publicada en internet. ¿Necesita tener Node.js instalado?
+    options:
+      - Sí, porque Angular funciona sobre Node
+      - No; Node solo hace falta para las herramientas que construyen la app, y la app corre en su navegador
+      - Solo si usa Windows
+    answer: 1
+    explanation: 'Node es el taller donde se fabrica la app (CLI, compilador, servidor de desarrollo). El resultado son archivos HTML, CSS y JavaScript que cualquier navegador ejecuta sin Node.'
+  - type: choice
+    prompt: ¿Qué es npm?
+    options:
+      - El registro público de paquetes de JavaScript y el programa que los descarga a tu proyecto
+      - Un navegador especial para programadores
+      - El compilador de TypeScript
+    answer: 0
+    explanation: 'npm (Node Package Manager) es a la vez el almacén en internet (npmjs.com) y la orden de terminal que instala esos paquetes. Se instala junto con Node.'
+  - type: choice
+    prompt: Instalas Node, escribes `node --version` en una terminal que ya tenías abierta y dice que no reconoce la orden. ¿Qué haces primero?
+    options:
+      - Reinstalar Windows
+      - Instalar npm por separado
+      - Cerrar la terminal y abrir una nueva
+    answer: 2
+    explanation: 'Una terminal carga la lista de programas al abrirse. La que estaba abierta antes de instalar Node no sabe que existe; una nueva sí.'

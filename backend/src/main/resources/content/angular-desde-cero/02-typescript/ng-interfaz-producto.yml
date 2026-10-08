@@ -1,0 +1,60 @@
+title: La forma de un producto
+summary: Completa una interfaz con una propiedad opcional, una unión y un valor por defecto.
+difficulty: MEDIUM
+kind: fill
+statement: |
+  Describe los productos de la tienda y muestra el precio de uno. Completa los huecos:
+
+  1. la palabra que declara la **forma de un objeto** (no lleva `=`);
+  2. el símbolo que hace **opcional** la propiedad `oferta`;
+  3. el símbolo que significa «o» en un tipo;
+  4. el tipo de `gorra`;
+  5. el operador que usa `gorra.precio` **solo si** `oferta` es `null` o `undefined` (una oferta de `0` significa gratis y debe mostrarse `0`).
+
+  La consola debe mostrar:
+
+  ```text
+  Gorra (ropa): 15 €
+  ```
+starter: |
+  {{?}} Producto {
+    id: number;
+    nombre: string;
+    precio: number;
+    oferta{{?}}: number;
+  }
+
+  type Categoria = 'ropa' {{?}} 'calzado';
+
+  const gorra: {{?}} = { id: 1, nombre: 'Gorra', precio: 15 };
+  const categoria: Categoria = 'ropa';
+
+  console.log(`${gorra.nombre} (${categoria}): ${gorra.oferta {{?}} gorra.precio} €`);
+answers:
+  - interface
+  - '?'
+  - '|'
+  - Producto
+  - '??'
+solution: |
+  interface Producto {
+    id: number;
+    nombre: string;
+    precio: number;
+    oferta?: number;
+  }
+
+  type Categoria = 'ropa' | 'calzado';
+
+  const gorra: Producto = { id: 1, nombre: 'Gorra', precio: 15 };
+  const categoria: Categoria = 'ropa';
+
+  console.log(`${gorra.nombre} (${categoria}): ${gorra.oferta ?? gorra.precio} €`);
+hints:
+  - 'La idea: primero describes la forma de los productos, después usas esa forma para crear uno y, al mostrarlo, eliges entre la oferta y el precio normal.'
+  - 'Qué usar: `interface` para la forma de un objeto, `?` tras el nombre de una propiedad opcional, `|` para las uniones y `??` para los valores por defecto.'
+  - 'El plan: interface · ? · | · el nombre de la interfaz · ??. Recuerda que `||` también cambiaría una oferta de 0, y aquí no queremos eso.'
+tests:
+  - output: |
+      Gorra (ropa): 15 €
+    sample: true

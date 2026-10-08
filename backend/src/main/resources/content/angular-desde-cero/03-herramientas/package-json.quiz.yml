@@ -1,0 +1,26 @@
+questions:
+  - type: choice
+    prompt: ¿Por qué `typescript` está en `devDependencies` y no en `dependencies`?
+    options:
+      - Porque solo se usa para compilar; al navegador le llega JavaScript ya traducido
+      - Porque TypeScript es de pago
+      - Porque es una versión de prueba
+    answer: 0
+    explanation: 'Las `devDependencies` son herramientas de fabricación. TypeScript traduce tu código a JavaScript y después no hace falta: no viaja al navegador.'
+  - type: choice
+    prompt: 'Con `"scripts": { "start": "ng serve" }`, ¿qué orden arranca el servidor de desarrollo?'
+    options:
+      - '`npm serve`'
+      - '`npm start`'
+      - '`npm install start`'
+    answer: 1
+    explanation: '`npm start` busca el script `start` y ejecuta lo que dice: `ng serve`. `start` es uno de los nombres que no necesitan `run`.'
+  - type: choice
+    prompt: ¿Cuál de estos paquetes acaba dentro de la aplicación que descarga el usuario?
+    options:
+      - '`@angular/cli`'
+      - '`vitest`'
+      - '`@angular/router`'
+      - '`prettier`'
+    answer: 2
+    explanation: '`@angular/router` es una dependencia de la app: hace la navegación en el navegador. Los otros tres son herramientas (crear y compilar, probar, formatear código).'

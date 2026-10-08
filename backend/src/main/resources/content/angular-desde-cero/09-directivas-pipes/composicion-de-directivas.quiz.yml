@@ -1,0 +1,32 @@
+questions:
+  - type: choice
+    prompt: ¿Para qué sirve `hostDirectives` en un componente?
+    options:
+      - Para que el componente lleve de serie ciertas directivas en su elemento anfitrión
+      - Para importar directivas que se usarán dentro de su plantilla
+      - Para heredar la plantilla de otro componente
+    answer: 0
+    explanation: 'Las directivas de `hostDirectives` se aplican al propio `<app-tarjeta>`. Las que usas dentro de la plantilla van en `imports`.'
+  - type: choice
+    prompt: 'Con `hostDirectives: [Ayuda]` (sin `inputs`), ¿qué pasa al escribir `<app-tarjeta [ayuda]="texto()">`?'
+    options:
+      - 'Error de compilación: `ayuda` no es una propiedad conocida de `app-tarjeta`'
+      - El título se pone igualmente
+      - La directiva `Ayuda` no se crea
+    answer: 0
+    explanation: 'La directiva sí se crea, pero sus entradas quedan ocultas. Hay que exponerlas con `{ directive: Ayuda, inputs: [''ayuda''] }`.'
+  - type: output
+    prompt: '¿Qué valor tiene el atributo `class` de cada `<app-chip>` en la página? (Escribe solo el valor.)'
+    code: |
+      @Component({
+        selector: 'app-chip',
+        host: { class: 'chip' },
+        template: `<ng-content />`,
+      })
+      export class Chip {}
+
+      <!-- plantilla del padre -->
+      <app-chip>Nuevo</app-chip>
+    answer: |
+      chip
+    explanation: '`host: { class: ''chip'' }` pone ese atributo fijo en el elemento anfitrión, así que cada `<app-chip>` lleva la clase `chip`.'

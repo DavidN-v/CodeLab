@@ -1,0 +1,41 @@
+title: Pon los tipos
+summary: Escribe el tipo de cada variable de una pequeña tienda.
+difficulty: EASY
+kind: fill
+statement: |
+  Estas variables describen una tienda: su nombre, cuántas visitas lleva, si está abierta y las tallas que vende. Escribe en cada hueco **el tipo** que corresponde a su valor.
+
+  Para el array, usa la forma corta con corchetes (`tipo[]`).
+
+  Al ejecutarlo, la consola muestra:
+
+  ```text
+  Nube: 120 visitas
+  ```
+starter: |
+  const tienda: {{?}} = 'Nube';
+  let visitas: {{?}} = 120;
+  let abierta: {{?}} = true;
+  const tallas: {{?}} = ['S', 'M', 'L'];
+
+  console.log(`${tienda}: ${visitas} visitas`);
+answers:
+  - string
+  - number
+  - boolean
+  - string[]
+solution: |
+  const tienda: string = 'Nube';
+  let visitas: number = 120;
+  let abierta: boolean = true;
+  const tallas: string[] = ['S', 'M', 'L'];
+
+  console.log(`${tienda}: ${visitas} visitas`);
+hints:
+  - 'La idea: mira el valor de cada variable y pregúntate qué es: ¿un texto, un número, un sí/no, una lista de textos?'
+  - 'Qué usar: los tres tipos básicos de la lección (`string`, `number`, `boolean`) y, para una lista, el tipo de sus elementos seguido de `[]`.'
+  - 'El plan: lo que va entre comillas es `string`; `120` es `number`; `true` es `boolean`; una lista de textos es `string[]`.'
+tests:
+  - output: |
+      Nube: 120 visitas
+    sample: true

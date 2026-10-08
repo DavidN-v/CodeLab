@@ -1,0 +1,52 @@
+title: Escucha el clic
+summary: Completa el JavaScript que busca elementos del DOM y reacciona a un clic.
+difficulty: MEDIUM
+kind: fill
+statement: |
+  Al pulsar **Me gusta**, el párrafo debe mostrar cuántos «me gusta» lleva: `Me gusta: 1`, `Me gusta: 2`…
+
+  Completa los huecos con el nombre exacto de cada función o propiedad del navegador:
+
+  1. la función de `document` que busca un elemento por su selector (como `#corazon`);
+  2. la función que se queda escuchando un evento del botón;
+  3. la propiedad que cambia el texto de un elemento.
+starter: |
+  <p id="total">Me gusta: 0</p>
+  <button id="corazon">Me gusta</button>
+
+  <script>
+    let likes = 0;
+    const boton = document.{{?}}('#corazon');
+    const total = document.querySelector('#total');
+
+    boton.{{?}}('click', () => {
+      likes = likes + 1;
+      total.{{?}} = 'Me gusta: ' + likes;
+    });
+  </script>
+answers:
+  - querySelector
+  - addEventListener
+  - textContent
+solution: |
+  <p id="total">Me gusta: 0</p>
+  <button id="corazon">Me gusta</button>
+
+  <script>
+    let likes = 0;
+    const boton = document.querySelector('#corazon');
+    const total = document.querySelector('#total');
+
+    boton.addEventListener('click', () => {
+      likes = likes + 1;
+      total.textContent = 'Me gusta: ' + likes;
+    });
+  </script>
+hints:
+  - 'La idea: hay que hacer tres cosas con el DOM: encontrar el botón, escuchar sus clics y reescribir el texto del párrafo.'
+  - 'Qué usar: la siguiente línea del código ya usa la misma función de búsqueda que necesitas en el primer hueco. Para escuchar eventos y cambiar el texto usa los nombres de la lección.'
+  - 'El plan: primer hueco, la función con la que se busca `#total`; segundo, «añadir un escuchador de eventos» en inglés y en camelCase; tercero, «contenido de texto» en inglés.'
+tests:
+  - output: |
+      Tras dos clics el párrafo muestra: Me gusta: 2
+    sample: true

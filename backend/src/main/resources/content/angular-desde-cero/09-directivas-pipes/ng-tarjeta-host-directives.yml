@@ -1,0 +1,68 @@
+title: Una tarjeta con directivas de serie
+summary: Compón dos directivas en un componente y expón una de sus entradas.
+difficulty: HARD
+kind: fill
+statement: |
+  Las directivas `Pulsable` (cambia el cursor a una mano) y `Ayuda` (pone el atributo `title`) ya existen. Queremos que **todo** `<app-boton>` las lleve automáticamente, y que se pueda escribir:
+
+  ```html
+  <app-boton ayuda="Guarda los cambios">Guardar</app-boton>
+  ```
+
+  Completa los huecos: la propiedad del decorador que aplica directivas al anfitrión, la clave del objeto que indica **qué** directiva se aplica y la clave que **expone** su entrada `ayuda`.
+starter: |
+  // src/app/boton.ts
+  import { Component, Directive, input } from '@angular/core';
+
+  @Directive({
+    host: { '[style.cursor]': "'pointer'" },
+  })
+  export class Pulsable {}
+
+  @Directive({
+    host: { '[attr.title]': 'ayuda()' },
+  })
+  export class Ayuda {
+    readonly ayuda = input('');
+  }
+
+  @Component({
+    selector: 'app-boton',
+    {{?}}: [Pulsable, { {{?}}: Ayuda, {{?}}: ['ayuda'] }],
+    template: `<ng-content />`,
+  })
+  export class Boton {}
+answers:
+  - hostDirectives
+  - directive
+  - inputs
+solution: |
+  // src/app/boton.ts
+  import { Component, Directive, input } from '@angular/core';
+
+  @Directive({
+    host: { '[style.cursor]': "'pointer'" },
+  })
+  export class Pulsable {}
+
+  @Directive({
+    host: { '[attr.title]': 'ayuda()' },
+  })
+  export class Ayuda {
+    readonly ayuda = input('');
+  }
+
+  @Component({
+    selector: 'app-boton',
+    hostDirectives: [Pulsable, { directive: Ayuda, inputs: ['ayuda'] }],
+    template: `<ng-content />`,
+  })
+  export class Boton {}
+hints:
+  - 'La idea: no se trata de usar las directivas dentro de la plantilla del botón, sino de pegarlas al propio `<app-boton>`, y además abrir una de sus entradas al exterior.'
+  - 'Qué usar: la propiedad `hostDirectives` del decorador. Cada elemento de la lista es una clase o un objeto con la directiva y las entradas que expone.'
+  - 'El plan: `hostDirectives: [Pulsable, { directive: Ayuda, inputs: [''ayuda''] }]`.'
+tests:
+  - output: |
+      <app-boton title="Guarda los cambios" style="cursor: pointer;">Guardar</app-boton>
+    sample: true

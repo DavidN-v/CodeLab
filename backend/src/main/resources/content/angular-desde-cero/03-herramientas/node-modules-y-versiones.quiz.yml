@@ -1,0 +1,25 @@
+questions:
+  - type: choice
+    prompt: 'El `package.json` pide `"rxjs": "~7.8.0"`. ¿Cuál de estas versiones puede instalar npm?'
+    options:
+      - '`7.9.0`'
+      - '`8.0.0`'
+      - '`7.8.2`'
+    answer: 2
+    explanation: '`~` solo acepta parches de la misma mayor y menor (7.8.x). La 7.9.0 cambia la menor y la 8.0.0 la mayor.'
+  - type: choice
+    prompt: ¿Qué archivos o carpetas de un proyecto se guardan en el repositorio de código?
+    options:
+      - '`package.json` y `package-lock.json`, pero no `node_modules`'
+      - Solo `node_modules`, que es lo importante
+      - Los tres, para que nadie tenga que instalar nada
+    answer: 0
+    explanation: 'Con `package.json` y `package-lock.json` cualquiera reconstruye `node_modules` con `npm install`. Subir `node_modules` sería guardar cientos de megas que se pueden regenerar.'
+  - type: choice
+    prompt: El `package.json` lista 15 paquetes, pero `npm install` dice que ha añadido más de 400. ¿Por qué?
+    options:
+      - Porque npm instala todo el registro por si acaso
+      - Porque cada paquete trae sus propias dependencias, y estas otras
+      - Porque se descargan varias copias de cada paquete
+    answer: 1
+    explanation: 'Son las dependencias transitivas: `@angular/core` necesita `tslib`, la CLI necesita decenas de herramientas… npm las instala todas para que cada paquete funcione.'

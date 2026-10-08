@@ -1,0 +1,63 @@
+title: Tareas tachadas
+summary: Completa los bindings de clase y de estilo de una lista de tareas.
+difficulty: EASY
+kind: fill
+statement: |
+  La lista pinta cada tarea en un `<li>`. Completa los huecos para que:
+
+  1. cada `<li>` lleve la **clase** `hecha` cuando `tarea.hecha` sea `true` (el CSS global ya la tacha);
+  2. las tareas urgentes se vean en rojo usando un binding de **estilo** sobre la propiedad CSS `color`.
+
+  Usa bindings de Angular (`[class.…]` y `[style.…]`), sin importar `NgClass` ni `NgStyle`.
+starter: |
+  // src/app/tareas.ts
+  import { Component, signal } from '@angular/core';
+
+  @Component({
+    selector: 'app-tareas',
+    template: `
+      <ul>
+        @for (tarea of tareas(); track tarea.titulo) {
+          <li [{{?}}]="tarea.hecha" [style.{{?}}]="tarea.urgente ? 'red' : null">{{ tarea.titulo }}</li>
+        }
+      </ul>
+    `,
+  })
+  export class Tareas {
+    protected readonly tareas = signal([
+      { titulo: 'Comprar pan', hecha: true, urgente: false },
+      { titulo: 'Pagar la luz', hecha: false, urgente: true },
+    ]);
+  }
+answers:
+  - class.hecha
+  - color
+solution: |
+  // src/app/tareas.ts
+  import { Component, signal } from '@angular/core';
+
+  @Component({
+    selector: 'app-tareas',
+    template: `
+      <ul>
+        @for (tarea of tareas(); track tarea.titulo) {
+          <li [class.hecha]="tarea.hecha" [style.color]="tarea.urgente ? 'red' : null">{{ tarea.titulo }}</li>
+        }
+      </ul>
+    `,
+  })
+  export class Tareas {
+    protected readonly tareas = signal([
+      { titulo: 'Comprar pan', hecha: true, urgente: false },
+      { titulo: 'Pagar la luz', hecha: false, urgente: true },
+    ]);
+  }
+hints:
+  - 'La idea: el primer binding pone o quita una clase según un booleano; el segundo pone un estilo concreto.'
+  - 'Qué usar: `[class.nombre]="condición"` para una clase y `[style.propiedad]="valor"` para un estilo.'
+  - 'El plan: en el primer hueco va `class.` seguido del nombre de la clase; en el segundo, solo el nombre de la propiedad CSS del color del texto.'
+tests:
+  - output: |
+      <li class="hecha">Comprar pan</li>
+      <li style="color: red;">Pagar la luz</li>
+    sample: true

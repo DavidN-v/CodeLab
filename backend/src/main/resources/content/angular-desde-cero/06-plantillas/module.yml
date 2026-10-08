@@ -1,0 +1,28 @@
+lessons:
+  - slug: interpolacion
+    title: La plantilla y la interpolación {{ }}
+    summary: Pintar datos de la clase en el HTML y entender por qué la plantilla se compila.
+    minutes: 8
+  - slug: enlazar-propiedades
+    title: Enlazar propiedades, clases y estilos [ ]
+    summary: Conectar disabled, src, clases CSS, estilos y atributos a los datos de la clase.
+    minutes: 8
+  - slug: eventos-y-referencias
+    title: Eventos ( ), $event y variables #ref
+    summary: Reaccionar a clics y teclas, leer el evento y nombrar elementos de la plantilla.
+    minutes: 9
+  - slug: if-switch-y-let
+    title: Decidir qué se ve con @if, @switch y @let
+    summary: Crear o quitar partes de la página según los datos y guardar cálculos en la plantilla.
+    minutes: 8
+  - slug: for-y-track
+    title: Repetir con @for, track y @empty
+    summary: Pintar listas, usar $index y compañía y entender por qué track es obligatorio.
+    minutes: 9
+exercises:
+  - ng-predice-interpolacion
+  - ng-enlaza-producto
+  - ng-boton-me-gusta
+  - ng-predice-plazas
+  - ng-ordena-lista-compra
+  - ng-lista-de-alumnos

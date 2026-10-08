@@ -1,0 +1,32 @@
+questions:
+  - type: choice
+    prompt: ¿Qué hace el navegador con los tipos de TypeScript?
+    options:
+      - Los comprueba cada vez que se ejecuta la página
+      - Nada, porque nunca le llegan; el compilador los borra al generar JavaScript
+      - Los muestra en la consola
+    answer: 1
+    explanation: 'Los tipos se comprueban al compilar. El JavaScript que recibe el navegador ya no los lleva: solo sirvieron para avisarte mientras programabas.'
+  - type: choice
+    prompt: ¿Qué tipo infiere TypeScript para `tienda`?
+    code: |
+      const tienda = 'Nube';
+    options:
+      - '`number`'
+      - '`boolean`'
+      - '`string`'
+    answer: 2
+    explanation: 'El valor inicial es un texto entre comillas, así que TypeScript deduce que es `string` sin que lo escribas.'
+  - type: choice
+    prompt: ¿Qué línea da un error de tipos?
+    code: |
+      let total: number = 10;
+      const nombre = 'Ada';
+      let activo = true;
+    options:
+      - '`total = total + 5;`'
+      - '`activo = false;`'
+      - '`total = ''diez'';`'
+      - '`console.log(nombre);`'
+    answer: 2
+    explanation: '`total` es `number` y no admite un texto. Las demás líneas respetan los tipos: `activo` es `boolean` y puede pasar a `false`.'

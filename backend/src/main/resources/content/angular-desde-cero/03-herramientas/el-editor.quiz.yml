@@ -1,0 +1,25 @@
+questions:
+  - type: choice
+    prompt: VS Code ya entiende TypeScript. ¿Para qué necesitas la extensión Angular Language Service?
+    options:
+      - Para que VS Code pueda abrir archivos `.ts`
+      - Para entender las plantillas de Angular (autocompletado y errores en el HTML de los componentes)
+      - Para ejecutar la aplicación en el navegador
+    answer: 1
+    explanation: 'TypeScript lo entiende de serie, pero `{{ }}`, `(click)` y el resto de la sintaxis de plantillas son de Angular. La extensión enseña al editor ese vocabulario.'
+  - type: choice
+    prompt: ¿Qué hace el archivo `.vscode/extensions.json` que genera Angular?
+    options:
+      - Instala Node.js
+      - Contiene el código de la extensión
+      - Recomienda la extensión `angular.ng-template` al abrir el proyecto en VS Code
+    answer: 2
+    explanation: 'Solo es una lista de recomendaciones. Al abrir el proyecto, VS Code te sugiere instalar las extensiones que aparecen ahí.'
+  - type: choice
+    prompt: El autocompletado de las plantillas no funciona. Has abierto en VS Code la carpeta `proyectos`, que contiene `mi-app` dentro. ¿Qué haces?
+    options:
+      - Abrir directamente la carpeta `mi-app`, la que tiene `package.json` y `angular.json`
+      - Reinstalar VS Code
+      - Mover los archivos de `src` a `proyectos`
+    answer: 0
+    explanation: 'Las herramientas buscan la configuración del proyecto en la carpeta que abres. Si abres una de más arriba, no encuentran `angular.json` ni `node_modules`.'

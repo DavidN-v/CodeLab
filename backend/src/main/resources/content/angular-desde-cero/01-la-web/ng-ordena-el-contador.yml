@@ -1,0 +1,49 @@
+title: Ordena el contador
+summary: Ordena las líneas de un script que reacciona al clic y actualiza la pantalla.
+difficulty: HARD
+kind: parsons
+statement: |
+  Las variables ya están preparadas. Falta la parte que hace que, **en cada clic** del botón, el contador suba en uno y el párrafo muestre el valor **nuevo**. Tras el primer clic debe verse `Clics: 1`, no `Clics: 0`.
+
+  Ordena las líneas. Cuidado: algunas sobran.
+starter: |
+  <p id="valor">Clics: 0</p>
+  <button id="boton">Sumar</button>
+
+  <script>
+    let clics = 0;
+    const boton = document.querySelector('#boton');
+    const valor = document.querySelector('#valor');
+
+  {{lines}}
+  </script>
+lines:
+  - '  boton.addEventListener(''click'', () => {'
+  - '    clics = clics + 1;'
+  - '    valor.textContent = ''Clics: '' + clics;'
+  - '  });'
+distractors:
+  - '    let clics = 0;'
+  - '  valor.addEventListener(''click'', () => {'
+solution: |
+  <p id="valor">Clics: 0</p>
+  <button id="boton">Sumar</button>
+
+  <script>
+    let clics = 0;
+    const boton = document.querySelector('#boton');
+    const valor = document.querySelector('#valor');
+
+    boton.addEventListener('click', () => {
+      clics = clics + 1;
+      valor.textContent = 'Clics: ' + clics;
+    });
+  </script>
+hints:
+  - 'La idea: hay que escuchar el clic del botón y, dentro de la función que se ejecuta, primero cambiar el dato y después la pantalla.'
+  - 'Qué usar: `addEventListener` sobre el elemento que el usuario pulsa (el botón, no el párrafo). La variable `clics` ya existe: dentro solo hay que cambiarla, no volver a crearla.'
+  - 'El plan: abre el escuchador del botón; suma 1 a clics; escribe el texto con el valor nuevo; cierra con `});`.'
+tests:
+  - output: |
+      Tras el primer clic: Clics: 1
+    sample: true

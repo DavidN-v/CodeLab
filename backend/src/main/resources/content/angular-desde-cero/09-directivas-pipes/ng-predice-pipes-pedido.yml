@@ -1,0 +1,36 @@
+title: El resumen del pedido
+summary: Predice qué muestran uppercase, currency y date en una plantilla.
+difficulty: EASY
+kind: predict
+statement: |
+  Lee el componente **sin ejecutarlo** y escribe el texto que se ve en la página, **una línea por elemento** (`<h1>` y cada `<p>`).
+
+  La aplicación usa el idioma por defecto de Angular (inglés de EE. UU., `en-US`).
+starter: |
+  // src/app/pedido.ts
+  import { Component, signal } from '@angular/core';
+  import { CurrencyPipe, DatePipe, UpperCasePipe } from '@angular/common';
+
+  @Component({
+    selector: 'app-pedido',
+    imports: [CurrencyPipe, DatePipe, UpperCasePipe],
+    template: `
+      <h1>{{ cliente() | uppercase }}</h1>
+      <p>Total: {{ total() | currency: 'EUR' }}</p>
+      <p>Fecha: {{ fecha | date: 'dd/MM/yyyy' }}</p>
+    `,
+  })
+  export class Pedido {
+    protected readonly cliente = signal('Ada');
+    protected readonly total = signal(42.5);
+    protected readonly fecha = new Date(2026, 0, 9);
+  }
+hints:
+  - 'La idea: cada pipe transforma el valor de su izquierda solo para mostrarlo. Resuelve las tres líneas por separado.'
+  - 'Qué usar: `uppercase` pasa todo a mayúsculas; `currency: ''EUR''` en `en-US` pone el símbolo delante y siempre dos decimales; en `new Date(2026, 0, 9)` los meses empiezan en 0.'
+  - 'El plan: el nombre queda `ADA`; el total, `€42.50`; y la fecha es el 9 de enero de 2026 con formato día/mes/año de dos, dos y cuatro cifras.'
+tests:
+  - output: |
+      ADA
+      Total: €42.50
+      Fecha: 09/01/2026

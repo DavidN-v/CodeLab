@@ -1,0 +1,37 @@
+questions:
+  - type: output
+    prompt: ¿Qué aparece en la consola?
+    code: |
+      const tallas: string[] = ['S', 'M', 'L'];
+      tallas.push('XL');
+      console.log(tallas.length);
+      console.log(tallas[1]);
+    answer: |
+      4
+      M
+    explanation: 'Tras el `push` hay cuatro elementos. Las posiciones empiezan en 0, así que `tallas[1]` es el segundo: `M`.'
+  - type: choice
+    prompt: ¿Qué objeto cumple esta interfaz?
+    code: |
+      interface Usuario {
+        nombre: string;
+        edad: number;
+        email?: string;
+      }
+    options:
+      - "`{ nombre: 'Ada' }`"
+      - "`{ nombre: 'Ada', edad: 36 }`"
+      - "`{ nombre: 'Ada', edad: '36' }`"
+    answer: 1
+    explanation: '`email` es opcional (`?`), así que puede faltar. `nombre` y `edad` son obligatorias, y `edad` debe ser un número, no un texto.'
+  - type: output
+    prompt: ¿Qué aparece en la consola?
+    code: |
+      const stock: number | null = 0;
+      const apodo: string | undefined = undefined;
+      console.log(stock ?? 10);
+      console.log(apodo ?? 'Sin apodo');
+    answer: |
+      0
+      Sin apodo
+    explanation: '`??` solo usa el valor de la derecha si el de la izquierda es `null` o `undefined`. El `0` es un valor válido, así que se queda; `apodo` es `undefined`, así que se usa `Sin apodo`.'

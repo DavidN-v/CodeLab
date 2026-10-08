@@ -1,0 +1,25 @@
+questions:
+  - type: choice
+    prompt: ¿Por qué es mejor `<button (click)="guardar()">` que `<div (click)="guardar()">`?
+    options:
+      - El botón recibe el foco con Tab, se pulsa con Enter o Espacio y el lector lo anuncia como botón
+      - El `div` no permite eventos `(click)` en Angular
+      - No hay diferencia si les das el mismo estilo
+    answer: 0
+    explanation: 'El `div` sí recibe clics de ratón, pero no es accesible: no entra en el orden de Tab, no responde al teclado y el lector de pantalla no sabe que es pulsable. `<button>` lo trae todo de serie.'
+  - type: choice
+    prompt: Un botón abre y cierra un panel según la señal `abierto()`. ¿Cómo informas al lector de pantalla de su estado?
+    options:
+      - '`[attr.aria-expanded]="abierto()"`'
+      - '`aria-expanded="abierto()"`'
+      - '`[class.aria-expanded]="abierto()"`'
+    answer: 0
+    explanation: 'Con `[attr.…]` Angular escribe el atributo con el valor de la expresión y lo actualiza cuando cambia. Sin corchetes, el atributo valdría literalmente el texto `abierto()`; y `[class.…]` añade una clase CSS, no un atributo.'
+  - type: choice
+    prompt: 'En `styles.css` alguien ha escrito `*:focus { outline: none; }` porque «el borde azul es feo». ¿Qué problema causa?'
+    options:
+      - Quien navega con teclado ya no ve qué elemento tiene el foco
+      - Ninguno, el foco solo importa con ratón
+      - Los formularios dejan de enviarse
+    answer: 0
+    explanation: 'El contorno de foco es la única pista visual de dónde está el teclado. Si no te gusta el estándar, cámbialo por otro bien visible con `:focus-visible`, pero no lo quites.'

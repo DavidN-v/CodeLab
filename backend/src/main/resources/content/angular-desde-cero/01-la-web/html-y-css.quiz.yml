@@ -1,0 +1,36 @@
+questions:
+  - type: choice
+    prompt: ¿Dónde va todo lo que se ve dentro de la página?
+    options:
+      - Dentro de `<head>`
+      - Dentro de `<body>`
+      - Dentro de `<title>`
+    answer: 1
+    explanation: '`<body>` es el cuerpo visible. `<head>` guarda información sobre la página (como el título de la pestaña o los estilos enlazados), que no se pinta dentro de ella.'
+  - type: choice
+    prompt: ¿A qué elementos se aplica esta regla CSS?
+    code: |
+      .aviso {
+        color: red;
+      }
+    options:
+      - A todas las etiquetas `<aviso>`
+      - A los elementos con `class="aviso"`
+      - Solo al primer párrafo de la página
+    answer: 1
+    explanation: 'El punto delante del nombre indica un selector de clase: la regla afecta a cualquier elemento que tenga `class="aviso"`, sea un `<p>`, un `<div>` o un `<span>`.'
+  - type: output
+    prompt: ¿Qué texto se ve en la página? Escribe una línea por elemento visible.
+    code: |
+      <body>
+        <h1>Menú</h1>
+        <ul>
+          <li>Sopa</li>
+          <li>Pasta</li>
+        </ul>
+      </body>
+    answer: |
+      Menú
+      Sopa
+      Pasta
+    explanation: 'El `<h1>` es el título y cada `<li>` es un elemento de la lista. Las etiquetas no se ven: solo su contenido.'
