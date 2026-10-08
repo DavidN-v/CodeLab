@@ -1,0 +1,70 @@
+title: Las rutas de Mis tareas
+summary: Completa app.routes.ts con la redirección, la carga diferida y el guard.
+difficulty: EASY
+kind: fill
+statement: |
+  Completa las rutas de **Mis tareas**:
+
+  - la ruta vacía **redirige** a `tareas`;
+  - el formulario se carga **de forma diferida** con un componente;
+  - el detalle se carga de forma diferida y está **protegido** por `tareaExisteGuard` (un `CanActivateFn`).
+starter: |
+  import { Routes } from '@angular/router';
+  import { ListaTareas } from './tareas/lista-tareas/lista-tareas';
+  import { NoEncontrada } from './no-encontrada/no-encontrada';
+  import { tareaExisteGuard } from './tareas/tarea-existe-guard';
+
+  export const routes: Routes = [
+    { path: '', {{?}}: 'tareas', pathMatch: 'full' },
+    { path: 'tareas', component: ListaTareas, title: 'Mis tareas' },
+    {
+      path: 'tareas/nueva',
+      {{?}}: () => import('./tareas/nueva-tarea/nueva-tarea').then((m) => m.NuevaTarea),
+      title: 'Nueva tarea',
+    },
+    {
+      path: 'tareas/:id',
+      loadComponent: () =>
+        import('./tareas/detalle-tarea/detalle-tarea').then((m) => m.DetalleTarea),
+      {{?}}: [tareaExisteGuard],
+      title: 'Detalle de la tarea',
+    },
+    { path: '**', component: NoEncontrada, title: 'Página no encontrada' },
+  ];
+solution: |
+  import { Routes } from '@angular/router';
+  import { ListaTareas } from './tareas/lista-tareas/lista-tareas';
+  import { NoEncontrada } from './no-encontrada/no-encontrada';
+  import { tareaExisteGuard } from './tareas/tarea-existe-guard';
+
+  export const routes: Routes = [
+    { path: '', redirectTo: 'tareas', pathMatch: 'full' },
+    { path: 'tareas', component: ListaTareas, title: 'Mis tareas' },
+    {
+      path: 'tareas/nueva',
+      loadComponent: () => import('./tareas/nueva-tarea/nueva-tarea').then((m) => m.NuevaTarea),
+      title: 'Nueva tarea',
+    },
+    {
+      path: 'tareas/:id',
+      loadComponent: () =>
+        import('./tareas/detalle-tarea/detalle-tarea').then((m) => m.DetalleTarea),
+      canActivate: [tareaExisteGuard],
+      title: 'Detalle de la tarea',
+    },
+    { path: '**', component: NoEncontrada, title: 'Página no encontrada' },
+  ];
+answers:
+  - redirectTo
+  - loadComponent
+  - canActivate
+hints:
+  - 'La idea: cada hueco es el nombre de una propiedad de `Route`: una para redirigir, otra para cargar un componente más tarde y otra para la lista de guards.'
+  - 'Qué usar: mira la ruta del detalle, que ya tiene la carga diferida escrita. El guard es de tipo `CanActivateFn`, así que va en la propiedad con ese mismo nombre en minúscula.'
+  - 'El plan: `redirectTo`, `loadComponent` y `canActivate`.'
+tests:
+  - output: |
+      /          → /tareas
+      /tareas/2  → detalle (si la tarea 2 existe)
+      /tareas/99 → /tareas
+    sample: true

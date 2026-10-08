@@ -1,0 +1,51 @@
+title: El guard de Mis tareas
+summary: Ordena un guard funcional asíncrono que carga los datos y redirige si la tarea no existe.
+difficulty: HARD
+kind: parsons
+statement: |
+  `tareaExisteGuard` protege la ruta `tareas/:id`. Debe:
+
+  1. conseguir `TareasStore` y `Router`;
+  2. **esperar** a que las tareas estén cargadas (`cargar()` devuelve una promesa), porque el usuario puede abrir la URL directamente;
+  3. leer el parámetro `id` de la ruta y convertirlo en número;
+  4. dejar pasar si la tarea existe o **redirigir** a `/tareas` si no, devolviendo un `UrlTree`.
+
+  Ordena las líneas. Cuidado: hay líneas que sobran.
+starter: |
+  import { inject } from '@angular/core';
+  import { CanActivateFn, Router } from '@angular/router';
+  import { TareasStore } from './tareas-store';
+
+  {{lines}}
+  };
+solution: |
+  import { inject } from '@angular/core';
+  import { CanActivateFn, Router } from '@angular/router';
+  import { TareasStore } from './tareas-store';
+
+  export const tareaExisteGuard: CanActivateFn = async (route) => {
+    const store = inject(TareasStore);
+    const router = inject(Router);
+    await store.cargar();
+    const id = Number(route.paramMap.get('id'));
+    return store.porId(id) ? true : router.createUrlTree(['/tareas']);
+  };
+lines:
+  - 'export const tareaExisteGuard: CanActivateFn = async (route) => {'
+  - '  const store = inject(TareasStore);'
+  - '  const router = inject(Router);'
+  - '  await store.cargar();'
+  - "  const id = Number(route.paramMap.get('id'));"
+  - "  return store.porId(id) ? true : router.createUrlTree(['/tareas']);"
+distractors:
+  - '  store.cargar();'
+  - "  return store.porId(id) ? true : router.navigate(['/tareas']);"
+hints:
+  - 'La idea: primero las dependencias, después esperar los datos, luego leer la URL y al final decidir.'
+  - 'Qué usar: `inject()` para los dos servicios; `await` delante de `store.cargar()` (sin él, la búsqueda se haría antes de tener datos); `route.paramMap.get(''id'')`; y `createUrlTree`, que devuelve la redirección en vez de navegar por su cuenta.'
+  - 'El plan: cabecera async → store → router → await cargar → id → return con el operador ternario.'
+tests:
+  - output: |
+      /tareas/2  → se abre el detalle
+      /tareas/99 → redirige a /tareas
+    sample: true

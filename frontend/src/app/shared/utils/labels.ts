@@ -60,6 +60,6 @@ export const KIND_INSTRUCTIONS: Readonly<Record<ExerciseKind, string>> = {
   FIX: 'Este programa tiene un error. Encuéntralo, arréglalo y envíalo.',
   FILL: 'Escribe en cada hueco lo que falta para que el programa funcione.',
   PARSONS: 'Pon las líneas en el orden correcto. Ojo: puede que sobre alguna.',
-  PREDICT: 'Lee el programa sin ejecutarlo y escribe exactamente lo que imprimirá.',
+  PREDICT: 'Lee el código sin ejecutarlo y escribe exactamente lo que pide el enunciado.',
   PROJECT: 'Un programa más grande: avanza paso a paso y ejecuta a menudo.',
 };

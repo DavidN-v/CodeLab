@@ -990,3 +990,182 @@ terms:
   - harnesses
   definition: Objeto del CDK que maneja un componente en las pruebas con métodos sencillos, como pulsar
     un botón, sin depender de su HTML interno.
+- term: SSR
+  aliases:
+  - renderizado en el servidor
+  - Server-Side Rendering
+  definition: Generar el HTML de una página en el servidor, en cada petición, para que el navegador lo
+    reciba ya relleno y lo muestre al instante.
+- term: CSR
+  aliases:
+  - renderizado en el cliente
+  - Client-Side Rendering
+  definition: La forma habitual de una app Angular. El servidor envía un HTML casi vacío y el navegador
+    construye la página con JavaScript.
+- term: SSG
+  aliases:
+  - prerender
+  - prerenderizado
+  - Static Site Generation
+  definition: Generar el HTML de una página una sola vez, al compilar, y guardarlo como archivo estático
+    para servirlo igual a todos los visitantes.
+- term: hidratación
+  aliases:
+  - hidratar
+  - hidrata
+  definition: El paso en el que Angular reutiliza el HTML que llegó del servidor y le conecta los eventos
+    y el estado, en vez de volver a pintarlo.
+- term: hidratación incremental
+  definition: Hidratar partes de la página más tarde, con bloques @defer (hydrate on …), para descargar
+    menos JavaScript al principio.
+- term: repetición de eventos
+  aliases:
+  - event replay
+  definition: Guardar los clics que el usuario hace antes de que Angular termine de hidratar y ejecutarlos
+    después, para que no se pierdan.
+- term: SEO
+  definition: Search Engine Optimization. Todo lo que ayuda a que una página aparezca bien en los buscadores,
+    empezando por que su HTML tenga el contenido real.
+- term: Express
+  definition: Una librería de Node.js para crear servidores web. El server.ts de un proyecto con SSR la
+    usa para recibir peticiones y pasarlas a Angular.
+- term: RenderMode
+  definition: La forma de renderizar cada ruta en una app con SSR. Server (en cada petición), Prerender
+    (en el build) o Client (en el navegador).
+- term: afterNextRender
+  definition: Función de Angular que ejecuta código una vez, después del siguiente pintado y solo en el
+    navegador. Es el sitio para usar window o localStorage.
+- term: PLATFORM_ID
+  aliases:
+  - isPlatformBrowser
+  - isPlatformServer
+  definition: Un valor que Angular inyecta para saber si el código se ejecuta en el navegador o en el
+    servidor; se consulta con isPlatformBrowser o isPlatformServer.
+- term: allowedHosts
+  definition: La lista de dominios a los que el servidor SSR de Angular acepta responder. Si un dominio
+    no está en ella, responde 400 Bad Request.
+- term: arquitectura
+  definition: La forma de organizar una aplicación. Dónde va cada archivo y qué partes pueden usar a cuáles.
+- term: feature
+  aliases:
+  - features
+  - funcionalidad
+  definition: Una parte del negocio de la app, como el catálogo o los pedidos. Se agrupa en su propia
+    carpeta con todo lo que necesita.
+- term: componente de presentación
+  aliases:
+  - componentes de presentación
+  - componente tonto
+  - dumb
+  definition: Un componente que solo pinta lo que recibe por sus inputs y avisa de lo que pasa con outputs,
+    sin pedir datos ni guardar estado.
+- term: componente contenedor
+  aliases:
+  - contenedor
+  - contenedores
+  - componente inteligente
+  - smart
+  definition: Un componente que obtiene los datos, guarda o consulta el estado y reacciona a los eventos,
+    y junta componentes de presentación.
+- term: monorepo
+  definition: Un único repositorio que contiene muchas aplicaciones y librerías que comparten código y
+    versiones.
+- term: public-api.ts
+  aliases:
+  - public-api
+  definition: El archivo de una librería que decide qué se puede usar desde fuera. Lo que no se exporta
+    ahí queda privado.
+- term: XSS
+  aliases:
+  - Cross-Site Scripting
+  definition: Un ataque que consigue ejecutar JavaScript ajeno dentro de tu página, por ejemplo escondido
+    en un comentario de un usuario.
+- term: sanitizar
+  aliases:
+  - sanear
+  - sanitización
+  - saneado
+  - sanitizador
+  definition: Limpiar un valor antes de insertarlo como HTML, quitando lo peligroso (scripts, atributos
+    on…) y dejando lo inofensivo.
+- term: CSRF
+  aliases:
+  - XSRF
+  - Cross-Site Request Forgery
+  definition: Un ataque en el que otra web hace que tu navegador envíe una petición a un sitio donde tienes
+    la sesión abierta, sin que tú lo quieras.
+- term: i18n
+  aliases:
+  - internacionalización
+  definition: Preparar una app para varios idiomas y regiones. Traducir textos y adaptar fechas, números
+    y monedas.
+- term: linter
+  aliases:
+  - lint
+  - ESLint
+  definition: Un programa que revisa el código sin ejecutarlo y avisa de errores comunes y de incumplimientos
+    del estilo acordado.
+- term: desplegar
+  aliases:
+  - despliegue
+  - desplegarla
+  - publicar
+  definition: Poner una versión de la app en un servidor para que la usen las personas reales.
+- term: configuración de build
+  aliases:
+  - configuraciones
+  - configuración production
+  - configuración development
+  definition: Un conjunto de opciones de angular.json (production, development…) que cambia cómo compila
+    ng build.
+- term: source map
+  aliases:
+  - source maps
+  - sourceMap
+  definition: Un archivo que relaciona el código compilado con el código original, para depurar viendo
+    tu TypeScript en vez del JavaScript generado.
+- term: entorno
+  aliases:
+  - entornos
+  - environment
+  - environments
+  definition: Un archivo con valores de configuración (por ejemplo la URL de la API) que el build cambia
+    según compiles para desarrollo o para producción.
+- term: base href
+  definition: La dirección donde empieza la app, indicada en la etiqueta base de index.html. Se cambia
+    si la app se publica en una subcarpeta.
+- term: fallback
+  definition: Una respuesta de reserva. En una SPA, el servidor devuelve index.html para cualquier ruta
+    que no sea un archivo, y el router de Angular decide qué mostrar.
+- term: nginx
+  definition: Un servidor web muy usado para enviar archivos estáticos, como los de una app Angular compilada.
+- term: Docker
+  aliases:
+  - imagen
+  - Dockerfile
+  definition: Una herramienta que empaqueta una aplicación con todo lo que necesita en una imagen que
+    funciona igual en cualquier máquina.
+- term: hosting estático
+  definition: Un servicio que publica archivos HTML, CSS y JavaScript sin ejecutar código en el servidor,
+    como Firebase Hosting, Netlify o GitHub Pages.
+- term: integración continua
+  aliases:
+  - CI
+  definition: Un servidor que, en cada cambio subido al repositorio, instala, revisa, prueba y compila
+    el proyecto automáticamente.
+- term: migración
+  aliases:
+  - migraciones
+  definition: Un programa que ng update ejecuta para modificar tu código y adaptarlo a una versión nueva
+    de Angular.
+- term: backend falso
+  definition: Algo que imita un servidor de verdad para poder desarrollar sin él, como un archivo JSON
+    en public/ que HttpClient descarga.
+- term: firstValueFrom
+  definition: Función de RxJS que se suscribe a un observable, espera su primer valor y lo devuelve como
+    una promesa.
+- term: input binding de rutas
+  aliases:
+  - withComponentInputBinding
+  definition: Opción del router que pasa los parámetros de la URL a los inputs del componente con el mismo
+    nombre.

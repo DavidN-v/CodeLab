@@ -1,0 +1,25 @@
+questions:
+  - type: choice
+    prompt: El usuario escribe «ab» en el título, sale del campo y no pulsa nada más. ¿Qué mensaje ve?
+    options:
+      - '«Escribe al menos 3 letras.»'
+      - '«El título es obligatorio.»'
+      - Ninguno, porque no ha pulsado «Guardar»
+    answer: 0
+    explanation: 'Al salir del campo, el control queda `touched`. No está vacío (no falla `required`) pero tiene menos de 3 caracteres, así que falla `minlength`.'
+  - type: choice
+    prompt: ¿Por qué `guardar()` llama a `markAllAsTouched()` cuando el formulario es inválido?
+    options:
+      - Para que aparezcan los mensajes de error de los campos que el usuario no llegó a tocar
+      - Para vaciar el formulario
+      - Para que el formulario pase a ser válido
+    answer: 0
+    explanation: 'Los mensajes solo se muestran en campos `touched`. Si el usuario pulsa «Guardar» sin entrar en ningún campo, marcarlos todos hace visibles sus errores.'
+  - type: choice
+    prompt: "Cambias la ruta a `{ path: 'tareas/nueva', component: NuevaTarea }`, con su `import` arriba de `app.routes.ts`. ¿Qué cambia al ejecutar `ng build`?"
+    options:
+      - Desaparece el lazy chunk `nueva-tarea`; su código pasa al paquete inicial que se descarga al abrir la app
+      - El build falla porque las rutas con formularios deben ser diferidas
+      - Nada; Angular lo sigue cargando de forma diferida
+    answer: 0
+    explanation: 'Con `component:` y un import estático, el componente forma parte del paquete inicial. Solo `loadComponent` con un `import()` dinámico lo separa en su propio archivo.'

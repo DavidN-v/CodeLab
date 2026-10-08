@@ -1,0 +1,60 @@
+title: El formulario de nueva tarea
+summary: Completa el formulario reactivo con sus validadores y su conexión con la plantilla.
+difficulty: MEDIUM
+kind: fill
+statement: |
+  Completa el formulario de **Nueva tarea**:
+
+  - el título es **obligatorio** y necesita **al menos 3** caracteres;
+  - la plantilla conecta el `<form>` con el grupo y cada campo con su control;
+  - al enviar (sin recargar la página) se llama a `guardar()`.
+starter: |
+  // nueva-tarea.ts (fragmento)
+  protected readonly form = inject(FormBuilder).nonNullable.group({
+    titulo: ['', [Validators.{{?}}, Validators.{{?}}(3)]],
+    prioridad: ['media' as Prioridad],
+  });
+
+  <!-- nueva-tarea.html (fragmento) -->
+  <form [{{?}}]="form" ({{?}})="guardar()">
+    <input {{?}}="titulo" />
+    <select formControlName="prioridad">
+      <option value="alta">Alta</option>
+      <option value="media">Media</option>
+      <option value="baja">Baja</option>
+    </select>
+    <button type="submit">Guardar</button>
+  </form>
+solution: |
+  // nueva-tarea.ts (fragmento)
+  protected readonly form = inject(FormBuilder).nonNullable.group({
+    titulo: ['', [Validators.required, Validators.minLength(3)]],
+    prioridad: ['media' as Prioridad],
+  });
+
+  <!-- nueva-tarea.html (fragmento) -->
+  <form [formGroup]="form" (ngSubmit)="guardar()">
+    <input formControlName="titulo" />
+    <select formControlName="prioridad">
+      <option value="alta">Alta</option>
+      <option value="media">Media</option>
+      <option value="baja">Baja</option>
+    </select>
+    <button type="submit">Guardar</button>
+  </form>
+answers:
+  - required
+  - minLength
+  - formGroup
+  - ngSubmit
+  - formControlName
+hints:
+  - 'La idea: dos validadores incluidos en Angular, y tres directivas de `ReactiveFormsModule` que unen la plantilla con la clase.'
+  - 'Qué usar: `Validators.required` (sin paréntesis) y `Validators.minLength(n)` (en camelCase). En la plantilla, el `select` te enseña cómo se conecta un campo.'
+  - 'El plan: `required`, `minLength`; `[formGroup]="form"`, `(ngSubmit)="guardar()"` y `formControlName="titulo"`.'
+tests:
+  - output: |
+      Guardar con el título vacío → «El título es obligatorio.»
+      Guardar con «ab» → «Escribe al menos 3 letras.»
+      Guardar con «Ir al médico» → vuelve a la lista con la tarea nueva
+    sample: true

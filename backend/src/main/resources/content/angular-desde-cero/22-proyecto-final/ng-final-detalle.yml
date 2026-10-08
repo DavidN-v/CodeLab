@@ -1,0 +1,55 @@
+title: El detalle después de un clic
+summary: Predice qué muestra la página de detalle tras pulsar un botón.
+difficulty: MEDIUM
+kind: predict
+statement: |
+  Una versión reducida de `DetalleTarea`, con las tareas dentro del propio componente. La app usa `withComponentInputBinding()`.
+
+  El usuario abre `/tareas/2` y pulsa **una vez** el primer botón. Escribe el texto que se ve después, **una línea por elemento** (`h2`, cada `p` y cada `button`), en orden.
+starter: |
+  import { Component, computed, input, signal } from '@angular/core';
+
+  @Component({
+    selector: 'app-detalle-tarea',
+    template: `
+      @if (tarea(); as t) {
+        <h2>{{ t.titulo }}</h2>
+        <p>Prioridad: {{ t.prioridad }}</p>
+        <p>Estado: {{ t.hecha ? 'Hecha' : 'Pendiente' }}</p>
+        <button (click)="alternar()">
+          {{ t.hecha ? 'Marcar como pendiente' : 'Marcar como hecha' }}
+        </button>
+        <button>Borrar</button>
+      } @else {
+        <p>No existe la tarea {{ id() }}</p>
+      }
+    `,
+  })
+  export class DetalleTarea {
+    private readonly tareas = signal([
+      { id: 1, titulo: 'Comprar pan', prioridad: 'media', hecha: true },
+      { id: 2, titulo: 'Estudiar signals', prioridad: 'alta', hecha: false },
+    ]);
+
+    readonly id = input.required<string>();
+    protected readonly tarea = computed(() =>
+      this.tareas().find((t) => t.id === Number(this.id())),
+    );
+
+    protected alternar(): void {
+      this.tareas.update((lista) =>
+        lista.map((t) => (t.id === Number(this.id()) ? { ...t, hecha: !t.hecha } : t)),
+      );
+    }
+  }
+hints:
+  - 'La idea: el router pone `''2''` en el input `id`; el componente busca esa tarea y el clic cambia su estado.'
+  - 'Qué usar: `Number(''2'')` es 2, así que `tarea()` es «Estudiar signals». `alternar` cambia `hecha` de `false` a `true`, y `computed` y la plantilla se actualizan.'
+  - 'El plan: título; prioridad; estado ya cambiado; el texto del primer botón con el estado nuevo; y el botón Borrar.'
+tests:
+  - output: |
+      Estudiar signals
+      Prioridad: alta
+      Estado: Hecha
+      Marcar como pendiente
+      Borrar
