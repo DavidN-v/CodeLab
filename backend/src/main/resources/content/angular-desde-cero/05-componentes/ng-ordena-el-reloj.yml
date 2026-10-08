@@ -1,0 +1,56 @@
+title: Ordena el reloj sin fugas
+summary: Coloca las líneas de un componente que arranca un temporizador y lo para al destruirse.
+difficulty: HARD
+kind: parsons
+statement: |
+  El componente `Reloj` muestra la hora y la actualiza cada segundo. Cuando el componente se destruye (por ejemplo, al ocultarlo con un `@if`), el temporizador **tiene que pararse**.
+
+  Ordena las líneas de la clase. Sigue la convención: las propiedades van **antes** del constructor. Cuidado: hay líneas que **sobran**.
+starter: |
+  import { Component, DestroyRef, inject, signal } from '@angular/core';
+
+  function ahora(): string {
+    return new Date().toLocaleTimeString();
+  }
+
+  @Component({
+    selector: 'app-reloj',
+    template: `<p>Son las {{ hora() }}</p>`,
+  })
+  {{lines}}
+  }
+solution: |
+  import { Component, DestroyRef, inject, signal } from '@angular/core';
+
+  function ahora(): string {
+    return new Date().toLocaleTimeString();
+  }
+
+  @Component({
+    selector: 'app-reloj',
+    template: `<p>Son las {{ hora() }}</p>`,
+  })
+  export class Reloj {
+    protected readonly hora = signal(ahora());
+    constructor() {
+      const id = setInterval(() => this.hora.set(ahora()), 1000);
+      inject(DestroyRef).onDestroy(() => clearInterval(id));
+    }
+  }
+lines:
+  - 'export class Reloj {'
+  - '  protected readonly hora = signal(ahora());'
+  - '  constructor() {'
+  - '    const id = setInterval(() => this.hora.set(ahora()), 1000);'
+  - '    inject(DestroyRef).onDestroy(() => clearInterval(id));'
+  - '  }'
+distractors:
+  - '    inject(DestroyRef).onDestroy(clearInterval(id));'
+  - '    const id = setInterval(this.hora.set(ahora()), 1000);'
+hints:
+  - 'La idea: primero la clase y su signal; en el constructor, arrancar el temporizador y, justo después, registrar cómo pararlo. Para pararlo necesitas el `id`, así que va después.'
+  - 'Qué usar: `setInterval` y `onDestroy` reciben **funciones** (`() => ...`) que se ejecutarán más tarde. Las líneas sin `() =>` llaman a la función en el momento, una sola vez: por eso sobran.'
+  - 'El plan: `export class` → la propiedad `hora` → `constructor() {` → `const id = setInterval(() => ..., 1000)` → `inject(DestroyRef).onDestroy(() => clearInterval(id))` → cerrar el constructor (la llave final de la clase ya está puesta).'
+tests:
+  - output: "Son las 10:42:07"
+    sample: true

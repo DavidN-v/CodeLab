@@ -1,0 +1,36 @@
+title: Completa main.ts
+summary: Rellena los huecos del punto de entrada que arranca Angular.
+difficulty: EASY
+kind: fill
+statement: |
+  Este es el `main.ts` de un proyecto recién creado, pero le faltan cuatro piezas. Rellena los huecos para que:
+
+  1. Importe la función que **arranca** la aplicación desde la librería que conecta Angular con el **navegador**.
+  2. Importe la configuración desde el archivo `src/app/app.config.ts` (recuerda: sin la extensión `.ts`).
+  3. Arranque la app con `App` como raíz y la configuración importada.
+
+  Cuando funciona, la página muestra el saludo del componente `App`.
+starter: |
+  import { {{?}} } from '@angular/{{?}}';
+  import { appConfig } from './app/{{?}}';
+  import { App } from './app/app';
+
+  bootstrapApplication(App, {{?}}).catch((err) => console.error(err));
+solution: |
+  import { bootstrapApplication } from '@angular/platform-browser';
+  import { appConfig } from './app/app.config';
+  import { App } from './app/app';
+
+  bootstrapApplication(App, appConfig).catch((err) => console.error(err));
+answers:
+  - bootstrapApplication
+  - platform-browser
+  - app.config
+  - appConfig
+hints:
+  - 'La idea: la última línea ya usa una función y un objeto de configuración; los imports de arriba tienen que traerlos.'
+  - 'Qué usar: la función de arranque se llama igual que en la última línea y vive en `@angular/platform-browser`. La configuración se exporta como `appConfig` desde `app.config.ts`.'
+  - 'El plan: hueco 1 = el nombre de la función; hueco 2 = `platform-browser`; hueco 3 = el nombre del archivo de configuración sin `.ts`; hueco 4 = la constante importada en la línea 2.'
+tests:
+  - output: "Hello, mi-app"
+    sample: true

@@ -1,0 +1,39 @@
+title: Completa app.config.ts
+summary: Rellena la configuración global con sus proveedores y el router.
+difficulty: MEDIUM
+kind: fill
+statement: |
+  Completa `app.config.ts` para que la aplicación:
+
+  - Declare el objeto con el **tipo** de configuración de aplicación de Angular.
+  - Tenga en su lista de **proveedores** la escucha global de errores y el **router** con las rutas de `app.routes.ts`.
+
+  Fíjate en qué librería trae cada cosa: el tipo viene del corazón de Angular y el router, de su propia librería.
+starter: |
+  import { {{?}}, provideBrowserGlobalErrorListeners } from '@angular/core';
+  import { provideRouter } from '@angular/{{?}}';
+  import { routes } from './app.routes';
+
+  export const appConfig: ApplicationConfig = {
+    {{?}}: [provideBrowserGlobalErrorListeners(), {{?}}(routes)],
+  };
+solution: |
+  import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
+  import { provideRouter } from '@angular/router';
+  import { routes } from './app.routes';
+
+  export const appConfig: ApplicationConfig = {
+    providers: [provideBrowserGlobalErrorListeners(), provideRouter(routes)],
+  };
+answers:
+  - ApplicationConfig
+  - router
+  - providers
+  - provideRouter
+hints:
+  - 'La idea: el objeto tiene un tipo que hay que importar, un único campo con una lista de proveedores y una función que activa el router.'
+  - 'Qué usar: el tipo es el que aparece después de `appConfig:`; el campo de la lista se llama igual que los "proveedores" en inglés; la función del router ya está importada en la línea 2.'
+  - 'El plan: hueco 1 = `ApplicationConfig`; hueco 2 = la librería `@angular/...` del router; hueco 3 = el nombre del campo de la lista; hueco 4 = la función importada de esa librería.'
+tests:
+  - output: "Hello, mi-app"
+    sample: true

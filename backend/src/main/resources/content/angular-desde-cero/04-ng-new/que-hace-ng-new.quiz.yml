@@ -1,0 +1,26 @@
+questions:
+- type: choice
+  prompt: ¿Qué hace `ng new mi-app --defaults`?
+  options:
+  - Crea el proyecto pero no instala las librerías
+  - Muestra qué archivos crearía sin escribir nada
+  - Actualiza un proyecto existente a la versión por defecto de Angular
+  - Crea el proyecto sin hacer preguntas, con CSS, sin SSR y sin archivos de IA
+  answer: 3
+  explanation: '`--defaults` responde a las preguntas con su valor por defecto. Para no instalar las librerías se usa `--skip-install`, y para el ensayo sin escribir, `--dry-run`.'
+- type: choice
+  prompt: ¿En qué orden trabaja `ng new`?
+  options:
+  - Ejecuta npm install, genera los archivos y arranca ng serve
+  - Genera los archivos con schematics, los escribe, ejecuta npm install y hace el primer commit de Git
+  - Descarga una plantilla de internet y la descomprime
+  answer: 1
+  explanation: Los schematics preparan los archivos en memoria, después se escriben en la carpeta, `npm install` descarga las librerías y, por último, se crea el repositorio Git con un primer commit. `ng serve` lo lanzas tú.
+- type: choice
+  prompt: Al crear tu primer proyecto te pregunta si quieres SSR (Server-Side Rendering). ¿Qué es lo razonable al empezar?
+  options:
+  - Responder que no; se puede añadir más tarde con `ng add @angular/ssr`
+  - Responder que sí, porque sin SSR la app no funciona en el navegador
+  - Da igual, porque esa respuesta no cambia ningún archivo
+  answer: 0
+  explanation: Sin SSR la app funciona perfectamente en el navegador. SSR añade un servidor Node.js y archivos extra; es útil para SEO y primera carga, y se puede añadir después con `ng add @angular/ssr`.

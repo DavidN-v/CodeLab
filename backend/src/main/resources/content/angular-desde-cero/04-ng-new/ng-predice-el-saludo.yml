@@ -1,0 +1,38 @@
+title: ¿Qué queda en la página?
+summary: Predice qué se ve cuando Angular pinta App dentro de app-root.
+difficulty: EASY
+kind: predict
+statement: |
+  Este proyecto tiene un `index.html` con texto **alrededor** y **dentro** de `<app-root>`, y un componente `App` sencillo.
+
+  Cuando la aplicación termina de arrancar, ¿qué texto se ve en la página? Escribe **una línea por cada elemento** que se ve, de arriba abajo, sin etiquetas HTML.
+starter: |
+  <!-- src/index.html (dentro de <body>) -->
+  <p>Arriba</p>
+  <app-root>Cargando...</app-root>
+  <p>Abajo</p>
+
+  // src/app/app.ts
+  import { Component, signal } from '@angular/core';
+
+  @Component({
+    selector: 'app-root',
+    template: `
+      <h1>Hola, {{ nombre() }}</h1>
+      <p>Versión {{ version }}</p>
+    `,
+  })
+  export class App {
+    protected readonly nombre = signal('Ada');
+    protected readonly version = 22;
+  }
+hints:
+  - 'La idea: Angular solo toca el elemento que coincide con el selector de App. El resto de `index.html` se queda como está.'
+  - 'Qué usar: al arrancar, Angular vacía el contenido de `<app-root>` (adiós, «Cargando...») y pinta dentro la plantilla de App, sustituyendo cada `{{ }}` por su valor.'
+  - 'El plan: primero el párrafo de arriba, después las dos líneas de la plantilla con `nombre()` = Ada y `version` = 22, y por último el párrafo de abajo.'
+tests:
+  - output: |
+      Arriba
+      Hola, Ada
+      Versión 22
+      Abajo

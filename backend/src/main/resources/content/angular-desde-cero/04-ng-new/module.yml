@@ -1,0 +1,36 @@
+lessons:
+  - slug: que-hace-ng-new
+    title: ¿Qué ocurre al ejecutar ng new?
+    summary: Las preguntas que hace, sus opciones y las cuatro fases que convierten un comando en un proyecto.
+    minutes: 8
+  - slug: archivos-del-proyecto
+    title: Cada archivo del proyecto
+    summary: El árbol completo que genera ng new, para qué sirve cada archivo y cuáles no debes tocar.
+    minutes: 8
+  - slug: librerias-del-proyecto
+    title: package.json y cada librería
+    summary: dependencies y devDependencies una a una, los scripts y qué descarga de verdad npm install.
+    minutes: 9
+  - slug: angular-json-y-tsconfig
+    title: angular.json y los tsconfig
+    summary: Targets, builders, configuraciones y budgets; y qué hace cada opción de TypeScript y Angular.
+    minutes: 10
+  - slug: el-arranque
+    title: El arranque, paso a paso
+    summary: De index.html a main.ts, bootstrapApplication, appConfig y App pintado en app-root.
+    minutes: 10
+  - slug: ng-serve-y-ng-build
+    title: ng serve y ng build
+    summary: Compilar, servir con recarga en caliente y construir para producción con nombres con huella.
+    minutes: 8
+  - slug: ng-generate
+    title: Generar piezas con ng generate
+    summary: Componentes, servicios, pipes y más con el formato exacto de Angular 22; y en qué se diferencia de ng add.
+    minutes: 7
+exercises:
+  - ng-predice-el-saludo
+  - ng-completa-main-ts
+  - ng-completa-app-config
+  - ng-ordena-los-comandos
+  - ng-completa-angular-json
+  - ng-predice-el-orden-de-arranque

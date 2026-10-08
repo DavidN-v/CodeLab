@@ -1,0 +1,71 @@
+title: Completa angular.json
+summary: Rellena los builders, el punto de entrada y las opciones de producción.
+difficulty: HARD
+kind: fill
+statement: |
+  Este trozo de `angular.json` ha perdido cinco valores. Rellénalos para que:
+
+  1. El target `build` use el builder de **aplicaciones** de `@angular/build` (el que compila con esbuild).
+  2. El punto de entrada sea el archivo que llama a `bootstrapApplication`.
+  3. En producción **todos** los archivos generados lleven huella en el nombre (`main-O7QUVEYP.js`).
+  4. `ng build` sin opciones use la configuración de **producción**.
+  5. El target `serve` use el builder del **servidor de desarrollo**.
+starter: |
+  "build": {
+    "builder": "@angular/build:{{?}}",
+    "options": {
+      "browser": "src/{{?}}",
+      "tsConfig": "tsconfig.app.json",
+      "styles": ["src/styles.css"]
+    },
+    "configurations": {
+      "production": {
+        "outputHashing": "{{?}}"
+      },
+      "development": {
+        "optimization": false,
+        "sourceMap": true
+      }
+    },
+    "defaultConfiguration": "{{?}}"
+  },
+  "serve": {
+    "builder": "@angular/build:{{?}}",
+    "defaultConfiguration": "development"
+  }
+solution: |
+  "build": {
+    "builder": "@angular/build:application",
+    "options": {
+      "browser": "src/main.ts",
+      "tsConfig": "tsconfig.app.json",
+      "styles": ["src/styles.css"]
+    },
+    "configurations": {
+      "production": {
+        "outputHashing": "all"
+      },
+      "development": {
+        "optimization": false,
+        "sourceMap": true
+      }
+    },
+    "defaultConfiguration": "production"
+  },
+  "serve": {
+    "builder": "@angular/build:dev-server",
+    "defaultConfiguration": "development"
+  }
+answers:
+  - application
+  - main.ts
+  - all
+  - production
+  - dev-server
+hints:
+  - 'La idea: cada hueco es un valor que viste en el angular.json generado por `ng new`: dos nombres de builder, un archivo, un modo de huellas y el nombre de una configuración.'
+  - 'Qué usar: los builders se escriben `paquete:builder`; el de compilar se llama como "aplicación" en inglés y el de servir lleva un guion. El punto de entrada está en `src/`. Para "todos los archivos", el valor de `outputHashing` es la palabra inglesa para "todos".'
+  - 'El plan: `application`, `main.ts`, `all`, el nombre de la configuración que comprueba budgets, y `dev-server`.'
+tests:
+  - output: "main-O7QUVEYP.js"
+    sample: true

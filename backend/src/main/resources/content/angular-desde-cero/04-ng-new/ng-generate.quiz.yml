@@ -1,0 +1,26 @@
+questions:
+- type: choice
+  prompt: Ejecutas `ng g c lista-tareas`. ¿Cómo se llaman la clase y el selector?
+  options:
+  - Clase `ListaTareasComponent`, selector `lista-tareas`
+  - Clase `listaTareas`, selector `app-listaTareas`
+  - Clase `ListaTareas`, selector `app-lista-tareas`
+  answer: 2
+  explanation: La CLI convierte el nombre a PascalCase para la clase (sin sufijo en Angular 22) y a kebab-case con el prefijo `app-` para el selector.
+- type: choice
+  prompt: ¿Qué opción enseña los archivos que crearía `ng generate` sin crearlos?
+  options:
+  - '`--skip-tests`'
+  - '`--dry-run`'
+  - '`--flat`'
+  - '`--defaults`'
+  answer: 1
+  explanation: '`--dry-run` hace un ensayo: lista los `CREATE` y termina con una nota de que no se ha cambiado nada. `--skip-tests` evita el `.spec.ts` y `--flat` evita la carpeta propia.'
+- type: choice
+  prompt: ¿En qué se diferencia `ng add` de `ng generate`?
+  options:
+  - '`ng add` instala una librería y la configura en el proyecto; `ng generate` crea piezas de tu propio código'
+  - Son el mismo comando con distinto nombre
+  - '`ng add` añade un componente a otro; `ng generate` lo crea vacío'
+  answer: 0
+  explanation: '`ng add @angular/material` hace `npm install` y ejecuta un schematic que cambia `angular.json` y `app.config.ts`. `ng generate` crea componentes, servicios, pipes... nuevos.'

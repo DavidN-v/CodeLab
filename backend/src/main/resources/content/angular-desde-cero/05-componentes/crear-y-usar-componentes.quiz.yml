@@ -1,0 +1,39 @@
+questions:
+  - type: choice
+    prompt: Acabas de ejecutar `ng g c menu`. ¿Aparece ya el menú en la página?
+    options:
+      - Sí, la CLI lo añade al final de app.html
+      - No; hay que importarlo en otro componente y poner su etiqueta `<app-menu />`
+      - Sí, pero solo después de reiniciar ng serve
+    answer: 1
+    explanation: 'La CLI crea los archivos, pero no coloca el componente en ninguna plantilla. Tienes que importarlo (`import` + `imports`) y usar su selector.'
+  - type: choice
+    prompt: 'El build falla con `NG8001: ''app-menu'' is not a known element`. ¿Qué falta lo más probable?'
+    options:
+      - Añadir `Menu` al array `imports` del componente que usa `<app-menu />`
+      - Ejecutar `npm install`
+      - Cambiar el selector a `menu`, sin prefijo
+    answer: 0
+    explanation: 'El compilador encuentra la etiqueta pero no sabe qué componente es, porque no está en los `imports` de ese componente. El propio mensaje lo sugiere.'
+  - type: output
+    prompt: '¿Qué texto se ve? Escribe una línea por elemento.'
+    code: |
+      // pie.ts
+      @Component({
+        selector: 'app-pie',
+        template: `<p>© 2026</p>`,
+      })
+      export class Pie {}
+
+      // app.ts
+      @Component({
+        selector: 'app-root',
+        imports: [Pie],
+        template: `<app-pie /><h1>Inicio</h1><app-pie />`,
+      })
+      export class App {}
+    answer: |
+      © 2026
+      Inicio
+      © 2026
+    explanation: 'Angular pinta la plantilla de `App` en orden y sustituye cada `<app-pie />` por la plantilla de `Pie`. Dos etiquetas, dos instancias.'

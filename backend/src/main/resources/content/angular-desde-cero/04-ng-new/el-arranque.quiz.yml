@@ -1,0 +1,32 @@
+questions:
+- type: choice
+  prompt: ¿Cómo sabe Angular dónde pintar el componente `App` dentro de `index.html`?
+  options:
+  - Lo pinta siempre al final del `<body>`
+  - Busca el elemento que coincide con su `selector`, `app-root`
+  - Sustituye el `<body>` entero
+  - Lo indica el archivo `angular.json`
+  answer: 1
+  explanation: '`selector: ''app-root''` significa "píntame dentro de `<app-root>`". Por eso `index.html` tiene esa etiqueta vacía; si no coinciden, la app no arranca (error NG05104).'
+- type: choice
+  prompt: ¿Qué hay en `appConfig.providers`?
+  options:
+  - Las piezas globales que la app tendrá disponibles, como el router o la escucha de errores
+  - La lista de componentes que se pintan en la página
+  - Las librerías que npm debe descargar
+  answer: 0
+  explanation: 'Los providers preparan servicios y funciones para toda la app mediante la inyección de dependencias: `provideRouter(routes)` activa el router y `provideBrowserGlobalErrorListeners()` captura errores no gestionados.'
+- type: output
+  prompt: Con este `app.ts`, ¿qué texto muestra el `<h1>` en el navegador?
+  code: |
+    // app.ts
+    @Component({
+      selector: 'app-root',
+      template: `<h1>Hola, {{ nombre() }}</h1>`,
+    })
+    export class App {
+      protected readonly nombre = signal('Forja');
+    }
+  answer: |
+    Hola, Forja
+  explanation: '`{{ nombre() }}` lee el valor del signal y lo escribe en su sitio. El navegador nunca ve las llaves: el compilador las convierte en una instrucción que escribe el texto.'

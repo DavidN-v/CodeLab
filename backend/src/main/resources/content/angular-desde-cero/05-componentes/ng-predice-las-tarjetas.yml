@@ -1,0 +1,49 @@
+title: ¿Cuántas tarjetas se ven?
+summary: Predice qué pinta un componente que usa a otro dos veces.
+difficulty: EASY
+kind: predict
+statement: |
+  `App` usa el componente `Tarjeta` en su plantilla. Lee los dos archivos y escribe **el texto que se ve en la página**, una línea por cada elemento (`h1`, `h2`, `p`), de arriba abajo.
+starter: |
+  // src/app/tarjeta/tarjeta.ts
+  import { Component } from '@angular/core';
+
+  @Component({
+    selector: 'app-tarjeta',
+    template: `
+      <h2>{{ titulo }}</h2>
+      <p>{{ precio }} €</p>
+    `,
+  })
+  export class Tarjeta {
+    protected readonly titulo = 'Taza';
+    protected readonly precio = 8;
+  }
+
+  // src/app/app.ts
+  import { Component } from '@angular/core';
+  import { Tarjeta } from './tarjeta/tarjeta';
+
+  @Component({
+    selector: 'app-root',
+    imports: [Tarjeta],
+    template: `
+      <h1>Tienda</h1>
+      <app-tarjeta />
+      <p>Envío gratis</p>
+      <app-tarjeta />
+    `,
+  })
+  export class App {}
+hints:
+  - 'La idea: cada `<app-tarjeta />` se sustituye por la plantilla completa de `Tarjeta`, en el sitio exacto donde está la etiqueta.'
+  - 'Qué usar: la plantilla de `Tarjeta` tiene dos elementos, y `{{ titulo }}` y `{{ precio }}` se cambian por sus valores. Las dos instancias tienen los mismos datos.'
+  - 'El plan: título de la tienda → las dos líneas de una tarjeta → el párrafo del envío → las dos líneas de la otra tarjeta.'
+tests:
+  - output: |
+      Tienda
+      Taza
+      8 €
+      Envío gratis
+      Taza
+      8 €

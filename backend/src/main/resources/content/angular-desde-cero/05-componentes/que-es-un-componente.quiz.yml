@@ -1,0 +1,25 @@
+questions:
+  - type: choice
+    prompt: ¿Qué tres partes tiene un componente, además del decorador que las une?
+    options:
+      - Una plantilla HTML, unos estilos CSS y una clase TypeScript
+      - Un módulo, un servicio y una ruta
+      - Un archivo index.html, un main.ts y un angular.json
+    answer: 0
+    explanation: 'La clase guarda datos y lógica, la plantilla dice qué se ve y los estilos cómo se ve. `@Component` las une y le da un selector.'
+  - type: choice
+    prompt: Una plantilla usa `<app-perfil />` tres veces. ¿Cuántos objetos `Perfil` crea Angular?
+    options:
+      - Uno, compartido por las tres etiquetas
+      - Tres, uno por cada etiqueta
+      - Ninguno; las etiquetas solo copian el HTML
+    answer: 1
+    explanation: 'Cada etiqueta es una instancia independiente, como llamar tres veces a `new Perfil()`. Por eso más adelante cada una podrá mostrar datos distintos.'
+  - type: choice
+    prompt: ¿Cuál es el componente raíz del árbol en un proyecto recién creado?
+    options:
+      - '`Perfil`'
+      - '`AppModule`'
+      - '`App`, con el selector `app-root`'
+    answer: 2
+    explanation: '`main.ts` arranca `App`, que se pinta dentro de `<app-root>` en `index.html`. Todos los demás componentes cuelgan de él. `AppModule` era la forma antigua, con NgModules.'

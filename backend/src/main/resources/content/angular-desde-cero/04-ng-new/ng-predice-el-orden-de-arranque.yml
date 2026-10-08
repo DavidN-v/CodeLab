@@ -1,0 +1,53 @@
+title: ¿En qué orden arranca?
+summary: Predice el orden de los mensajes de consola al cargar main.ts, sus imports y el componente raíz.
+difficulty: HARD
+kind: predict
+statement: |
+  Estos tres archivos escriben mensajes en la consola del navegador. Escribe **los mensajes que escribe este código, en el orden en que aparecen**, uno por línea. (Ignora los avisos que escribe Angular por su cuenta, como `Angular is running in development mode.`)
+
+  Pista para pensar: ¿qué se ejecuta antes, el código de un archivo importado o el cuerpo del archivo que lo importa? ¿Y `bootstrapApplication` termina antes o después de la línea siguiente?
+starter: |
+  // src/app/app.config.ts
+  import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
+
+  console.log('app.config.ts cargado');
+
+  export const appConfig: ApplicationConfig = {
+    providers: [provideBrowserGlobalErrorListeners()],
+  };
+
+  // src/app/app.ts
+  import { Component } from '@angular/core';
+
+  console.log('app.ts cargado');
+
+  @Component({
+    selector: 'app-root',
+    template: `<h1>Hola</h1>`,
+  })
+  export class App {
+    constructor() {
+      console.log('constructor de App');
+    }
+  }
+
+  // src/main.ts
+  import { bootstrapApplication } from '@angular/platform-browser';
+  import { App } from './app/app';
+  import { appConfig } from './app/app.config';
+
+  console.log('main.ts: llamo a bootstrapApplication');
+  bootstrapApplication(App, appConfig).then(() => console.log('aplicación lista'));
+  console.log('main.ts: fin del archivo');
+hints:
+  - 'La idea: hay dos reglas. Los archivos importados se evalúan enteros, en el orden de los `import`, antes del cuerpo de `main.ts`. Y `bootstrapApplication` es asíncrono: devuelve una promesa y el arranque ocurre después.'
+  - 'Qué usar: mira el orden de los imports en `main.ts` (primero `app`, luego `app.config`). Después, el código síncrono de `main.ts` se ejecuta seguido. El constructor de App se llama durante el arranque, y `.then` cuando el arranque termina.'
+  - 'El plan: los dos mensajes de "cargado" en el orden de los imports → los dos mensajes de `main.ts` → el constructor → la aplicación lista.'
+tests:
+  - output: |
+      app.ts cargado
+      app.config.ts cargado
+      main.ts: llamo a bootstrapApplication
+      main.ts: fin del archivo
+      constructor de App
+      aplicación lista
