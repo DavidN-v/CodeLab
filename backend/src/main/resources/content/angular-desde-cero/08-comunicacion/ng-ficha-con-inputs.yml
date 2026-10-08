@@ -1,0 +1,93 @@
+title: Ficha de producto con inputs
+summary: Declara inputs obligatorios, con valor por defecto y con transform, y pásalos desde el padre.
+difficulty: EASY
+kind: fill
+statement: |
+  El hijo `FichaProducto` necesita:
+
+  - `nombre`: un texto **obligatorio**.
+  - `precio`: un número **opcional**, que vale `0` si nadie lo pasa.
+  - `oferta`: un booleano que el padre puede activar escribiendo solo `oferta`, sin valor.
+
+  El padre `Escaparate` le pasa el nombre como texto fijo y el precio desde su signal `precioLampara`.
+
+  Completa los huecos. El resultado esperado es lo que se ve en la página.
+starter: |
+  // src/app/ficha-producto/ficha-producto.ts
+  import { Component, booleanAttribute, input } from '@angular/core';
+
+  @Component({
+    selector: 'app-ficha-producto',
+    template: `
+      <h3>{{ nombre() }}</h3>
+      <p>{{ precio() }} €</p>
+      @if (oferta()) {
+        <p>¡Oferta!</p>
+      }
+    `,
+  })
+  export class FichaProducto {
+    readonly nombre = {{?}}<string>();
+    readonly precio = input({{?}});
+    readonly oferta = input(false, { {{?}}: booleanAttribute });
+  }
+
+  // src/app/escaparate/escaparate.ts
+  import { Component, signal } from '@angular/core';
+  import { FichaProducto } from '../ficha-producto/ficha-producto';
+
+  @Component({
+    selector: 'app-escaparate',
+    imports: [FichaProducto],
+    template: `<app-ficha-producto nombre="Lámpara" {{?}}="precioLampara()" oferta />`,
+  })
+  export class Escaparate {
+    protected readonly precioLampara = signal(25);
+  }
+answers:
+  - input.required
+  - '0'
+  - transform
+  - '[precio]'
+solution: |
+  // src/app/ficha-producto/ficha-producto.ts
+  import { Component, booleanAttribute, input } from '@angular/core';
+
+  @Component({
+    selector: 'app-ficha-producto',
+    template: `
+      <h3>{{ nombre() }}</h3>
+      <p>{{ precio() }} €</p>
+      @if (oferta()) {
+        <p>¡Oferta!</p>
+      }
+    `,
+  })
+  export class FichaProducto {
+    readonly nombre = input.required<string>();
+    readonly precio = input(0);
+    readonly oferta = input(false, { transform: booleanAttribute });
+  }
+
+  // src/app/escaparate/escaparate.ts
+  import { Component, signal } from '@angular/core';
+  import { FichaProducto } from '../ficha-producto/ficha-producto';
+
+  @Component({
+    selector: 'app-escaparate',
+    imports: [FichaProducto],
+    template: `<app-ficha-producto nombre="Lámpara" [precio]="precioLampara()" oferta />`,
+  })
+  export class Escaparate {
+    protected readonly precioLampara = signal(25);
+  }
+hints:
+  - 'La idea: cada input se declara según si es obligatorio, si tiene valor por defecto o si convierte lo que recibe; y el padre pasa el precio como expresión, no como texto.'
+  - 'Qué usar: `input.required<T>()` para obligatorios; `input(valorPorDefecto)` para opcionales; la opción que convierte valores se llama `transform`; los corchetes evalúan una expresión.'
+  - 'El plan: `input.required` → `0` → `transform` → `[precio]`.'
+tests:
+  - output: |
+      Lámpara
+      25 €
+      ¡Oferta!
+    sample: true

@@ -1,0 +1,44 @@
+title: Lo que queda en el carrito
+summary: Sigue las llamadas a un store con signals y predice lo que se pinta.
+difficulty: EASY
+kind: predict
+statement: |
+  `CarritoStore` es el store de la lección 2: `agregar` suma 1 a la cantidad si el producto ya está y, si no, lo añade con cantidad 1; `quitar` elimina la línea entera. El carrito empieza vacío.
+
+  ¿Qué se ve en la página? Escribe el texto de cada `<p>` y de cada `<li>`, **una línea por elemento**, en orden.
+starter: |
+  // src/app/resumen/resumen.ts
+  import { Component, inject } from '@angular/core';
+  import { CarritoStore } from '../carrito/carrito-store';
+
+  @Component({
+    selector: 'app-resumen',
+    template: `
+      <p>Unidades: {{ store.unidades() }}</p>
+      <p>Total: {{ store.total() }} €</p>
+      @for (l of store.todas(); track l.id) {
+        <li>{{ l.nombre }} x{{ l.cantidad }}</li>
+      }
+    `,
+  })
+  export class Resumen {
+    protected readonly store = inject(CarritoStore);
+
+    constructor() {
+      this.store.agregar({ id: 1, nombre: 'Café', precio: 3 });
+      this.store.agregar({ id: 2, nombre: 'Té', precio: 2 });
+      this.store.agregar({ id: 1, nombre: 'Café', precio: 3 });
+      this.store.quitar(2);
+      this.store.agregar({ id: 3, nombre: 'Tarta', precio: 5 });
+    }
+  }
+hints:
+  - 'La idea: el constructor cambia el carrito cinco veces antes de pintar. La plantilla muestra cómo queda al final.'
+  - 'Qué usar: apunta las líneas después de cada llamada. `unidades` suma las cantidades y `total` suma precio × cantidad de cada línea.'
+  - 'El plan: Café x1 → Café x1, Té x1 → Café x2, Té x1 → sin Té → Café x2, Tarta x1. Ahora calcula unidades y total.'
+tests:
+  - output: |
+      Unidades: 3
+      Total: 11 €
+      Café x2
+      Tarta x1

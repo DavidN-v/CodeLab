@@ -1,0 +1,86 @@
+title: Ordena el interruptor con model
+summary: Ordena la clase de un hijo con input, model y un método que lo alterna.
+difficulty: MEDIUM
+kind: parsons
+statement: |
+  El hijo `Interruptor` muestra una etiqueta (un input con valor por defecto `'Luz'`) y un estado encendido/apagado que **el padre comparte** con `[(encendido)]="luz"`. Al pulsar el botón, el hijo invierte el estado y el padre se entera.
+
+  Ordena las líneas de la clase `Interruptor` así: primero el input, después el model y por último el método `alternar`. Cuidado: alguna línea sobra.
+
+  Tras un clic, se ve lo que indica el resultado esperado.
+starter: |
+  // src/app/interruptor/interruptor.ts
+  import { Component, input, model } from '@angular/core';
+
+  @Component({
+    selector: 'app-interruptor',
+    template: `<button (click)="alternar()">{{ etiqueta() }}: {{ encendido() ? 'ON' : 'OFF' }}</button>`,
+  })
+  export class Interruptor {
+  {{lines}}
+  }
+
+  // src/app/salon/salon.ts
+  import { Component, signal } from '@angular/core';
+  import { Interruptor } from '../interruptor/interruptor';
+
+  @Component({
+    selector: 'app-salon',
+    imports: [Interruptor],
+    template: `
+      <app-interruptor etiqueta="Lámpara" [(encendido)]="luz" />
+      <p>La lámpara está {{ luz() ? 'encendida' : 'apagada' }}</p>
+    `,
+  })
+  export class Salon {
+    protected readonly luz = signal(false);
+  }
+solution: |
+  // src/app/interruptor/interruptor.ts
+  import { Component, input, model } from '@angular/core';
+
+  @Component({
+    selector: 'app-interruptor',
+    template: `<button (click)="alternar()">{{ etiqueta() }}: {{ encendido() ? 'ON' : 'OFF' }}</button>`,
+  })
+  export class Interruptor {
+    readonly etiqueta = input('Luz');
+    readonly encendido = model(false);
+    protected alternar(): void {
+      this.encendido.update((e) => !e);
+    }
+  }
+
+  // src/app/salon/salon.ts
+  import { Component, signal } from '@angular/core';
+  import { Interruptor } from '../interruptor/interruptor';
+
+  @Component({
+    selector: 'app-salon',
+    imports: [Interruptor],
+    template: `
+      <app-interruptor etiqueta="Lámpara" [(encendido)]="luz" />
+      <p>La lámpara está {{ luz() ? 'encendida' : 'apagada' }}</p>
+    `,
+  })
+  export class Salon {
+    protected readonly luz = signal(false);
+  }
+lines:
+  - "  readonly etiqueta = input('Luz');"
+  - '  readonly encendido = model(false);'
+  - '  protected alternar(): void {'
+  - '    this.encendido.update((e) => !e);'
+  - '  }'
+distractors:
+  - '  readonly encendido = input(false);'
+  - '    this.encendido = !this.encendido();'
+hints:
+  - 'La idea: la etiqueta solo se muestra (baja del padre), pero el estado lo cambia el hijo y tiene que subir al padre.'
+  - 'Qué usar: `input` para lo que solo se muestra y `model` para lo que el hijo edita; un input no tiene `update`. Un signal nunca se cambia con `=`.'
+  - 'El plan: etiqueta con `input(''Luz'')` → encendido con `model(false)` → abre `alternar` → `update((e) => !e)` → cierra la llave del método.'
+tests:
+  - output: |
+      Lámpara: ON
+      La lámpara está encendida
+    sample: true

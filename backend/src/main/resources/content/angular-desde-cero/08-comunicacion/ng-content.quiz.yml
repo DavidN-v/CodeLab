@@ -1,0 +1,30 @@
+questions:
+  - type: output
+    prompt: 'La plantilla de `app-caja` es `<ng-content select="h1" /><ng-content />`. ¿Qué se ve con este padre? Una línea por elemento.'
+    code: |
+      <app-caja>
+        <p>Uno</p>
+        <h1>Dos</h1>
+        <p>Tres</p>
+      </app-caja>
+    answer: |
+      Dos
+      Uno
+      Tres
+    explanation: 'El `<h1>` va al hueco con `select="h1"`, que está primero. Los dos párrafos van al hueco sin `select`, en el orden en que los escribió el padre.'
+  - type: choice
+    prompt: '¿Qué hace `<ng-content select="[icono]" />`?'
+    options:
+      - Muestra ahí solo el contenido del padre que lleva el atributo `icono`
+      - Crea un input llamado `icono`
+      - Muestra un icono por defecto
+    answer: 0
+    explanation: '`select` acepta un selector CSS. `[icono]` encaja con cualquier elemento que tenga ese atributo, como `<span icono>⭐</span>`.'
+  - type: choice
+    prompt: 'El contenido proyectado tiene `{{ total() }}`. ¿De qué componente sale `total`?'
+    options:
+      - Del padre, que es quien escribió ese contenido
+      - Del hijo que tiene el `<ng-content>`
+      - 'De ninguno: en contenido proyectado no se puede interpolar'
+    answer: 0
+    explanation: 'El contenido proyectado pertenece al padre: se compila en su plantilla, con sus datos y sus eventos. El hijo solo decide dónde colocarlo.'

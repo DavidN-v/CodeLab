@@ -1,0 +1,25 @@
+questions:
+  - type: choice
+    prompt: Tu app tiene un carrito y el usuario conectado, y la desarrolláis dos personas. ¿Qué es lo más razonable?
+    options:
+      - Servicios con signals; una librería de estado sería más código sin beneficio claro
+      - NgRx Store desde el primer día
+      - Guardar todo en `localStorage`
+    answer: 0
+    explanation: 'Un servicio con signals cubre muy bien unos pocos datos compartidos. Las librerías compensan con equipos grandes, muchos stores o necesidad de trazar cada cambio.'
+  - type: choice
+    prompt: En NgRx Store, ¿qué es un reducer?
+    options:
+      - Una función pura que recibe el estado y una acción y devuelve el estado nuevo
+      - Un componente que muestra el estado
+      - Un servicio que hace peticiones HTTP
+    answer: 0
+    explanation: 'El reducer calcula el estado siguiente sin mutar el anterior. Las peticiones HTTP las hacen los effects.'
+  - type: choice
+    prompt: ¿En qué se parece un store de NgRx SignalStore al servicio con signals de la lección 2?
+    options:
+      - 'Los dos organizan el estado en: estado, valores derivados con `computed` y métodos que lo cambian'
+      - En nada; SignalStore usa acciones y reducers
+      - Los dos guardan el estado en la URL
+    answer: 0
+    explanation: '`withState`, `withComputed` y `withMethods` corresponden a las tres partes del store hecho a mano. SignalStore añade convenciones y piezas reutilizables.'

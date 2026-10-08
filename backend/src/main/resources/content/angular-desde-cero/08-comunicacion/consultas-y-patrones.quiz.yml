@@ -1,0 +1,25 @@
+questions:
+  - type: choice
+    prompt: '¿Qué devuelve `viewChild.required<ElementRef<HTMLInputElement>>(''correo'')`?'
+    options:
+      - Un signal con el `ElementRef` del elemento marcado con `#correo` en la plantilla
+      - El texto escrito en el input `correo`
+      - Un input llamado `correo` que da el padre
+    answer: 0
+    explanation: 'Las consultas devuelven signals. Este contiene un `ElementRef`, cuyo `nativeElement` es el `<input>` real.'
+  - type: choice
+    prompt: 'Un componente `Pestanas` quiere saber cuántas `<app-pestana>` le ha puesto el padre entre sus etiquetas. ¿Qué usa?'
+    options:
+      - '`contentChildren(Pestana)`'
+      - '`viewChildren(Pestana)`'
+      - '`input<Pestana[]>()`'
+    answer: 0
+    explanation: 'Lo que el padre escribe entre las etiquetas es contenido proyectado: se consulta con `contentChildren`. `viewChildren` busca en la plantilla propia.'
+  - type: choice
+    prompt: 'Quieres que el hijo muestre el nombre de un usuario que tiene el padre. ¿Qué es lo más adecuado?'
+    options:
+      - 'Un `input()` en el hijo y `[nombre]` en el padre'
+      - 'Un `viewChild` en el padre que escriba en una propiedad del hijo'
+      - 'Un `contentChild` en el hijo que lea al padre'
+    answer: 0
+    explanation: 'Pasar datos hacia abajo es el trabajo de los inputs. Las consultas acoplan los componentes y se reservan para acciones sobre el DOM o hijos concretos.'

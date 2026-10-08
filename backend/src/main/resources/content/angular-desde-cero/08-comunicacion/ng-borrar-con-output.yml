@@ -1,0 +1,93 @@
+title: Borrar tareas con un output
+summary: El hijo avisa de qué tarea borrar y el padre la quita de su lista.
+difficulty: MEDIUM
+kind: fill
+statement: |
+  Cada `FilaTarea` (hijo) muestra un título y un botón ✕. Al pulsarlo, el hijo **no borra nada**: avisa al padre con un evento `borrar` que lleva el título. El padre `Lista` escucha ese evento y quita la tarea de su signal.
+
+  Completa los huecos. Si pulsas ✕ en «Leche», la lista queda como indica el resultado esperado (solo los títulos).
+starter: |
+  // src/app/fila-tarea/fila-tarea.ts
+  import { Component, input, {{?}} } from '@angular/core';
+
+  @Component({
+    selector: 'app-fila-tarea',
+    template: `<li>{{ titulo() }} <button (click)="borrar.{{?}}(titulo())">✕</button></li>`,
+  })
+  export class FilaTarea {
+    readonly titulo = input.required<string>();
+    readonly borrar = output<{{?}}>();
+  }
+
+  // src/app/lista/lista.ts
+  import { Component, signal } from '@angular/core';
+  import { FilaTarea } from '../fila-tarea/fila-tarea';
+
+  @Component({
+    selector: 'app-lista',
+    imports: [FilaTarea],
+    template: `
+      <ul>
+        @for (t of tareas(); track t) {
+          <app-fila-tarea [titulo]="t" {{?}}="quitar({{?}})" />
+        }
+      </ul>
+    `,
+  })
+  export class Lista {
+    protected readonly tareas = signal(['Pan', 'Leche', 'Huevos']);
+
+    protected quitar(titulo: string): void {
+      this.tareas.update((lista) => lista.filter((t) => t !== titulo));
+    }
+  }
+answers:
+  - output
+  - emit
+  - string
+  - (borrar)
+  - $event
+solution: |
+  // src/app/fila-tarea/fila-tarea.ts
+  import { Component, input, output } from '@angular/core';
+
+  @Component({
+    selector: 'app-fila-tarea',
+    template: `<li>{{ titulo() }} <button (click)="borrar.emit(titulo())">✕</button></li>`,
+  })
+  export class FilaTarea {
+    readonly titulo = input.required<string>();
+    readonly borrar = output<string>();
+  }
+
+  // src/app/lista/lista.ts
+  import { Component, signal } from '@angular/core';
+  import { FilaTarea } from '../fila-tarea/fila-tarea';
+
+  @Component({
+    selector: 'app-lista',
+    imports: [FilaTarea],
+    template: `
+      <ul>
+        @for (t of tareas(); track t) {
+          <app-fila-tarea [titulo]="t" (borrar)="quitar($event)" />
+        }
+      </ul>
+    `,
+  })
+  export class Lista {
+    protected readonly tareas = signal(['Pan', 'Leche', 'Huevos']);
+
+    protected quitar(titulo: string): void {
+      this.tareas.update((lista) => lista.filter((t) => t !== titulo));
+    }
+  }
+hints:
+  - 'La idea: el hijo declara un evento propio que lleva un texto y lo lanza al pulsar; el padre lo escucha como cualquier otro evento y recibe ese texto.'
+  - 'Qué usar: la función `output` de `@angular/core`, su método `emit`, el tipo del dato entre `< >`, paréntesis para escuchar y `$event` para recoger lo emitido.'
+  - 'El plan: importa `output`; `borrar.emit(...)`; `output<string>()`; en el padre `(borrar)="quitar($event)"`.'
+tests:
+  - output: |
+      Pan
+      Huevos
+    sample: true

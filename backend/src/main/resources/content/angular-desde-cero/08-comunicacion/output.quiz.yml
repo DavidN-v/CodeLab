@@ -1,0 +1,25 @@
+questions:
+  - type: choice
+    prompt: 'El hijo hace `this.borrar.emit(42)`. En el padre, `(borrar)="quitar($event)"`. ¿Qué recibe `quitar`?'
+    options:
+      - 'El número 42'
+      - Un objeto `MouseEvent` del navegador
+      - '`undefined`, porque los outputs no llevan datos'
+    answer: 0
+    explanation: 'En un output de un componente, `$event` es exactamente el valor que se pasó a `emit()`.'
+  - type: choice
+    prompt: ¿Cuál es la forma moderna de declarar un evento que lleva un texto?
+    options:
+      - '`readonly enviado = output<string>();`'
+      - '`readonly enviado = input<string>();`'
+      - '`readonly enviado = signal<string>('''');`'
+    answer: 0
+    explanation: '`output<string>()` crea un evento que el padre escucha con paréntesis. `input` es para recibir datos y `signal` para estado propio.'
+  - type: choice
+    prompt: '¿Qué frase resume la comunicación padre-hijo?'
+    options:
+      - Los datos bajan por inputs y los eventos suben por outputs
+      - Los datos suben por inputs y los eventos bajan por outputs
+      - El hijo llama directamente a los métodos del padre
+    answer: 0
+    explanation: 'El padre da datos al hijo con inputs (`[x]`); el hijo avisa al padre con outputs (`(y)`). Así el hijo no depende de quién lo use.'

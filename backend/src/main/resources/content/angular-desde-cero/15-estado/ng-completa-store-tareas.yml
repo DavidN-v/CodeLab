@@ -1,0 +1,70 @@
+title: El store de tareas
+summary: Completa un store con estado privado, selector de solo lectura, computed y un método.
+difficulty: EASY
+kind: fill
+statement: |
+  Completa el store de tareas. Debe tener las tres partes de la lección: estado privado, selectores públicos y métodos.
+
+  Completa los tres huecos, en orden:
+
+  1. El método que convierte el signal privado en uno **de solo lectura**.
+  2. La función que crea un valor **derivado** que se recalcula solo.
+  3. El método del signal que calcula el valor nuevo **a partir del anterior**.
+
+  Tras `agregar('Pan')` y `agregar('Leche')`, un componente que muestra `pendientes()` pinta:
+
+  ```text
+  2 pendientes
+  ```
+starter: |
+  // src/app/tareas/tareas-store.ts
+  import { computed, Service, signal } from '@angular/core';
+
+  export interface Tarea {
+    titulo: string;
+    hecha: boolean;
+  }
+
+  @Service()
+  export class TareasStore {
+    private readonly tareas = signal<Tarea[]>([]);
+
+    readonly todas = this.tareas.{{?}}();
+    readonly pendientes = {{?}}(() => this.tareas().filter((t) => !t.hecha).length);
+
+    agregar(titulo: string) {
+      this.tareas.{{?}}((ts) => [...ts, { titulo, hecha: false }]);
+    }
+  }
+answers:
+  - asReadonly
+  - computed
+  - update
+solution: |
+  // src/app/tareas/tareas-store.ts
+  import { computed, Service, signal } from '@angular/core';
+
+  export interface Tarea {
+    titulo: string;
+    hecha: boolean;
+  }
+
+  @Service()
+  export class TareasStore {
+    private readonly tareas = signal<Tarea[]>([]);
+
+    readonly todas = this.tareas.asReadonly();
+    readonly pendientes = computed(() => this.tareas().filter((t) => !t.hecha).length);
+
+    agregar(titulo: string) {
+      this.tareas.update((ts) => [...ts, { titulo, hecha: false }]);
+    }
+  }
+hints:
+  - 'La idea: los componentes deben poder leer las tareas pero no cambiarlas; el número de pendientes se calcula; y añadir parte de la lista anterior.'
+  - 'Qué usar: los signals escribibles tienen un método que devuelve su versión de solo lectura, y otro que recibe una función con el valor anterior. Los valores derivados se crean con una función importada en la primera línea.'
+  - 'El plan: this.tareas.asReadonly(), computed(() => ...) y this.tareas.update((ts) => ...).'
+tests:
+  - output: |
+      2 pendientes
+    sample: true

@@ -1,0 +1,25 @@
+questions:
+  - type: choice
+    prompt: 'El hijo declara `readonly abierto = model(false);`. ¿Qué output crea automáticamente?'
+    options:
+      - '`abiertoChange`'
+      - '`abiertoOutput`'
+      - '`changeAbierto`'
+    answer: 0
+    explanation: 'Un model crea un input con el nombre del campo y un output con el mismo nombre más `Change`. Por eso `[(abierto)]` funciona.'
+  - type: choice
+    prompt: '¿Cuál es la forma correcta de enlazar en los dos sentidos el signal `volumen` del padre?'
+    options:
+      - '`<app-slider [(valor)]="volumen" />`'
+      - '`<app-slider [(valor)]="volumen()" />`'
+      - '`<app-slider ([valor])="volumen" />`'
+    answer: 0
+    explanation: 'La caja de plátanos es `[( )]`, corchetes por fuera. Y el signal va sin paréntesis, para que Angular pueda escribir en él.'
+  - type: choice
+    prompt: '¿A qué equivale `<app-estrellas [(valor)]="nota" />` cuando `nota` es un signal?'
+    options:
+      - '`<app-estrellas [valor]="nota()" (valorChange)="nota.set($event)" />`'
+      - '`<app-estrellas [valor]="nota" />`'
+      - '`<app-estrellas (valor)="nota.set($event)" />`'
+    answer: 0
+    explanation: 'El enlace bidireccional es la suma de un enlace de propiedad (el valor baja) y un evento `...Change` (el valor sube).'
