@@ -1,0 +1,25 @@
+questions:
+  - type: choice
+    prompt: Ejecutas `ng build` (sin `-c`). ¿Qué archivo de entorno acaba en el JavaScript?
+    options:
+      - '`environment.ts`'
+      - '`environment.development.ts`'
+      - Los dos, y la app elige al arrancar
+    answer: 0
+    explanation: '`ng build` usa `production`, que no tiene `fileReplacements`: se queda `environment.ts`. El reemplazo por `environment.development.ts` solo ocurre en la configuración `development`.'
+  - type: choice
+    prompt: ¿Qué import es el correcto en un servicio que necesita la URL de la API?
+    options:
+      - "`import { environment } from '../environments/environment';`"
+      - "`import { environment } from '../environments/environment.development';`"
+      - "`import { environment } from '@angular/core';`"
+    answer: 0
+    explanation: 'Siempre se importa `environment`; el build lo sustituye por el de desarrollo cuando toca. Importar el de desarrollo directamente lo llevaría también a producción.'
+  - type: choice
+    prompt: ¿Qué NO debes guardar en `environment.ts`?
+    options:
+      - La clave privada de una API de pagos
+      - La URL pública del backend
+      - 'Un indicador `produccion: true`'
+    answer: 0
+    explanation: 'Los entornos se compilan dentro del JavaScript que descarga cualquier visitante. Las URLs públicas y los indicadores están bien; los secretos, nunca.'

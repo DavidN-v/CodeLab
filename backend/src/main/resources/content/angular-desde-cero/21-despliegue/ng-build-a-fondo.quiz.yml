@@ -1,0 +1,25 @@
+questions:
+  - type: choice
+    prompt: ¿Por qué el archivo se llama `main-O7QUVEYP.js` y no simplemente `main.js`?
+    options:
+      - El hash cambia cuando cambia el contenido, así el navegador puede cachearlo mucho tiempo y aun así descargar las versiones nuevas
+      - Para que nadie pueda adivinar el nombre y descargarlo
+      - Porque esbuild no permite nombres sin letras aleatorias
+    answer: 0
+    explanation: 'El hash se calcula a partir del contenido. Si el archivo no cambia, el nombre tampoco y se reutiliza la caché; si cambia, el nombre es nuevo y se descarga. No es una medida de seguridad.'
+  - type: choice
+    prompt: ¿Qué configuración usa `ng build` si no le pasas `--configuration`?
+    options:
+      - '`production`, porque es la `defaultConfiguration` del target `build`'
+      - '`development`, la misma que `ng serve`'
+      - Ninguna, solo las `options` comunes
+    answer: 0
+    explanation: 'En `angular.json`, el target `build` tiene `"defaultConfiguration": "production"`. El de `serve` tiene `development`.'
+  - type: choice
+    prompt: El build falla con `[ERROR] bundle initial exceeded maximum budget`. ¿Qué significa?
+    options:
+      - Lo que se descarga al abrir la app supera el límite de error definido en `budgets`
+      - El servidor no tiene espacio en disco
+      - Hay un error de TypeScript en el código
+    answer: 0
+    explanation: 'Los budgets son límites de tamaño. Superar `maximumError` del tipo `initial` hace fallar el build para que una app demasiado pesada no llegue a producción.'

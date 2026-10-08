@@ -1,0 +1,25 @@
+questions:
+  - type: choice
+    prompt: ¿Por qué en CI se usa `npm ci` y no `npm install`?
+    options:
+      - Porque instala exactamente las versiones de `package-lock.json`, sin cambiar nada
+      - Porque es más moderno e instala las últimas versiones
+      - Porque `npm install` no funciona en Linux
+    answer: 0
+    explanation: '`npm ci` respeta el archivo de bloqueo al pie de la letra y falla si no coincide con `package.json`. Así la CI prueba exactamente lo mismo que tienes en tu ordenador.'
+  - type: choice
+    prompt: ¿Qué pasa si en la CI escribes `npx ng test` sin `--watch=false`?
+    options:
+      - Vitest se queda esperando cambios y el paso no termina nunca (hasta que lo corta un límite de tiempo)
+      - Las pruebas no se ejecutan
+      - Las pruebas se ejecutan dos veces
+    answer: 0
+    explanation: 'En modo vigilancia, las pruebas se repiten cada vez que guardas un archivo. En una máquina de CI nadie guarda nada, así que hay que pedir una sola ejecución.'
+  - type: choice
+    prompt: Ejecutas `ng deploy` en un proyecto recién creado y responde `Cannot find "deploy" target`. ¿Qué haces?
+    options:
+      - Añadir con `ng add` el paquete de despliegue de tu hosting, que crea el target `deploy`
+      - Reinstalar la Angular CLI
+      - Ejecutar antes `ng build -c development`
+    answer: 0
+    explanation: 'La CLI no sabe publicar en ningún servicio por sí sola. Paquetes como `@angular/fire` o `angular-cli-ghpages` añaden el target `deploy` a `angular.json`.'

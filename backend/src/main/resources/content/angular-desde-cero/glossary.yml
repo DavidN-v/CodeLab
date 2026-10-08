@@ -1,0 +1,992 @@
+# Glosario del curso: términos que resalta cada lección al pasar el ratón.
+terms:
+- term: navegador
+  aliases:
+  - navegadores
+  definition: El programa con el que ves páginas web, como Chrome o Firefox; pide los archivos al servidor
+    y los pinta en pantalla.
+- term: servidor
+  aliases:
+  - servidores
+  definition: Un ordenador que guarda los archivos de una web y los entrega a quien los pide.
+- term: URL
+  aliases:
+  - URLs
+  definition: La dirección de una página, con su protocolo, su dominio y su ruta, como https://tienda.com/carrito.
+- term: HTTP
+  aliases:
+  - HTTPS
+  definition: El idioma con el que el navegador pide archivos al servidor y el servidor responde; HTTPS
+    es su versión cifrada.
+- term: HTML
+  definition: El lenguaje de etiquetas que dice qué es cada parte de una página (título, párrafo, botón…).
+- term: etiqueta
+  aliases:
+  - etiquetas
+  definition: Una marca de HTML entre < y >, como <p> o <button>, que indica qué tipo de contenido envuelve.
+- term: CSS
+  definition: El lenguaje de reglas que decide el aspecto de una página, como colores, tamaños y posiciones.
+- term: JavaScript
+  aliases:
+  - JS
+  definition: El lenguaje de programación que ejecuta el navegador para que la página reaccione a lo que
+    hace el usuario.
+- term: DOM
+  definition: El árbol de objetos que el navegador construye a partir del HTML; lo que ves en pantalla
+    es siempre el DOM.
+- term: evento
+  aliases:
+  - eventos
+  definition: Algo que ocurre en la página, como un clic o una tecla pulsada, y a lo que el código puede
+    reaccionar.
+- term: SPA
+  aliases:
+  - aplicación de una sola página
+  definition: Una aplicación web que carga un único HTML y cambia de pantalla con JavaScript, sin recargar
+    la página.
+- term: localhost
+  definition: El nombre de tu propio ordenador cuando actúa como servidor; Angular sirve tu app en localhost:4200
+    mientras programas.
+- term: librería
+  aliases:
+  - librerías
+  - biblioteca
+  definition: Código ya escrito por otros que resuelve un problema concreto y que tú llamas cuando lo
+    necesitas.
+- term: framework
+  aliases:
+  - frameworks
+  definition: Una estructura completa para construir aplicaciones que marca las reglas y llama a tu código
+    cuando toca; Angular es uno.
+- term: TypeScript
+  aliases:
+  - TS
+  definition: JavaScript con tipos; el lenguaje en el que se escribe Angular, que se traduce a JavaScript
+    antes de llegar al navegador.
+- term: tipo
+  aliases:
+  - tipos
+  definition: La clase de valor que puede guardar algo, como texto (string), número (number) o verdadero/falso
+    (boolean).
+- term: inferencia
+  aliases:
+  - infiere
+  - inferir
+  definition: Cuando TypeScript deduce el tipo de algo a partir de su valor, sin que lo escribas.
+- term: compilador
+  aliases:
+  - compilar
+  - compila
+  definition: El programa que revisa tu código y lo traduce a otro lenguaje; el de TypeScript comprueba
+    los tipos y genera JavaScript.
+- term: array
+  aliases:
+  - arrays
+  definition: Una lista ordenada de valores; se cuenta desde 0, como una fila de taquillas numeradas.
+- term: interfaz
+  aliases:
+  - interface
+  - interfaces
+  definition: La descripción de la forma de un objeto en TypeScript, con el nombre y el tipo de cada propiedad.
+- term: unión
+  aliases:
+  - uniones
+  - tipo unión
+  definition: Un tipo que admite varias opciones separadas por |, como 'S' | 'M' | 'L'.
+- term: función flecha
+  aliases:
+  - funciones flecha
+  - arrow function
+  definition: Una forma corta de escribir funciones con =>, por ejemplo (n) => n * 2.
+- term: callback
+  aliases:
+  - callbacks
+  definition: Una función que le pasas a otra para que la llame cuando toque, como la que recibe addEventListener
+    o map.
+- term: genérico
+  aliases:
+  - genéricos
+  definition: Un tipo que se decide al usar una función o clase, escrito entre < >, como Array<string>
+    o signal<number>.
+- term: clase
+  aliases:
+  - clases
+  definition: Un molde que define propiedades y métodos; con new se fabrican objetos a partir de él.
+- term: constructor
+  definition: El método especial de una clase que se ejecuta una vez, al crear cada objeto con new.
+- term: decorador
+  aliases:
+  - decoradores
+  definition: Una función que se escribe con @ encima de una clase para añadirle información; @Component
+    convierte una clase en componente.
+- term: módulo
+  aliases:
+  - módulos
+  definition: Cada archivo de TypeScript; lo que declara es privado salvo lo que se exporta con export.
+- term: promesa
+  aliases:
+  - promesas
+  - Promise
+  definition: Un objeto que representa un valor que llegará más tarde, como la respuesta de un servidor;
+    se espera con await.
+- term: Node.js
+  aliases:
+  - Node
+  definition: Un programa que ejecuta JavaScript en tu ordenador, fuera del navegador; Angular lo usa
+    para sus herramientas.
+- term: npm
+  definition: El registro público de paquetes de JavaScript y la orden de terminal que los instala en
+    tu proyecto.
+- term: paquete
+  aliases:
+  - paquetes
+  definition: Una librería o herramienta empaquetada para instalarla con npm, como @angular/core o typescript.
+- term: terminal
+  aliases:
+  - consola de órdenes
+  - línea de comandos
+  definition: La ventana donde escribes órdenes de texto al ordenador, como npm install o ng serve.
+- term: package.json
+  definition: El archivo que lista las librerías que necesita un proyecto y los atajos de órdenes (scripts).
+- term: dependencia
+  aliases:
+  - dependencias
+  - dependencies
+  definition: Un paquete que tu proyecto necesita; las dependencies acaban dentro de la app.
+- term: devDependencies
+  aliases:
+  - dependencia de desarrollo
+  definition: Paquetes que solo se usan para fabricar y probar la app, como el compilador o el programa
+    de pruebas; no llegan al navegador.
+- term: script
+  aliases:
+  - scripts
+  definition: Un nombre corto en package.json para una orden; npm start ejecuta el script start.
+- term: node_modules
+  definition: La carpeta donde npm guarda todos los paquetes descargados; no se edita ni se comparte,
+    se reconstruye con npm install.
+- term: package-lock.json
+  aliases:
+  - lockfile
+  definition: El archivo donde npm anota la versión exacta de cada paquete instalado, para que todo el
+    equipo tenga lo mismo.
+- term: versionado semántico
+  aliases:
+  - semver
+  definition: Numerar versiones como MAYOR.MENOR.PARCHE; la mayor puede romper cosas, la menor añade y
+    el parche arregla.
+- term: Angular CLI
+  aliases:
+  - CLI
+  - ng
+  definition: La herramienta de terminal de Angular que crea, sirve, genera, compila y prueba proyectos.
+- term: extensión
+  aliases:
+  - extensiones
+  definition: Un complemento que añade funciones a un editor, como Angular Language Service en VS Code.
+- term: Prettier
+  definition: Una herramienta que ordena el formato del código automáticamente (sangrías, comillas, saltos
+    de línea).
+- term: workspace
+  aliases:
+  - espacio de trabajo
+  definition: La carpeta que crea ng new, con la configuración común (angular.json, package.json) y uno
+    o varios proyectos dentro.
+- term: schematic
+  aliases:
+  - schematics
+  definition: Una plantilla de código con instrucciones que la CLI usa para crear o modificar archivos,
+    por ejemplo al hacer ng new o ng generate.
+- term: builder
+  aliases:
+  - builders
+  definition: El programa que ejecuta una tarea de angular.json, como compilar (@angular/build:application)
+    o servir la app (@angular/build:dev-server).
+- term: target
+  aliases:
+  - targets
+  definition: Una tarea que sabe hacer un proyecto en angular.json (build, serve, test); cada una usa
+    un builder.
+- term: punto de entrada
+  aliases:
+  - main.ts
+  definition: El primer archivo que se ejecuta; en Angular es main.ts, que arranca la aplicación con bootstrapApplication.
+- term: bootstrapApplication
+  definition: La función de @angular/platform-browser que arranca la aplicación a partir de un componente
+    raíz y una configuración.
+- term: provider
+  aliases:
+  - providers
+  - proveedor
+  - proveedores
+  definition: Una pieza que se registra para que la aplicación pueda pedirla en cualquier sitio, como
+    el router o un servicio.
+- term: esbuild
+  definition: El empaquetador muy rápido que usa Angular para compilar y juntar el código de la aplicación.
+- term: Vite
+  definition: El servidor de desarrollo que usa ng serve para servir la app y recargarla al instante cuando
+    guardas.
+- term: HMR
+  aliases:
+  - recarga en caliente
+  - Hot Module Replacement
+  definition: Sustituir en el navegador solo la parte que cambió (por ejemplo, una plantilla) sin recargar
+    la página entera.
+- term: tree shaking
+  definition: Eliminar del resultado final el código que se descarga en node_modules pero tu aplicación
+    no importa.
+- term: minimizar
+  aliases:
+  - minificar
+  - minimiza
+  definition: Reescribir el código sin espacios ni comentarios y con nombres cortos para que ocupe menos.
+- term: hash
+  aliases:
+  - huella
+  definition: Un código calculado a partir del contenido de un archivo; si el contenido cambia, cambia.
+    Se añade al nombre de los archivos del build.
+- term: budget
+  aliases:
+  - budgets
+  - presupuesto de tamaño
+  definition: Un límite de tamaño en angular.json; si la app lo supera, ng build avisa o falla.
+- term: zoneless
+  definition: Una aplicación que no usa la librería zone.js; Angular sabe qué repintar gracias a los signals
+    y a los eventos. Es el modo por defecto en Angular 22.
+- term: componente
+  aliases:
+  - componentes
+  definition: Una pieza reutilizable de la interfaz formada por una clase, una plantilla HTML y unos estilos,
+    unidos por el decorador @Component.
+- term: selector
+  definition: El nombre de la etiqueta con la que se usa un componente en una plantilla, por ejemplo app-perfil
+    para <app-perfil />.
+- term: plantilla
+  aliases:
+  - plantillas
+  - template
+  definition: El HTML de un componente, con marcas de Angular como {{ }} para mostrar datos de la clase.
+- term: metadatos
+  definition: Los datos sobre una clase que se escriben en su decorador, como el selector o la plantilla
+    de un componente.
+- term: componente raíz
+  definition: El primer componente que arranca la aplicación (App) y del que cuelgan todos los demás.
+- term: árbol de componentes
+  definition: La estructura de una app en la que cada componente contiene a otros en su plantilla, con
+    el componente raíz arriba.
+- term: instancia
+  aliases:
+  - instancias
+  definition: Un objeto concreto creado a partir de una clase; cada etiqueta de un componente crea una
+    instancia nueva.
+- term: standalone
+  definition: Componente independiente que declara en su propio imports lo que usa, sin necesitar un NgModule.
+    Es la forma por defecto.
+- term: host
+  aliases:
+  - elemento anfitrión
+  definition: El elemento del DOM que representa al componente, su propia etiqueta, como <app-aviso>.
+- term: detección de cambios
+  definition: El proceso con el que Angular revisa los componentes y actualiza la pantalla cuando cambian
+    los datos.
+- term: OnPush
+  definition: Estrategia de detección de cambios que solo revisa un componente cuando cambia un signal
+    que lee, ocurre un evento en él o recibe datos nuevos. Es la de por defecto en Angular 22.
+- term: ciclo de vida
+  aliases:
+  - lifecycle hooks
+  - ganchos del ciclo de vida
+  definition: Los momentos de la vida de un componente (creación, pintado, destrucción) en los que Angular
+    te deja ejecutar código.
+- term: DestroyRef
+  definition: Un objeto de Angular que representa la destrucción de un componente; con onDestroy registras
+    qué limpiar en ese momento.
+- term: fuga de memoria
+  definition: Recursos (temporizadores, suscripciones) que siguen activos cuando ya no se necesitan y
+    hacen la app cada vez más lenta.
+- term: interpolación
+  aliases:
+  - interpolaciones
+  definition: Escribir `{{ expresión }}` en la plantilla para pintar ese valor como texto.
+- term: expresión
+  aliases:
+  - expresiones
+  definition: Un trozo de código que da un valor, como `precio * 2` o `nombre()`; no declara variables
+    ni ejecuta órdenes.
+- term: enlace de propiedades
+  aliases:
+  - property binding
+  - enlazar propiedades
+  definition: Escribir `[propiedad]="expresión"` para conectar una propiedad de un elemento (como `disabled`
+    o `src`) a un dato de la clase.
+- term: atributo
+  aliases:
+  - atributos
+  definition: Lo que escribes en una etiqueta HTML, como `src="foto.png"`; el navegador lo convierte en
+    propiedades del elemento.
+- term: enlace de eventos
+  aliases:
+  - event binding
+  definition: Escribir `(evento)="instrucción"` para ejecutar código cuando pasa algo en un elemento,
+    como un clic.
+- term: $event
+  definition: Variable especial de la plantilla con la información del evento que acaba de ocurrir, o
+    el valor que emitió un componente.
+- term: variable de plantilla
+  aliases:
+  - variables de plantilla
+  - '#ref'
+  definition: Un nombre que das a un elemento con `#nombre` para usarlo en otras partes de la misma plantilla.
+- term: control de flujo
+  definition: Los bloques `@if`, `@for` y `@switch` que deciden qué partes de la plantilla existen y cuántas
+    veces se repiten.
+- term: track
+  definition: La parte obligatoria de `@for` que dice cómo reconocer cada elemento de una lista, normalmente
+    por su id.
+- term: inmutabilidad
+  definition: Cambiar datos creando una copia nueva con el cambio en lugar de modificar los existentes
+    por dentro.
+- term: signal
+  aliases:
+  - signals
+  - señal
+  definition: Un valor que avisa a Angular cuando cambia. Se crea con `signal(inicial)`, se lee con `()`
+    y se cambia con `set` o `update`.
+- term: computed
+  definition: Un signal de solo lectura cuyo valor se calcula a partir de otros signals y se recalcula
+    solo cuando cambian.
+- term: effect
+  aliases:
+  - efecto
+  - efectos
+  definition: Una función que Angular vuelve a ejecutar cada vez que cambian los signals que lee; sirve
+    para hablar con el mundo exterior, como guardar en localStorage.
+- term: efecto secundario
+  aliases:
+  - efectos secundarios
+  definition: Algo que el código hace fuera de calcular un valor, como guardar datos, escribir en la consola
+    o llamar a un servidor.
+- term: linkedSignal
+  definition: Un signal que se puede cambiar a mano pero que se recalcula solo cuando cambia el dato del
+    que depende.
+- term: untracked
+  definition: Función que lee un signal sin convertirlo en dependencia, para que sus cambios no repitan
+    el cálculo o el efecto.
+- term: grafo de dependencias
+  definition: El dibujo de quién depende de quién entre signals, computed, efectos y plantillas; Angular
+    lo usa para saber qué repintar.
+- term: zone.js
+  definition: Librería que usaban las apps antiguas de Angular para enterarse de todos los eventos y temporizadores
+    y repintar por si acaso.
+- term: localStorage
+  definition: Un pequeño almacén del navegador que guarda textos con nombre y los conserva aunque recargues
+    la página.
+- term: asReadonly
+  definition: Método de un signal que devuelve una versión que se puede leer pero no cambiar.
+- term: componente padre
+  aliases:
+  - padre
+  definition: El componente que usa a otro en su plantilla; le pasa datos y escucha sus avisos.
+- term: componente hijo
+  aliases:
+  - hijo
+  definition: El componente que se usa dentro de la plantilla de otro.
+- term: input
+  aliases:
+  - inputs
+  - entrada
+  definition: Una ranura de un componente por la que el padre le pasa un dato. Se declara con `input()`
+    y se lee como un signal.
+- term: output
+  aliases:
+  - outputs
+  - salida
+  definition: Un evento propio de un componente con el que avisa a su padre. Se declara con `output()`
+    y se lanza con `emit()`.
+- term: emit
+  aliases:
+  - emitir
+  definition: Lanzar el evento de un output, opcionalmente con un valor que el padre recibe como `$event`.
+- term: model
+  definition: Un input que el hijo también puede cambiar; al cambiarlo avisa al padre con un evento `nombreChange`.
+- term: enlace bidireccional
+  aliases:
+  - two-way binding
+  - banana in a box
+  definition: La sintaxis `[(valor)]="miSignal"`, que pasa un dato al hijo y lo recoge de vuelta cuando
+    el hijo lo cambia.
+- term: transform
+  definition: Opción de un input que convierte el valor que llega, por ejemplo de texto a booleano con
+    `booleanAttribute`.
+- term: proyección de contenido
+  aliases:
+  - ng-content
+  definition: Mostrar dentro de un componente lo que el padre escribe entre sus etiquetas, en los huecos
+    marcados con `<ng-content>`.
+- term: consulta
+  aliases:
+  - consultas
+  - query
+  - queries
+  definition: Una forma de que la clase consiga un elemento o componente de su plantilla (`viewChild`)
+    o de su contenido proyectado (`contentChild`).
+- term: viewChild
+  aliases:
+  - viewChildren
+  definition: Función que busca en la plantilla del componente un elemento o hijo y lo devuelve dentro
+    de un signal.
+- term: ElementRef
+  definition: Envoltorio de Angular alrededor de un elemento real del DOM; el elemento está en su propiedad
+    `nativeElement`.
+- term: directiva
+  aliases:
+  - directivas
+  definition: Una clase de Angular que se engancha a un elemento de la plantilla y le añade aspecto o
+    comportamiento, como una pegatina con superpoderes.
+- term: directiva de atributo
+  aliases:
+  - directivas de atributo
+  definition: Una directiva que se pone como atributo en un elemento que ya existe (`<p appResaltar>`)
+    y cambia su aspecto o comportamiento sin pintar HTML propio.
+- term: directiva estructural
+  aliases:
+  - directivas estructurales
+  definition: Una directiva antigua, como `*ngIf` o `*ngFor`, que añade o quita elementos de la página.
+    Hoy se usan los bloques `@if` y `@for`.
+- term: selector de atributo
+  definition: Un selector escrito entre corchetes, como `[appResaltar]`, que activa una directiva en cualquier
+    elemento que tenga ese atributo.
+- term: hostDirectives
+  aliases:
+  - directivas anfitrionas
+  definition: Una lista del decorador de un componente o directiva con otras directivas que se aplican
+    automáticamente a su elemento anfitrión.
+- term: composición
+  definition: Construir una pieza grande juntando piezas pequeñas independientes, en lugar de heredar
+    de una sola clase padre.
+- term: pipe
+  aliases:
+  - pipes
+  definition: Una función de la plantilla que transforma un valor solo para mostrarlo, por ejemplo `{{
+    precio | currency }}`. El dato original no cambia.
+- term: pipe puro
+  aliases:
+  - pipes puros
+  definition: Un pipe que Angular solo vuelve a ejecutar cuando cambia su valor de entrada o un parámetro.
+    Es el comportamiento por defecto.
+- term: pipe impuro
+  aliases:
+  - pipes impuros
+  definition: Un pipe declarado con `pure false` que se ejecuta en cada revisión de la pantalla, aunque
+    nada haya cambiado.
+- term: locale
+  aliases:
+  - LOCALE_ID
+  definition: El idioma y la región que decide cómo se escriben números, monedas y fechas, por ejemplo
+    `es` (1.234,50 €) o `en-US` ($1,234.50).
+- term: servicio
+  aliases:
+  - servicios
+  definition: Una clase que guarda datos y lógica que varios componentes comparten, como la cocina de
+    un restaurante a la que todos los camareros piden.
+- term: inyección de dependencias
+  aliases:
+  - DI
+  - dependency injection
+  definition: Una forma de trabajar en la que cada clase pide lo que necesita en lugar de crearlo ella
+    misma con `new`; Angular se lo entrega.
+- term: inyector
+  aliases:
+  - inyectores
+  definition: El objeto de Angular que sabe crear servicios, guarda los que ya creó y entrega siempre
+    la misma instancia a quien la pide.
+- term: inyector raíz
+  definition: El inyector de toda la aplicación. Lo que se registra en él existe una sola vez y vive mientras
+    la aplicación esté abierta.
+- term: singleton
+  aliases:
+  - singletons
+  definition: Un objeto del que solo existe una instancia, compartida por todo el que la pide.
+- term: inject
+  aliases:
+  - inject()
+  definition: La función de Angular para pedir una dependencia al inyector. Solo funciona mientras Angular
+    está construyendo algo (en los campos o el constructor).
+- term: contexto de inyección
+  definition: El momento en que Angular está creando una clase o ejecutando una función suya y, por tanto,
+    se puede llamar a `inject()`.
+- term: token
+  aliases:
+  - tokens
+  definition: La etiqueta con la que se pide algo al inyector. Puede ser una clase o un `InjectionToken`.
+- term: InjectionToken
+  definition: Un token creado a mano para inyectar valores que no son clases, como un objeto de configuración
+    o un número.
+- term: '@Service'
+  aliases:
+  - Service
+  definition: El decorador de Angular 22 que marca una clase como servicio y, por defecto, la registra
+    en el inyector raíz. En versiones anteriores se usa `@Injectable` con `providedIn root`.
+- term: '@Injectable'
+  aliases:
+  - Injectable
+  definition: El decorador clásico para servicios. Con la opción `providedIn root` hace lo mismo que `@Service()`;
+    sin ella, el servicio debe añadirse a una lista de proveedores.
+- term: doble de prueba
+  aliases:
+  - dobles de prueba
+  - doble
+  definition: Un objeto falso que se hace pasar por un servicio real durante una prueba, con valores controlados.
+- term: TestBed
+  definition: La herramienta de pruebas de Angular que crea un inyector y componentes de prueba, y permite
+    cambiar servicios por dobles.
+- term: router
+  aliases:
+  - enrutador
+  definition: La parte de Angular que mira la dirección del navegador y decide qué componente mostrar,
+    sin recargar la página.
+- term: ruta
+  aliases:
+  - rutas
+  definition: Una entrada de la tabla del router que une una dirección (`path`) con lo que se muestra
+    en ella, normalmente un componente.
+- term: router-outlet
+  aliases:
+  - outlet
+  - RouterOutlet
+  definition: La etiqueta `<router-outlet />` que marca el hueco de la página donde el router pinta el
+    componente de la ruta actual.
+- term: routerLink
+  definition: La directiva que convierte un enlace en navegación interna, sin recargar la aplicación.
+- term: routerLinkActive
+  definition: La directiva que añade una clase a un enlace cuando su ruta es la que se está viendo, para
+    resaltarlo en el menú.
+- term: parámetro de ruta
+  aliases:
+  - parámetros de ruta
+  definition: Un trozo variable de la dirección, escrito con dos puntos en la ruta (`productos/:id`),
+    cuyo valor lee el componente.
+- term: query params
+  aliases:
+  - query param
+  - parámetros de consulta
+  definition: Datos opcionales que van al final de la dirección tras un `?`, como `?orden=precio`. Sirven
+    para filtros y ordenaciones.
+- term: redirección
+  aliases:
+  - redirecciones
+  - redirectTo
+  definition: Una ruta que no muestra nada y manda a otra dirección; la barra del navegador cambia.
+- term: ruta comodín
+  aliases:
+  - '**'
+  definition: La ruta con `path` de dos asteriscos, que coincide con cualquier dirección. Se pone al final
+    para mostrar la página «no encontrada».
+- term: rutas hijas
+  aliases:
+  - ruta hija
+  - children
+  definition: Rutas que viven dentro de otra y se pintan en un `<router-outlet />` del componente padre,
+    como las secciones de un panel.
+- term: carga diferida
+  aliases:
+  - lazy loading
+  definition: Descargar el código de una parte de la aplicación solo cuando alguien la visita, para que
+    la primera carga sea más rápida.
+- term: guard
+  aliases:
+  - guards
+  - guardia
+  definition: Una función que el router ejecuta antes de entrar o salir de una ruta y que decide si se
+    puede pasar o adónde redirigir.
+- term: resolver
+  aliases:
+  - resolvers
+  definition: Una función que el router ejecuta antes de mostrar una ruta para preparar sus datos, que
+    luego recibe el componente.
+- term: UrlTree
+  definition: Una dirección de la aplicación ya construida por el router. Si un guard la devuelve, el
+    router navega allí en lugar de a la ruta pedida.
+- term: formulario de plantilla
+  aliases:
+  - formularios de plantilla
+  definition: Un formulario cuya lógica se escribe en el HTML con ngModel y atributos como required. Sirve
+    para formularios pequeños.
+- term: formulario reactivo
+  aliases:
+  - formularios reactivos
+  definition: Un formulario que se crea como objeto en la clase (FormGroup con FormControl dentro) y se
+    conecta al HTML con directivas.
+- term: ngModel
+  aliases:
+  - '[(ngModel)]'
+  definition: La directiva de FormsModule que copia el valor de una caja de texto a una variable y de
+    la variable a la caja.
+- term: FormControl
+  aliases:
+  - control
+  - controles
+  definition: Un campo de un formulario reactivo; sabe su valor, sus reglas y si es válido o si alguien
+    lo ha tocado.
+- term: FormGroup
+  aliases:
+  - grupo
+  definition: Un conjunto de campos con nombre que forman un formulario o una parte de él.
+- term: FormArray
+  definition: Una lista de campos de formulario que puede crecer y encoger mientras se usa, como los invitados
+    de una fiesta.
+- term: validador
+  aliases:
+  - validadores
+  definition: Una función que revisa el valor de un campo y devuelve null si está bien o un objeto que
+    describe el error.
+- term: touched
+  aliases:
+  - tocado
+  definition: Estado de un campo en el que la persona ya entró y salió; se usa para no mostrar errores
+    antes de tiempo.
+- term: dirty
+  definition: Estado de un campo cuyo valor la persona ha cambiado al menos una vez. Su contrario es pristine.
+- term: Signal Forms
+  aliases:
+  - formularios con signals
+  definition: La forma de hacer formularios de @angular/forms/signals, donde tus datos son un signal y
+    el estado de cada campo también. Estable en Angular 22.
+- term: esquema
+  aliases:
+  - schema
+  definition: En Signal Forms, la función donde declaras las reglas del formulario, como required o minLength.
+- term: API
+  aliases:
+  - APIs
+  - API REST
+  definition: La puerta por la que una aplicación pide datos a un servidor, con unas reglas fijas sobre
+    qué se puede pedir y cómo.
+- term: REST
+  definition: Una forma de organizar una API en la que cada tipo de cosa tiene una URL y el verbo HTTP
+    dice qué haces con ella.
+- term: JSON
+  definition: Un formato de texto con forma de objeto, con claves entre comillas dobles, que se usa para
+    enviar datos por la red.
+- term: petición HTTP
+  aliases:
+  - petición
+  - peticiones
+  definition: Un mensaje que el navegador envía a un servidor con un verbo, una dirección y, a veces,
+    datos.
+- term: verbo HTTP
+  aliases:
+  - GET
+  - POST
+  - PUT
+  - PATCH
+  - DELETE
+  - método HTTP
+  definition: La palabra que dice qué quieres hacer en una petición - GET lee, POST crea, PUT y PATCH
+    cambian, DELETE borra.
+- term: código de estado
+  aliases:
+  - códigos de estado
+  - status
+  definition: El número de una respuesta HTTP que resume qué pasó - 2xx bien, 4xx error de quien pide,
+    5xx error del servidor.
+- term: cabecera
+  aliases:
+  - cabeceras
+  - header
+  - headers
+  definition: Un dato extra que viaja con una petición o respuesta, como el token de quien la hace.
+- term: HttpClient
+  definition: El servicio de Angular para hacer peticiones HTTP; devuelve observables con la respuesta
+    ya convertida desde JSON.
+- term: observable frío
+  aliases:
+  - frío
+  - fríos
+  definition: Un observable que no hace nada hasta que alguien se suscribe, y que empieza de nuevo con
+    cada suscripción.
+- term: interceptor
+  aliases:
+  - interceptores
+  definition: Una función por la que pasan todas las peticiones HTTP a la ida y a la vuelta, para añadir
+    un token, tratar errores o medir tiempos.
+- term: resource
+  aliases:
+  - resources
+  - httpResource
+  - rxResource
+  definition: Una pieza de Angular que carga datos asíncronos cuando cambian los signals que lee y expone
+    su valor, su estado y su error como signals.
+- term: RxJS
+  definition: Una librería de JavaScript para trabajar con valores que llegan a lo largo del tiempo; Angular
+    la usa en HTTP, router y formularios.
+- term: observable
+  aliases:
+  - observables
+  definition: Una secuencia de valores en el tiempo a la que te suscribes para recibirlos, como un canal
+    al que sigues.
+- term: suscribirse
+  aliases:
+  - subscribe
+  - suscripción
+  - suscripciones
+  definition: Empezar a recibir los valores de un observable; hasta entonces, un observable frío no hace
+    nada.
+- term: darse de baja
+  aliases:
+  - unsubscribe
+  definition: Dejar de recibir valores de un observable para que no siga gastando memoria ni ejecutando
+    código.
+- term: diagrama de canicas
+  aliases:
+  - marble diagram
+  - diagramas de canicas
+  definition: Un dibujo que muestra los valores de un observable sobre una línea de tiempo, con | para
+    el final y X para un error.
+- term: Subject
+  aliases:
+  - Subjects
+  definition: Un observable al que tú mismo puedes enviar valores con next; solo los reciben quienes ya
+    están suscritos.
+- term: BehaviorSubject
+  definition: Un Subject que siempre guarda su último valor y se lo da enseguida a quien se suscribe.
+- term: operador
+  aliases:
+  - operadores
+  definition: Una función de RxJS que transforma un observable en otro, como map, filter o debounceTime.
+- term: switchMap
+  aliases:
+  - mergeMap
+  - concatMap
+  - exhaustMap
+  definition: Operadores que convierten cada valor en otro observable (por ejemplo una petición) y deciden
+    qué hacer si se solapan.
+- term: debounceTime
+  definition: Un operador que espera a que pase un tiempo sin valores nuevos y entonces deja pasar el
+    último.
+- term: toSignal
+  aliases:
+  - toObservable
+  definition: Funciones de Angular que convierten un observable en signal (y al revés), dándose de baja
+    solas.
+- term: estado
+  definition: Los datos que cambian mientras se usa la aplicación y que la pantalla debe reflejar, como
+    el carrito o el usuario conectado.
+- term: estado local
+  definition: Estado que solo necesita un componente, como si un menú está abierto; vive en un signal
+    dentro de él.
+- term: estado compartido
+  definition: Estado que necesitan varios componentes, como el carrito; vive en un servicio que todos
+    inyectan.
+- term: store
+  aliases:
+  - stores
+  - almacén
+  definition: Un servicio que guarda estado compartido con tres partes - estado privado, lecturas públicas
+    y métodos para cambiarlo.
+- term: fuente de verdad
+  aliases:
+  - única fuente de verdad
+  definition: El único sitio donde se guarda un dato; el resto de valores se calculan a partir de él.
+- term: mutar
+  aliases:
+  - mutación
+  definition: Cambiar un array u objeto por dentro, como con push; un signal no se entera porque sigue
+    siendo el mismo objeto.
+- term: estado derivado
+  definition: Un dato que se calcula a partir de otro, como el total de un carrito; en Angular se crea
+    con computed.
+- term: spread
+  aliases:
+  - operador spread
+  definition: Los tres puntos (...) que copian los elementos de un array o las propiedades de un objeto
+    en uno nuevo.
+- term: NgRx
+  aliases:
+  - NgRx SignalStore
+  - NgRx Store
+  definition: Una familia de librerías de estado para Angular, útil en aplicaciones y equipos grandes.
+- term: encapsulación de estilos
+  aliases:
+  - encapsulación
+  - encapsulado
+  - encapsulados
+  definition: El mecanismo por el que los estilos de un componente solo afectan a su propia plantilla
+    y no se escapan al resto de la página.
+- term: ViewEncapsulation
+  aliases:
+  - Emulated
+  - ShadowDom
+  definition: La opción de un componente que elige cómo se aíslan sus estilos; Emulated (por defecto)
+    usa atributos, None los hace globales y ShadowDom usa el aislamiento del navegador.
+- term: Shadow DOM
+  definition: Una función del navegador que crea un árbol de elementos aislado dentro de una etiqueta,
+    con estilos que no entran ni salen.
+- term: :host
+  aliases:
+  - :host-context
+  definition: Selector CSS que, desde los estilos de un componente, apunta a su propia etiqueta anfitriona.
+- term: variable CSS
+  aliases:
+  - variables CSS
+  - custom property
+  - propiedad personalizada
+  definition: Un valor con nombre que empieza por -- y se lee con var(); se hereda hacia los elementos
+    de dentro, por eso sirve para crear temas.
+- term: tema
+  aliases:
+  - temas
+  - modo oscuro
+  definition: El conjunto de colores, tipografías y espaciados de una app, que se puede cambiar de una
+    vez, como pasar a modo oscuro.
+- term: Angular CDK
+  aliases:
+  - CDK
+  - Component Dev Kit
+  definition: Librería oficial con comportamientos reutilizables sin aspecto propio, como arrastrar y
+    soltar, capas flotantes o ayudas de accesibilidad.
+- term: Angular Material
+  aliases:
+  - Material
+  definition: Librería oficial de componentes listos para usar (botones, diálogos, tablas…) con el diseño
+    Material de Google, construida sobre el CDK.
+- term: ng add
+  definition: Comando que instala una librería y además ejecuta su instalador para configurar el proyecto
+    automáticamente.
+- term: animate.enter
+  aliases:
+  - animate.leave
+  definition: Atributos de plantilla de Angular que añaden una clase CSS cuando un elemento entra o, al
+    salir, esperan a que acabe su animación antes de borrarlo.
+- term: accesibilidad
+  aliases:
+  - a11y
+  - accesible
+  - accesibles
+  definition: Que una app la pueda usar cualquier persona, también quien usa lector de pantalla, solo
+    teclado o ve con dificultad.
+- term: ARIA
+  aliases:
+  - aria-label
+  - aria-live
+  - aria-expanded
+  definition: Atributos HTML que dan información extra a los lectores de pantalla, como el nombre de un
+    botón o si un panel está abierto.
+- term: foco
+  aliases:
+  - focus
+  - el foco
+  definition: El elemento de la página que recibe lo que se escribe con el teclado; se mueve con la tecla
+    Tab.
+- term: lector de pantalla
+  aliases:
+  - lectores de pantalla
+  definition: Programa que lee en voz alta el contenido de la pantalla para personas ciegas o con baja
+    visión.
+- term: Eager
+  aliases:
+  - ChangeDetectionStrategy.Eager
+  definition: Estrategia de detección de cambios que revisa el componente siempre que pasa la detección;
+    antes se llamaba Default.
+- term: '@defer'
+  aliases:
+  - defer
+  - vista diferida
+  definition: Bloque de plantilla cuyo contenido y código se cargan más tarde, cuando se cumple un disparador
+    como entrar en pantalla.
+- term: disparador
+  aliases:
+  - disparadores
+  - trigger
+  definition: La condición que decide cuándo se carga un bloque @defer, como on viewport, on idle u on
+    interaction.
+- term: bundle
+  aliases:
+  - bundle inicial
+  definition: Los archivos JavaScript y CSS que genera ng build con todo el código de la app; el inicial
+    es lo que se descarga antes de ver nada.
+- term: chunk
+  aliases:
+  - chunks
+  - lazy chunk
+  definition: Un trozo del bundle en un archivo aparte, que solo se descarga cuando hace falta.
+- term: LCP
+  aliases:
+  - Largest Contentful Paint
+  definition: Métrica de rendimiento que mide cuánto tarda en verse el elemento más grande de la pantalla,
+    a menudo la imagen principal.
+- term: NgOptimizedImage
+  aliases:
+  - ngSrc
+  definition: Directiva de Angular para imágenes que exige sus dimensiones, carga primero las prioritarias
+    y retrasa las demás.
+- term: Angular DevTools
+  aliases:
+  - Profiler
+  definition: Extensión del navegador para inspeccionar el árbol de componentes y medir cuánto tarda cada
+    detección de cambios.
+- term: prueba automática
+  aliases:
+  - pruebas automáticas
+  - test
+  - tests
+  definition: Un pequeño programa que comprueba que otra parte del código hace lo que debe, y que se puede
+    repetir en segundos tras cada cambio.
+- term: prueba unitaria
+  aliases:
+  - pruebas unitarias
+  definition: Prueba de una pieza aislada, como un servicio o un componente; es rápida y por eso se escriben
+    muchas.
+- term: E2E
+  aliases:
+  - prueba de extremo a extremo
+  - pruebas E2E
+  - end to end
+  definition: Prueba que abre la app en un navegador real y la usa como un usuario, de principio a fin.
+- term: Vitest
+  definition: El ejecutor de pruebas que usa Angular 22; busca los archivos .spec.ts, los ejecuta y muestra
+    cuáles pasan y cuáles fallan.
+- term: jsdom
+  definition: Una imitación del navegador escrita en JavaScript donde se pintan los componentes durante
+    las pruebas, sin abrir ninguna ventana.
+- term: spec
+  aliases:
+  - .spec.ts
+  - archivo de prueba
+  definition: Archivo de pruebas que acompaña a un componente o servicio; describe cómo debe comportarse.
+- term: describe
+  aliases:
+  - it
+  - expect
+  definition: Funciones de Vitest para escribir pruebas; describe agrupa, it define una prueba y expect
+    comprueba un resultado.
+- term: matcher
+  aliases:
+  - matchers
+  - toBe
+  - toEqual
+  definition: El método que sigue a expect y dice qué se espera, como toBe para igualdad exacta o toContain
+    para que contenga algo.
+- term: fixture
+  aliases:
+  - ComponentFixture
+  definition: El objeto que devuelve TestBed.createComponent; sirve para manejar el componente creado
+    y mirar lo que ha pintado.
+- term: whenStable
+  definition: Método del fixture que espera a que Angular termine de actualizar la pantalla antes de seguir
+    con la prueba.
+- term: espía
+  aliases:
+  - spy
+  - vi.fn
+  definition: Una función falsa que apunta cuántas veces la llaman y con qué datos, para comprobarlo después.
+- term: HttpTestingController
+  aliases:
+  - provideHttpClientTesting
+  definition: El mando de un servidor HTTP falso para pruebas; permite comprobar las peticiones y responderlas
+    con los datos que quieras.
+- term: harness
+  aliases:
+  - harnesses
+  definition: Objeto del CDK que maneja un componente en las pruebas con métodos sencillos, como pulsar
+    un botón, sin depender de su HTML interno.

@@ -1,0 +1,49 @@
+title: Tres builds, tres entornos
+summary: Predice qué entorno usa cada comando con una configuración staging añadida a mano.
+difficulty: MEDIUM
+kind: predict
+statement: |
+  El equipo ha añadido un tercer entorno, `staging`. Estos son los archivos y la parte de `angular.json` que importa (las configuraciones del target `build`; `"defaultConfiguration": "production"`; y `ng serve` usa `development`).
+
+  El componente muestra `<p>{{ entorno.nombre }}</p>`. Escribe el texto que se ve con cada comando, **una línea por comando**, en este orden: `ng serve`, `ng build`, `ng build -c staging`.
+starter: |
+  // src/environments/environment.ts
+  export const environment = { nombre: 'Producción' };
+
+  // src/environments/environment.development.ts
+  export const environment = { nombre: 'Desarrollo' };
+
+  // src/environments/environment.staging.ts
+  export const environment = { nombre: 'Pruebas' };
+
+  // angular.json (fragmento de build.configurations)
+  "production": {
+    "outputHashing": "all"
+  },
+  "staging": {
+    "fileReplacements": [
+      {
+        "replace": "src/environments/environment.ts",
+        "with": "src/environments/environment.staging.ts"
+      }
+    ]
+  },
+  "development": {
+    "optimization": false,
+    "sourceMap": true,
+    "fileReplacements": [
+      {
+        "replace": "src/environments/environment.ts",
+        "with": "src/environments/environment.development.ts"
+      }
+    ]
+  }
+hints:
+  - 'La idea: cada comando elige una configuración, y solo las que tienen `fileReplacements` cambian el archivo de entorno.'
+  - 'Qué usar: `ng serve` → `development`; `ng build` → la `defaultConfiguration`; `-c staging` → `staging`.'
+  - 'El plan: `development` sustituye por el de desarrollo; `production` no sustituye nada, así que usa `environment.ts`; `staging` sustituye por el de staging.'
+tests:
+  - output: |
+      Desarrollo
+      Producción
+      Pruebas
