@@ -1,0 +1,46 @@
+title: El orden de las rutas
+summary: Predice la dirección final y el título para rutas con parámetros, hijas y comodín.
+difficulty: HARD
+kind: predict
+statement: |
+  Lee la tabla de rutas. Para cada dirección escrita en la barra, en este orden:
+
+  1. `localhost:4200/productos/nuevo`
+  2. `localhost:4200/cuenta`
+  3. `localhost:4200/productos`
+
+  escribe **una línea** con la ruta final que muestra la barra (empezando por `/`), un espacio y el texto del `<h1>` que se ve.
+starter: |
+  // src/app/app.routes.ts
+  // Detalle       pinta <h1>Producto {{ id() }}</h1>  (id es un input)
+  // NuevoProducto pinta <h1>Nuevo producto</h1>
+  // Cuenta        pinta <h1>Mi cuenta</h1> y su <router-outlet />
+  // Perfil        pinta <p>Tus datos</p>
+  // NoEncontrada  pinta <h1>Página no encontrada</h1>
+  import { Routes } from '@angular/router';
+
+  export const routes: Routes = [
+    { path: 'productos/:id', component: Detalle },
+    { path: 'productos/nuevo', component: NuevoProducto },
+    {
+      path: 'cuenta',
+      component: Cuenta,
+      children: [
+        { path: '', redirectTo: 'perfil', pathMatch: 'full' },
+        { path: 'perfil', component: Perfil },
+      ],
+    },
+    { path: '**', component: NoEncontrada },
+  ];
+
+  // src/app/app.config.ts
+  // providers: [provideRouter(routes, withComponentInputBinding())]
+hints:
+  - 'La idea: el router usa la primera ruta que coincide, en orden, y un parámetro coincide con cualquier texto. Las redirecciones cambian la barra.'
+  - 'Qué usar: `productos/:id` aparece antes que `productos/nuevo`; dentro de `cuenta`, la hija vacía redirige; `productos` a secas no tiene dos segmentos.'
+  - 'El plan: 1) `nuevo` cae en `:id`, así que se ve el detalle con id `nuevo`. 2) `/cuenta` acaba en `/cuenta/perfil` y el `<h1>` es el de `Cuenta`. 3) Ninguna ruta es exactamente `productos`: gana el comodín.'
+tests:
+  - output: |
+      /productos/nuevo Producto nuevo
+      /cuenta/perfil Mi cuenta
+      /productos Página no encontrada

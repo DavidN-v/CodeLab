@@ -1,0 +1,32 @@
+questions:
+  - type: choice
+    prompt: 'Quieres que `inject(Pagos)` devuelva una instancia de `PagosFalsos` durante una demo. ¿Qué proveedor usas?'
+    options:
+      - '`{ provide: Pagos, useClass: PagosFalsos }`'
+      - '`{ provide: PagosFalsos, useClass: Pagos }`'
+      - '`{ provide: Pagos, useValue: PagosFalsos }`'
+    answer: 0
+    explanation: '`provide` es lo que se pide y `useClass` la clase que se construye. Con `useValue: PagosFalsos` entregarías la clase misma, no una instancia.'
+  - type: choice
+    prompt: ¿Por qué hace falta un `InjectionToken` para inyectar un objeto de configuración?
+    options:
+      - Porque las interfaces de TypeScript no existen en tiempo de ejecución y no pueden servir de token
+      - Porque los objetos no se pueden guardar en un inyector
+      - Porque `useValue` solo acepta textos
+    answer: 0
+    explanation: 'El inyector necesita una «etiqueta» que exista al ejecutar. Una interfaz desaparece al compilar; un `InjectionToken` es un objeto real.'
+  - type: output
+    prompt: '¿Qué muestra `{{ nombre }}` si el componente hace `nombre = inject(NOMBRE_TIENDA)`?'
+    code: |
+      export const NOMBRE_TIENDA = new InjectionToken<string>('NOMBRE_TIENDA', {
+        providedIn: 'root',
+        factory: () => 'Mi tienda',
+      });
+
+      // app.config.ts
+      providers: [
+        { provide: NOMBRE_TIENDA, useValue: 'Forja Shop' },
+      ]
+    answer: |
+      Forja Shop
+    explanation: 'La `factory` del token solo se usa si nadie lo provee. Aquí `appConfig` lo provee con `useValue`, y eso gana.'

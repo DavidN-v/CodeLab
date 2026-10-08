@@ -1,0 +1,57 @@
+title: Una prueba con doble
+summary: Ordena una prueba que sustituye un servicio por un doble con useValue.
+difficulty: HARD
+kind: parsons
+statement: |
+  El componente `Saludo` muestra `Hola, {{ sesion.nombre() }}` usando el servicio `Sesion`. Queremos probarlo **sin** la sesión real, con un doble cuyo nombre sea `Ada`.
+
+  Ordena las líneas de la prueba. Cuidado: alguna línea sobra.
+starter: |
+  // src/app/saludo.spec.ts
+  import { signal } from '@angular/core';
+  import { TestBed } from '@angular/core/testing';
+  import { Sesion } from './sesion';
+  import { Saludo } from './saludo';
+
+  describe('Saludo', () => {
+    it('usa el nombre de la sesión', async () => {
+  {{lines}}
+    });
+  });
+solution: |
+  // src/app/saludo.spec.ts
+  import { signal } from '@angular/core';
+  import { TestBed } from '@angular/core/testing';
+  import { Sesion } from './sesion';
+  import { Saludo } from './saludo';
+
+  describe('Saludo', () => {
+    it('usa el nombre de la sesión', async () => {
+      const sesionFalsa = { nombre: signal('Ada') };
+      TestBed.configureTestingModule({
+        providers: [{ provide: Sesion, useValue: sesionFalsa }],
+      });
+      const fixture = TestBed.createComponent(Saludo);
+      await fixture.whenStable();
+      expect(fixture.nativeElement.textContent).toContain('Hola, Ada');
+    });
+  });
+lines:
+  - "    const sesionFalsa = { nombre: signal('Ada') };"
+  - '    TestBed.configureTestingModule({'
+  - '      providers: [{ provide: Sesion, useValue: sesionFalsa }],'
+  - '    });'
+  - '    const fixture = TestBed.createComponent(Saludo);'
+  - '    await fixture.whenStable();'
+  - "    expect(fixture.nativeElement.textContent).toContain('Hola, Ada');"
+distractors:
+  - '      providers: [{ provide: sesionFalsa, useValue: Sesion }],'
+  - '    const sesionFalsa = new Sesion();'
+hints:
+  - 'La idea: primero preparas el doble, después le dices al inyector de prueba que lo use, luego creas el componente, esperas a que pinte y compruebas el texto.'
+  - 'Qué usar: un objeto con una signal `nombre`, `TestBed.configureTestingModule` con un proveedor `{ provide: TokenReal, useValue: doble }`, `TestBed.createComponent` y `whenStable`.'
+  - 'El plan: doble → configureTestingModule (con su línea de providers y su cierre) → createComponent → await whenStable → expect. Hay que configurar antes de crear el componente.'
+tests:
+  - output: |
+      ✓ Saludo > usa el nombre de la sesión
+    sample: true

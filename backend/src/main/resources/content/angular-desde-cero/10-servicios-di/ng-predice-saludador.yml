@@ -1,0 +1,60 @@
+title: ¿Quién saluda?
+summary: Predice qué implementación recibe cada componente según dónde se provee.
+difficulty: MEDIUM
+kind: predict
+statement: |
+  `Saludador` es una clase abstracta usada como token. El componente padre y uno de los hijos la proveen con clases distintas.
+
+  Escribe el texto que se ve en la página, **una línea por cada `<p>`**.
+starter: |
+  // src/app/saludos.ts
+  import { Component, inject } from '@angular/core';
+
+  export abstract class Saludador {
+    abstract saludar(nombre: string): string;
+  }
+
+  export class Formal implements Saludador {
+    saludar(nombre: string): string {
+      return 'Buenos días, ' + nombre;
+    }
+  }
+
+  export class Informal implements Saludador {
+    saludar(nombre: string): string {
+      return '¡Hola, ' + nombre + '!';
+    }
+  }
+
+  @Component({
+    selector: 'app-amiga',
+    providers: [{ provide: Saludador, useClass: Informal }],
+    template: `<p>{{ saludador.saludar('Ada') }}</p>`,
+  })
+  export class Amiga {
+    protected readonly saludador = inject(Saludador);
+  }
+
+  @Component({
+    selector: 'app-cliente',
+    template: `<p>{{ saludador.saludar('Alan') }}</p>`,
+  })
+  export class Cliente {
+    protected readonly saludador = inject(Saludador);
+  }
+
+  @Component({
+    selector: 'app-recepcion',
+    imports: [Amiga, Cliente],
+    providers: [{ provide: Saludador, useClass: Formal }],
+    template: `<app-amiga /><app-cliente />`,
+  })
+  export class Recepcion {}
+hints:
+  - 'La idea: cada `inject(Saludador)` busca un proveedor empezando por su propio componente y subiendo por los padres.'
+  - 'Qué usar: `Amiga` tiene su propio `providers`; `Cliente` no tiene, así que sube hasta `Recepcion`.'
+  - 'El plan: Amiga encuentra `Informal` en sí misma; Cliente encuentra `Formal` en su padre. Aplica cada `saludar` a su nombre.'
+tests:
+  - output: |
+      ¡Hola, Ada!
+      Buenos días, Alan

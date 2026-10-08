@@ -1,0 +1,27 @@
+questions:
+  - type: choice
+    prompt: ¿Qué hace `<router-outlet />`?
+    options:
+      - Marca el lugar donde se pinta el componente de la ruta actual
+      - Crea un enlace a otra página
+      - Define la tabla de rutas
+    answer: 0
+    explanation: 'Es el hueco que el router rellena. La tabla de rutas está en `app.routes.ts` y los enlaces se hacen con `routerLink` (lección siguiente).'
+  - type: choice
+    prompt: '¿Qué `path` corresponde a la dirección `localhost:4200/contacto`?'
+    options:
+      - "`'contacto'`"
+      - "`'/contacto'`"
+      - "`'localhost:4200/contacto'`"
+    answer: 0
+    explanation: 'Los `path` se escriben sin la barra inicial y sin el dominio. Con barra inicial, Angular da error al arrancar.'
+  - type: output
+    prompt: '¿Qué texto tiene la pestaña del navegador al abrir `localhost:4200/ayuda`?'
+    code: |
+      export const routes: Routes = [
+        { path: '', component: Inicio, title: 'Inicio' },
+        { path: 'ayuda', component: Ayuda, title: 'Centro de ayuda' },
+      ];
+    answer: |
+      Centro de ayuda
+    explanation: 'La dirección `/ayuda` coincide con la ruta `ayuda`, y el router pone su `title` en la pestaña.'

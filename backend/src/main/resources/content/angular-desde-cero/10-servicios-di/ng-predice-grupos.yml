@@ -1,0 +1,64 @@
+title: Numeradores por grupo
+summary: Predice cuántas instancias de un servicio hay cuando se provee en la raíz y en un componente.
+difficulty: HARD
+kind: predict
+statement: |
+  `Numerador` está registrado en la raíz con `@Service()`, pero el componente `Grupo` también lo provee en sus `providers`.
+
+  Escribe el texto que se ve en la página, **una línea por cada `<p>`**, en el orden en que aparecen.
+starter: |
+  // src/app/grupos.ts
+  import { Component, Service, inject } from '@angular/core';
+
+  @Service()
+  export class Numerador {
+    private ultimo = 0;
+
+    siguiente(): number {
+      this.ultimo = this.ultimo + 1;
+      return this.ultimo;
+    }
+  }
+
+  @Component({
+    selector: 'app-ficha',
+    template: `<p>{{ etiqueta() }} {{ numero }}</p>`,
+  })
+  export class Ficha {
+    protected readonly numero = inject(Numerador).siguiente();
+    protected etiqueta(): string {
+      return 'Ficha';
+    }
+  }
+
+  @Component({
+    selector: 'app-grupo',
+    imports: [Ficha],
+    providers: [Numerador],
+    template: `<app-ficha /><app-ficha />`,
+  })
+  export class Grupo {}
+
+  @Component({
+    selector: 'app-tablero',
+    imports: [Ficha, Grupo],
+    template: `
+      <app-ficha />
+      <app-grupo />
+      <app-ficha />
+      <app-grupo />
+    `,
+  })
+  export class Tablero {}
+hints:
+  - 'La idea: cuenta cuántos `Numerador` distintos existen y a cuál llega cada ficha.'
+  - 'Qué usar: las fichas sueltas del tablero suben hasta la raíz; las que están dentro de un `Grupo` encuentran antes el `Numerador` que crea ese grupo. Cada `<app-grupo>` crea el suyo.'
+  - 'El plan: hay tres numeradores (el raíz y uno por grupo). Las fichas sueltas comparten el raíz (1 y luego 2); cada grupo empieza su cuenta en 1.'
+tests:
+  - output: |
+      Ficha 1
+      Ficha 1
+      Ficha 2
+      Ficha 2
+      Ficha 1
+      Ficha 2

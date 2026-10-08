@@ -1,0 +1,69 @@
+title: Rutas que se cargan cuando hacen falta
+summary: Completa una tabla con carga diferida, un guard y un resolver.
+difficulty: HARD
+kind: fill
+statement: |
+  Completa la tabla de rutas para que:
+
+  1. el componente `Ofertas` se descargue **solo** al visitar `/ofertas`;
+  2. todo el **array de rutas** `adminRoutes` se descargue solo al visitar `/admin`, y que antes de entrar se ejecute el guard `authGuard`;
+  3. `/fichas/:id` ejecute `productoResolver` antes de mostrarse y entregue el resultado al `input()` llamado `ficha`.
+
+  Cada hueco es el **nombre de una propiedad** de la ruta.
+starter: |
+  // src/app/app.routes.ts
+  import { Routes } from '@angular/router';
+  import { authGuard } from './auth-guard';
+  import { productoResolver } from './producto-resolver';
+
+  export const routes: Routes = [
+    {
+      path: 'ofertas',
+      {{?}}: () => import('./ofertas/ofertas').then((m) => m.Ofertas),
+    },
+    {
+      path: 'admin',
+      {{?}}: [authGuard],
+      {{?}}: () => import('./admin/admin.routes').then((m) => m.adminRoutes),
+    },
+    {
+      path: 'fichas/:id',
+      loadComponent: () => import('./ficha-producto/ficha-producto').then((m) => m.FichaProducto),
+      {{?}}: { ficha: productoResolver },
+    },
+  ];
+answers:
+  - loadComponent
+  - canActivate
+  - loadChildren
+  - resolve
+solution: |
+  // src/app/app.routes.ts
+  import { Routes } from '@angular/router';
+  import { authGuard } from './auth-guard';
+  import { productoResolver } from './producto-resolver';
+
+  export const routes: Routes = [
+    {
+      path: 'ofertas',
+      loadComponent: () => import('./ofertas/ofertas').then((m) => m.Ofertas),
+    },
+    {
+      path: 'admin',
+      canActivate: [authGuard],
+      loadChildren: () => import('./admin/admin.routes').then((m) => m.adminRoutes),
+    },
+    {
+      path: 'fichas/:id',
+      loadComponent: () => import('./ficha-producto/ficha-producto').then((m) => m.FichaProducto),
+      resolve: { ficha: productoResolver },
+    },
+  ];
+hints:
+  - 'La idea: hay dos formas de carga diferida (un componente o un array de rutas), una propiedad para los guards que se ejecutan al entrar y otra para los datos previos.'
+  - 'Qué usar: `loadComponent` cuando el `import()` devuelve un componente, `loadChildren` cuando devuelve `Routes`; `canActivate` recibe una lista de guards; `resolve` un objeto `{ clave: resolver }`.'
+  - 'El plan: `loadComponent` en ofertas; `canActivate` y `loadChildren` en admin; `resolve` en fichas.'
+tests:
+  - output: |
+      ng build → Lazy chunk files: ofertas, admin-routes, ficha-producto
+    sample: true

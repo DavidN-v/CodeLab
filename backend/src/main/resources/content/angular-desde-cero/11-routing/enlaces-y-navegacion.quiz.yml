@@ -1,0 +1,24 @@
+questions:
+  - type: choice
+    prompt: ¿Qué diferencia hay entre `<a href="/productos">` y `<a routerLink="/productos">` dentro de tu app?
+    options:
+      - '`href` recarga toda la aplicación; `routerLink` cambia de página sin recargar'
+      - Ninguna, son equivalentes
+      - '`routerLink` solo funciona con rutas que tienen parámetros'
+    answer: 0
+    explanation: '`routerLink` cancela la recarga y le pide al router que cambie el componente del outlet. Con `href`, el navegador pide la página de nuevo y se pierde el estado.'
+  - type: choice
+    prompt: El enlace de Inicio (`routerLink="/"`) aparece resaltado en todas las páginas. ¿Cómo lo arreglas?
+    options:
+      - 'Añadiendo `[routerLinkActiveOptions]="{ exact: true }"`'
+      - Cambiando `routerLink="/"` por `href="/"`
+      - Quitando `RouterLinkActive` de `imports`
+    answer: 0
+    explanation: 'Por defecto, un enlace está activo si la dirección actual **empieza** por la suya, y todas empiezan por `/`. Con `exact: true` solo se activa en `/`.'
+  - type: output
+    prompt: '¿A qué dirección lleva este código? Escribe solo la ruta, empezando por `/`.'
+    code: |
+      this.router.navigate(['/productos', 7, 'opiniones']);
+    answer: |
+      /productos/7/opiniones
+    explanation: 'El router une los segmentos del array con `/`. El número `7` se convierte en texto.'

@@ -1,0 +1,25 @@
+questions:
+  - type: choice
+    prompt: '`Lista` tiene `providers: [Filtro]` y dentro hay dos componentes `Buscador` y `Resultados` que hacen `inject(Filtro)`. ¿Cuántas instancias de `Filtro` hay si la página muestra una sola `Lista`?'
+    options:
+      - Una, compartida por Buscador y Resultados
+      - Dos, una para cada hijo
+      - Ninguna, porque los hijos no tienen `providers`
+    answer: 0
+    explanation: 'Los hijos no tienen proveedor propio, así que suben hasta `Lista` y usan la instancia que creó su inyector.'
+  - type: output
+    prompt: 'Con el `Marcador` de la lección (`providers: [Contador]`), pulsas tres veces el primer botón y ninguna el segundo. ¿Qué texto tienen los dos botones? Uno por línea.'
+    code: |
+      <app-marcador /><app-marcador />
+    answer: |
+      Equipo: 3
+      Equipo: 0
+    explanation: 'Cada `<app-marcador>` tiene su propio inyector de elemento con su propio `Contador`, así que los clics del primero no afectan al segundo.'
+  - type: choice
+    prompt: '¿Qué significa el error `NG0201: No provider found for ''Registro''`?'
+    options:
+      - Que ningún inyector, desde el componente hasta la raíz, sabe crear un `Registro`
+      - Que `Registro` tiene un error de sintaxis
+      - Que llamaste a `inject()` fuera de un contexto de inyección
+    answer: 0
+    explanation: 'Angular subió por todo el árbol sin encontrar un proveedor. Añade `Registro` a algún `providers` o márcalo con `@Service()`. Llamar a `inject()` en mal momento es otro error, el NG0203.'

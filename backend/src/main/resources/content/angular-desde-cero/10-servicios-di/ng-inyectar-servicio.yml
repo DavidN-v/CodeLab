@@ -1,0 +1,55 @@
+title: Pedir el servicio
+summary: Completa un servicio con @Service() y un componente que lo pide con inject().
+difficulty: EASY
+kind: fill
+statement: |
+  El servicio `Favoritos` guarda cuántos productos ha marcado la persona. El componente `ContadorFavoritos` debe mostrar ese número.
+
+  Completa los huecos:
+
+  1. el decorador de Angular 22 que registra `Favoritos` como servicio en el inyector raíz;
+  2. la función que pide el servicio al inyector (aparece en el `import` y en el componente).
+starter: |
+  // src/app/favoritos.ts
+  import { Component, Service, {{?}}, signal } from '@angular/core';
+
+  @{{?}}()
+  export class Favoritos {
+    readonly total = signal(4);
+  }
+
+  @Component({
+    selector: 'app-contador-favoritos',
+    template: `<span>❤ {{ favoritos.total() }}</span>`,
+  })
+  export class ContadorFavoritos {
+    protected readonly favoritos = {{?}}(Favoritos);
+  }
+answers:
+  - inject
+  - Service
+  - inject
+solution: |
+  // src/app/favoritos.ts
+  import { Component, Service, inject, signal } from '@angular/core';
+
+  @Service()
+  export class Favoritos {
+    readonly total = signal(4);
+  }
+
+  @Component({
+    selector: 'app-contador-favoritos',
+    template: `<span>❤ {{ favoritos.total() }}</span>`,
+  })
+  export class ContadorFavoritos {
+    protected readonly favoritos = inject(Favoritos);
+  }
+hints:
+  - 'La idea: el servicio se marca con un decorador para que Angular sepa crearlo, y el componente lo pide en lugar de hacer `new`.'
+  - 'Qué usar: el decorador nuevo de Angular 22 que genera `ng generate service`, y la función de `@angular/core` que pide dependencias.'
+  - 'El plan: `@Service()` sobre la clase, `inject` en el `import` y `inject(Favoritos)` en el campo.'
+tests:
+  - output: |
+      ❤ 4
+    sample: true

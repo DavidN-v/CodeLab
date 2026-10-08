@@ -1,0 +1,35 @@
+questions:
+  - type: choice
+    prompt: ¿Cuándo crea Angular la instancia de un servicio con `@Service()`?
+    options:
+      - La primera vez que alguien lo pide con `inject()`
+      - Al arrancar la aplicación, siempre
+      - Cada vez que alguien lo pide
+    answer: 0
+    explanation: 'El inyector crea el servicio bajo demanda, la primera vez, y después devuelve siempre esa misma instancia.'
+  - type: choice
+    prompt: ¿Qué línea provoca el error NG0203?
+    code: |
+      export class Perfil {
+        private readonly sesion = inject(Sesion);   // A
+        constructor() {
+          const log = inject(Registro);             // B
+        }
+        guardar() {
+          const api = inject(Api);                  // C
+        }
+      }
+    options:
+      - La C
+      - La A
+      - La B
+    answer: 0
+    explanation: 'Los campos (A) y el constructor (B) son contexto de inyección. Un método como `guardar()` se ejecuta más tarde, cuando Angular ya no está construyendo el componente.'
+  - type: choice
+    prompt: '¿Qué equivale a `@Service()` en código anterior a Angular 22?'
+    options:
+      - "`@Injectable({ providedIn: 'root' })`"
+      - '`@Component({ providers: [] })`'
+      - '`@Injectable()` sin opciones'
+    answer: 0
+    explanation: '`@Service()` se autoprovee en la raíz, igual que `providedIn: ''root''`. Un `@Injectable()` sin opciones no se registra en ningún sitio: hay que añadirlo a una lista `providers`.'
