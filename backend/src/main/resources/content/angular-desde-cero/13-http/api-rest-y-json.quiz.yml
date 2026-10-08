@@ -1,0 +1,25 @@
+questions:
+  - type: choice
+    prompt: Quieres crear una tarea nueva en la API. ¿Qué petición haces?
+    options:
+      - '`POST /api/tareas` con la tarea en el cuerpo'
+      - '`GET /api/tareas/nueva`'
+      - '`DELETE /api/tareas` con la tarea en el cuerpo'
+    answer: 0
+    explanation: 'En REST, `POST` sobre la colección crea un elemento nuevo, y los datos van en el cuerpo. `GET` solo lee y `DELETE` borra.'
+  - type: choice
+    prompt: La API responde con el código `401`. ¿Qué significa?
+    options:
+      - El servidor no sabe quién eres (falta la sesión o caducó)
+      - El servidor ha fallado por un error en su código
+      - Todo ha ido bien
+    answer: 0
+    explanation: 'Los `4xx` son errores de quien pide. `401` es «no autenticado»: normalmente falta el token o ha caducado. Un fallo del servidor sería un `5xx`.'
+  - type: choice
+    prompt: ¿Cuál de estos textos es JSON válido?
+    options:
+      - '`{ "titulo": "Pan", "hecha": false }`'
+      - '`{ titulo: "Pan", hecha: false }`'
+      - "`{ 'titulo': 'Pan', 'hecha': false }`"
+    answer: 0
+    explanation: 'En JSON las claves y los textos van siempre entre comillas **dobles**. Las otras dos opciones son objetos válidos de JavaScript, pero no JSON.'

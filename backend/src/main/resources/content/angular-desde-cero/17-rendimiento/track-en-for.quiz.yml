@@ -1,0 +1,25 @@
+questions:
+  - type: choice
+    prompt: Cada 10 segundos recibes del servidor una lista nueva de pedidos (objetos nuevos, cada uno con su `id`). ¿Qué `track` usas?
+    options:
+      - '`track pedido.id`'
+      - '`track pedido`'
+      - '`track $index`'
+    answer: 0
+    explanation: 'Los objetos son copias nuevas en cada respuesta, así que `track pedido` los consideraría todos distintos y recrearía la lista entera (aviso NG0956). `$index` se equivoca si los pedidos cambian de orden. El `id` es único y estable.'
+  - type: choice
+    prompt: Una lista usa `track $index` y cada fila tiene un campo de texto. Escribes en la primera fila y borras su elemento. ¿Qué pasa?
+    options:
+      - Lo que escribiste aparece en la fila del elemento que antes era el segundo
+      - Lo que escribiste desaparece con su fila
+      - Angular da un error de compilación
+    answer: 0
+    explanation: 'Con `$index` la clave es la posición. Tras borrar, la posición 0 sigue existiendo (ahora con el segundo elemento), así que Angular reutiliza ese DOM con el campo tal como estaba y borra la última posición.'
+  - type: choice
+    prompt: En la consola del navegador aparece el aviso NG0955. ¿Qué significa?
+    options:
+      - 'La expresión de `track` dio claves repetidas: dos elementos tienen la misma clave'
+      - Te falta escribir `track` en el `@for`
+      - La lista está vacía y falta un bloque `@empty`
+    answer: 0
+    explanation: 'NG0955 avisa de claves duplicadas. Olvidar `track` no es un aviso: es un error de compilación, porque en `@for` es obligatorio.'

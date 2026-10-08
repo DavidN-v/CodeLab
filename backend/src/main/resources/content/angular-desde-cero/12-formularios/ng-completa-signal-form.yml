@@ -1,0 +1,80 @@
+title: Una nota con Signal Forms
+summary: Completa un formulario de Signal Forms con una regla, una caja y un mensaje de error.
+difficulty: MEDIUM
+kind: fill
+statement: |
+  Este componente edita el título de una nota con **Signal Forms** (`@angular/forms/signals`, estable en Angular 22). El título es obligatorio y debe tener al menos 3 letras. Mientras no sea válido, se muestra «Título demasiado corto».
+
+  Completa los tres huecos, en orden:
+
+  1. La directiva que conecta la caja con el campo `nota.titulo`.
+  2. La propiedad del estado del campo que vale `true` cuando tiene algún error.
+  3. La regla que hace el título obligatorio.
+
+  Al cargar, el modelo vale `'Hi'` (dos letras), así que la página muestra:
+
+  ```text
+  Título demasiado corto
+  Título: Hi
+  ```
+starter: |
+  // src/app/nota/nota.ts
+  import { Component, signal } from '@angular/core';
+  import { form, FormField, minLength, required } from '@angular/forms/signals';
+
+  @Component({
+    selector: 'app-nota',
+    imports: [FormField],
+    template: `
+      <input [{{?}}]="nota.titulo" />
+      @if (nota.titulo().{{?}}()) {
+        <p>Título demasiado corto</p>
+      }
+      <p>Título: {{ modelo().titulo }}</p>
+    `,
+  })
+  export class Nota {
+    protected readonly modelo = signal({ titulo: 'Hi' });
+
+    protected readonly nota = form(this.modelo, (campo) => {
+      {{?}}(campo.titulo);
+      minLength(campo.titulo, 3);
+    });
+  }
+answers:
+  - formField
+  - invalid
+  - required
+solution: |
+  // src/app/nota/nota.ts
+  import { Component, signal } from '@angular/core';
+  import { form, FormField, minLength, required } from '@angular/forms/signals';
+
+  @Component({
+    selector: 'app-nota',
+    imports: [FormField],
+    template: `
+      <input [formField]="nota.titulo" />
+      @if (nota.titulo().invalid()) {
+        <p>Título demasiado corto</p>
+      }
+      <p>Título: {{ modelo().titulo }}</p>
+    `,
+  })
+  export class Nota {
+    protected readonly modelo = signal({ titulo: 'Hi' });
+
+    protected readonly nota = form(this.modelo, (campo) => {
+      required(campo.titulo);
+      minLength(campo.titulo, 3);
+    });
+  }
+hints:
+  - 'La idea: la caja necesita una directiva que la conecte con el campo, el `@if` necesita preguntar si el campo tiene errores, y el esquema necesita la regla de «obligatorio».'
+  - 'Qué usar: la directiva se llama igual que la clase importada `FormField`, pero empezando en minúscula. El estado de un campo tiene `valid()` e `invalid()`. Las reglas vienen importadas en la línea de `@angular/forms/signals`.'
+  - 'El plan: [formField]="nota.titulo"; @if (nota.titulo().invalid()); y en el esquema required(campo.titulo).'
+tests:
+  - output: |
+      Título demasiado corto
+      Título: Hi
+    sample: true

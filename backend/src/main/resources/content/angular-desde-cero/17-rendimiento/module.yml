@@ -1,0 +1,27 @@
+lessons:
+  - slug: deteccion-de-cambios
+    title: Detección de cambios sin zone.js
+    summary: Cómo decide Angular 22 cuándo repintar, y por qué OnPush es el modo por defecto.
+    minutes: 9
+  - slug: track-en-for
+    title: Por qué importa track en @for
+    summary: Darle identidad a cada elemento para reutilizar el DOM en lugar de recrearlo.
+    minutes: 7
+  - slug: defer
+    title: Cargar más tarde con @defer
+    summary: Disparadores, precarga y los bloques placeholder, loading y error.
+    minutes: 9
+  - slug: bundle-y-carga-diferida
+    title: El bundle, las rutas diferidas y los budgets
+    summary: Qué se descarga al abrir la app, cómo recortarlo y cómo vigilar su tamaño.
+    minutes: 9
+  - slug: medir-e-imagenes
+    title: Medir primero y optimizar imágenes
+    summary: Lighthouse, Angular DevTools y NgOptimizedImage para cargar rápido lo importante.
+    minutes: 8
+exercises:
+  - ng-completa-track-productos
+  - ng-completa-imagen-prioritaria
+  - ng-predice-onpush-timeout
+  - ng-ordena-ruta-diferida
+  - ng-completa-defer-comentarios

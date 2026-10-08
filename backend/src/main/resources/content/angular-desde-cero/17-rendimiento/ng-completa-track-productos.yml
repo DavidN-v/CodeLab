@@ -1,0 +1,42 @@
+title: Una lista que sabe quién es quién
+summary: Completa un @for con un track correcto y un bloque para la lista vacía.
+difficulty: EASY
+kind: fill
+statement: |
+  El catálogo recibe del servidor, cada cierto tiempo, una lista **nueva** de productos (objetos nuevos cada vez). Cada producto tiene un `id` único.
+
+  Completa los huecos para que:
+
+  1. Angular identifique cada producto por su `id` y reutilice su `<li>` entre actualizaciones (dos huecos: la palabra clave y la expresión).
+  2. Si la lista está vacía, se vea «No hay productos» (el nombre del bloque, sin la `@`).
+starter: |
+  <!-- src/app/catalogo/catalogo.html -->
+  <ul>
+    @for (producto of productos(); {{?}} {{?}}) {
+      <li>{{ producto.nombre }}: {{ producto.precio }} €</li>
+    } @{{?}} {
+      <li>No hay productos</li>
+    }
+  </ul>
+solution: |
+  <!-- src/app/catalogo/catalogo.html -->
+  <ul>
+    @for (producto of productos(); track producto.id) {
+      <li>{{ producto.nombre }}: {{ producto.precio }} €</li>
+    } @empty {
+      <li>No hay productos</li>
+    }
+  </ul>
+answers:
+  - track
+  - producto.id
+  - empty
+hints:
+  - 'La idea: `@for` necesita saber qué dato identifica a cada elemento, y tiene un bloque opcional para cuando no hay elementos.'
+  - 'Qué usar: la palabra clave obligatoria de `@for` seguida de una clave única y estable. `$index` fallaría al borrar o reordenar, y el objeto entero fallaría porque llegan copias nuevas.'
+  - 'El plan: `track producto.id` en los dos primeros huecos y `empty` en el tercero.'
+tests:
+  - output: |
+      Libro: 20 €
+      Taza: 8 €
+    sample: true

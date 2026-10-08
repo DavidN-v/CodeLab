@@ -1,0 +1,37 @@
+questions:
+  - type: choice
+    prompt: ¿Cuál es la estrategia de detección de cambios por defecto de un componente en Angular 22?
+    options:
+      - '`OnPush`'
+      - '`Eager`'
+      - '`Default`'
+    answer: 0
+    explanation: 'En Angular 22 `OnPush` está activado por defecto y `ng generate component` lo da por hecho. `Eager` es la estrategia clásica de revisar siempre, y `Default` es su nombre antiguo, ya obsoleto.'
+  - type: output
+    prompt: 'En una app zoneless, el usuario pulsa «Cargar». Pasan dos segundos. ¿Qué se ve en el párrafo? (`mensaje` es una propiedad normal, no un signal, y el componente es OnPush.)'
+    code: |
+      @Component({
+        selector: 'app-aviso',
+        template: `
+          <p>{{ mensaje }}</p>
+          <button type="button" (click)="cargar()">Cargar</button>
+        `,
+      })
+      export class Aviso {
+        protected mensaje = 'Esperando';
+
+        protected cargar() {
+          setTimeout(() => (this.mensaje = 'Listo'), 1000);
+        }
+      }
+    answer: |
+      Esperando
+    explanation: 'El clic sí es un aviso, pero en ese momento `mensaje` todavía vale «Esperando». Un segundo después cambia una propiedad normal dentro de un `setTimeout`: nadie avisa a Angular y la pantalla no se actualiza. Con `mensaje = signal(...)` y `.set(''Listo'')` sí cambiaría.'
+  - type: choice
+    prompt: ¿Para qué sirve el Profiler de Angular DevTools?
+    options:
+      - Para grabar las detecciones de cambios y ver qué componentes se revisaron y cuánto tardaron
+      - Para comprimir el bundle antes de publicar
+      - Para ejecutar las pruebas unitarias en el navegador
+    answer: 0
+    explanation: 'Angular DevTools es una extensión del navegador. Su Profiler graba cada ciclo de detección de cambios con el tiempo de cada componente, así puedes encontrar el que va lento.'

@@ -1,0 +1,27 @@
+questions:
+  - type: choice
+    prompt: En un buscador, la persona escribe «an» y enseguida «ana». ¿Qué operador evita que la respuesta lenta de «an» pise la de «ana»?
+    options:
+      - '`switchMap`, porque cancela la petición anterior al llegar un texto nuevo'
+      - '`mergeMap`, porque ejecuta las dos a la vez'
+      - '`concatMap`, porque las pone en fila'
+    answer: 0
+    explanation: 'Con `switchMap` solo vale la última búsqueda: la petición de «an» se cancela. Con `mergeMap` las dos llegan y la más lenta puede sobrescribir a la buena.'
+  - type: choice
+    prompt: El botón «Pagar» lanza una petición y la persona lo pulsa tres veces seguidas. ¿Qué operador hace que solo se pague una vez?
+    options:
+      - '`exhaustMap`'
+      - '`mergeMap`'
+      - '`switchMap`'
+    answer: 0
+    explanation: '`exhaustMap` ignora los valores nuevos mientras el anterior sigue en marcha. `mergeMap` pagaría tres veces y `switchMap` cancelaría el pago a medias (en el navegador; el servidor quizá ya lo recibió).'
+  - type: choice
+    prompt: ¿Qué recibe el `subscribe` con este código?
+    code: |
+      textos$.pipe(map((t) => this.api.buscar(t))).subscribe((r) => console.log(r));
+    options:
+      - Observables sin lanzar, uno por texto; las peticiones nunca salen
+      - Los resultados de cada búsqueda
+      - Un error de compilación siempre
+    answer: 0
+    explanation: '`map` devuelve lo que devuelve la función: un Observable. Nadie se suscribe a él, así que es frío y no hace nada. Para eso hacen falta `switchMap`, `mergeMap`…'

@@ -1,0 +1,54 @@
+title: La lista que cambia sola
+summary: Sigue push, insert y removeAt sobre un FormArray y predice lo que se pinta.
+difficulty: HARD
+kind: predict
+statement: |
+  El constructor de este componente modifica la lista de tareas **antes** de que se pinte la página. Todas las tareas son obligatorias.
+
+  ¿Qué se ve en la página? Escribe el texto de cada `<p>` y de cada `<li>`, **una línea por elemento**, en el orden en que aparecen.
+starter: |
+  // src/app/lista/lista.ts
+  import { Component, inject } from '@angular/core';
+  import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+
+  @Component({
+    selector: 'app-lista',
+    imports: [ReactiveFormsModule],
+    template: `
+      <p>{{ form.controls.tareas.length }} tareas</p>
+      <ul>
+        @for (tarea of form.controls.tareas.controls; track tarea) {
+          <li>{{ tarea.value }}</li>
+        }
+      </ul>
+      <p>Válido: {{ form.valid }}</p>
+    `,
+  })
+  export class Lista {
+    private readonly fb = inject(NonNullableFormBuilder);
+
+    protected readonly form = this.fb.group({
+      tareas: this.fb.array([
+        this.fb.control('Estudiar', Validators.required),
+        this.fb.control('', Validators.required),
+      ]),
+    });
+
+    constructor() {
+      const tareas = this.form.controls.tareas;
+      tareas.push(this.fb.control('Comprar pan', Validators.required));
+      tareas.insert(0, this.fb.control('Llamar a Ana', Validators.required));
+      tareas.removeAt(2);
+    }
+  }
+hints:
+  - 'La idea: la lista empieza con dos elementos y cada una de las tres operaciones del constructor la cambia. Al final, la plantilla pinta cómo ha quedado.'
+  - 'Qué usar: escribe la lista en un papel después de cada paso. `push` añade al final, `insert(0, ...)` añade al principio y `removeAt(2)` quita el que está en la posición 2 (se cuenta desde 0) en ese momento.'
+  - 'El plan: [Estudiar, ""] → push → [Estudiar, "", Comprar pan] → insert(0) → [Llamar a Ana, Estudiar, "", Comprar pan] → removeAt(2) quita… ¿cuál? Después mira si queda algún campo vacío para saber si es válido.'
+tests:
+  - output: |
+      3 tareas
+      Llamar a Ana
+      Estudiar
+      Comprar pan
+      Válido: true

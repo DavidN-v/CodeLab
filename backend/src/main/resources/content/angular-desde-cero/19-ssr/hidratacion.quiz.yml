@@ -1,0 +1,29 @@
+questions:
+  - type: choice
+    prompt: ¿Qué hace Angular al hidratar una página que llegó renderizada del servidor?
+    options:
+      - Reutiliza el HTML existente y le conecta los eventos, los signals y los componentes
+      - Borra el HTML del servidor y lo vuelve a pintar desde cero
+      - Pide otra vez la página al servidor
+    answer: 0
+    explanation: 'Hidratar es «dar vida» al HTML que ya está. Tirarlo y repintarlo es justo lo que la hidratación evita: provocaría parpadeos y trabajo repetido.'
+  - type: choice
+    prompt: Un usuario pulsa un botón antes de que Angular termine de hidratar. ¿Qué pasa en Angular 22 con `provideClientHydration()`?
+    options:
+      - El clic se guarda y se repite cuando Angular termina de hidratar
+      - El clic se pierde y el usuario tiene que volver a pulsar
+      - La página se recarga
+    answer: 0
+    explanation: 'La repetición de eventos viene incluida: un pequeño script captura los clics de los elementos marcados con `jsaction` y Angular los ejecuta al terminar de hidratar.'
+  - type: choice
+    prompt: ¿Qué envía el servidor para este bloque?
+    code: |
+      @defer (hydrate on viewport) {
+        <app-comentarios />
+      }
+    options:
+      - El HTML de `<app-comentarios>` ya renderizado; el navegador lo hidrata cuando entra en pantalla
+      - Nada; el componente se renderiza solo en el navegador al hacer scroll
+      - Un mensaje de carga
+    answer: 0
+    explanation: 'Con `hydrate`, el servidor renderiza el contenido completo y solo se retrasa la descarga y la hidratación. Un `@defer` normal, en cambio, enviaría su `@placeholder`.'

@@ -1,0 +1,30 @@
+questions:
+  - type: output
+    prompt: ¿Qué aparece en la consola?
+    code: |
+      const s = new Subject<number>();
+      s.next(1);
+      s.subscribe((n) => console.log('recibo ' + n));
+      s.next(2);
+    answer: |
+      recibo 2
+    explanation: 'Un `Subject` solo entrega a quien ya está suscrito. El `1` se emitió cuando nadie escuchaba y se perdió.'
+  - type: output
+    prompt: ¿Y con un `BehaviorSubject`?
+    code: |
+      const b = new BehaviorSubject(0);
+      b.next(1);
+      b.subscribe((n) => console.log('recibo ' + n));
+      b.next(2);
+    answer: |
+      recibo 1
+      recibo 2
+    explanation: 'Un `BehaviorSubject` guarda el último valor y se lo da enseguida a quien se suscribe (`1`); después llegan los nuevos (`2`). El `0` inicial ya fue sustituido por el `1`.'
+  - type: choice
+    prompt: ¿Por qué un servicio expone `mensajes$ = this.mensajes.asObservable()` en lugar del `Subject` directamente?
+    options:
+      - Para que los demás puedan escuchar pero no emitir; solo el servicio llama a `next`
+      - Porque un `Subject` no se puede suscribir desde un componente
+      - Para que los valores se guarden en el navegador
+    answer: 0
+    explanation: '`asObservable()` devuelve una vista de solo lectura, sin `next`. Así el estado solo cambia por los métodos del servicio y es fácil saber quién lo cambió.'

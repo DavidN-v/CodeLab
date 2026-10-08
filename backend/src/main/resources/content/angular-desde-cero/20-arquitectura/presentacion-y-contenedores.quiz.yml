@@ -1,0 +1,25 @@
+questions:
+  - type: choice
+    prompt: ¿Cuál de estos rasgos es propio de un componente de presentación?
+    options:
+      - Recibe los datos por `input()` y avisa de los clics con `output()`
+      - Inyecta `HttpClient` para pedir sus datos
+      - Guarda el estado del carrito en un signal compartido
+    answer: 0
+    explanation: 'Un componente de presentación solo pinta lo que recibe y avisa de lo que pasa. Pedir datos y guardar estado es trabajo del contenedor y de los servicios.'
+  - type: choice
+    prompt: La URL del backend cambia de `/api/productos` a `/v2/catalogo`. Con la separación en capas de la lección, ¿qué archivo cambias?
+    options:
+      - '`productos-api.ts`'
+      - '`tarjeta-producto.ts`'
+      - '`catalogo-page.ts` y `tarjeta-producto.ts`'
+    answer: 0
+    explanation: 'La capa de datos es la única que conoce las URL del backend. El resto de la app no se entera del cambio.'
+  - type: choice
+    prompt: En `<app-tarjeta-producto [producto]="p" (anadir)="alAnadir($event)" />`, ¿quién añade de verdad el producto al carrito?
+    options:
+      - El contenedor, en su método `alAnadir`, que llama al store
+      - La tarjeta, al emitir `anadir`
+      - Angular, automáticamente
+    answer: 0
+    explanation: 'La tarjeta solo emite el aviso con el producto. El contenedor recibe ese aviso en `$event` y decide qué hacer: llamar a `CarritoStore.anadir`.'

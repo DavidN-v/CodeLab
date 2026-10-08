@@ -1,0 +1,27 @@
+questions:
+  - type: choice
+    prompt: ¿Qué hace `ng build --localize` con `@angular/localize`?
+    options:
+      - Compila una versión de la app por cada idioma, con los textos ya traducidos
+      - Descarga las traducciones del idioma del usuario al arrancar la app
+      - Traduce los textos automáticamente con un traductor en línea
+    answer: 0
+    explanation: 'La traducción de `@angular/localize` ocurre al compilar: cada idioma tiene su propia versión. Las traducciones las escriben personas en los archivos `.xlf`.'
+  - type: choice
+    prompt: ¿Cómo marcas para traducir el texto de este botón?
+    code: |
+      <button>Comprar</button>
+    options:
+      - '`<button i18n>Comprar</button>`'
+      - '`<button>{{ ''Comprar'' | translate }}</button>`'
+      - '`<button lang="es">Comprar</button>`'
+    answer: 0
+    explanation: 'El atributo `i18n` le dice a `ng extract-i18n` que ese texto debe ir al archivo de traducciones. El pipe `translate` es de librerías externas, no de Angular.'
+  - type: choice
+    prompt: Un equipo de 10 personas quiere evitar que una feature importe archivos de otra. ¿Qué es lo más eficaz?
+    options:
+      - Una regla de linter (o de Nx) que lo detecte automáticamente en cada cambio
+      - Un mensaje en el chat del equipo recordándolo
+      - Poner todo el código en `shared/`
+    answer: 0
+    explanation: 'Los acuerdos que comprueba una máquina se cumplen siempre; los que dependen de la memoria se olvidan. Meterlo todo en `shared/` empeora el problema.'

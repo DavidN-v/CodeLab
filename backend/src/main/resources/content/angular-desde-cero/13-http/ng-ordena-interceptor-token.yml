@@ -1,0 +1,57 @@
+title: El interceptor del token
+summary: Ordena un interceptor funcional que añade la cabecera Authorization.
+difficulty: MEDIUM
+kind: parsons
+statement: |
+  Escribe un interceptor que añada `Authorization: Bearer <token>` a todas las peticiones **cuando hay sesión**. Si no hay token, la petición pasa sin cambios.
+
+  El token se lee del servicio `Sesion`, que lo guarda en un signal.
+
+  Ordena las líneas. Sobran dos.
+
+  Con el token `abc123`, una petición a `/api/tareas` llega al servidor con la cabecera:
+
+  ```text
+  Authorization: Bearer abc123
+  ```
+starter: |
+  // src/app/auth-interceptor.ts
+  import { HttpInterceptorFn } from '@angular/common/http';
+  import { inject } from '@angular/core';
+  import { Sesion } from './sesion';
+
+  export const authInterceptor: HttpInterceptorFn = (req, next) => {
+  {{lines}}
+  };
+solution: |
+  // src/app/auth-interceptor.ts
+  import { HttpInterceptorFn } from '@angular/common/http';
+  import { inject } from '@angular/core';
+  import { Sesion } from './sesion';
+
+  export const authInterceptor: HttpInterceptorFn = (req, next) => {
+    const token = inject(Sesion).token();
+    if (!token) {
+      return next(req);
+    }
+    const conToken = req.clone({ setHeaders: { Authorization: `Bearer ${token}` } });
+    return next(conToken);
+  };
+lines:
+  - '  const token = inject(Sesion).token();'
+  - '  if (!token) {'
+  - '    return next(req);'
+  - '  }'
+  - '  const conToken = req.clone({ setHeaders: { Authorization: `Bearer ${token}` } });'
+  - '  return next(conToken);'
+distractors:
+  - '  req.headers.set(''Authorization'', `Bearer ${token}`);'
+  - '  return conToken;'
+hints:
+  - 'La idea: lee el token; si no hay, deja pasar la petición tal cual; si hay, crea una copia de la petición con la cabecera y deja pasar la copia.'
+  - 'Qué usar: `inject(Sesion).token()` para leer el token, `req.clone({ setHeaders: ... })` porque las peticiones no se pueden modificar, y `next(...)` para pasarla al siguiente eslabón.'
+  - 'El plan: const token = ...; if (!token) { return next(req); } const conToken = req.clone(...); return next(conToken);'
+tests:
+  - output: |
+      Authorization: Bearer abc123
+    sample: true

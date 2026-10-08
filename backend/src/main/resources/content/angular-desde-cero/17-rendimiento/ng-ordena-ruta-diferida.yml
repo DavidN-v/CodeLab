@@ -1,0 +1,50 @@
+title: Informes solo para quien los visita
+summary: Ordena las rutas para que la página de informes se cargue de forma diferida.
+difficulty: MEDIUM
+kind: parsons
+statement: |
+  Ordena las líneas del array de rutas para que:
+
+  1. La ruta vacía (`''`) muestre `Inicio`, que ya está importado arriba y va en el bundle inicial.
+  2. La ruta `informes` cargue el componente `Informes` **solo cuando alguien navegue a ella**. Escribe primero su `path` y después cómo se carga.
+  3. Cualquier otra dirección redirija al inicio. Esta ruta comodín tiene que ir la última, porque el router prueba las rutas en orden.
+
+  Cuidado: dos líneas sobran.
+starter: |
+  // src/app/app.routes.ts
+  import { Routes } from '@angular/router';
+  import { Inicio } from './inicio/inicio';
+
+  export const routes: Routes = [
+  {{lines}}
+  ];
+solution: |
+  // src/app/app.routes.ts
+  import { Routes } from '@angular/router';
+  import { Inicio } from './inicio/inicio';
+
+  export const routes: Routes = [
+    { path: '', component: Inicio },
+    {
+      path: 'informes',
+      loadComponent: () => import('./informes/informes').then((m) => m.Informes),
+    },
+    { path: '**', redirectTo: '' },
+  ];
+lines:
+  - "  { path: '', component: Inicio },"
+  - '  {'
+  - "    path: 'informes',"
+  - "    loadComponent: () => import('./informes/informes').then((m) => m.Informes),"
+  - '  },'
+  - "  { path: '**', redirectTo: '' },"
+distractors:
+  - "    component: () => import('./informes/informes').then((m) => m.Informes),"
+  - "    loadComponent: import('./informes/informes').then((m) => m.Informes),"
+hints:
+  - 'La idea: tres rutas en orden: la portada, la de informes (un objeto en varias líneas) y la comodín al final.'
+  - 'Qué usar: `loadComponent` recibe una **función** que el router llama al navegar; dentro, `import()` con paréntesis descarga el chunk. `component` espera una clase, no una función.'
+  - "El plan: la línea de `Inicio`; abre `{`; `path: 'informes',`; la línea de `loadComponent` con `() =>`; cierra `},`; y la ruta `'**'`."
+tests:
+  - output: 'ng build muestra «informes» en Lazy chunk files y /informes lo descarga al visitarlo.'
+    sample: true

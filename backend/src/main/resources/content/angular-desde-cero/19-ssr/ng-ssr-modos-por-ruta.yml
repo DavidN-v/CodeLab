@@ -1,0 +1,42 @@
+title: Elige el modo de cada ruta
+summary: Completa app.routes.server.ts con el RenderMode adecuado para cada página.
+difficulty: MEDIUM
+kind: fill
+statement: |
+  Una academia online tiene estas páginas:
+
+  - `''` (portada): igual para todos. Debe generarse **una vez, en el build**.
+  - `'mis-cursos'`: depende del alumno que entra. Debe generarse **en el servidor en cada petición**.
+  - `'editor/**'`: un editor de código muy interactivo, detrás de un login. Lo debe pintar **solo el navegador**.
+  - Todo lo demás: en el servidor en cada petición.
+
+  Completa los huecos con el valor de `RenderMode` adecuado (por ejemplo `RenderMode.Algo`).
+starter: |
+  import { RenderMode, ServerRoute } from '@angular/ssr';
+
+  export const serverRoutes: ServerRoute[] = [
+    { path: '', renderMode: {{?}} },
+    { path: 'mis-cursos', renderMode: {{?}} },
+    { path: 'editor/**', renderMode: {{?}} },
+    { path: '**', renderMode: RenderMode.Server },
+  ];
+solution: |
+  import { RenderMode, ServerRoute } from '@angular/ssr';
+
+  export const serverRoutes: ServerRoute[] = [
+    { path: '', renderMode: RenderMode.Prerender },
+    { path: 'mis-cursos', renderMode: RenderMode.Server },
+    { path: 'editor/**', renderMode: RenderMode.Client },
+    { path: '**', renderMode: RenderMode.Server },
+  ];
+answers:
+  - RenderMode.Prerender
+  - RenderMode.Server
+  - RenderMode.Client
+hints:
+  - 'La idea: hay tres momentos posibles para generar el HTML: al compilar, en cada petición o en el navegador.'
+  - 'Qué usar: `RenderMode` tiene tres valores: `Prerender` (build), `Server` (cada petición) y `Client` (navegador).'
+  - 'El plan: portada → Prerender; mis-cursos → Server; editor → Client.'
+tests:
+  - output: "Portada prerenderizada, mis cursos en el servidor y el editor en el navegador"
+    sample: true

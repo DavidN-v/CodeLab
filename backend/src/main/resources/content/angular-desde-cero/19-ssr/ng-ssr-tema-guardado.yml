@@ -1,0 +1,70 @@
+title: Recupera el tema sin romper el servidor
+summary: Ordena las líneas de un componente que lee localStorage solo en el navegador.
+difficulty: MEDIUM
+kind: parsons
+statement: |
+  El componente `SelectorTema` muestra el tema elegido (`claro` u `oscuro`). Al pulsar el botón lo cambia y lo guarda en `localStorage`. Al cargar, debe recuperar el tema guardado **sin fallar en el servidor**, donde `localStorage` no existe.
+
+  El servidor siempre renderiza `Tema: claro`; un instante después de hidratar, el navegador muestra el tema guardado.
+
+  Ordena las líneas de la clase. Cuidado: hay líneas que sobran.
+starter: |
+  import { Component, afterNextRender, signal } from '@angular/core';
+
+  @Component({
+    selector: 'app-selector-tema',
+    template: `
+      <p>Tema: {{ tema() }}</p>
+      <button (click)="cambiar()">Cambiar tema</button>
+    `,
+  })
+  export class SelectorTema {
+  {{lines}}
+    }
+  }
+solution: |
+  import { Component, afterNextRender, signal } from '@angular/core';
+
+  @Component({
+    selector: 'app-selector-tema',
+    template: `
+      <p>Tema: {{ tema() }}</p>
+      <button (click)="cambiar()">Cambiar tema</button>
+    `,
+  })
+  export class SelectorTema {
+    protected readonly tema = signal('claro');
+    constructor() {
+      afterNextRender(() => {
+        this.tema.set(localStorage.getItem('tema') ?? 'claro');
+      });
+    }
+    protected cambiar(): void {
+      const nuevo = this.tema() === 'claro' ? 'oscuro' : 'claro';
+      this.tema.set(nuevo);
+      localStorage.setItem('tema', nuevo);
+    }
+  }
+lines:
+  - "  protected readonly tema = signal('claro');"
+  - '  constructor() {'
+  - '    afterNextRender(() => {'
+  - "      this.tema.set(localStorage.getItem('tema') ?? 'claro');"
+  - '    });'
+  - '  }'
+  - '  protected cambiar(): void {'
+  - "    const nuevo = this.tema() === 'claro' ? 'oscuro' : 'claro';"
+  - '    this.tema.set(nuevo);'
+  - "    localStorage.setItem('tema', nuevo);"
+distractors:
+  - "  protected readonly tema = signal(localStorage.getItem('tema') ?? 'claro');"
+  - "  private readonly guardado = localStorage.getItem('tema');"
+hints:
+  - 'La idea: el valor inicial del signal es lo que pinta el servidor, así que no puede depender de `localStorage`. La lectura va «para después», solo en el navegador.'
+  - 'Qué usar: `signal(''claro'')` como valor inicial y `afterNextRender(() => { … })` dentro del constructor para leer `localStorage`. El método `cambiar` puede usar `localStorage` directamente: solo se ejecuta al hacer clic.'
+  - 'El plan: declara el signal; abre el constructor y dentro `afterNextRender` con el `set` que lee `localStorage`; cierra ambos; después el método `cambiar`: calcula `nuevo`, haz `set` y guárdalo.'
+tests:
+  - output: |
+      Servidor: Tema: claro
+      Navegador tras hidratar: Tema: oscuro (si estaba guardado)
+    sample: true

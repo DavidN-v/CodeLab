@@ -1,0 +1,44 @@
+title: La cesta que no se entera
+summary: Predice la pantalla cuando un array se modifica por dentro y cuando se sustituye por uno nuevo.
+difficulty: HARD
+kind: predict
+statement: |
+  La persona pulsa **Mal** una vez y después **Bien** una vez.
+
+  Escribe el texto de los dos párrafos **después de pulsar Mal** y, a continuación, el de los dos párrafos **después de pulsar Bien**: 4 líneas en total, sin los botones.
+starter: |
+  // src/app/cesta/cesta.ts
+  import { Component, computed, signal } from '@angular/core';
+
+  @Component({
+    selector: 'app-cesta',
+    template: `
+      <p>Unidades: {{ unidades() }}</p>
+      <p>Cesta: {{ resumen() }}</p>
+      <button (click)="meterMal()">Mal</button>
+      <button (click)="meterBien()">Bien</button>
+    `,
+  })
+  export class Cesta {
+    protected readonly carrito = signal<string[]>(['pan']);
+    protected readonly unidades = computed(() => this.carrito().length);
+    protected readonly resumen = computed(() => this.carrito().join(', '));
+
+    protected meterMal(): void {
+      this.carrito().push('leche');
+    }
+
+    protected meterBien(): void {
+      this.carrito.update((lista) => [...lista, 'huevos']);
+    }
+  }
+hints:
+  - 'La idea: un computed solo recalcula si su signal avisa, y un signal solo avisa con `set` o `update` y un valor distinto.'
+  - 'Qué usar: `push` modifica el mismo array sin avisar, así que los dos computed devuelven lo que tenían guardado. `[...lista, ''huevos'']` es un array nuevo que contiene todo lo anterior.'
+  - 'El plan: tras Mal, el array es [pan, leche] pero la pantalla sigue con los valores calculados para [pan]. Tras Bien, el array nuevo es [pan, leche, huevos] y ambos computed recalculan.'
+tests:
+  - output: |
+      Unidades: 1
+      Cesta: pan
+      Unidades: 3
+      Cesta: pan, leche, huevos

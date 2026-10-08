@@ -1,0 +1,79 @@
+title: La página que coordina
+summary: Ordena las líneas de un componente contenedor que junta API, estado y presentación.
+difficulty: MEDIUM
+kind: parsons
+statement: |
+  `CatalogoPage` es el contenedor del catálogo:
+
+  - pide los productos a `ProductosApi` (su método `listar()` devuelve un observable) y los convierte en un signal que empieza como lista vacía;
+  - usa `CarritoStore` para mostrar el total y para añadir productos;
+  - cuando una `TarjetaProducto` emite `anadir`, añade ese producto al carrito.
+
+  La plantilla ya está escrita. Ordena las líneas de la clase. Cuidado: hay líneas que sobran.
+starter: |
+  import { Component, inject } from '@angular/core';
+  import { toSignal } from '@angular/core/rxjs-interop';
+  import { CarritoStore } from '../data/carrito-store';
+  import { Producto } from '../data/producto';
+  import { ProductosApi } from '../data/productos-api';
+  import { TarjetaProducto } from '../ui/tarjeta-producto';
+
+  @Component({
+    selector: 'app-catalogo-page',
+    imports: [TarjetaProducto],
+    template: `
+      <p>Total del carrito: {{ carrito.total() }} €</p>
+      @for (producto of productos(); track producto.id) {
+        <app-tarjeta-producto [producto]="producto" (anadir)="alAnadir($event)" />
+      }
+    `,
+  })
+  export class CatalogoPage {
+  {{lines}}
+    }
+  }
+solution: |
+  import { Component, inject } from '@angular/core';
+  import { toSignal } from '@angular/core/rxjs-interop';
+  import { CarritoStore } from '../data/carrito-store';
+  import { Producto } from '../data/producto';
+  import { ProductosApi } from '../data/productos-api';
+  import { TarjetaProducto } from '../ui/tarjeta-producto';
+
+  @Component({
+    selector: 'app-catalogo-page',
+    imports: [TarjetaProducto],
+    template: `
+      <p>Total del carrito: {{ carrito.total() }} €</p>
+      @for (producto of productos(); track producto.id) {
+        <app-tarjeta-producto [producto]="producto" (anadir)="alAnadir($event)" />
+      }
+    `,
+  })
+  export class CatalogoPage {
+    private readonly api = inject(ProductosApi);
+    protected readonly carrito = inject(CarritoStore);
+    protected readonly productos = toSignal(this.api.listar(), { initialValue: [] });
+    protected alAnadir(producto: Producto): void {
+      this.carrito.anadir(producto);
+    }
+  }
+lines:
+  - '  private readonly api = inject(ProductosApi);'
+  - '  protected readonly carrito = inject(CarritoStore);'
+  - '  protected readonly productos = toSignal(this.api.listar(), { initialValue: [] });'
+  - '  protected alAnadir(producto: Producto): void {'
+  - '    this.carrito.anadir(producto);'
+distractors:
+  - '  private readonly carrito = inject(CarritoStore);'
+  - '  protected readonly productos = this.api.listar();'
+hints:
+  - 'La idea: primero se consiguen las dependencias, después se preparan los datos que usa la plantilla y al final se reacciona al evento de la tarjeta.'
+  - 'Qué usar: `inject()` para los dos servicios. La plantilla lee `carrito` y `productos()`, así que deben ser `protected` (no `private`) y `productos` debe ser un signal, no un observable: para eso está `toSignal`.'
+  - 'El plan: api; carrito (protected); productos con toSignal (necesita `this.api`, así que va después); el método `alAnadir` que llama a `this.carrito.anadir(producto)`.'
+tests:
+  - output: |
+      Total del carrito: 0 €
+      (pulsar «Añadir al carrito» en una taza de 12 €)
+      Total del carrito: 12 €
+    sample: true

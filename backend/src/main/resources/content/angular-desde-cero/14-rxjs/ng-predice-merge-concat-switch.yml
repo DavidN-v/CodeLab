@@ -1,0 +1,38 @@
+title: Tres formas de atender pedidos
+summary: Predice el orden de salida de mergeMap, concatMap y switchMap con tiempos distintos.
+difficulty: HARD
+kind: predict
+statement: |
+  Llegan tres pedidos seguidos: 3, 1 y 2. Atender el pedido `n` tarda `n × 100` milisegundos. El programa los atiende primero con `mergeMap`; cuando termina, con `concatMap`; y cuando termina, con `switchMap`.
+
+  ¿Qué aparece en la consola? Escribe **una línea por mensaje**, en orden.
+starter: |
+  import { concatMap, map, mergeMap, of, switchMap, timer } from 'rxjs';
+
+  const pedidos$ = of(3, 1, 2);
+  const tarda = (n: number) => timer(n * 100).pipe(map(() => n));
+
+  pedidos$.pipe(mergeMap(tarda)).subscribe({
+    next: (n) => console.log('merge ' + n),
+    complete: () => {
+      pedidos$.pipe(concatMap(tarda)).subscribe({
+        next: (n) => console.log('concat ' + n),
+        complete: () => {
+          pedidos$.pipe(switchMap(tarda)).subscribe((n) => console.log('switch ' + n));
+        },
+      });
+    },
+  });
+hints:
+  - 'La idea: los tres operadores reciben los mismos pedidos; cambia qué hacen cuando llega uno nuevo mientras otro está en marcha. Los pedidos llegan todos a la vez (`of` es instantáneo).'
+  - 'Qué usar: `mergeMap` atiende todos a la vez (sale antes el más rápido); `concatMap` en fila, en el orden de llegada; `switchMap` cancela el que está en marcha al llegar uno nuevo.'
+  - 'El plan: merge sale ordenado por duración (1, 2, 3); concat respeta la llegada (3, 1, 2); switch solo deja vivo el último pedido que llegó.'
+tests:
+  - output: |
+      merge 1
+      merge 2
+      merge 3
+      concat 3
+      concat 1
+      concat 2
+      switch 2

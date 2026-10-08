@@ -1,0 +1,38 @@
+questions:
+  - type: choice
+    prompt: ¿Por qué falla `localStorage.getItem('tema')` en el constructor de un componente cuando activas SSR?
+    options:
+      - Porque el constructor también se ejecuta en el servidor, en Node.js, donde `localStorage` no existe
+      - Porque SSR borra el `localStorage` del navegador
+      - Porque en Angular está prohibido usar `localStorage`
+    answer: 0
+    explanation: 'El servidor ejecuta el mismo código para generar el HTML, pero allí no hay navegador: ni `window`, ni `document`, ni `localStorage`.'
+  - type: output
+    prompt: La ruta se renderiza en el servidor. ¿Qué aparece en la terminal del servidor cuando alguien la visita?
+    code: |
+      export class Aviso implements OnInit {
+        constructor() {
+          console.log('A');
+          afterNextRender(() => console.log('B'));
+        }
+
+        ngOnInit(): void {
+          console.log('C');
+        }
+      }
+    answer: |
+      A
+      C
+    explanation: 'El constructor y `ngOnInit` se ejecutan también en el servidor. `afterNextRender` nunca se ejecuta en el servidor; en el navegador escribiría B al final.'
+  - type: choice
+    prompt: ¿Qué problema tiene esta plantilla en una app con SSR?
+    code: |
+      @if (esNavegador) {
+        <p>Bienvenido de nuevo</p>
+      }
+    options:
+      - El HTML del servidor (sin el párrafo) no coincide con el del navegador y la hidratación falla
+      - '`@if` no funciona en el servidor'
+      - Ninguno; es la forma recomendada
+    answer: 0
+    explanation: 'La hidratación necesita el mismo DOM en los dos lados. Lo correcto es pintar lo mismo y cambiar el estado después, por ejemplo en `afterNextRender`.'

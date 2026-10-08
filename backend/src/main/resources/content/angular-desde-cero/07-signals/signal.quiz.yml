@@ -1,0 +1,27 @@
+questions:
+  - type: output
+    prompt: ¿Qué aparece en la consola?
+    code: |
+      const vidas = signal(3);
+      vidas.update((v) => v - 1);
+      vidas.set(vidas() + 5);
+      console.log(vidas());
+    answer: |
+      7
+    explanation: '`update` resta 1 (3 → 2). Después `set` guarda `vidas() + 5`, es decir, 2 + 5 = 7.'
+  - type: choice
+    prompt: 'Un componente cambia una variable normal (no signal) dentro de un `setInterval`. ¿Qué pasa en una app nueva de Angular 22?'
+    options:
+      - La variable cambia, pero la pantalla no se actualiza porque nadie avisa a Angular
+      - La pantalla se actualiza sola cada segundo
+      - Da un error de compilación
+    answer: 0
+    explanation: 'Las apps nuevas son zoneless: Angular no vigila temporizadores. Sin un signal (u otro aviso), el componente no se repinta.'
+  - type: choice
+    prompt: '¿Qué operación usas para añadir un elemento a `tareas = signal<string[]>([])`?'
+    options:
+      - '`tareas.update((lista) => [...lista, ''Nueva''])`'
+      - '`tareas = [...tareas, ''Nueva'']`'
+      - '`tareas.set(''Nueva'')`'
+    answer: 0
+    explanation: '`update` recibe la lista actual y devuelve una nueva con el elemento añadido. Asignar con `=` sustituye el signal entero, y `set(''Nueva'')` cambiaría la lista por un texto.'

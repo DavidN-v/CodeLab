@@ -1,0 +1,25 @@
+questions:
+  - type: choice
+    prompt: ¿Qué hace `[(ngModel)]="nombre"` en una caja de texto?
+    options:
+      - 'Copia el valor en los dos sentidos: del signal a la caja y de la caja al signal'
+      - Solo muestra el valor del signal; lo que se escribe no se guarda
+      - Solo guarda lo que se escribe; la caja empieza siempre vacía
+    answer: 0
+    explanation: 'La «caja con plátano» `[( )]` junta un property binding `[ ]` (de la clase a la caja) y un event binding `( )` (de la caja a la clase). Por eso se llama enlace bidireccional.'
+  - type: choice
+    prompt: El compilador dice «Can't bind to 'ngModel' since it isn't a known property of 'input'». ¿Qué falta?
+    options:
+      - Añadir `FormsModule` al array `imports` del componente
+      - 'Poner `standalone: true` en el decorador'
+      - Instalar `@angular/forms` con npm
+    answer: 0
+    explanation: '`ngModel` es una directiva de `FormsModule`. Cada componente debe importar lo que usa en su plantilla. `@angular/forms` ya viene instalado con `ng new`, y en Angular 22 los componentes son standalone por defecto.'
+  - type: output
+    prompt: 'La persona escribe «Lu» en la caja. ¿Qué se ve en el párrafo?'
+    code: |
+      <input name="ciudad" [(ngModel)]="ciudad" />
+      <p>Viajas a: {{ ciudad() }}</p>
+    answer: |
+      Viajas a: Lu
+    explanation: 'Cada tecla actualiza el signal `ciudad` gracias a `[(ngModel)]`, y la interpolación `{{ ciudad() }}` lee el valor nuevo.'

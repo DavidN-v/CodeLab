@@ -1,0 +1,58 @@
+title: Comentarios que esperan su turno
+summary: Escribe un @defer completo con disparador, precarga, placeholder, loading y error.
+difficulty: HARD
+kind: fill
+statement: |
+  Los comentarios están al final de un artículo largo. Completa la plantilla para que:
+
+  1. Los comentarios se muestren cuando su zona **entre en la parte visible** de la pantalla.
+  2. Su código se **precargue** cuando el navegador esté **desocupado**, antes de llegar abajo.
+  3. Antes de dispararse se vea «Los comentarios están más abajo» (el bloque de **antes**).
+  4. Si la descarga tarda más de 100 ms, se vea «Cargando…» (el bloque de **durante**).
+  5. Si la descarga falla, se vea «No se pudieron cargar» (el bloque de **fallo**).
+
+  Escribe los nombres sin la `@`.
+starter: |
+  <!-- src/app/articulo/articulo.html -->
+  <h1>Mi artículo</h1>
+  <p>Texto largo del artículo…</p>
+
+  @defer (on {{?}}; prefetch on {{?}}) {
+    <app-comentarios />
+  } @{{?}} {
+    <p>Los comentarios están más abajo</p>
+  } @{{?}} (after 100ms) {
+    <p>Cargando…</p>
+  } @{{?}} {
+    <p>No se pudieron cargar</p>
+  }
+solution: |
+  <!-- src/app/articulo/articulo.html -->
+  <h1>Mi artículo</h1>
+  <p>Texto largo del artículo…</p>
+
+  @defer (on viewport; prefetch on idle) {
+    <app-comentarios />
+  } @placeholder {
+    <p>Los comentarios están más abajo</p>
+  } @loading (after 100ms) {
+    <p>Cargando…</p>
+  } @error {
+    <p>No se pudieron cargar</p>
+  }
+answers:
+  - viewport
+  - idle
+  - placeholder
+  - loading
+  - error
+hints:
+  - 'La idea: un bloque `@defer` con dos disparadores (uno para mostrar y otro para precargar) y sus tres bloques opcionales: antes, durante y si falla.'
+  - 'Qué usar: los disparadores son palabras inglesas: «zona visible» y «desocupado». Los bloques se llaman como lo que son en inglés: el marcador de sitio, la carga y el error.'
+  - 'El plan: `viewport`, `idle`, `placeholder`, `loading` y `error`, en ese orden.'
+tests:
+  - output: |
+      Mi artículo
+      Texto largo del artículo…
+      Los comentarios están más abajo
+    sample: true

@@ -1,0 +1,45 @@
+title: Activa la hidratación
+summary: Completa app.config.ts para que el navegador hidrate el HTML del servidor.
+difficulty: EASY
+kind: fill
+statement: |
+  Alguien borró la hidratación de `app.config.ts` y ahora la página parpadea al cargar: Angular tira el HTML del servidor y lo repinta.
+
+  Completa los huecos para volver a activarla. Escribe el nombre de la función y la librería de la que se importa (entre comillas).
+starter: |
+  import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
+  import { provideRouter } from '@angular/router';
+  import { routes } from './app.routes';
+  import { {{?}} } from {{?}};
+
+  export const appConfig: ApplicationConfig = {
+    providers: [
+      provideBrowserGlobalErrorListeners(),
+      provideRouter(routes),
+      {{?}}(),
+    ],
+  };
+solution: |
+  import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
+  import { provideRouter } from '@angular/router';
+  import { routes } from './app.routes';
+  import { provideClientHydration } from '@angular/platform-browser';
+
+  export const appConfig: ApplicationConfig = {
+    providers: [
+      provideBrowserGlobalErrorListeners(),
+      provideRouter(routes),
+      provideClientHydration(),
+    ],
+  };
+answers:
+  - provideClientHydration
+  - "'@angular/platform-browser'"
+  - provideClientHydration
+hints:
+  - 'La idea: la hidratación se activa con una función `provide…` en la lista de providers del navegador, igual que el router.'
+  - 'Qué usar: la función se llama «proveer hidratación del cliente» en inglés, y viene de la librería que conecta Angular con el navegador.'
+  - 'El plan: importa `provideClientHydration` desde `''@angular/platform-browser''` y llámala dentro de `providers`.'
+tests:
+  - output: "La página se hidrata: sin parpadeo y con los botones funcionando"
+    sample: true

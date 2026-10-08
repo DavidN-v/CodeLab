@@ -1,0 +1,25 @@
+questions:
+  - type: choice
+    prompt: '¿Qué hace `toSignal(obs$, { initialValue: [] })`?'
+    options:
+      - Se suscribe a `obs$`, guarda el último valor en un signal que empieza en `[]` y se da de baja al destruirse el componente
+      - Convierte el signal `[]` en un Observable
+      - Lanza `obs$` una sola vez y luego se olvida de él
+    answer: 0
+    explanation: '`toSignal` es el puente de Observable a signal. Se suscribe por ti, empieza con `initialValue` y corta la suscripción solo cuando se destruye su contexto.'
+  - type: choice
+    prompt: 'En un método que se llama al pulsar un botón, escribes `interval(1000).pipe(takeUntilDestroyed()).subscribe(...)` y Angular da un error. ¿Por qué?'
+    options:
+      - 'Fuera del constructor no hay contexto de inyección; hay que pasarle el `DestroyRef`: `takeUntilDestroyed(this.destroyRef)`'
+      - '`takeUntilDestroyed` solo funciona con peticiones HTTP'
+      - 'Hay que ponerlo antes de `interval`'
+    answer: 0
+    explanation: 'Sin argumentos, `takeUntilDestroyed` usa `inject(DestroyRef)` por dentro, que solo funciona en un contexto de inyección. En un método, inyecta `DestroyRef` antes y pásalo.'
+  - type: choice
+    prompt: 'Según la regla práctica de la lección, ¿dónde va cada cosa?'
+    options:
+      - Estado que se muestra en signals; eventos y reglas de tiempo en RxJS
+      - Todo en RxJS, los signals son solo para formularios
+      - Todo en signals, RxJS está obsoleto en Angular 22
+    answer: 0
+    explanation: 'Signals son ideales para estado y valores derivados; RxJS para flujos de eventos con tiempo (debounce, cancelar, combinar). Angular 22 sigue usando RxJS en `HttpClient`, router y formularios reactivos.'

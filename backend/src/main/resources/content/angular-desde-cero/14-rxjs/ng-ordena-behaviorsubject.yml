@@ -1,0 +1,44 @@
+title: Ordena la emisora
+summary: Ordena las llamadas a un BehaviorSubject para obtener una salida concreta.
+difficulty: MEDIUM
+kind: parsons
+statement: |
+  Ordena las líneas para que la consola muestre **exactamente** esto:
+
+  ```text
+  Ana ve 20
+  Ana ve 30
+  Luis ve 30
+  ```
+
+  Piensa en qué recibe cada persona en el momento en que se suscribe. Sobra una línea.
+starter: |
+  import { BehaviorSubject } from 'rxjs';
+
+  {{lines}}
+solution: |
+  import { BehaviorSubject } from 'rxjs';
+
+  const precio$ = new BehaviorSubject(10);
+  precio$.next(20);
+  precio$.subscribe((p) => console.log('Ana ve ' + p));
+  precio$.next(30);
+  precio$.subscribe((p) => console.log('Luis ve ' + p));
+lines:
+  - 'const precio$ = new BehaviorSubject(10);'
+  - 'precio$.next(20);'
+  - "precio$.subscribe((p) => console.log('Ana ve ' + p));"
+  - 'precio$.next(30);'
+  - "precio$.subscribe((p) => console.log('Luis ve ' + p));"
+distractors:
+  - 'const precio$ = new BehaviorSubject();'
+hints:
+  - 'La idea: quien se suscribe a un `BehaviorSubject` recibe al instante el valor actual y después cada cambio.'
+  - 'Qué usar: Ana nunca ve el 10, así que se suscribe cuando ya vale 20. Luis solo ve el 30, así que se suscribe al final. Y un `BehaviorSubject` necesita valor inicial.'
+  - 'El plan: crear con 10; next(20); suscribir a Ana; next(30); suscribir a Luis.'
+tests:
+  - output: |
+      Ana ve 20
+      Ana ve 30
+      Luis ve 30
+    sample: true

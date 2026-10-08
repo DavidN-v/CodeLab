@@ -1,0 +1,25 @@
+questions:
+  - type: choice
+    prompt: Un componente `ResumenPedido` muestra el total de un pedido con su IVA. ¿Dónde lo pones?
+    options:
+      - '`features/pedidos/ui/`'
+      - '`shared/ui/`'
+      - '`core/`'
+    answer: 0
+    explanation: 'Sabe qué es un pedido, así que es lógica del negocio de esa funcionalidad. `shared/` es para piezas genéricas y `core/` para lo que existe una sola vez en toda la app.'
+  - type: choice
+    prompt: La funcionalidad `pedidos` necesita la interfaz `Producto`, que vive en `features/productos/data/`. Según las reglas de dependencia, ¿qué haces?
+    options:
+      - Mover el modelo compartido a un sitio común (por ejemplo `shared/` o una capa de datos común) en vez de importar de otra feature
+      - Importarlo directamente desde `features/productos/data/producto.ts`
+      - Copiar y pegar la interfaz en `pedidos`
+    answer: 0
+    explanation: 'Una feature no debe depender de otra: crearía acoplamientos y ciclos. Lo que necesitan dos funcionalidades sube a un sitio común. Copiarlo duplicaría el código y acabaría desincronizado.'
+  - type: choice
+    prompt: ¿Cómo llama la CLI de Angular 22 al archivo de un componente llamado `TarjetaProducto`?
+    options:
+      - '`tarjeta-producto.ts`'
+      - '`tarjeta-producto.component.ts`'
+      - '`TarjetaProducto.ts`'
+    answer: 0
+    explanation: 'Desde Angular 20 la CLI no añade el sufijo `.component`. Los archivos van en minúsculas con guiones y la clase en PascalCase.'

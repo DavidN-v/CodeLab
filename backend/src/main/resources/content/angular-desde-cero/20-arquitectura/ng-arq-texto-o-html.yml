@@ -1,0 +1,29 @@
+title: ¿Texto o HTML?
+summary: Predice qué se ve al mostrar un comentario con interpolación y con innerHTML.
+difficulty: EASY
+kind: predict
+statement: |
+  Un usuario malintencionado ha escrito este comentario. El componente lo muestra de dos formas.
+
+  Escribe el texto que se ve en la página, **una línea por párrafo**, exactamente con los caracteres que aparecen (incluidos `<` y `>` si se ven).
+starter: |
+  import { Component } from '@angular/core';
+
+  @Component({
+    selector: 'app-comentario',
+    template: `
+      <p>{{ comentario }}</p>
+      <p [innerHTML]="comentario"></p>
+    `,
+  })
+  export class Comentario {
+    comentario = '<i>Oferta</i> hoy<script>robar()</script>';
+  }
+hints:
+  - 'La idea: las dos formas tratan el valor de manera distinta: una como texto, otra como HTML revisado.'
+  - 'Qué usar: la interpolación muestra los caracteres tal cual; `[innerHTML]` pasa por el sanitizador, que elimina el `<script>` con su contenido y deja las etiquetas inofensivas.'
+  - 'El plan: primer párrafo, el valor completo sin interpretar. Segundo, solo el texto que queda visible: `<i>` se convierte en cursiva (no se ve la etiqueta) y el script desaparece.'
+tests:
+  - output: |
+      <i>Oferta</i> hoy<script>robar()</script>
+      Oferta hoy

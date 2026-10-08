@@ -1,0 +1,32 @@
+questions:
+  - type: output
+    prompt: ¿Qué aparece en la consola?
+    code: |
+      const nums = signal([1, 2]);
+      const suma = computed(() => nums().reduce((a, b) => a + b, 0));
+      console.log(suma());
+      nums().push(10);
+      console.log(suma());
+      nums.update((l) => [...l]);
+      console.log(suma());
+    answer: |
+      3
+      3
+      13
+    explanation: '`push` cambia el array por dentro sin avisar, así que el computed devuelve su resultado guardado (3). `update` con una copia es un valor nuevo: el computed recalcula y suma 1 + 2 + 10.'
+  - type: choice
+    prompt: '¿Qué tipo de objeto devuelve `this._puntos.asReadonly()`?'
+    options:
+      - 'Un `Signal` que se puede leer pero no tiene `set` ni `update`'
+      - Una copia del valor que ya no cambia nunca
+      - Un `WritableSignal` independiente del original
+    answer: 0
+    explanation: 'Es una vista del mismo signal: cambia cuando cambia el original, pero quien la tiene solo puede leerla.'
+  - type: choice
+    prompt: 'Cambia el signal `usuario`, que solo lee la plantilla de `Cabecera`. ¿Qué componentes revisa Angular?'
+    options:
+      - Los que dependen de `usuario`, como `Cabecera`
+      - Todos los componentes de la página
+      - Ninguno hasta que hay un clic
+    answer: 0
+    explanation: 'El grafo de dependencias dice exactamente quién leyó `usuario`. Los demás componentes no se revisan.'

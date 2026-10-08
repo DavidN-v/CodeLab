@@ -1,0 +1,30 @@
+questions:
+  - type: output
+    prompt: ¿Qué aparece en la consola?
+    code: |
+      const tallas = signal(['S', 'M', 'L']);
+      const talla = linkedSignal(() => tallas()[0]);
+      talla.set('L');
+      console.log(talla());
+      tallas.set(['XL', 'XXL']);
+      console.log(talla());
+    answer: |
+      L
+      XL
+    explanation: 'Primero gana el `set(''L'')`. Después cambia la fuente, así que el linkedSignal se recalcula y vale el primer elemento de la lista nueva.'
+  - type: choice
+    prompt: ¿En qué se diferencia un `linkedSignal` de un `computed`?
+    options:
+      - El linkedSignal se puede cambiar con `set` y `update`; el computed no
+      - El computed se recalcula solo y el linkedSignal nunca
+      - El linkedSignal no puede leer otros signals
+    answer: 0
+    explanation: 'Los dos se recalculan cuando cambian sus dependencias, pero el linkedSignal además es escribible: alguien puede ponerle otro valor hasta el siguiente cambio de la fuente.'
+  - type: choice
+    prompt: 'En la forma larga, ¿qué contiene `anterior.value` dentro de `computation`?'
+    options:
+      - El valor que tenía el linkedSignal antes de que cambiara la fuente
+      - El valor nuevo de la fuente
+      - El valor inicial con el que se creó la fuente
+    answer: 0
+    explanation: '`computation(nuevaFuente, anterior)` recibe la fuente nueva como primer parámetro y, en `anterior`, el valor previo del linkedSignal (`value`) y la fuente previa (`source`).'

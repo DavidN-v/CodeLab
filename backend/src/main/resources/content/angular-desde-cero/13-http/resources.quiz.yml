@@ -1,0 +1,25 @@
+questions:
+  - type: choice
+    prompt: Según los tipos de Angular 22, ¿qué estado tienen `resource`, `rxResource` y `httpResource`?
+    options:
+      - 'Estables: llevan `@publicApi 22.0`'
+      - 'Experimentales: llevan `@experimental`'
+      - 'En vista previa: llevan `@developerPreview`'
+    answer: 0
+    explanation: 'En Angular 22 las tres funciones y sus tipos (`ResourceRef`, `ResourceStatus`…) son `@publicApi 22.0`. Lo que sigue siendo experimental son piezas vecinas como `debounced()`.'
+  - type: choice
+    prompt: 'Con `tarea = httpResource<Tarea>(() => `/api/tareas/${this.id()}`)`, ¿qué pasa cuando el input `id` cambia de 7 a 8?'
+    options:
+      - Pide `/api/tareas/8` automáticamente y cancela la petición de la 7 si no había terminado
+      - Nada, hay que llamar a `tarea.reload()`
+      - Lanza un error porque la URL ya estaba fijada
+    answer: 0
+    explanation: 'La función lee el signal `id()`, así que el resource depende de él. Cuando cambia, vuelve a cargar con la URL nueva y cancela la anterior.'
+  - type: choice
+    prompt: Quieres guardar una tarea nueva con `POST`. ¿Qué usas?
+    options:
+      - '`HttpClient.post(...)` con `subscribe`'
+      - '`httpResource`'
+      - '`rxResource` con `params` que cambien al pulsar «Guardar»'
+    answer: 0
+    explanation: 'Los resources están pensados para leer: cancelan la petición en curso si cambian los parámetros, lo que podría cortar una escritura. Para crear, cambiar o borrar se usa `HttpClient` directamente.'

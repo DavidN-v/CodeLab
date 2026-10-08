@@ -1,0 +1,26 @@
+questions:
+  - type: choice
+    prompt: ¿Cuándo usas un `FormArray` en lugar de un `FormGroup`?
+    options:
+      - Cuando el número de campos cambia mientras se usa el formulario
+      - Cuando el formulario tiene más de diez campos
+      - Cuando los campos son números
+    answer: 0
+    explanation: 'Un `FormGroup` tiene campos fijos con nombre. Un `FormArray` es una lista que crece y encoge (añadir invitado, quitar teléfono), y cada elemento se identifica por su posición.'
+  - type: output
+    prompt: 'La lista empieza con los controles «A» y «B». ¿Qué valor tiene `lista.value` después de este código?'
+    code: |
+      lista.push(fb.control('C'));
+      lista.removeAt(0);
+      lista.insert(0, fb.control('Z'));
+    answer: |
+      ["Z","B","C"]
+    explanation: '`push` deja `[A, B, C]`; `removeAt(0)` quita la A: `[B, C]`; `insert(0, Z)` mete Z delante: `[Z, B, C]`.'
+  - type: choice
+    prompt: ¿Por qué el botón «Añadir invitado» lleva `type="button"`?
+    options:
+      - Porque un botón dentro de un `<form>` es de tipo submit por defecto y enviaría el formulario
+      - Porque sin él no se puede usar `(click)`
+      - Porque `FormArray` lo exige
+    answer: 0
+    explanation: 'En HTML, el tipo por defecto de un `<button>` dentro de un formulario es `submit`. Sin `type="button"`, cada clic en «Añadir» dispararía también `(ngSubmit)`.'

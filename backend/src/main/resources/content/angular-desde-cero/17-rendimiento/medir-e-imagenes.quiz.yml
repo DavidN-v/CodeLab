@@ -1,0 +1,25 @@
+questions:
+  - type: choice
+    prompt: La portada tarda mucho en mostrarse en el móvil. ¿Qué haces primero?
+    options:
+      - Medir con Lighthouse para saber qué tarda (por ejemplo, el LCP)
+      - Cambiar todos los componentes a `Eager`
+      - Quitar todos los `track` de los `@for`
+    answer: 0
+    explanation: 'Sin medir no sabes si el problema es una imagen, el bundle o la detección de cambios. Lighthouse te da el LCP y te señala los recursos que lo retrasan.'
+  - type: choice
+    prompt: '¿Qué atributos escribe `NgOptimizedImage` en una imagen marcada con `priority`?'
+    options:
+      - '`loading="eager"` y `fetchpriority="high"`'
+      - '`loading="lazy"` y `fetchpriority="auto"`'
+      - Ninguno; `priority` solo cambia el orden en el HTML
+    answer: 0
+    explanation: 'Con `priority` la imagen se pide en cuanto se puede y con prioridad alta. Las imágenes sin `priority` reciben `loading="lazy"` y esperan a que el usuario se acerque.'
+  - type: choice
+    prompt: 'Escribes `<img ngSrc="logo.png" alt="Logo">` (con `NgOptimizedImage` en `imports`). ¿Qué falla?'
+    options:
+      - Faltan `width` y `height`, que la directiva exige para reservar el espacio
+      - Falta `src` además de `ngSrc`
+      - '`ngSrc` solo admite imágenes .jpg'
+    answer: 0
+    explanation: 'Sin dimensiones el navegador no sabe cuánto hueco dejar y la página salta al cargar. Por eso la directiva las exige (o el atributo `fill` si la imagen debe llenar su contenedor).'

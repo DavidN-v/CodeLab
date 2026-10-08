@@ -1,0 +1,28 @@
+title: La cadena de montaje
+summary: Predice qué sale de un pipe con filter y map y cuándo termina.
+difficulty: EASY
+kind: predict
+statement: |
+  Lee el código y predice qué aparece en la consola. Escribe **una línea por mensaje**, en orden.
+starter: |
+  import { filter, map, of } from 'rxjs';
+
+  of(1, 2, 3, 4, 5)
+    .pipe(
+      filter((n) => n % 2 === 1),
+      map((n) => n * 10),
+    )
+    .subscribe({
+      next: (n) => console.log(n),
+      complete: () => console.log('fin'),
+    });
+hints:
+  - 'La idea: cada número pasa por dos estaciones; algunos se quedan en la primera. Al final, el Observable avisa de que terminó.'
+  - 'Qué usar: `n % 2 === 1` es verdadero para los impares. `map` multiplica por 10 a los que sobreviven. `complete` se ejecuta una vez, al final.'
+  - 'El plan: impares de 1 a 5 → 1, 3, 5 → multiplicados por 10 → y después «fin».'
+tests:
+  - output: |
+      10
+      30
+      50
+      fin

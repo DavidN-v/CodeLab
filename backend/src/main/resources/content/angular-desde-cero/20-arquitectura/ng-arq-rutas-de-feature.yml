@@ -1,0 +1,61 @@
+title: Carga diferida de una funcionalidad
+summary: Conecta las rutas de la feature de pedidos con las rutas principales.
+difficulty: MEDIUM
+kind: fill
+statement: |
+  La funcionalidad `pedidos` vive en `src/app/features/pedidos/` y exporta sus propias rutas en `pedidos.routes.ts`, en la constante `PEDIDOS_ROUTES`.
+
+  Completa `app.routes.ts` para que todas esas rutas cuelguen de `/pedidos` y su código **solo se descargue** cuando el usuario entre en esa sección.
+starter: |
+  // src/app/features/pedidos/pedidos.routes.ts
+  import { Routes } from '@angular/router';
+  import { ListaPedidosPage } from './pages/lista-pedidos-page';
+  import { DetallePedidoPage } from './pages/detalle-pedido-page';
+
+  export const PEDIDOS_ROUTES: Routes = [
+    { path: '', component: ListaPedidosPage },
+    { path: ':id', component: DetallePedidoPage },
+  ];
+
+  // src/app/app.routes.ts
+  import { Routes } from '@angular/router';
+
+  export const routes: Routes = [
+    {
+      path: 'pedidos',
+      {{?}}: () => import('{{?}}').then((m) => m.{{?}}),
+    },
+  ];
+solution: |
+  // src/app/features/pedidos/pedidos.routes.ts
+  import { Routes } from '@angular/router';
+  import { ListaPedidosPage } from './pages/lista-pedidos-page';
+  import { DetallePedidoPage } from './pages/detalle-pedido-page';
+
+  export const PEDIDOS_ROUTES: Routes = [
+    { path: '', component: ListaPedidosPage },
+    { path: ':id', component: DetallePedidoPage },
+  ];
+
+  // src/app/app.routes.ts
+  import { Routes } from '@angular/router';
+
+  export const routes: Routes = [
+    {
+      path: 'pedidos',
+      loadChildren: () => import('./features/pedidos/pedidos.routes').then((m) => m.PEDIDOS_ROUTES),
+    },
+  ];
+answers:
+  - loadChildren
+  - ./features/pedidos/pedidos.routes
+  - PEDIDOS_ROUTES
+hints:
+  - 'La idea: no cargas un componente, sino una lista entera de rutas hijas, y lo haces con un `import()` dinámico para que vaya en un archivo aparte.'
+  - 'Qué usar: la propiedad de ruta para cargar rutas hijas de forma diferida (no `loadComponent`), la ruta relativa al archivo desde `app.routes.ts` sin `.ts`, y el nombre de la constante exportada.'
+  - 'El plan: `loadChildren: () => import(''./features/pedidos/pedidos.routes'').then((m) => m.PEDIDOS_ROUTES)`.'
+tests:
+  - output: |
+      /pedidos   → ListaPedidosPage (chunk de pedidos descargado al entrar)
+      /pedidos/7 → DetallePedidoPage
+    sample: true

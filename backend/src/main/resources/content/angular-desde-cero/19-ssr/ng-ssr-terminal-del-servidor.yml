@@ -1,0 +1,43 @@
+title: ¿Qué escribe el servidor?
+summary: Predice qué partes de un componente se ejecutan en el servidor.
+difficulty: EASY
+kind: predict
+statement: |
+  La ruta de este componente usa `RenderMode.Server`. Un visitante abre la página.
+
+  Escribe **exactamente** lo que aparece en la **terminal del servidor** (no en la consola del navegador), una línea por cada `console.log`, en orden.
+starter: |
+  import { Component, OnInit, PLATFORM_ID, afterNextRender, inject } from '@angular/core';
+  import { isPlatformBrowser, isPlatformServer } from '@angular/common';
+
+  @Component({
+    selector: 'app-ficha',
+    template: `<h2>Ficha</h2>`,
+  })
+  export class Ficha implements OnInit {
+    private readonly plataforma = inject(PLATFORM_ID);
+
+    constructor() {
+      console.log('constructor');
+      afterNextRender(() => console.log('pintado'));
+      if (isPlatformBrowser(this.plataforma)) {
+        console.log('navegador');
+      }
+      if (isPlatformServer(this.plataforma)) {
+        console.log('servidor');
+      }
+    }
+
+    ngOnInit(): void {
+      console.log('init');
+    }
+  }
+hints:
+  - 'La idea: en el servidor se crea el componente y se genera su HTML, pero no hay pantalla ni navegador.'
+  - 'Qué usar: el constructor y `ngOnInit` se ejecutan en los dos sitios; `afterNextRender` nunca en el servidor; cada `isPlatform…` solo es `true` en su sitio.'
+  - 'El plan: recorre el constructor de arriba abajo descartando lo que es solo del navegador, y después añade `ngOnInit`.'
+tests:
+  - output: |
+      constructor
+      servidor
+      init

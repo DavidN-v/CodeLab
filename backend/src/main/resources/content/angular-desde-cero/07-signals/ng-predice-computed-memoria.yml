@@ -1,0 +1,38 @@
+title: ¿Cuándo calcula un computed?
+summary: Predice cuántas veces se ejecuta la fórmula de un computed perezoso y con memoria.
+difficulty: MEDIUM
+kind: predict
+statement: |
+  La fórmula del computed escribe `calculando` cada vez que se ejecuta. Escribe **todo** lo que aparece en la consola, una línea por cada mensaje, en orden.
+
+  Recuerda las dos reglas: un computed solo calcula cuando alguien lo lee, y no repite el cálculo si sus dependencias no han cambiado. Un signal que recibe el mismo valor que ya tenía no cuenta como cambio.
+starter: |
+  import { computed, signal } from '@angular/core';
+
+  const nombre = signal('ada');
+  const enMayusculas = computed(() => {
+    console.log('calculando');
+    return nombre().toUpperCase();
+  });
+
+  console.log('inicio');
+  console.log(enMayusculas());
+  console.log(enMayusculas());
+  nombre.set('ada');
+  console.log(enMayusculas());
+  nombre.set('grace');
+  nombre.set('alan');
+  console.log(enMayusculas());
+hints:
+  - 'La idea: cuenta en qué lecturas tiene que ejecutarse la fórmula y en cuáles el computed devuelve lo que ya tenía guardado.'
+  - 'Qué usar: crear el computed no ejecuta nada (perezoso). `set(''ada'')` cuando ya valía `''ada''` no es un cambio. Dos `set` seguidos sin leer en medio provocan un solo cálculo, en la siguiente lectura.'
+  - 'El plan: inicio → primera lectura (calcula: ADA) → segunda (guardado) → tras el set igual (guardado) → tras grace y alan, una lectura que calcula con el último valor.'
+tests:
+  - output: |
+      inicio
+      calculando
+      ADA
+      ADA
+      ADA
+      calculando
+      ALAN

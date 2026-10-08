@@ -1,0 +1,86 @@
+title: El servicio de la API
+summary: Completa un servicio que lista, crea y borra notas con HttpClient.
+difficulty: EASY
+kind: fill
+statement: |
+  El servicio `NotasApi` habla con la API REST `/api/notas`. Completa los cuatro huecos, en orden:
+
+  1. El servicio de Angular que hace peticiones HTTP.
+  2. El método para **leer** la lista de notas.
+  3. El método para **crear** una nota nueva.
+  4. El método para **borrar** una nota.
+
+  Un componente que llama a `listar()` y se suscribe recibe las notas; si la API tiene dos, escribe:
+
+  ```text
+  2 notas
+  ```
+starter: |
+  // src/app/notas/notas-api.ts
+  import { HttpClient } from '@angular/common/http';
+  import { inject, Service } from '@angular/core';
+  import { Observable } from 'rxjs';
+
+  export interface Nota {
+    id: number;
+    texto: string;
+  }
+
+  @Service()
+  export class NotasApi {
+    private readonly http = inject({{?}});
+    private readonly url = '/api/notas';
+
+    listar(): Observable<Nota[]> {
+      return this.http.{{?}}<Nota[]>(this.url);
+    }
+
+    crear(texto: string): Observable<Nota> {
+      return this.http.{{?}}<Nota>(this.url, { texto });
+    }
+
+    borrar(id: number): Observable<void> {
+      return this.http.{{?}}<void>(`${this.url}/${id}`);
+    }
+  }
+answers:
+  - HttpClient
+  - get
+  - post
+  - delete
+solution: |
+  // src/app/notas/notas-api.ts
+  import { HttpClient } from '@angular/common/http';
+  import { inject, Service } from '@angular/core';
+  import { Observable } from 'rxjs';
+
+  export interface Nota {
+    id: number;
+    texto: string;
+  }
+
+  @Service()
+  export class NotasApi {
+    private readonly http = inject(HttpClient);
+    private readonly url = '/api/notas';
+
+    listar(): Observable<Nota[]> {
+      return this.http.get<Nota[]>(this.url);
+    }
+
+    crear(texto: string): Observable<Nota> {
+      return this.http.post<Nota>(this.url, { texto });
+    }
+
+    borrar(id: number): Observable<void> {
+      return this.http.delete<void>(`${this.url}/${id}`);
+    }
+  }
+hints:
+  - 'La idea: primero pides el «mensajero» HTTP al sistema de inyección; después, cada método usa el verbo REST que corresponde a lo que hace.'
+  - 'Qué usar: el servicio ya está importado en la primera línea. Los métodos de ese servicio se llaman igual que los verbos HTTP, en minúsculas.'
+  - 'El plan: inject(HttpClient); leer es get, crear es post y borrar es delete.'
+tests:
+  - output: |
+      2 notas
+    sample: true

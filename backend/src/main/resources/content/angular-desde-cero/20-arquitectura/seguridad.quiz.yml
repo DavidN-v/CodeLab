@@ -1,0 +1,30 @@
+questions:
+  - type: output
+    prompt: ¿Qué texto se ve en pantalla? (Escribe exactamente los caracteres que aparecen.)
+    code: |
+      @Component({
+        selector: 'app-saludo',
+        template: `<p>{{ nombre }}</p>`,
+      })
+      export class Saludo {
+        nombre = '<b>Ada</b>';
+      }
+    answer: |
+      <b>Ada</b>
+    explanation: 'La interpolación inserta el valor como texto: los `<` y `>` se muestran tal cual y no se crea ninguna etiqueta `<b>`.'
+  - type: choice
+    prompt: ¿Cuándo es aceptable usar `bypassSecurityTrustResourceUrl`?
+    options:
+      - Con una URL fija que escribiste tú en el código, por ejemplo la de un vídeo incrustado
+      - Con la URL que el usuario escribe en un campo de texto
+      - Siempre que el sanitizador muestre un aviso en la consola
+    answer: 0
+    explanation: 'Saltarse el sanitizador solo es seguro con valores que controlas por completo. Con datos de usuarios abres la puerta al XSS, y el aviso de la consola significa precisamente que Angular te ha protegido.'
+  - type: choice
+    prompt: Quieres llamar a una API de pagos que necesita una clave secreta. ¿Dónde pones la clave?
+    options:
+      - En tu servidor; la app Angular llama a tu servidor y él llama a la API
+      - En `environment.ts`, que no se publica
+      - En una variable `private readonly` de un servicio
+    answer: 0
+    explanation: 'Todo el código de la app, incluidos los entornos y las propiedades privadas, se descarga en el navegador y cualquiera puede leerlo. Los secretos solo pueden vivir en el servidor.'

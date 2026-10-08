@@ -1,0 +1,31 @@
+questions:
+  - type: choice
+    prompt: La página «Mi perfil» muestra los datos del usuario que ha iniciado sesión y debe llegar renderizada. ¿Qué modo le pones?
+    options:
+      - '`RenderMode.Server`'
+      - '`RenderMode.Prerender`'
+      - '`RenderMode.Client`'
+    answer: 0
+    explanation: 'Su contenido cambia con cada usuario, así que no se puede generar en el build. `Server` la genera en cada petición. `Client` también funcionaría, pero llegaría vacía.'
+  - type: output
+    prompt: Con esta regla, ¿qué rutas genera el build? Escribe una por línea, en orden.
+    code: |
+      {
+        path: 'blog/:slug',
+        renderMode: RenderMode.Prerender,
+        async getPrerenderParams() {
+          return [{ slug: 'hola' }, { slug: 'signals' }];
+        },
+      }
+    answer: |
+      /blog/hola
+      /blog/signals
+    explanation: 'Cada objeto que devuelve `getPrerenderParams` rellena el parámetro `:slug` y produce una página prerenderizada.'
+  - type: choice
+    prompt: "¿Por qué la regla `{ path: '**', … }` debe ir al final de `serverRoutes`?"
+    options:
+      - Porque se usa la primera regla que encaja, y `'**'` encaja con todo
+      - Porque Angular ordena las reglas alfabéticamente
+      - Porque si no, el build falla siempre
+    answer: 0
+    explanation: 'Si `''**''` estuviera primero, todas las rutas usarían su modo y las reglas de debajo no se aplicarían nunca.'

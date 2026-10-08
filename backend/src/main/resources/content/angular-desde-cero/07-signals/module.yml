@@ -1,0 +1,28 @@
+lessons:
+  - slug: signal
+    title: 'signal(): valores que avisan'
+    summary: Por qué la pantalla no se entera de una variable normal y cómo leer, set y update.
+    minutes: 8
+  - slug: computed
+    title: 'computed(): valores que se calculan solos'
+    summary: Derivar valores de otros signals, perezosos y con memoria.
+    minutes: 8
+  - slug: effect-y-untracked
+    title: effect(), untracked y cuándo no usarlos
+    summary: Efectos secundarios como guardar en localStorage, y por qué casi siempre quieres computed.
+    minutes: 9
+  - slug: linked-signal
+    title: 'linkedSignal(): una elección que se reinicia'
+    summary: Un signal editable que se recalcula cuando cambia su fuente.
+    minutes: 8
+  - slug: como-repinta-angular
+    title: Cómo sabe Angular qué repintar
+    summary: El grafo de dependencias, la igualdad, la inmutabilidad y asReadonly.
+    minutes: 9
+exercises:
+  - ng-predice-saldo
+  - ng-termostato-con-signal
+  - ng-total-con-computed
+  - ng-predice-computed-memoria
+  - ng-ordena-selector-talla
+  - ng-predice-cesta-mutada

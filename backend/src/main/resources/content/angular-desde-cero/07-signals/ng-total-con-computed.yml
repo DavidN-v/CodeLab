@@ -1,0 +1,67 @@
+title: Total del pedido con computed
+summary: Completa una cadena de computed que calcula subtotal, envío y total.
+difficulty: MEDIUM
+kind: fill
+statement: |
+  Un pedido tiene `precio` y `cantidad` (signals). Queremos tres valores que se calculen solos:
+
+  - `subtotal`: precio por cantidad.
+  - `envio`: 0 € si el subtotal llega a 50 €, si no 5 € (ya está hecho).
+  - `total`: subtotal más envío.
+
+  Completa los huecos. Al principio se ve `Subtotal: 30 €`, `Envío: 5 €` y `Total: 35 €`. Tras pulsar **Añadir otra** dos veces, lo que indica el resultado esperado.
+starter: |
+  // src/app/pedido-total/pedido-total.ts
+  import { Component, computed, signal } from '@angular/core';
+
+  @Component({
+    selector: 'app-pedido-total',
+    template: `
+      <p>Subtotal: {{ subtotal() }} €</p>
+      <p>Envío: {{ envio() }} €</p>
+      <p>Total: {{ total() }} €</p>
+      <button (click)="cantidad.update((c) => c + 1)">Añadir otra</button>
+    `,
+  })
+  export class PedidoTotal {
+    protected readonly precio = signal(15);
+    protected readonly cantidad = signal(2);
+    protected readonly subtotal = {{?}}(() => this.precio() * this.{{?}});
+    protected readonly envio = computed(() => (this.{{?}}() >= 50 ? 0 : 5));
+    protected readonly total = computed(() => {{?}} + this.envio());
+  }
+answers:
+  - computed
+  - cantidad()
+  - subtotal
+  - this.subtotal()
+solution: |
+  // src/app/pedido-total/pedido-total.ts
+  import { Component, computed, signal } from '@angular/core';
+
+  @Component({
+    selector: 'app-pedido-total',
+    template: `
+      <p>Subtotal: {{ subtotal() }} €</p>
+      <p>Envío: {{ envio() }} €</p>
+      <p>Total: {{ total() }} €</p>
+      <button (click)="cantidad.update((c) => c + 1)">Añadir otra</button>
+    `,
+  })
+  export class PedidoTotal {
+    protected readonly precio = signal(15);
+    protected readonly cantidad = signal(2);
+    protected readonly subtotal = computed(() => this.precio() * this.cantidad());
+    protected readonly envio = computed(() => (this.subtotal() >= 50 ? 0 : 5));
+    protected readonly total = computed(() => this.subtotal() + this.envio());
+  }
+hints:
+  - 'La idea: los tres valores salen de otros, así que ninguno se escribe a mano; cada uno lee los signals que necesita.'
+  - 'Qué usar: `computed(() => ...)`. Dentro, los signals y los computed se leen llamándolos con `()` y con `this.` delante.'
+  - 'El plan: `computed` para el subtotal y `this.cantidad()` como segundo factor; el envío compara `this.subtotal()`; el total empieza por `this.subtotal()`.'
+tests:
+  - output: |
+      Subtotal: 60 €
+      Envío: 0 €
+      Total: 60 €
+    sample: true

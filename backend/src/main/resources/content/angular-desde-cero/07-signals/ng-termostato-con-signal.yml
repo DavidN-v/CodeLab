@@ -1,0 +1,67 @@
+title: Termostato con signal
+summary: Completa la creación de un signal y sus dos formas de cambiarlo.
+difficulty: EASY
+kind: fill
+statement: |
+  Un termostato empieza en 20 °C. El botón **+** sube un grado a partir de la temperatura actual y **Apagar** la pone directamente a 0.
+
+  Completa los huecos: importa lo necesario, crea el signal y usa el método adecuado en cada botón. Tras pulsar **+** dos veces, la página muestra lo que indica el resultado esperado.
+starter: |
+  // src/app/termostato/termostato.ts
+  import { Component, {{?}} } from '@angular/core';
+
+  @Component({
+    selector: 'app-termostato',
+    template: `
+      <p>Temperatura: {{ grados() }} °C</p>
+      <button (click)="subir()">+</button>
+      <button (click)="apagar()">Apagar</button>
+    `,
+  })
+  export class Termostato {
+    protected readonly grados = {{?}}(20);
+
+    protected subir(): void {
+      this.grados.{{?}}((g) => g + 1);
+    }
+
+    protected apagar(): void {
+      this.grados.{{?}}(0);
+    }
+  }
+answers:
+  - signal
+  - signal
+  - update
+  - set
+solution: |
+  // src/app/termostato/termostato.ts
+  import { Component, signal } from '@angular/core';
+
+  @Component({
+    selector: 'app-termostato',
+    template: `
+      <p>Temperatura: {{ grados() }} °C</p>
+      <button (click)="subir()">+</button>
+      <button (click)="apagar()">Apagar</button>
+    `,
+  })
+  export class Termostato {
+    protected readonly grados = signal(20);
+
+    protected subir(): void {
+      this.grados.update((g) => g + 1);
+    }
+
+    protected apagar(): void {
+      this.grados.set(0);
+    }
+  }
+hints:
+  - 'La idea: necesitas un valor que avise a Angular al cambiar; un botón lo cambia según su valor anterior y el otro le pone un valor fijo.'
+  - 'Qué usar: la función `signal` de `@angular/core`. Para cambiarlo: el método que recibe una función con el valor anterior, y el que recibe el valor nuevo directamente.'
+  - 'El plan: importa `signal`; crea con `signal(20)`; en `subir`, `update`; en `apagar`, `set`.'
+tests:
+  - output: |
+      Temperatura: 22 °C
+    sample: true

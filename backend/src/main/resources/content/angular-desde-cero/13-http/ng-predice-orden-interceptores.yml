@@ -1,0 +1,48 @@
+title: El orden de los interceptores
+summary: Predice la consola cuando una petición atraviesa dos interceptores de ida y vuelta.
+difficulty: HARD
+kind: predict
+statement: |
+  La aplicación registra dos interceptores con `provideHttpClient(withInterceptors([registro, auth]))`. Un componente pide las tareas y el servidor responde bien con **2 tareas**.
+
+  Recuerda que `next(req)` emite varios eventos HTTP y que aquí solo se escribe al recibir la respuesta final.
+
+  ¿Qué aparece en la consola? Escribe **una línea por mensaje**, en orden.
+starter: |
+  // src/app/interceptores.ts
+  export const registro: HttpInterceptorFn = (req, next) => {
+    console.log('registro: ida');
+    return next(req).pipe(
+      tap((evento) => {
+        if (evento.type === HttpEventType.Response) {
+          console.log('registro: vuelta');
+        }
+      }),
+    );
+  };
+
+  export const auth: HttpInterceptorFn = (req, next) => {
+    console.log('auth: ida');
+    const conToken = req.clone({ setHeaders: { Authorization: 'Bearer abc' } });
+    return next(conToken).pipe(
+      tap((evento) => {
+        if (evento.type === HttpEventType.Response) {
+          console.log('auth: vuelta');
+        }
+      }),
+    );
+  };
+
+  // en el componente
+  this.http.get<Tarea[]>('/api/tareas').subscribe((t) => console.log(`Componente: ${t.length} tareas`));
+hints:
+  - 'La idea: la petición atraviesa los interceptores como controles de un aeropuerto: a la ida en un orden y a la vuelta en el contrario. El componente es el último en enterarse.'
+  - 'Qué usar: el orden del array de `withInterceptors` es el orden de ida. La respuesta vuelve primero por el interceptor más cercano al servidor (el último del array).'
+  - 'El plan: ida: registro, auth; vuelta: auth, registro; y después el `subscribe` del componente.'
+tests:
+  - output: |
+      registro: ida
+      auth: ida
+      auth: vuelta
+      registro: vuelta
+      Componente: 2 tareas

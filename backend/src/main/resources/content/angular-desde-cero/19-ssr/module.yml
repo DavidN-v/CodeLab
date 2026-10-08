@@ -1,0 +1,28 @@
+lessons:
+  - slug: que-es-ssr
+    title: ¿Qué es renderizar en el servidor?
+    summary: CSR, SSR y SSG; por qué importan la primera carga y el SEO.
+    minutes: 7
+  - slug: proyecto-con-ssr
+    title: Un proyecto con SSR por dentro
+    summary: Qué crean ng new --ssr y ng add @angular/ssr, archivo por archivo.
+    minutes: 10
+  - slug: hidratacion
+    title: Hidratación
+    summary: Dar vida al HTML del servidor con provideClientHydration y @defer (hydrate …).
+    minutes: 8
+  - slug: modos-de-renderizado
+    title: Un modo de renderizado por ruta
+    summary: RenderMode.Prerender, Server y Client, y getPrerenderParams.
+    minutes: 8
+  - slug: codigo-solo-del-navegador
+    title: Código que solo puede ir en el navegador
+    summary: window y localStorage no existen en el servidor; afterNextRender e isPlatformBrowser.
+    minutes: 8
+exercises:
+  - ng-ssr-activar-hidratacion
+  - ng-ssr-terminal-del-servidor
+  - ng-ssr-modos-por-ruta
+  - ng-ssr-tema-guardado
+  - ng-ssr-html-del-servidor
+  - ng-ssr-prerender-productos

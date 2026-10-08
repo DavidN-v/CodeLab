@@ -1,0 +1,28 @@
+lessons:
+  - slug: formularios-de-plantilla
+    title: Formularios de plantilla con ngModel
+    summary: Las tres formas de hacer formularios y la más sencilla, con FormsModule y [(ngModel)].
+    minutes: 7
+  - slug: formularios-reactivos
+    title: Formularios reactivos
+    summary: FormControl, FormGroup y FormBuilder; el formulario como objeto tipado en la clase.
+    minutes: 8
+  - slug: validacion-y-errores
+    title: Validación, estado y errores
+    summary: valid, touched y dirty; validadores incluidos, propios y de grupo; mostrar errores a tiempo.
+    minutes: 9
+  - slug: listas-de-campos
+    title: Listas de campos con FormArray
+    summary: Formularios que crecen y encogen mientras se usan.
+    minutes: 7
+  - slug: signal-forms
+    title: Signal Forms
+    summary: Formularios construidos sobre signals con @angular/forms/signals, estables en Angular 22.
+    minutes: 9
+exercises:
+  - ng-predice-estado-formulario
+  - ng-completa-ngmodel
+  - ng-completa-formulario-reactivo
+  - ng-ordena-validador-propio
+  - ng-completa-signal-form
+  - ng-predice-lista-de-campos
