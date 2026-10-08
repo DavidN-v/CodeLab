@@ -7,13 +7,10 @@ import {
   output,
   signal,
 } from '@angular/core';
-import hljs from 'highlight.js/lib/core';
-import java from 'highlight.js/lib/languages/java';
 
 import { QuizQuestion } from '../../../../core/models/course.model';
 import { MarkdownComponent } from '../../../../shared/components/markdown/markdown.component';
-
-hljs.registerLanguage('java', java);
+import { highlightCode } from '../../../../shared/utils/code-language';
 
 interface Answer {
   /** CHOICE: index chosen. OUTPUT: text written. */
@@ -71,7 +68,7 @@ export class LessonQuizComponent {
   }
 
   protected code(question: QuizQuestion): string {
-    return question.code ? hljs.highlight(question.code, { language: 'java' }).value : '';
+    return question.code ? highlightCode(question.code) : '';
   }
 
   protected choose(index: number, option: number): void {

@@ -12,12 +12,12 @@ import { ProgressBarComponent } from '../../../../shared/components/progress-bar
 import { readStorage, writeStorage } from '../../../../core/services/browser-storage';
 import { ModulePathComponent } from '../../components/module-path/module-path.component';
 import { ModuleRowComponent } from '../../components/module-row/module-row.component';
+import { BreadcrumbsComponent } from '../../../../shared/components/breadcrumbs/breadcrumbs.component';
+import { stepLabel, stepLink } from '../../../../shared/utils/next-step';
 
 const VIEW_KEY = 'forja.courseView';
 
 /** A language's course: what it covers, the learner's progress and the module outline. */
-import { BreadcrumbsComponent } from '../../../../shared/components/breadcrumbs/breadcrumbs.component';
-import { stepLabel, stepLink } from '../../../../shared/utils/next-step';
 @Component({
   selector: 'app-course-page',
   imports: [

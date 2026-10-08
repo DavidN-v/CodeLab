@@ -1,6 +1,7 @@
 package com.forja.api.tutor;
 
 import com.forja.api.entity.Exercise;
+import com.forja.api.entity.Language;
 import com.forja.api.entity.Lesson;
 import com.forja.api.exception.ResourceNotFoundException;
 import com.forja.api.exception.TooManyRequestsException;
@@ -55,32 +56,48 @@ public class TutorService {
 
 	public String explainLesson(Long userId, Long lessonId, String question) {
 		admit(userId);
+		String[] system = new String[1];
 		String prompt = readTransaction.execute(status -> {
 			Lesson lesson = lessonRepository.findPublishedById(lessonId)
 				.orElseThrow(() -> new ResourceNotFoundException("No existe la lección con id %d.".formatted(lessonId)));
+			system[0] = systemFor(lesson.getModule().getCourse().getLanguage());
 			String asked = question == null || question.isBlank() ? TutorPrompts.DEFAULT_QUESTION
 					: "Su pregunta: " + question.strip();
 			return TutorPrompts.EXPLAIN.formatted(asked, lesson.getTitle(), clip(lesson.getContentMarkdown()));
 		});
-		return ask(prompt);
+		return ask(system[0], prompt);
 	}
 
 	public String debug(Long userId, String exerciseSlug, String sourceCode, String result) {
 		admit(userId);
-		Exercise exercise = findExercise(exerciseSlug);
-		return ask(TutorPrompts.DEBUG.formatted(exercise.getTitle(), exercise.getStatementMarkdown(), sourceCode,
-				result == null || result.isBlank() ? "(no lo ha ejecutado todavía)" : result));
+		Found found = findExercise(exerciseSlug);
+		Exercise exercise = found.exercise();
+		return ask(found.system(), TutorPrompts.DEBUG.formatted(exercise.getTitle(), exercise.getStatementMarkdown(),
+				sourceCode, result == null || result.isBlank() ? "(no lo ha ejecutado todavía)" : result));
 	}
 
 	public String review(Long userId, String exerciseSlug, String sourceCode) {
 		admit(userId);
-		Exercise exercise = findExercise(exerciseSlug);
-		return ask(TutorPrompts.REVIEW.formatted(exercise.getTitle(), exercise.getStatementMarkdown(), sourceCode));
+		Found found = findExercise(exerciseSlug);
+		Exercise exercise = found.exercise();
+		return ask(found.system(),
+				TutorPrompts.REVIEW.formatted(exercise.getTitle(), exercise.getStatementMarkdown(), sourceCode));
 	}
 
-	private Exercise findExercise(String slug) {
-		return readTransaction.execute(status -> exerciseRepository.findPublishedBySlug(slug)
-			.orElseThrow(() -> new ResourceNotFoundException("No existe el ejercicio '%s'.".formatted(slug))));
+	/** An exercise and the system prompt for its course. */
+	private record Found(Exercise exercise, String system) {
+	}
+
+	private Found findExercise(String slug) {
+		return readTransaction.execute(status -> {
+			Exercise exercise = exerciseRepository.findPublishedBySlug(slug)
+				.orElseThrow(() -> new ResourceNotFoundException("No existe el ejercicio '%s'.".formatted(slug)));
+			return new Found(exercise, systemFor(exercise.getModule().getCourse().getLanguage()));
+		});
+	}
+
+	private static String systemFor(Language language) {
+		return TutorPrompts.system(language.getSlug(), language.getName());
 	}
 
 	private void admit(Long userId) {
@@ -89,8 +106,8 @@ public class TutorService {
 		}
 	}
 
-	private String ask(String prompt) {
-		String answer = model.answer(TutorPrompts.SYSTEM, prompt);
+	private String ask(String system, String prompt) {
+		String answer = model.answer(system, prompt);
 		return answer == null || answer.isBlank() ? DECLINED : answer;
 	}
 

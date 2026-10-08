@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { switchMap } from 'rxjs';
 
 import { withoutErrorNotification } from '../../../../core/interceptors/http-error.interceptor';
@@ -12,6 +12,7 @@ import {
 } from '../../../../core/models/course.model';
 import { AuthService } from '../../../../core/services/auth.service';
 import { CourseService } from '../../../../core/services/course.service';
+import { LanguageService } from '../../../../core/services/language.service';
 import { ProgressService } from '../../../../core/services/progress.service';
 import { ProgressBarComponent } from '../../../../shared/components/progress-bar/progress-bar.component';
 import {
@@ -20,9 +21,10 @@ import {
   KIND_ICONS,
   KIND_LABELS,
 } from '../../../../shared/utils/labels';
+import { isRunnable } from '../../../../shared/utils/code-language';
 
-/** The only active course for now; the page is built per language for when there are more. */
-const LANGUAGE = 'java';
+/** The course shown when the address does not choose one. */
+const DEFAULT_LANGUAGE = 'java';
 
 type StatusFilter = 'all' | 'pending' | 'solved';
 
@@ -58,15 +60,34 @@ export class PracticePageComponent {
     'PROJECT',
   ];
 
+  private readonly router = inject(Router);
+  private readonly languageService = inject(LanguageService);
+
+  /** `?curso=angular` in the address: the language or framework whose exercises to show. */
+  readonly curso = input<string | undefined>();
+  protected readonly language = computed(() => this.curso() ?? DEFAULT_LANGUAGE);
+
+  /** Tabs: every language or framework with a course. */
+  protected readonly languages = rxResource({
+    stream: () => this.languageService.getLanguages(withoutErrorNotification()),
+  });
+  protected readonly tabs = computed(() =>
+    (this.languages.value() ?? []).filter((language) => language.active),
+  );
+  /** The playground and the visualizer run code: Java only. */
+  protected readonly runnable = computed(() => isRunnable(this.language()));
+
   protected readonly catalog = rxResource({
-    stream: () =>
+    params: () => this.language(),
+    stream: ({ params: language }) =>
       this.courses
-        .getPrimaryCourse(LANGUAGE)
+        .getPrimaryCourse(language)
         .pipe(switchMap((course) => this.courses.getExercises(course.id))),
   });
 
   private readonly courseId = rxResource({
-    stream: () => this.courses.getPrimaryCourse(LANGUAGE),
+    params: () => this.language(),
+    stream: ({ params: language }) => this.courses.getPrimaryCourse(language),
   });
 
   protected readonly progress = rxResource({
@@ -148,6 +169,12 @@ export class PracticePageComponent {
       return 'solved';
     }
     return this.attempted().has(slug) ? 'attempted' : 'new';
+  }
+
+  protected chooseLanguage(slug: string): void {
+    void this.router.navigate([], {
+      queryParams: { curso: slug === DEFAULT_LANGUAGE ? null : slug },
+    });
   }
 
   protected onQuery(event: Event): void {

@@ -2,10 +2,12 @@ package com.forja.api.tutor;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.forja.api.entity.Exercise;
+import com.forja.api.entity.Language;
 import com.forja.api.exception.TooManyRequestsException;
 import com.forja.api.learning.RateLimiter;
 import com.forja.api.repository.ExerciseRepository;
@@ -25,6 +27,8 @@ class TutorServiceTest {
 
 	private String reply = "Mira la condición del bucle.";
 
+	private final List<String> systems = new ArrayList<>();
+
 	private final ExerciseRepository exercises = mock(ExerciseRepository.class);
 
 	private TutorService service;
@@ -32,10 +36,13 @@ class TutorServiceTest {
 	@BeforeEach
 	void setUp() {
 		TutorModel model = (system, prompt) -> {
+			systems.add(system);
 			prompts.add(prompt);
 			return reply;
 		};
-		Exercise exercise = mock(Exercise.class);
+		Exercise exercise = mock(Exercise.class, RETURNS_DEEP_STUBS);
+		when(exercise.getModule().getCourse().getLanguage())
+			.thenReturn(new Language("angular", "Angular", "22", "angular", "Angular.", null, true, 10));
 		when(exercise.getTitle()).thenReturn("Contar hasta diez");
 		when(exercise.getStatementMarkdown()).thenReturn("Imprime del 1 al 10.");
 		when(exercises.findPublishedBySlug("contar")).thenReturn(Optional.of(exercise));
@@ -50,6 +57,7 @@ class TutorServiceTest {
 
 		assertThat(answer).isEqualTo("Mira la condición del bucle.");
 		assertThat(prompts.get(0)).contains("Contar hasta diez", "i < 10", "obtenido 0..9", "No escribas el programa corregido");
+		assertThat(systems.get(0)).contains("aprender Angular desde cero", "```typescript");
 	}
 
 	@Test

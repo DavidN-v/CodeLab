@@ -16,6 +16,8 @@ const PYTHON: Language = {
   tagline: 'Sintaxis clara.',
   description: null,
   active: false,
+  category: 'LANGUAGE',
+  runnable: true,
 };
 const JAVA: Language = {
   ...PYTHON,
@@ -24,6 +26,8 @@ const JAVA: Language = {
   name: 'Java',
   version: '21',
   active: true,
+  category: 'LANGUAGE',
+  runnable: true,
 };
 
 describe('HomePageComponent', () => {

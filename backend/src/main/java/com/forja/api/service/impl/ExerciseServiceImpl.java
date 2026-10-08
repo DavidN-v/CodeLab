@@ -2,33 +2,35 @@ package com.forja.api.service.impl;
 
 import com.forja.api.client.CodeRunnerClient;
 import com.forja.api.client.RunnerExecution;
+import com.forja.api.content.ContentTemplates;
+import com.forja.api.dto.CelebrationResponse;
 import com.forja.api.dto.ExerciseDetailResponse;
 import com.forja.api.dto.ExerciseProgressResponse;
 import com.forja.api.dto.ExerciseSummaryResponse;
 import com.forja.api.dto.SampleTestResponse;
 import com.forja.api.dto.SolutionResponse;
+import com.forja.api.dto.SubmissionRequest;
 import com.forja.api.dto.SubmissionResultResponse;
 import com.forja.api.dto.SubmissionSummaryResponse;
-import com.forja.api.content.ContentTemplates;
-import com.forja.api.dto.CelebrationResponse;
-import com.forja.api.dto.SubmissionRequest;
 import com.forja.api.dto.TestOutcome;
 import com.forja.api.dto.TestResultResponse;
 import com.forja.api.entity.Exercise;
 import com.forja.api.entity.ExerciseHint;
 import com.forja.api.entity.ExerciseKind;
 import com.forja.api.entity.ExerciseProgress;
+import com.forja.api.entity.Language;
 import com.forja.api.entity.Submission;
 import com.forja.api.entity.SubmissionStatus;
 import com.forja.api.exception.InvalidRequestException;
 import com.forja.api.exception.ResourceNotFoundException;
 import com.forja.api.exception.TooManyRequestsException;
-import com.forja.api.learning.Grader;
 import com.forja.api.learning.Grader.Grade;
+import com.forja.api.learning.Grader;
 import com.forja.api.learning.OutputComparator;
 import com.forja.api.learning.ParsonsPuzzle;
 import com.forja.api.learning.PredictionFeedback;
 import com.forja.api.learning.RateLimiter;
+import com.forja.api.learning.StaticChecker;
 import com.forja.api.learning.XpPolicy;
 import com.forja.api.mapper.RefMapper;
 import com.forja.api.repository.ExerciseOutline;
@@ -172,8 +174,10 @@ public class ExerciseServiceImpl implements ExerciseService {
 				.map(testCase -> new Grader.TestCase(testCase.getPosition(), testCase.getStdin(),
 						testCase.getExpectedStdout(), testCase.isSample()))
 				.toList();
-			return new ExerciseToRun(exercise.getId(), exercise.getModule().getCourse().getLanguage().getSlug(),
-					exercise.getKind(), program(exercise, request), cases);
+			Language language = exercise.getModule().getCourse().getLanguage();
+			StaticChecker.Verdict verdict = language.isRunnable() ? null : checkStatically(exercise, request);
+			return new ExerciseToRun(exercise.getId(), language.getSlug(), exercise.getKind(),
+					program(exercise, request), cases, verdict);
 		});
 
 		Grade grade;
@@ -182,6 +186,13 @@ public class ExerciseServiceImpl implements ExerciseService {
 			Grader.TestCase expected = toRun.cases().get(0);
 			boolean right = OutputComparator.matches(expected.expectedStdout(), toRun.program());
 			feedback = right ? null : PredictionFeedback.describe(expected.expectedStdout(), toRun.program());
+			grade = new Grade(right ? SubmissionStatus.ACCEPTED : SubmissionStatus.WRONG_ANSWER, right ? 1 : 0, 1,
+					null, null, List.of(new TestResultResponse(1, false,
+							right ? TestOutcome.PASSED : TestOutcome.WRONG_OUTPUT, null, null, null, null)));
+		}
+		else if (toRun.verdict() != null) {
+			boolean right = toRun.verdict().right();
+			feedback = toRun.verdict().feedback();
 			grade = new Grade(right ? SubmissionStatus.ACCEPTED : SubmissionStatus.WRONG_ANSWER, right ? 1 : 0, 1,
 					null, null, List.of(new TestResultResponse(1, false,
 							right ? TestOutcome.PASSED : TestOutcome.WRONG_OUTPUT, null, null, null, null)));
@@ -247,6 +258,17 @@ public class ExerciseServiceImpl implements ExerciseService {
 		};
 	}
 
+	/** Without a sandbox for the language, fill and parsons answers are compared with the solution. */
+	private StaticChecker.Verdict checkStatically(Exercise exercise, SubmissionRequest request) {
+		List<String> parts = request.parts() == null ? List.of() : request.parts();
+		return switch (exercise.getKind()) {
+			case FILL -> StaticChecker.checkBlanks(exercise.getStarterCode(), exercise.getSolutionCode(), parts);
+			case PARSONS -> StaticChecker.checkLines(parsonsData(exercise).lines(), parts);
+			case PREDICT -> null;
+			default -> throw new InvalidRequestException("Este ejercicio no se puede corregir en esta plataforma.");
+		};
+	}
+
 	private ParsonsPuzzle.Data parsonsData(Exercise exercise) {
 		return jsonMapper.readValue(exercise.getParsonsJson(), ParsonsPuzzle.Data.class);
 	}
@@ -288,8 +310,9 @@ public class ExerciseServiceImpl implements ExerciseService {
 				progress.isReviewDue(clock.instant()));
 	}
 
+	/** {@code verdict} is set when the answer was graded without running it. */
 	private record ExerciseToRun(Long exerciseId, String languageSlug, ExerciseKind kind, String program,
-			List<Grader.TestCase> cases) {
+			List<Grader.TestCase> cases, StaticChecker.Verdict verdict) {
 	}
 
 }

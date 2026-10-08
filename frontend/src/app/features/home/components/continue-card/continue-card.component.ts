@@ -6,12 +6,12 @@ import { withoutErrorNotification } from '../../../../core/interceptors/http-err
 import { AuthService } from '../../../../core/services/auth.service';
 import { DashboardService } from '../../../../core/services/dashboard.service';
 import { ProgressBarComponent } from '../../../../shared/components/progress-bar/progress-bar.component';
+import { stepLabel, stepLink } from '../../../../shared/utils/next-step';
 
 /**
  * For a signed-in learner, the first thing on the home page: the next lesson,
  * today's goal, the streak and any review that is due.
  */
-import { stepLabel, stepLink } from '../../../../shared/utils/next-step';
 @Component({
   selector: 'app-continue-card',
   imports: [RouterLink, ProgressBarComponent],

@@ -10,7 +10,7 @@ public class LanguageMapper {
 	public LanguageResponse toResponse(Language language) {
 		return new LanguageResponse(language.getId(), language.getSlug(), language.getName(),
 				language.getVersion(), language.getIcon(), language.getTagline(), language.getDescription(),
-				language.isActive());
+				language.isActive(), language.getCategory(), language.isRunnable());
 	}
 
 }

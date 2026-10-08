@@ -8,11 +8,11 @@ import { DailyGoalComponent } from '../../../../shared/components/daily-goal/dai
 import { ProgressBarComponent } from '../../../../shared/components/progress-bar/progress-bar.component';
 import { SUBMISSION_LABELS } from '../../../../shared/utils/labels';
 import { ActivityHeatmapComponent } from '../../components/activity-heatmap/activity-heatmap.component';
+import { stepLabel, stepLink } from '../../../../shared/utils/next-step';
 
 const RELATIVE = new Intl.RelativeTimeFormat('es', { numeric: 'auto' });
 
 /** The student's panel: where to continue, how they are doing and what they have earned. */
-import { stepLabel, stepLink } from '../../../../shared/utils/next-step';
 @Component({
   selector: 'app-dashboard-page',
   imports: [RouterLink, ProgressBarComponent, ActivityHeatmapComponent, DailyGoalComponent],

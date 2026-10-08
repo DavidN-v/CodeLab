@@ -15,6 +15,8 @@ const JAVA: Language = {
   tagline: 'Aprende Java desde cero.',
   description: null,
   active: true,
+  category: 'LANGUAGE',
+  runnable: true,
 };
 
 describe('LanguageService', () => {

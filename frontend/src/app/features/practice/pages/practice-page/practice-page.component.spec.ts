@@ -4,6 +4,7 @@ import { of } from 'rxjs';
 
 import { ExerciseSummary } from '../../../../core/models/course.model';
 import { AuthService } from '../../../../core/services/auth.service';
+import { LanguageService } from '../../../../core/services/language.service';
 import { CourseService } from '../../../../core/services/course.service';
 import { ProgressService } from '../../../../core/services/progress.service';
 import { PracticePageComponent } from './practice-page.component';
@@ -45,6 +46,7 @@ describe('PracticePageComponent', () => {
           provide: CourseService,
           useValue: { getPrimaryCourse: () => of({ id: 1 }), getExercises: () => of(EXERCISES) },
         },
+        { provide: LanguageService, useValue: { getLanguages: () => of([]) } },
         {
           provide: ProgressService,
           useValue: {

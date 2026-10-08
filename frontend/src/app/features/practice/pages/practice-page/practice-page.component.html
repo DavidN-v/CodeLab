@@ -1,6 +1,6 @@
 <section class="page" aria-labelledby="practice-heading">
   <header class="page__header">
-    <p class="page__eyebrow">Práctica · Java</p>
+    <p class="page__eyebrow">Práctica</p>
     <h1 id="practice-heading" class="page__title">Ejercicios</h1>
     <p class="page__lead">
       Cada ejercicio se corrige solo. Hay varios tipos para ir de menos a más: adivinar qué imprime
@@ -9,17 +9,38 @@
     </p>
   </header>
 
-  <div class="practice__top">
-    <a class="playground-card" routerLink="/practice/playground">
-      <span class="playground-card__title">Playground ▸</span>
-      <span class="playground-card__text">Un editor libre para probar cualquier idea en Java.</span>
-    </a>
-    <a class="playground-card" routerLink="/practice/visualizer">
-      <span class="playground-card__title">👣 Visualizador ▸</span>
-      <span class="playground-card__text"
-        >Mira un programa ejecutarse línea a línea, con sus variables.</span
-      >
-    </a>
+  @if (tabs().length > 1) {
+    <div class="tabs" role="tablist" aria-label="Curso">
+      @for (tab of tabs(); track tab.slug) {
+        <button
+          type="button"
+          role="tab"
+          class="tabs__tab"
+          [class.tabs__tab--active]="tab.slug === language()"
+          [attr.aria-selected]="tab.slug === language()"
+          (click)="chooseLanguage(tab.slug)"
+        >
+          {{ tab.name }}
+        </button>
+      }
+    </div>
+  }
+
+  <div class="practice__top" [class.practice__top--single]="!runnable()">
+    @if (runnable()) {
+      <a class="playground-card" routerLink="/practice/playground">
+        <span class="playground-card__title">Playground ▸</span>
+        <span class="playground-card__text"
+          >Un editor libre para probar cualquier idea en Java.</span
+        >
+      </a>
+      <a class="playground-card" routerLink="/practice/visualizer">
+        <span class="playground-card__title">👣 Visualizador ▸</span>
+        <span class="playground-card__text"
+          >Mira un programa ejecutarse línea a línea, con sus variables.</span
+        >
+      </a>
+    }
     @if (progress.value()) {
       <div class="practice__progress">
         <p class="section-title">{{ totals().solved }} de {{ totals().total }} resueltos</p>

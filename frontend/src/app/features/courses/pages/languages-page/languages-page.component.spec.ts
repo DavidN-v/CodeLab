@@ -15,6 +15,8 @@ const JAVA: Language = {
   tagline: 'Aprende Java.',
   description: 'Orientado a objetos.',
   active: true,
+  category: 'LANGUAGE',
+  runnable: true,
 };
 
 describe('LanguagesPageComponent', () => {

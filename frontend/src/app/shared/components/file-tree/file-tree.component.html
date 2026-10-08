@@ -1,0 +1,41 @@
+<figure class="tree">
+  <div class="tree__files" role="tree" aria-label="Archivos del proyecto">
+    @for (entry of visible(); track entry.path) {
+      <button
+        type="button"
+        class="tree__entry"
+        role="treeitem"
+        [style.padding-left.rem]="0.75 + entry.depth * 1.1"
+        [class.tree__entry--selected]="selected()?.path === entry.path"
+        [class.tree__entry--folder]="entry.folder"
+        [class.tree__entry--plain]="!entry.description"
+        [attr.aria-expanded]="entry.folder ? isOpen(entry) : null"
+        [attr.aria-selected]="selected()?.path === entry.path"
+        (click)="choose(entry)"
+      >
+        @if (entry.folder) {
+          <span class="tree__icon" aria-hidden="true">{{ isOpen(entry) ? '📂' : '📁' }}</span>
+        } @else {
+          <span class="tree__badge" [attr.data-kind]="badge(entry)">{{ badge(entry) }}</span>
+        }
+        <span class="tree__name">{{ entry.name }}{{ entry.folder ? '/' : '' }}</span>
+        @if (entry.description) {
+          <span class="tree__dot" aria-hidden="true"></span>
+        }
+      </button>
+    }
+  </div>
+  <figcaption class="tree__panel" aria-live="polite">
+    @if (selected(); as entry) {
+      <p class="tree__path">{{ entry.path }}{{ entry.folder ? '/' : '' }}</p>
+      <p class="tree__description">
+        {{ entry.description || 'Este elemento no tiene explicación en esta lección.' }}
+      </p>
+    } @else {
+      <p class="tree__hint">
+        👆 Haz clic en un archivo o carpeta para ver para qué sirve. Hay
+        {{ described() }} explicados (los que llevan un punto).
+      </p>
+    }
+  </figcaption>
+</figure>

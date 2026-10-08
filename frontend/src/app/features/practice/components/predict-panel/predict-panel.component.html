@@ -13,15 +13,17 @@
       <pre>{{ stdin() }}</pre>
     </div>
   }
-  <label class="predict__label" for="predict-answer"
-    >¿Qué imprime? Escribe la salida exacta, una línea por cada println</label
-  >
+  <label class="predict__label" for="predict-answer">{{
+    isJava()
+      ? '¿Qué imprime? Escribe la salida exacta, una línea por cada println'
+      : 'Tu respuesta: escribe exactamente lo que pide el enunciado'
+  }}</label>
   <textarea
     id="predict-answer"
     class="predict__answer"
     spellcheck="false"
     rows="5"
-    placeholder="Sigue el programa línea a línea, como si fueras el ordenador…"
+    placeholder="Sigue el código línea a línea, como si fueras el ordenador…"
     [value]="answer()"
     (input)="onInput($event)"
   ></textarea>

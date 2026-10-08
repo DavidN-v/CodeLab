@@ -83,6 +83,10 @@ public class ContentImporter implements ApplicationRunner {
 
 	private static final int MAX_TEST_CASES = 12;
 
+	/** The kinds that can be graded without a sandbox for the language. */
+	private static final Set<ExerciseKind> GRADED_WITHOUT_RUNNING = Set.of(ExerciseKind.FILL, ExerciseKind.PARSONS,
+			ExerciseKind.PREDICT);
+
 	private final ModuleRepository moduleRepository;
 
 	private final LessonRepository lessonRepository;
@@ -216,6 +220,10 @@ public class ContentImporter implements ApplicationRunner {
 			ExerciseFile file = read(manifest.createRelative(slug + ".yml"), ExerciseFile.class);
 			ExerciseKind kind = kindOf(slug, file);
 			validate(slug, kind, file);
+			if (!module.getCourse().getLanguage().isRunnable() && !GRADED_WITHOUT_RUNNING.contains(kind)) {
+				throw new IllegalStateException(("Exercise %s is %s, but %s programs cannot be run here: use fill, "
+						+ "parsons or predict").formatted(slug, kind, module.getCourse().getLanguage().getName()));
+			}
 			String solution = kind == ExerciseKind.PREDICT && file.solution() == null ? file.tests().get(0).output()
 					: file.solution();
 			String parsons = kind == ExerciseKind.PARSONS ? jsonMapper.writeValueAsString(

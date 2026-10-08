@@ -2,6 +2,8 @@ package com.forja.api.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
 
 @Entity
@@ -31,6 +33,14 @@ public class Language extends BaseEntity {
 
 	@Column(name = "display_order", nullable = false)
 	private int displayOrder;
+
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false, length = 10)
+	private LanguageCategory category = LanguageCategory.LANGUAGE;
+
+	/** Whether the sandbox can run programs written in it. */
+	@Column(nullable = false)
+	private boolean runnable;
 
 	protected Language() {
 	}
@@ -77,6 +87,14 @@ public class Language extends BaseEntity {
 
 	public int getDisplayOrder() {
 		return displayOrder;
+	}
+
+	public LanguageCategory getCategory() {
+		return category;
+	}
+
+	public boolean isRunnable() {
+		return runnable;
 	}
 
 }

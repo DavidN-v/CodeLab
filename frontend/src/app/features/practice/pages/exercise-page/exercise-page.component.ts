@@ -51,6 +51,8 @@ import { ParsonsBoardComponent } from '../../components/parsons-board/parsons-bo
 import { PredictPanelComponent } from '../../components/predict-panel/predict-panel.component';
 import { TestResultsComponent } from '../../components/test-results/test-results.component';
 import { blankCount, fillProgram, parsonsProgram } from '../../exercise-program';
+import { BreadcrumbsComponent } from '../../../../shared/components/breadcrumbs/breadcrumbs.component';
+import { isRunnable } from '../../../../shared/utils/code-language';
 
 function draftKey(slug: string): string {
   return `forja.exercise.${slug}`;
@@ -67,7 +69,6 @@ function readJson<T>(key: string, fallback: T): T {
 }
 
 /** Statement, work area and grading for one exercise, whatever its kind. */
-import { BreadcrumbsComponent } from '../../../../shared/components/breadcrumbs/breadcrumbs.component';
 @Component({
   selector: 'app-exercise-page',
   imports: [
@@ -194,8 +195,15 @@ export class ExercisePageComponent {
     () => this.progress.value()?.solved === true || this.submission()?.status === 'ACCEPTED',
   );
 
+  /** Whether the sandbox can run this course's code (Java yes, Angular no). */
+  protected readonly runnable = computed(() =>
+    isRunnable(this.exercise.value()?.course.languageSlug),
+  );
+
   /** Predictions are only run once answered: running would give the answer away. */
-  protected readonly canRun = computed(() => this.kind() !== 'PREDICT' || this.solved());
+  protected readonly canRun = computed(
+    () => this.runnable() && (this.kind() !== 'PREDICT' || this.solved()),
+  );
 
   /** Compiler and runtime errors to underline in the editor. */
   protected readonly marks = computed<LineMark[]>(() => {

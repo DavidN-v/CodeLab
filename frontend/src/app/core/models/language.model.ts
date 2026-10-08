@@ -9,4 +9,8 @@ export interface Language {
   description: string | null;
   /** False while the language is announced but has no content yet. */
   active: boolean;
+  /** A programming language, or a framework built on one (Angular). */
+  category: 'LANGUAGE' | 'FRAMEWORK';
+  /** Whether learners' code runs in the sandbox (Java); otherwise exercises are graded by comparison. */
+  runnable: boolean;
 }

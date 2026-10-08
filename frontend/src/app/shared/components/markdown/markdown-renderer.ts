@@ -1,11 +1,39 @@
 import hljs from 'highlight.js/lib/core';
+import bash from 'highlight.js/lib/languages/bash';
+import css from 'highlight.js/lib/languages/css';
 import java from 'highlight.js/lib/languages/java';
+import javascript from 'highlight.js/lib/languages/javascript';
+import json from 'highlight.js/lib/languages/json';
+import scss from 'highlight.js/lib/languages/scss';
+import typescript from 'highlight.js/lib/languages/typescript';
+import xml from 'highlight.js/lib/languages/xml';
 import { Marked, Token, Tokens } from 'marked';
 
 import { GlossaryTerm } from '../../../core/models/course.model';
 import { renderMemoryDiagram } from './memory-diagram';
 
 hljs.registerLanguage('java', java);
+hljs.registerLanguage('typescript', typescript);
+hljs.registerLanguage('javascript', javascript);
+hljs.registerLanguage('xml', xml);
+hljs.registerLanguage('css', css);
+hljs.registerLanguage('scss', scss);
+hljs.registerLanguage('json', json);
+hljs.registerLanguage('bash', bash);
+
+/** Fence language → highlight.js language and the label shown above the block. */
+const LANGUAGES: Readonly<Record<string, { hljs: string; label: string }>> = {
+  java: { hljs: 'java', label: 'Java' },
+  typescript: { hljs: 'typescript', label: 'TypeScript' },
+  ts: { hljs: 'typescript', label: 'TypeScript' },
+  javascript: { hljs: 'javascript', label: 'JavaScript' },
+  js: { hljs: 'javascript', label: 'JavaScript' },
+  html: { hljs: 'xml', label: 'HTML' },
+  css: { hljs: 'css', label: 'CSS' },
+  scss: { hljs: 'scss', label: 'SCSS' },
+  json: { hljs: 'json', label: 'JSON' },
+  bash: { hljs: 'bash', label: 'Terminal' },
+};
 
 export interface Heading {
   id: string;
@@ -19,7 +47,11 @@ export interface Heading {
 export type Segment =
   | { kind: 'html'; html: string }
   | { kind: 'example'; code: string }
-  | { kind: 'mermaid'; source: string };
+  | { kind: 'mermaid'; source: string }
+  /** `arbol`: a project's files, each with what it is for. */
+  | { kind: 'tree'; source: string }
+  /** `pantalla`: static HTML showing what the browser displays. */
+  | { kind: 'screen'; html: string; url: string };
 
 export interface RenderedMarkdown {
   segments: Segment[];
@@ -138,6 +170,16 @@ export function renderMarkdown(source: string, options: RenderOptions = {}): Ren
         segments.push({ kind: 'mermaid', source: code });
         continue;
       }
+      if (language === 'arbol') {
+        flush();
+        segments.push({ kind: 'tree', source: code });
+        continue;
+      }
+      if (language === 'pantalla') {
+        flush();
+        segments.push({ kind: 'screen', ...parseScreen(code) });
+        continue;
+      }
     }
     pending.push(token);
   }
@@ -157,29 +199,43 @@ export function renderMarkdown(source: string, options: RenderOptions = {}): Ren
 /** The whole document as one HTML string, for short texts such as statements and hints. */
 export function renderMarkdownHtml(source: string): string {
   return renderMarkdown(source)
-    .segments.map((segment) =>
-      segment.kind === 'html'
-        ? segment.html
-        : codeBlock(
-            segment.kind === 'example' ? segment.code : segment.source,
-            segment.kind === 'example' ? 'java' : 'mermaid',
-            '',
-          ),
-    )
+    .segments.map((segment) => {
+      switch (segment.kind) {
+        case 'html':
+          return segment.html;
+        case 'example':
+          return codeBlock(segment.code, 'java', '');
+        case 'mermaid':
+          return codeBlock(segment.source, 'mermaid', '');
+        case 'tree':
+          return codeBlock(segment.source, 'arbol', '');
+        case 'screen':
+          return codeBlock(segment.html, 'html', '');
+      }
+    })
     .join('');
 }
 
+/** `@url /ruta` on the first line sets the address bar; the rest is the page. */
+export function parseScreen(code: string): { html: string; url: string } {
+  const match = /^@url[ \t]+(\S+)[ \t]*\n?/.exec(code);
+  return match
+    ? { url: match[1], html: code.slice(match[0].length) }
+    : { url: 'localhost:4200', html: code };
+}
+
 function codeBlock(text: string, language: string, variant: string): string {
-  const highlighted =
-    language === 'java' ? hljs.highlight(text, { language: 'java' }).value : escapeHtml(text);
+  const known = LANGUAGES[language];
+  const highlighted = known
+    ? hljs.highlight(text, { language: known.hljs }).value
+    : escapeHtml(text);
+  const name = known?.label ?? (language || 'texto');
   const label =
-    language === 'java'
-      ? variant === 'error'
-        ? 'Java · con un error a propósito'
-        : variant === 'fragment'
-          ? 'Java · fragmento'
-          : 'Java'
-      : language || 'texto';
+    variant === 'error'
+      ? `${name} · con un error a propósito`
+      : variant === 'fragment'
+        ? `${name} · fragmento`
+        : name;
   return `<div class="prose__code${variant === 'error' ? ' prose__code--error' : ''}"><div class="prose__code-bar"><span class="prose__code-lang">${label}</span></div><pre><code class="hljs">${highlighted}</code></pre></div>\n`;
 }
 

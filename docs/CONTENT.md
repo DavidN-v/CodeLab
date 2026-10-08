@@ -69,6 +69,36 @@ lección, la primera parte conserva el slug y la segunda recibe uno nuevo.
 | ` ```memoria ` | Diagrama de memoria (pila y montón). |
 | ` ```mermaid ` | Diagrama de flujo o de clases (sintaxis de Mermaid). |
 
+### Árbol de archivos (` ```arbol `)
+
+Un proyecto interactivo: las carpetas se abren y cierran, y al elegir un
+archivo se muestra para qué sirve. Una entrada por línea, dos espacios por
+nivel, las carpetas terminan en `/` y la explicación va tras `#`:
+
+````markdown
+```arbol
+mi-app/                 # La carpeta del proyecto que crea ng new
+  src/                  # Todo el código de tu aplicación
+    main.ts             # Punto de entrada: arranca Angular
+  package.json          # Librerías del proyecto y comandos
+```
+````
+
+### Pantalla (` ```pantalla `)
+
+Lo que se ve en el navegador: HTML estático dentro de una ventana de
+navegador, en un marco aislado sin scripts (no se permiten `<script>` ni
+atributos `on…=`). Una primera línea `@url /ruta` opcional pone el texto de la
+barra de direcciones.
+
+````markdown
+```pantalla
+@url localhost:4200/perfil
+<h1>Hola, Ada</h1>
+<button>Sumar</button> <span>Contador: 3</span>
+```
+````
+
 ### Recuadros
 
 Un bloque de cita cuya primera línea es `[!tipo]`:
@@ -250,6 +280,29 @@ distractors:
 **`project`**: un miniproyecto al final de un bloque (una calculadora, el
 ahorcado, una agenda…). Como `code`, pero el enunciado es más largo y se
 organiza en pasos.
+
+## Cursos que no se ejecutan (Angular)
+
+El sandbox solo ejecuta Java. Los cursos de otras tecnologías (como
+`angular-desde-cero`, del framework Angular) se marcan en la base de datos con
+`languages.runnable = false` y siguen estas reglas, que comprueban el
+importador y `tools/verify_content.py`:
+
+- Solo ejercicios `fill`, `parsons` y `predict`. Se corrigen comparando con la
+  solución, sin ejecutar: en `fill` cada hueco se compara con lo que la
+  solución tiene en su sitio, sin tener en cuenta los espacios junto a los
+  signos ni el tipo de comillas (`{{titulo()}}` vale como `{{ titulo() }}`);
+  en `parsons`, las líneas en orden. Cada ejercicio debe tener una única
+  respuesta correcta.
+- `predict` lleva una sola prueba, cuya `output` es la respuesta exacta.
+- Bloques de código: `typescript`, `html`, `css`, `scss`, `json`, `bash`,
+  `text`, `mermaid`, `arbol` y `pantalla`.
+- Las preguntas `output` del quiz llevan `code` y `answer`, pero no se
+  ejecutan: hay que comprobarlas a mano.
+- Los slugs de ejercicio son globales: los de Angular empiezan por `ng-`.
+
+Para revisar solo un curso: `python3 tools/verify_content.py --course
+angular-desde-cero 04`.
 
 ## Glosario
 

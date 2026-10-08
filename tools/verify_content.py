@@ -5,6 +5,10 @@ a running code-runner.
     python3 tools/verify_content.py                       # whole course
     python3 tools/verify_content.py 05-condicionales      # one module (prefix match)
     python3 tools/verify_content.py --static 05            # structure only, no runner
+    python3 tools/verify_content.py --course angular-desde-cero 04
+
+Courses whose programs the sandbox cannot run (see RUNNABLE_COURSES) are
+checked without the runner: their exercises are graded by comparing answers.
 
 The runner URL comes from FORJA_RUNNER_URL (default http://localhost:8090).
 The content format is described in docs/CONTENT.md. Exit code 0 means no
@@ -28,6 +32,13 @@ CONTENT = os.path.join(ROOT, 'backend', 'src', 'main', 'resources', 'content')
 RUNNER = os.environ.get('FORJA_RUNNER_URL', 'http://localhost:8090').rstrip('/') + '/internal/executions'
 
 KINDS = {'code', 'fix', 'fill', 'parsons', 'predict', 'project'}
+# Courses whose programs run in the sandbox; the rest are graded without running.
+RUNNABLE_COURSES = {'java-desde-cero'}
+STATIC_KINDS = {'fill', 'parsons', 'predict'}
+# Fenced block languages a lesson of a non-runnable course may use.
+STATIC_LANGUAGES = {'typescript', 'ts', 'html', 'css', 'scss', 'json', 'bash', 'text', 'javascript', 'js',
+                    'arbol', 'pantalla', 'mermaid'}
+TREE_LINE = re.compile(r'^( *)([^\s#][^#]*?)\s*(?:#\s*(.+))?$')
 DIFFICULTIES = {'EASY', 'MEDIUM', 'HARD'}
 CALLOUTS = {'analogia', 'idea', 'prueba', 'cuidado', 'resumen'}
 BLANK = '{{?}}'
@@ -154,13 +165,16 @@ def assemble_parsons(template, lines):
     return '\n'.join(out)
 
 
-def check_exercise(where, data, jobs):
+def check_exercise(where, data, jobs, runnable=True):
     if not isinstance(data, dict):
         problem(where, 'not a mapping')
         return
     kind = data.get('kind', 'code')
     if kind not in KINDS:
         problem(where, f'unknown kind {kind!r}')
+        return
+    if not runnable and kind not in STATIC_KINDS:
+        problem(where, f'kind {kind}: this course cannot run programs; use fill, parsons or predict')
         return
     for key in ('title', 'summary', 'statement', 'starter'):
         if not is_text(data.get(key)):
@@ -194,6 +208,9 @@ def check_exercise(where, data, jobs):
         return
 
     starter, solution = data['starter'], data.get('solution')
+    if not runnable:
+        check_static_exercise(where, kind, data, starter, solution)
+        return
     if kind in ('code', 'project'):
         jobs.append(lambda: check_passes(where + ' solution', solution, tests))
         jobs.append(lambda: check_compiles(where + ' starter', starter))
@@ -235,6 +252,37 @@ def check_exercise(where, data, jobs):
             jobs.append(lambda: check_passes(where + ' (the shown program)', starter, tests))
 
 
+def check_static_exercise(where, kind, data, starter, solution):
+    """Exercises graded by comparison: the content only has to be consistent."""
+    if kind == 'fill':
+        blanks = starter.count(BLANK)
+        answers = data.get('answers')
+        if blanks == 0:
+            problem(where, f'kind fill: the starter needs at least one {BLANK}')
+        elif not isinstance(answers, list) or len(answers) != blanks or not all(is_text(a) for a in answers):
+            problem(where, f'kind fill: needs one answer per blank ({blanks})')
+        elif normalize(fill_template(starter, answers)) != normalize(solution):
+            problem(where, 'kind fill: starter with the answers is not the solution')
+    elif kind == 'parsons':
+        lines = data.get('lines')
+        distractors = data.get('distractors') or []
+        if sum(1 for line in starter.split('\n') if line.strip() == LINES) != 1:
+            problem(where, f'kind parsons: the starter needs exactly one {LINES} line')
+        elif not isinstance(lines, list) or len(lines) < 3 or not all(is_text(line) for line in lines):
+            problem(where, 'kind parsons: needs at least 3 lines')
+        elif not all(is_text(line) for line in distractors):
+            problem(where, 'kind parsons: distractors must be text')
+        elif normalize(assemble_parsons(starter, lines)) != normalize(solution):
+            problem(where, 'kind parsons: starter with the lines in order is not the solution')
+        elif len({line.strip() for line in lines}) != len(lines):
+            problem(where, 'kind parsons: two lines are equal, so their order cannot be checked')
+        elif any(d.strip() in {line.strip() for line in lines} for d in distractors):
+            problem(where, 'kind parsons: a distractor is equal to a right line')
+    elif kind == 'predict':
+        if len(data['tests']) != 1:
+            problem(where, 'kind predict: needs exactly one test, whose output is the answer')
+
+
 def _distractor_cheap(where, starter, lines, distractors, tests):
     """A distractor must break the program; checked in one position to keep it cheap."""
     for wrong in distractors:
@@ -245,7 +293,7 @@ def _distractor_cheap(where, starter, lines, distractors, tests):
 
 # --- lessons ----------------------------------------------------------------
 
-def check_markdown(where, markdown, jobs):
+def check_markdown(where, markdown, jobs, runnable=True):
     for match in CALLOUT.finditer(markdown):
         if match.group(1).strip().lower() not in CALLOUTS:
             problem(where, f'unknown callout [!{match.group(1)}]; use one of {sorted(CALLOUTS)}')
@@ -254,12 +302,43 @@ def check_markdown(where, markdown, jobs):
         language = info[0] if info else ''
         variant = info[1] if len(info) > 1 else ''
         code = match.group(2)
+        if language == 'arbol':
+            check_tree(f'{where} arbol {index}', code)
+            continue
+        if language == 'pantalla':
+            if not code.strip():
+                problem(where, f'pantalla {index} is empty')
+            if re.search(r'<script|\son\w+\s*=', code, re.I):
+                problem(where, f'pantalla {index}: no scripts or on* handlers; it only shows HTML')
+            continue
+        if not runnable:
+            if language not in STATIC_LANGUAGES:
+                problem(where, f'block {index}: use one of {sorted(STATIC_LANGUAGES)}, not {language!r}')
+            continue
         if language == 'java' and variant == '' and 'static void main' in code:
             jobs.append(lambda code=code, index=index: check_compiles(f'{where} example {index}', code))
         elif language == 'java' and variant not in ('', 'fragment', 'error'):
             problem(where, f'example {index}: unknown java variant {variant!r}')
         elif language == 'memoria':
             check_memory(f'{where} memoria {index}', code)
+
+
+def check_tree(where, code):
+    """```arbol: one entry per line, two spaces per level, folders end in /, "# what it is"."""
+    depth_of_previous = -1
+    for line in code.rstrip('\n').split('\n'):
+        if not line.strip():
+            continue
+        match = TREE_LINE.match(line)
+        indent = len(line) - len(line.lstrip(' '))
+        if not match or indent % 2:
+            problem(where, f'bad line {line!r}: indent by 2 spaces, then the name, then optional "# description"')
+            return
+        depth = indent // 2
+        if depth > depth_of_previous + 1:
+            problem(where, f'{line.strip()!r} is indented more than one level below the previous entry')
+            return
+        depth_of_previous = depth
 
 
 def check_memory(where, code):
@@ -279,7 +358,7 @@ def check_memory(where, code):
             problem(where, f'heap line must be "@id Type: content": {stripped!r}')
 
 
-def check_quiz(where, quiz, jobs):
+def check_quiz(where, quiz, jobs, runnable=True):
     if not isinstance(quiz, dict) or not isinstance(quiz.get('questions'), list) or not quiz['questions']:
         problem(where, 'needs a non-empty "questions" list')
         return
@@ -307,11 +386,14 @@ def check_quiz(where, quiz, jobs):
                 problem(at, '"answer" must be the 0-based index of the right option')
             elif len(set(o.strip() for o in options)) != len(options):
                 problem(at, 'options must be different')
-            if code and 'static void main' in code:
+            if runnable and code and 'static void main' in code:
                 jobs.append(lambda at=at, code=code: check_compiles(at, code))
         elif kind == 'output':
             answer = question.get('answer')
-            if not code or 'static void main' not in code:
+            if not runnable:
+                if not code or not isinstance(answer, str) or not answer.strip():
+                    problem(at, 'output questions need "code" and the exact text it shows as "answer"')
+            elif not code or 'static void main' not in code:
                 problem(at, 'output questions need a complete program in "code"')
             elif not isinstance(answer, str):
                 problem(at, '"answer" must be the exact text the program prints')
@@ -326,6 +408,7 @@ def check_quiz(where, quiz, jobs):
 
 def check_module(module_dir, jobs, seen_exercises):
     name = os.path.relpath(module_dir, CONTENT)
+    runnable = os.path.basename(os.path.dirname(module_dir)) in RUNNABLE_COURSES
     manifest = load_yaml(os.path.join(module_dir, 'module.yml'))
     if not isinstance(manifest, dict):
         return
@@ -346,12 +429,12 @@ def check_module(module_dir, jobs, seen_exercises):
             problem(name, f'missing {slug}.md')
             continue
         with open(path, encoding='utf-8') as handle:
-            check_markdown(f'{name}/{slug}.md', handle.read(), jobs)
+            check_markdown(f'{name}/{slug}.md', handle.read(), jobs, runnable)
         quiz_path = os.path.join(module_dir, slug + '.quiz.yml')
         if os.path.exists(quiz_path):
             quiz = load_yaml(quiz_path)
             if quiz is not None:
-                check_quiz(f'{name}/{slug}.quiz.yml', quiz, jobs)
+                check_quiz(f'{name}/{slug}.quiz.yml', quiz, jobs, runnable)
     for path in glob.glob(os.path.join(module_dir, '*.quiz.yml')):
         if os.path.basename(path)[:-len('.quiz.yml')] not in lesson_slugs:
             problem(name, f'{os.path.basename(path)} belongs to no lesson in module.yml')
@@ -371,7 +454,7 @@ def check_module(module_dir, jobs, seen_exercises):
             continue
         data = load_yaml(path)
         if data is not None:
-            check_exercise(f'{name}/{slug}.yml', data, jobs)
+            check_exercise(f'{name}/{slug}.yml', data, jobs, runnable)
 
 
 def check_glossary(path):
@@ -398,6 +481,11 @@ def check_glossary(path):
 
 def main(argv):
     static_only = '--static' in argv
+    course = None
+    if '--course' in argv:
+        at = argv.index('--course')
+        course = argv[at + 1]
+        argv = argv[:at] + argv[at + 2:]
     filters = [arg for arg in argv if not arg.startswith('--')]
     jobs = []
     seen = set()
@@ -405,6 +493,8 @@ def main(argv):
     checked = 0
     for module_dir in module_dirs:
         if filters and not any(os.path.basename(module_dir).startswith(f) for f in filters):
+            continue
+        if course and os.path.basename(os.path.dirname(module_dir)) != course:
             continue
         checked += 1
         check_module(module_dir, jobs, seen)

@@ -13,9 +13,9 @@ import {
   KIND_ICONS,
   KIND_LABELS,
 } from '../../../../shared/utils/labels';
+import { BreadcrumbsComponent } from '../../../../shared/components/breadcrumbs/breadcrumbs.component';
 
 /** A module's lessons, in reading order, and its exercises. */
-import { BreadcrumbsComponent } from '../../../../shared/components/breadcrumbs/breadcrumbs.component';
 @Component({
   selector: 'app-module-page',
   imports: [BreadcrumbsComponent, RouterLink],

@@ -24,6 +24,8 @@ const COURSE: CourseDetail = {
     tagline: '',
     description: null,
     active: true,
+    category: 'LANGUAGE',
+    runnable: true,
   },
   modules: [
     {

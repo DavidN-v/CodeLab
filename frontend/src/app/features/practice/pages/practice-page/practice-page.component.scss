@@ -11,6 +11,40 @@
   }
 }
 
+.practice__top--single {
+  @include from('md') {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.tabs {
+  display: flex;
+  gap: var(--space-2);
+  margin-bottom: var(--space-5);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.tabs__tab {
+  margin-bottom: -1px;
+  padding: var(--space-2) var(--space-4);
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: none;
+  color: var(--color-text-muted);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--color-text);
+  }
+
+  &--active {
+    border-bottom-color: var(--color-accent);
+    color: var(--color-text);
+  }
+}
+
 .playground-card {
   display: flex;
   flex-direction: column;

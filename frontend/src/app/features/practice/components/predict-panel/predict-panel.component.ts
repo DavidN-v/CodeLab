@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, input, model } from '@angular/core';
 import hljs from 'highlight.js/lib/core';
-import java from 'highlight.js/lib/languages/java';
 
-hljs.registerLanguage('java', java);
+import { guessLanguage } from '../../../../shared/utils/code-language';
 
 /** "¿Qué imprime?": the program to read, and a box for the predicted output. */
 @Component({
@@ -17,12 +16,15 @@ export class PredictPanelComponent {
   readonly stdin = input('');
   readonly answer = model.required<string>();
 
-  protected readonly lines = computed(() =>
-    this.code()
+  protected readonly isJava = computed(() => guessLanguage(this.code()) === 'java');
+
+  protected readonly lines = computed(() => {
+    const language = guessLanguage(this.code());
+    return this.code()
       .replace(/\n$/, '')
       .split('\n')
-      .map((line) => hljs.highlight(line, { language: 'java', ignoreIllegals: true }).value),
-  );
+      .map((line) => hljs.highlight(line, { language, ignoreIllegals: true }).value);
+  });
 
   protected onInput(event: Event): void {
     this.answer.set((event.target as HTMLTextAreaElement).value);

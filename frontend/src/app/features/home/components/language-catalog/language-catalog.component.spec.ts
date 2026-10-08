@@ -15,6 +15,8 @@ function language(slug: string, active: boolean): Language {
     tagline: '',
     description: null,
     active,
+    category: 'LANGUAGE',
+    runnable: true,
   };
 }
 

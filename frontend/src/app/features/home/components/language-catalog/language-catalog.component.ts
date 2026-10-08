@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 
+import { groupLanguages } from '../../../../core/models/language-groups';
 import { Language } from '../../../../core/models/language.model';
 import { LoadState } from '../../../../core/models/load-state.model';
 import { LanguageListItemComponent } from '../../../../shared/components/language-list-item/language-list-item.component';
@@ -15,6 +16,8 @@ import { LanguageListItemComponent } from '../../../../shared/components/languag
 export class LanguageCatalogComponent {
   readonly languages = input.required<readonly Language[]>();
   readonly loadState = input.required<LoadState>();
+
+  protected readonly groups = computed(() => groupLanguages(this.languages()));
 
   /** Emitted when the user asks to load the catalog again after a failure. */
   readonly retry = output<void>();
