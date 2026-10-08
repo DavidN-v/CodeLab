@@ -50,15 +50,13 @@
             {{ courseProgress.solvedExercises }} de {{ courseProgress.totalExercises }} ejercicios
           </p>
         </div>
-        @if (courseProgress.nextLesson; as next) {
-          <a
-            class="button button--primary"
-            [routerLink]="['/learn', detail.language.slug, next.moduleSlug, next.slug]"
-          >
-            {{ courseProgress.completedLessons === 0 ? 'Empezar' : 'Continuar' }}: {{ next.title }}
+        @if (courseProgress.nextStep; as next) {
+          <a class="button button--primary" [routerLink]="stepLink(detail.language.slug, next)">
+            {{ courseProgress.percent === 0 ? 'Empezar' : 'Siguiente paso' }} →
+            {{ stepLabel(next) }}
           </a>
         } @else {
-          <p class="tag tag--done">Has leído todas las lecciones</p>
+          <p class="tag tag--done">🏁 Curso terminado</p>
         }
       } @else {
         @if (firstModule(); as first) {

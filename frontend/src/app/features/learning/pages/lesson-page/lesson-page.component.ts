@@ -133,7 +133,39 @@ export class LessonPageComponent {
     }
   }
 
-  /** Marks the lesson as read and moves on to the next one, if any. */
+  /**
+   * Where the path goes after this lesson: the next lesson of the module; after the
+   * last one, the module's exercises; then the next module.
+   */
+  protected readonly afterLesson = computed<{ label: string; link: string[] } | null>(() => {
+    const value = this.page.value();
+    if (!value) {
+      return null;
+    }
+    const { lesson, module } = value;
+    if (lesson.next && lesson.next.moduleSlug === module.slug) {
+      return {
+        label: 'Siguiente lección: ' + lesson.next.title,
+        link: ['/learn', this.languageSlug(), lesson.next.moduleSlug, lesson.next.slug],
+      };
+    }
+    const solved = new Set(this.progress.value()?.solvedExerciseSlugs ?? []);
+    const exercise =
+      module.exercises.find((e) => !solved.has(e.slug)) ??
+      (solved.size === 0 ? module.exercises[0] : undefined);
+    if (exercise) {
+      return { label: 'Practicar lo aprendido', link: ['/practice', exercise.slug] };
+    }
+    if (lesson.next) {
+      return {
+        label: 'Siguiente módulo',
+        link: ['/learn', this.languageSlug(), lesson.next.moduleSlug, lesson.next.slug],
+      };
+    }
+    return { label: 'Volver al curso', link: ['/languages', this.languageSlug()] };
+  });
+
+  /** Marks the lesson as read and moves on along the path. */
   protected completeAndContinue(): void {
     const value = this.page.value();
     if (!value || this.completing()) {
@@ -141,16 +173,8 @@ export class LessonPageComponent {
     }
     const { lesson } = value;
     const goNext = () => {
-      if (lesson.next) {
-        void this.router.navigate([
-          '/learn',
-          this.languageSlug(),
-          lesson.next.moduleSlug,
-          lesson.next.slug,
-        ]);
-      } else {
-        void this.router.navigate(['/languages', this.languageSlug()]);
-      }
+      const next = this.afterLesson();
+      void this.router.navigate(next ? next.link : ['/languages', this.languageSlug()]);
     };
     if (this.isCompleted()) {
       goNext();

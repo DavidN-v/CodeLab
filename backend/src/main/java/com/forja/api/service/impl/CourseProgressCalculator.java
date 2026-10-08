@@ -2,6 +2,7 @@ package com.forja.api.service.impl;
 
 import com.forja.api.dto.CourseProgressResponse;
 import com.forja.api.dto.ModuleProgressResponse;
+import com.forja.api.dto.NextStepResponse;
 import com.forja.api.mapper.RefMapper;
 import com.forja.api.repository.ExerciseOutline;
 import com.forja.api.repository.LessonOutline;
@@ -10,6 +11,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 import org.springframework.stereotype.Component;
 
 /** Combines a course's outline with what a learner has done. Shared by the progress and dashboard services. */
@@ -68,7 +71,35 @@ class CourseProgressCalculator {
 		int done = completed.size() + solved.size();
 		int percent = total == 0 ? 0 : (int) Math.floor(done * 100.0 / total);
 		return new CourseProgressResponse(courseId, completed.size(), lessons.size(), solved.size(), exercises.size(),
-				percent, completed, solved, attempted, modules, refMapper.toRef(nextLesson));
+				percent, completed, solved, attempted, modules, refMapper.toRef(nextLesson),
+				nextStep(lessons, exercises, completedLessonIds, solvedExerciseIds));
+	}
+
+	/** Module by module, in order: the first lesson not read, else the first exercise not solved. */
+	private static NextStepResponse nextStep(List<LessonOutline> lessons, List<ExerciseOutline> exercises,
+			Set<Long> completedLessonIds, Set<Long> solvedExerciseIds) {
+		Map<Integer, NextStepResponse> firstLesson = new TreeMap<>();
+		for (LessonOutline lesson : lessons) {
+			if (!completedLessonIds.contains(lesson.id())) {
+				firstLesson.putIfAbsent(lesson.modulePosition(), new NextStepResponse(NextStepResponse.Kind.LESSON,
+						lesson.slug(), lesson.title(), lesson.moduleSlug(), lesson.moduleTitle(), lesson.modulePosition()));
+			}
+		}
+		Map<Integer, NextStepResponse> firstExercise = new TreeMap<>();
+		for (ExerciseOutline exercise : exercises) {
+			if (!solvedExerciseIds.contains(exercise.id())) {
+				firstExercise.putIfAbsent(exercise.modulePosition(),
+						new NextStepResponse(NextStepResponse.Kind.EXERCISE, exercise.slug(), exercise.title(),
+								exercise.moduleSlug(), exercise.moduleTitle(), exercise.modulePosition()));
+			}
+		}
+		TreeSet<Integer> pending = new TreeSet<>(firstLesson.keySet());
+		pending.addAll(firstExercise.keySet());
+		if (pending.isEmpty()) {
+			return null;
+		}
+		int module = pending.first();
+		return firstLesson.containsKey(module) ? firstLesson.get(module) : firstExercise.get(module);
 	}
 
 }

@@ -59,7 +59,8 @@ public record DashboardResponse(
 	public record CourseCard(CourseRefResponse course, int percent, int completedLessons, int totalLessons,
 			int solvedExercises, int totalExercises,
 			@Schema(description = "Module of the next lesson; null when the course is finished.") ModuleRefResponse currentModule,
-			LessonRefResponse nextLesson) {
+			LessonRefResponse nextLesson,
+			@Schema(description = "Next lesson or exercise on the path; null when the course is finished.") NextStepResponse nextStep) {
 	}
 
 	@Schema(name = "RecentSubmission")

@@ -17,6 +17,7 @@ const VIEW_KEY = 'forja.courseView';
 
 /** A language's course: what it covers, the learner's progress and the module outline. */
 import { BreadcrumbsComponent } from '../../../../shared/components/breadcrumbs/breadcrumbs.component';
+import { stepLabel, stepLink } from '../../../../shared/utils/next-step';
 @Component({
   selector: 'app-course-page',
   imports: [
@@ -31,6 +32,9 @@ import { BreadcrumbsComponent } from '../../../../shared/components/breadcrumbs/
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CoursePageComponent {
+  protected readonly stepLink = stepLink;
+  protected readonly stepLabel = stepLabel;
+
   private readonly courses = inject(CourseService);
   private readonly progressService = inject(ProgressService);
   protected readonly auth = inject(AuthService);

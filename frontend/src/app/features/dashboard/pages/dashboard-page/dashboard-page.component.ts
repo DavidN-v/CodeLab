@@ -12,6 +12,7 @@ import { ActivityHeatmapComponent } from '../../components/activity-heatmap/acti
 const RELATIVE = new Intl.RelativeTimeFormat('es', { numeric: 'auto' });
 
 /** The student's panel: where to continue, how they are doing and what they have earned. */
+import { stepLabel, stepLink } from '../../../../shared/utils/next-step';
 @Component({
   selector: 'app-dashboard-page',
   imports: [RouterLink, ProgressBarComponent, ActivityHeatmapComponent, DailyGoalComponent],
@@ -20,6 +21,9 @@ const RELATIVE = new Intl.RelativeTimeFormat('es', { numeric: 'auto' });
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardPageComponent {
+  protected readonly stepLink = stepLink;
+  protected readonly stepLabel = stepLabel;
+
   private readonly dashboardService = inject(DashboardService);
 
   protected readonly submissionLabels = SUBMISSION_LABELS;

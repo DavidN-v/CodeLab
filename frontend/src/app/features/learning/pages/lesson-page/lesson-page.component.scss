@@ -172,6 +172,12 @@
   }
 }
 
+.lesson__next-hint {
+  max-width: 40rem;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
 .lesson__login {
   color: var(--color-text-muted);
 

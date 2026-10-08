@@ -69,6 +69,14 @@ const PROGRESS: CourseProgress = {
     moduleSlug: 'fundamentos',
     moduleTitle: 'Fundamentos',
   },
+  nextStep: {
+    kind: 'LESSON',
+    slug: 'salida',
+    title: 'Escribir en la consola',
+    moduleSlug: 'fundamentos',
+    moduleTitle: 'Fundamentos',
+    modulePosition: 1,
+  },
 };
 
 describe('CoursePageComponent', () => {
@@ -118,7 +126,7 @@ describe('CoursePageComponent', () => {
 
     const resume = element.querySelector('.course__resume .button--primary');
     expect(resume?.getAttribute('href')).toBe('/learn/java/fundamentos/salida');
-    expect(resume?.textContent).toContain('Continuar');
+    expect(resume?.textContent).toContain('Siguiente paso');
     expect(element.textContent).toContain('20 %');
   });
 });

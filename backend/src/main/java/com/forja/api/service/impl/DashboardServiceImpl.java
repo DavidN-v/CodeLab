@@ -10,6 +10,7 @@ import com.forja.api.dto.DashboardResponse.ReviewItem;
 import com.forja.api.dto.DashboardResponse.Level;
 import com.forja.api.dto.DashboardResponse.RecentSubmission;
 import com.forja.api.dto.DashboardResponse.Streak;
+import com.forja.api.dto.NextStepResponse;
 import com.forja.api.dto.DashboardResponse.Totals;
 import com.forja.api.dto.ModuleRefResponse;
 import com.forja.api.dto.ModuleProgressResponse;
@@ -146,15 +147,16 @@ public class DashboardServiceImpl implements DashboardService {
 			CourseProgressResponse progress = calculator.calculate(course.getId(), lessons, exercises,
 					completedLessons, solvedExercises, attemptedExercises);
 			progressByCourse.add(progress);
-			ModuleRefResponse currentModule = progress.nextLesson() == null ? null
+			NextStepResponse next = progress.nextStep();
+			ModuleRefResponse currentModule = next == null ? null
 					: lessons.stream()
-						.filter(lesson -> lesson.id().equals(progress.nextLesson().id()))
+						.filter(lesson -> lesson.moduleSlug().equals(next.moduleSlug()))
 						.findFirst()
 						.map(refMapper::moduleOf)
 						.orElse(null);
 			courses.add(new CourseCard(refMapper.toRef(course), progress.percent(), progress.completedLessons(),
 					progress.totalLessons(), progress.solvedExercises(), progress.totalExercises(), currentModule,
-					progress.nextLesson()));
+					progress.nextLesson(), next));
 		}
 
 		List<RecentSubmission> recent = submissionRepository

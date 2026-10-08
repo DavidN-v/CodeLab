@@ -2,20 +2,21 @@
   <section class="continue" aria-labelledby="continue-heading">
     <div class="continue__main">
       <p class="continue__eyebrow">Hola, {{ panel.user.displayName }} 👋</p>
-      @if (course()?.nextLesson; as next) {
+      @if (course()?.nextStep; as next) {
         <h2 id="continue-heading" class="continue__title">Continúa donde lo dejaste</h2>
         <p class="continue__lesson">
-          {{ course()!.currentModule?.title }} · <strong>{{ next.title }}</strong>
+          Módulo {{ next.modulePosition }} · {{ next.moduleTitle }} ·
+          <strong>{{ stepLabel(next) }}</strong>
         </p>
         <a
           class="button button--primary"
-          [routerLink]="['/learn', course()!.course.languageSlug, next.moduleSlug, next.slug]"
+          [routerLink]="stepLink(course()!.course.languageSlug, next)"
         >
-          Continuar →
+          Siguiente paso →
         </a>
       } @else {
-        <h2 id="continue-heading" class="continue__title">¡Has leído todas las lecciones!</h2>
-        <a class="button button--primary" routerLink="/practice">Seguir practicando →</a>
+        <h2 id="continue-heading" class="continue__title">🏁 ¡Has terminado el curso!</h2>
+        <a class="button button--primary" routerLink="/practice">Repasar ejercicios →</a>
       }
     </div>
     <ul class="continue__facts">

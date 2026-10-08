@@ -11,6 +11,7 @@ import { ProgressBarComponent } from '../../../../shared/components/progress-bar
  * For a signed-in learner, the first thing on the home page: the next lesson,
  * today's goal, the streak and any review that is due.
  */
+import { stepLabel, stepLink } from '../../../../shared/utils/next-step';
 @Component({
   selector: 'app-continue-card',
   imports: [RouterLink, ProgressBarComponent],
@@ -19,6 +20,9 @@ import { ProgressBarComponent } from '../../../../shared/components/progress-bar
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContinueCardComponent {
+  protected readonly stepLink = stepLink;
+  protected readonly stepLabel = stepLabel;
+
   private readonly dashboards = inject(DashboardService);
   protected readonly auth = inject(AuthService);
 

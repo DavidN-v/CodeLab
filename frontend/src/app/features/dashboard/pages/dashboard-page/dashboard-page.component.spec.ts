@@ -35,6 +35,14 @@ const DASHBOARD: Dashboard = {
         moduleSlug: 'variables',
         moduleTitle: 'Variables',
       },
+      nextStep: {
+        kind: 'LESSON',
+        slug: 'declarar',
+        title: 'Declarar variables',
+        moduleSlug: 'variables',
+        moduleTitle: 'Variables',
+        modulePosition: 2,
+      },
     },
   ],
   recentSubmissions: [

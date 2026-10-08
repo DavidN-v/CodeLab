@@ -88,7 +88,7 @@ describe('ModulePageComponent', () => {
 
     const resume = element.querySelector('.page__header .button--primary');
     expect(resume?.getAttribute('href')).toBe('/learn/java/fundamentos/primer-programa');
-    expect(resume?.textContent).toContain('Continuar');
+    expect(resume?.textContent).toContain('Siguiente paso');
     expect(element.querySelectorAll('.check--done')).toHaveLength(2);
     expect(element.querySelector('a[href="/practice/hola-mundo"] .tag')?.textContent?.trim()).toBe(
       'Fácil',

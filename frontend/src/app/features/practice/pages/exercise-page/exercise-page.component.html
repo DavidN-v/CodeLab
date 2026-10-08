@@ -299,11 +299,9 @@
         @if (submission(); as result) {
           <div class="panel panel--console">
             <app-test-results [result]="result" />
-            @if (result.status === 'ACCEPTED' && detail.next; as next) {
+            @if (result.status === 'ACCEPTED' && afterExercise(); as next) {
               <div class="next-step">
-                <a class="button button--primary" [routerLink]="['/practice', next.slug]">
-                  Siguiente: {{ next.title }} →
-                </a>
+                <a class="button button--primary" [routerLink]="next.link"> {{ next.label }} → </a>
               </div>
             }
           </div>

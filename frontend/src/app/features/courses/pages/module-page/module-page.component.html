@@ -23,21 +23,27 @@
       />
       <h1 id="module-heading" class="page__title">{{ detail.title }}</h1>
       <p class="page__lead">{{ detail.summary }}</p>
-      @if (nextLesson(); as next) {
+      <p class="module__how">
+        Primero lee las lecciones en orden; después resuelve los ejercicios para afianzar lo
+        aprendido. Cuando acabes, pasa al módulo siguiente.
+      </p>
+      @if (nextStep(); as next) {
         <div>
-          <a
-            class="button button--primary"
-            [routerLink]="['/learn', languageSlug(), detail.slug, next.slug]"
-          >
-            {{ started() ? 'Continuar' : 'Empezar' }}: {{ next.title }}
+          <a class="button button--primary" [routerLink]="next.link">
+            {{ started() ? 'Siguiente paso' : 'Empezar' }} → {{ next.label }}
           </a>
         </div>
       }
     </header>
 
-    <div class="module__columns">
-      <section aria-labelledby="lessons-heading">
-        <h2 id="lessons-heading" class="section-title">Lecciones</h2>
+    <div class="module__path">
+      <section class="phase" aria-labelledby="lessons-heading">
+        <h2 id="lessons-heading" class="phase__title">
+          <span class="phase__number" aria-hidden="true">1</span> Aprende
+          <span class="phase__count"
+            >{{ lessonsRead() }}/{{ detail.lessons.length }} lecciones</span
+          >
+        </h2>
         <ol class="rows">
           @for (lesson of detail.lessons; track lesson.id) {
             <li>
@@ -62,8 +68,13 @@
         </ol>
       </section>
 
-      <section aria-labelledby="exercises-heading">
-        <h2 id="exercises-heading" class="section-title">Ejercicios</h2>
+      <section class="phase" aria-labelledby="exercises-heading">
+        <h2 id="exercises-heading" class="phase__title">
+          <span class="phase__number" aria-hidden="true">2</span> Practica
+          <span class="phase__count"
+            >{{ exercisesSolved() }}/{{ detail.exercises.length }} ejercicios</span
+          >
+        </h2>
         @if (detail.exercises.length === 0) {
           <p class="state">Este módulo todavía no tiene ejercicios.</p>
         } @else {

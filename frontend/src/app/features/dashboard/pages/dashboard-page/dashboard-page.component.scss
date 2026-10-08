@@ -121,6 +121,29 @@
   font-family: var(--font-mono);
 }
 
+.course-card__steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: var(--space-2) 0 0;
+  padding: 0;
+  list-style: none;
+  color: var(--color-text-subtle);
+  font-size: var(--text-sm);
+
+  li {
+    padding: var(--space-1) var(--space-3);
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+  }
+}
+
+.course-card__step--now {
+  border-color: var(--color-accent) !important;
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
 .course-card__action {
   align-self: flex-start;
   margin-top: var(--space-2);

@@ -1,6 +1,7 @@
 import { CourseRef, LessonRef, ModuleRef } from './course.model';
 import { SubmissionStatus } from './exercise.model';
 import { User } from './auth.model';
+import { NextStep } from './progress.model';
 
 export interface Level {
   number: number;
@@ -31,6 +32,7 @@ export interface CourseCard {
   totalExercises: number;
   currentModule: ModuleRef | null;
   nextLesson: LessonRef | null;
+  nextStep: NextStep | null;
 }
 
 export interface RecentSubmission {

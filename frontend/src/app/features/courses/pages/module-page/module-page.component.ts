@@ -61,13 +61,43 @@ export class ModulePageComponent {
     () => new Set(this.progress.value()?.attemptedExerciseSlugs ?? []),
   );
 
-  /** First lesson not read yet, or the first one. */
-  protected readonly nextLesson = computed(() => {
-    const lessons = this.module.value()?.lessons ?? [];
-    return lessons.find((lesson) => !this.completedLessons().has(lesson.id)) ?? lessons[0] ?? null;
+  protected readonly lessonsRead = computed(
+    () =>
+      (this.module.value()?.lessons ?? []).filter((l) => this.completedLessons().has(l.id)).length,
+  );
+  protected readonly exercisesSolved = computed(
+    () =>
+      (this.module.value()?.exercises ?? []).filter((e) => this.solvedExercises().has(e.slug))
+        .length,
+  );
+
+  /** The first unread lesson, then the first unsolved exercise, then the next module. */
+  protected readonly nextStep = computed<{ label: string; link: string[] } | null>(() => {
+    const detail = this.module.value();
+    if (!detail) {
+      return null;
+    }
+    const lesson = detail.lessons.find((l) => !this.completedLessons().has(l.id));
+    if (lesson) {
+      return {
+        label: 'Lección: ' + lesson.title,
+        link: ['/learn', this.languageSlug(), detail.slug, lesson.slug],
+      };
+    }
+    const exercise = detail.exercises.find((e) => !this.solvedExercises().has(e.slug));
+    if (exercise) {
+      return { label: 'Ejercicio: ' + exercise.title, link: ['/practice', exercise.slug] };
+    }
+    if (detail.next) {
+      return {
+        label: 'Módulo ' + detail.next.position + ': ' + detail.next.title,
+        link: ['/languages', this.languageSlug(), 'modules', detail.next.slug],
+      };
+    }
+    return null;
   });
 
-  protected readonly started = computed(() => this.completedLessons().size > 0);
+  protected readonly started = computed(() => this.lessonsRead() > 0 || this.exercisesSolved() > 0);
 
   protected isCompleted(lessonId: number): boolean {
     return this.completedLessons().has(lessonId);

@@ -27,15 +27,10 @@
           >
           está en peligro: haz una lección o un ejercicio hoy para no perderla.
         </p>
-        @if (panel.courses[0]?.nextLesson; as next) {
+        @if (panel.courses[0]?.nextStep; as next) {
           <a
             class="button button--primary button--small"
-            [routerLink]="[
-              '/learn',
-              panel.courses[0].course.languageSlug,
-              next.moduleSlug,
-              next.slug,
-            ]"
+            [routerLink]="stepLink(panel.courses[0].course.languageSlug, next)"
           >
             Salvar la racha →
           </a>
@@ -61,16 +56,24 @@
               · Módulo actual: {{ module.position }}. {{ module.title }}
             }
           </p>
-          @if (card.nextLesson; as next) {
+          @if (card.nextStep; as next) {
+            <ol class="course-card__steps" aria-label="Cómo avanzar en cada módulo">
+              <li [class.course-card__step--now]="next.kind === 'LESSON'">1. Lee las lecciones</li>
+              <li [class.course-card__step--now]="next.kind === 'EXERCISE'">
+                2. Resuelve sus ejercicios
+              </li>
+              <li>3. Pasa al siguiente módulo</li>
+            </ol>
             <a
               class="button button--primary course-card__action"
-              [routerLink]="['/learn', card.course.languageSlug, next.moduleSlug, next.slug]"
+              [routerLink]="stepLink(card.course.languageSlug, next)"
             >
-              Continuar: {{ next.title }}
+              {{ card.percent === 0 ? 'Empezar' : 'Siguiente paso' }} → {{ stepLabel(next) }}
             </a>
           } @else {
+            <p class="card__detail">🏁 ¡Has terminado el curso! Repasa cuando quieras.</p>
             <a class="button button--secondary course-card__action" routerLink="/practice"
-              >Seguir practicando</a
+              >Repasar ejercicios</a
             >
           }
         </article>

@@ -215,6 +215,29 @@ export class ExercisePageComponent {
       : [];
   });
 
+  /**
+   * Where the path goes once this exercise is solved: the module's next exercise, or
+   * the next module once its exercises are done.
+   */
+  protected readonly afterExercise = computed<{ label: string; link: string[] } | null>(() => {
+    const detail = this.exercise.value();
+    if (!detail) {
+      return null;
+    }
+    const next = detail.next;
+    if (next && next.module.id === detail.module.id) {
+      return { label: 'Siguiente ejercicio: ' + next.title, link: ['/practice', next.slug] };
+    }
+    if (next) {
+      return {
+        label:
+          '¡Módulo terminado! Empieza el módulo ' + next.module.position + ': ' + next.module.title,
+        link: ['/languages', detail.course.languageSlug, 'modules', next.module.slug],
+      };
+    }
+    return { label: '🏁 Volver al curso', link: ['/languages', detail.course.languageSlug] };
+  });
+
   /** The latest outcome failed: offer the tutor's debugging help. */
   protected readonly failing = computed(() => {
     const submission = this.submission();

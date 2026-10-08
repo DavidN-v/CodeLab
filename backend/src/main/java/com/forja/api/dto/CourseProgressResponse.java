@@ -15,5 +15,6 @@ public record CourseProgressResponse(
 		List<String> solvedExerciseSlugs,
 		@Schema(description = "Exercises submitted at least once but not solved yet.") List<String> attemptedExerciseSlugs,
 		List<ModuleProgressResponse> modules,
-		@Schema(description = "First lesson not completed yet, in reading order; null when all are done.") LessonRefResponse nextLesson) {
+		@Schema(description = "First lesson not completed yet, in reading order; null when all are done.") LessonRefResponse nextLesson,
+		@Schema(description = "Next lesson or exercise on the path: a module's lessons, then its exercises; null when all are done.") NextStepResponse nextStep) {
 }
