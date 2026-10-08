@@ -12,7 +12,7 @@
 } @else if (dashboard.value(); as panel) {
   <section class="page" aria-labelledby="dashboard-heading">
     <header class="page__header">
-      <p class="page__eyebrow">Panel</p>
+      <p class="page__eyebrow">Mi panel</p>
       <h1 id="dashboard-heading" class="page__title">
         {{ greeting() }}, {{ panel.user.displayName }}
       </h1>
@@ -43,6 +43,73 @@
       </div>
     }
 
+    <div class="next-up">
+      <h2 class="section-title">Sigue donde lo dejaste</h2>
+      @for (card of panel.courses; track card.course.id) {
+        <article class="card course-card">
+          <div class="course-card__head">
+            <h3 class="course-card__title">
+              <a [routerLink]="['/languages', card.course.languageSlug]">{{ card.course.title }}</a>
+            </h3>
+            <span class="course-card__percent">{{ card.percent }} %</span>
+          </div>
+          <app-progress-bar [percent]="card.percent" [label]="'Progreso en ' + card.course.title" />
+          <p class="card__detail">
+            {{ card.completedLessons }}/{{ card.totalLessons }} lecciones ·
+            {{ card.solvedExercises }}/{{ card.totalExercises }} ejercicios
+            @if (card.currentModule; as module) {
+              · Módulo actual: {{ module.position }}. {{ module.title }}
+            }
+          </p>
+          @if (card.nextLesson; as next) {
+            <a
+              class="button button--primary course-card__action"
+              [routerLink]="['/learn', card.course.languageSlug, next.moduleSlug, next.slug]"
+            >
+              Continuar: {{ next.title }}
+            </a>
+          } @else {
+            <a class="button button--secondary course-card__action" routerLink="/practice"
+              >Seguir practicando</a
+            >
+          }
+        </article>
+      }
+
+      @if (panel.reviews.length > 0) {
+        <h2 class="section-title columns__heading">🔁 Repaso de hoy</h2>
+        <div class="card reviews">
+          <p class="card__detail">
+            Volver a resolver lo que ya hiciste, sin mirar, es lo que hace que no se olvide. Cada
+            repaso superado lo aleja un poco más en el tiempo.
+          </p>
+          <ul class="rows">
+            @for (review of panel.reviews; track review.exerciseSlug) {
+              <li>
+                <a class="row-link" [routerLink]="['/practice', review.exerciseSlug]">
+                  <span class="check" aria-hidden="true">↻</span>
+                  <span class="submission">
+                    <span>{{ review.exerciseTitle }}</span>
+                    <span class="submission__meta"
+                      >{{ review.moduleTitle }} · lo resolviste
+                      {{ daysSince(review.solvedAt) }}</span
+                    >
+                  </span>
+                  <span class="submission__time">Repasar →</span>
+                </a>
+              </li>
+            }
+          </ul>
+          @if (panel.reviewsDue > panel.reviews.length) {
+            <p class="card__detail">
+              Y {{ panel.reviewsDue - panel.reviews.length }} más pendientes.
+            </p>
+          }
+        </div>
+      }
+    </div>
+
+    <h2 class="section-title">Tu progreso</h2>
     <div class="overview">
       <div class="card">
         <app-daily-goal
@@ -83,95 +150,26 @@
           Mejor racha: {{ panel.streak.longest }}.
         </p>
       </div>
-
-      <ul class="stats" aria-label="Totales">
-        <li class="stat">
-          <span class="stat__value">{{ panel.totals.lessonsCompleted }}</span> lecciones
-        </li>
-        <li class="stat">
-          <span class="stat__value">{{ panel.totals.exercisesSolved }}</span> ejercicios resueltos
-        </li>
-        <li class="stat">
-          <span class="stat__value">{{ panel.totals.submissions }}</span> envíos
-        </li>
-        <li class="stat">
-          <span class="stat__value">{{ hours(panel.totals.learningMinutes) }}</span> de estudio
-        </li>
-      </ul>
     </div>
+
+    <ul class="stats" aria-label="Totales">
+      <li class="stat">
+        <span class="stat__value">{{ panel.totals.lessonsCompleted }}</span> lecciones
+      </li>
+      <li class="stat">
+        <span class="stat__value">{{ panel.totals.exercisesSolved }}</span> ejercicios resueltos
+      </li>
+      <li class="stat">
+        <span class="stat__value">{{ panel.totals.submissions }}</span> envíos
+      </li>
+      <li class="stat">
+        <span class="stat__value">{{ hours(panel.totals.learningMinutes) }}</span> de estudio
+      </li>
+    </ul>
 
     <div class="columns">
       <div class="columns__main">
-        <h2 class="section-title">Tus cursos</h2>
-        @for (card of panel.courses; track card.course.id) {
-          <article class="card course-card">
-            <div class="course-card__head">
-              <h3 class="course-card__title">
-                <a [routerLink]="['/languages', card.course.languageSlug]">{{
-                  card.course.title
-                }}</a>
-              </h3>
-              <span class="course-card__percent">{{ card.percent }} %</span>
-            </div>
-            <app-progress-bar
-              [percent]="card.percent"
-              [label]="'Progreso en ' + card.course.title"
-            />
-            <p class="card__detail">
-              {{ card.completedLessons }}/{{ card.totalLessons }} lecciones ·
-              {{ card.solvedExercises }}/{{ card.totalExercises }} ejercicios
-              @if (card.currentModule; as module) {
-                · Módulo actual: {{ module.position }}. {{ module.title }}
-              }
-            </p>
-            @if (card.nextLesson; as next) {
-              <a
-                class="button button--primary course-card__action"
-                [routerLink]="['/learn', card.course.languageSlug, next.moduleSlug, next.slug]"
-              >
-                Continuar: {{ next.title }}
-              </a>
-            } @else {
-              <a class="button button--secondary course-card__action" routerLink="/practice"
-                >Seguir practicando</a
-              >
-            }
-          </article>
-        }
-
-        @if (panel.reviews.length > 0) {
-          <h2 class="section-title columns__heading">🔁 Repaso de hoy</h2>
-          <div class="card reviews">
-            <p class="card__detail">
-              Volver a resolver lo que ya hiciste, sin mirar, es lo que hace que no se olvide. Cada
-              repaso superado lo aleja un poco más en el tiempo.
-            </p>
-            <ul class="rows">
-              @for (review of panel.reviews; track review.exerciseSlug) {
-                <li>
-                  <a class="row-link" [routerLink]="['/practice', review.exerciseSlug]">
-                    <span class="check" aria-hidden="true">↻</span>
-                    <span class="submission">
-                      <span>{{ review.exerciseTitle }}</span>
-                      <span class="submission__meta"
-                        >{{ review.moduleTitle }} · lo resolviste
-                        {{ daysSince(review.solvedAt) }}</span
-                      >
-                    </span>
-                    <span class="submission__time">Repasar →</span>
-                  </a>
-                </li>
-              }
-            </ul>
-            @if (panel.reviewsDue > panel.reviews.length) {
-              <p class="card__detail">
-                Y {{ panel.reviewsDue - panel.reviews.length }} más pendientes.
-              </p>
-            }
-          </div>
-        }
-
-        <h2 class="section-title columns__heading">Actividad</h2>
+        <h2 class="section-title">Actividad</h2>
         <div class="card">
           <app-activity-heatmap [days]="panel.activity" />
         </div>

@@ -17,11 +17,13 @@
   @let module = value.module;
   <div class="study">
     <aside class="study__index" aria-label="Lecciones del módulo">
-      <p class="section-title">
+      <p class="study__module">
         <a [routerLink]="['/languages', languageSlug(), 'modules', module.slug]">
-          Módulo {{ module.position }} · {{ module.title }}
+          <span class="study__module-label">Módulo {{ module.position }}</span>
+          {{ module.title }}
         </a>
       </p>
+      <p class="section-title">Lecciones</p>
       <ol class="index">
         @for (item of module.lessons; track item.id) {
           <li>
@@ -40,7 +42,7 @@
         }
       </ol>
       @if (module.exercises.length > 0) {
-        <p class="section-title index__exercises-title">Practica</p>
+        <p class="section-title index__exercises-title">Ejercicios del módulo</p>
         <ul class="index">
           @for (exercise of module.exercises; track exercise.id) {
             <li>
@@ -56,12 +58,19 @@
 
     <article class="study__content" aria-labelledby="lesson-heading">
       <header class="lesson__header">
-        <p class="page__eyebrow">
-          Lección {{ lesson.position }} de {{ module.lessons.length }} ·
-          {{ lesson.estimatedMinutes }} min
-        </p>
+        <app-breadcrumbs
+          [crumbs]="[
+            { label: lesson.course.title, link: ['/languages', languageSlug()] },
+            {
+              label: 'Módulo ' + module.position + ' · ' + module.title,
+              link: ['/languages', languageSlug(), 'modules', module.slug],
+            },
+            { label: 'Lección ' + lesson.position + ' de ' + module.lessons.length },
+          ]"
+        />
         <h1 id="lesson-heading" class="page__title">{{ lesson.title }}</h1>
         <p class="page__lead">{{ lesson.summary }}</p>
+        <p class="lesson__time">⏱ {{ lesson.estimatedMinutes }} min de lectura</p>
       </header>
 
       <app-markdown
@@ -74,7 +83,7 @@
         <app-lesson-quiz [questions]="lesson.quiz" (finished)="onQuizFinished($event)" />
       }
 
-      @if (auth.isAuthenticated()) {
+      @if (auth.isAuthenticated() && tutorEnabled()) {
         <div class="lesson__tutor" id="tutor">
           <p class="lesson__tutor-title">¿Algo no ha quedado claro?</p>
           <app-tutor-panel
@@ -148,10 +157,12 @@
       <p class="study__glossary">
         <a [routerLink]="['/languages', languageSlug(), 'glossary']">📖 Glosario del curso</a>
       </p>
-      @if (auth.isAuthenticated()) {
+      @if (auth.isAuthenticated() && tutorEnabled()) {
         <p class="study__glossary">
           <a [href]="router.url.split('#')[0] + '#tutor'">✦ Pregunta al tutor</a>
         </p>
+      }
+      @if (auth.isAuthenticated()) {
         <div class="study__module-progress">
           <p class="section-title">Progreso del módulo</p>
           <app-progress-bar [percent]="modulePercent()" label="Progreso del módulo" />

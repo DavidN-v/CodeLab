@@ -15,10 +15,12 @@
 } @else if (module.value(); as detail) {
   <section class="page" aria-labelledby="module-heading">
     <header class="page__header">
-      <p class="page__eyebrow">
-        <a [routerLink]="['/languages', languageSlug()]">{{ detail.course.title }}</a> / Módulo
-        {{ detail.position }}
-      </p>
+      <app-breadcrumbs
+        [crumbs]="[
+          { label: detail.course.title, link: ['/languages', languageSlug()] },
+          { label: 'Módulo ' + detail.position },
+        ]"
+      />
       <h1 id="module-heading" class="page__title">{{ detail.title }}</h1>
       <p class="page__lead">{{ detail.summary }}</p>
       @if (nextLesson(); as next) {

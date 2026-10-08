@@ -1,11 +1,14 @@
 <section class="page" aria-labelledby="glossary-heading">
   <header class="page__header">
-    <p class="page__eyebrow">
-      <a [routerLink]="['/languages', languageSlug()]">{{
-        glossary.value()?.course?.title ?? 'Curso'
-      }}</a>
-      / Glosario
-    </p>
+    <app-breadcrumbs
+      [crumbs]="[
+        {
+          label: glossary.value()?.course?.title ?? 'Curso',
+          link: ['/languages', languageSlug()],
+        },
+        { label: 'Glosario' },
+      ]"
+    />
     <h1 id="glossary-heading" class="page__title">Glosario</h1>
     <p class="page__lead">
       Las palabras que aparecen en el curso, explicadas con palabras sencillas. En las lecciones,

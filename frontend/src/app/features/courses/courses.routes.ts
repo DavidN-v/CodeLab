@@ -4,7 +4,7 @@ import { Routes } from '@angular/router';
 export const COURSES_ROUTES: Routes = [
   {
     path: '',
-    title: 'Lenguajes',
+    title: 'Cursos',
     loadComponent: () =>
       import('./pages/languages-page/languages-page.component').then(
         (m) => m.LanguagesPageComponent,

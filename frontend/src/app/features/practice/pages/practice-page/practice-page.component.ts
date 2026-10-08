@@ -118,6 +118,31 @@ export class PracticePageComponent {
     return { total, solved, percent: total === 0 ? 0 : (solved / total) * 100 };
   });
 
+  /** True while a search or a filter narrows the list. */
+  private readonly filtering = computed(
+    () =>
+      this.query().trim() !== '' ||
+      this.difficulty() !== 'ALL' ||
+      this.kind() !== 'ALL' ||
+      this.status() !== 'all',
+  );
+
+  /** The first module that still has something to solve: where the learner is. */
+  private readonly currentModuleId = computed(
+    () =>
+      this.groups().find((group) => this.solvedIn(group) < group.exercises.length)?.module.id ??
+      null,
+  );
+
+  protected solvedIn(group: ModuleGroup): number {
+    return group.exercises.filter((exercise) => this.solved().has(exercise.slug)).length;
+  }
+
+  /** Filtered results show open; otherwise only the module the learner is on. */
+  protected isOpen(group: ModuleGroup): boolean {
+    return this.filtering() || group.module.id === this.currentModuleId();
+  }
+
   protected exerciseState(slug: string): 'solved' | 'attempted' | 'new' {
     if (this.solved().has(slug)) {
       return 'solved';

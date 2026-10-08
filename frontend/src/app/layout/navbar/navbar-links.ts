@@ -5,8 +5,8 @@ export interface NavLink {
 
 /** Primary navigation, in display order. */
 export const NAV_LINKS: readonly NavLink[] = [
-  { label: 'Lenguajes', path: '/languages' },
+  { label: 'Mi panel', path: '/dashboard' },
+  { label: 'Cursos', path: '/languages' },
+  // The visualizer and the playground live inside Práctica.
   { label: 'Práctica', path: '/practice' },
-  { label: 'Visualizador', path: '/practice/visualizer' },
-  { label: 'Panel', path: '/dashboard' },
 ];

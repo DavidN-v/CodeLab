@@ -8,7 +8,7 @@ import { MarkdownComponent } from '../markdown/markdown.component';
 
 /**
  * A button that asks the AI tutor something, and its answer. When the server
- * has no tutor configured, it says so and how to turn it on.
+ * has no tutor configured, it renders nothing.
  */
 @Component({
   selector: 'app-tutor-panel',

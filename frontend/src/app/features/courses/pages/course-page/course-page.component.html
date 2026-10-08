@@ -13,10 +13,12 @@
 } @else if (course.value(); as detail) {
   <section class="page" aria-labelledby="course-heading">
     <header class="page__header">
-      <p class="page__eyebrow">
-        <a routerLink="/languages">Lenguajes</a> / {{ detail.language.name }}
-        {{ detail.language.version }}
-      </p>
+      <app-breadcrumbs
+        [crumbs]="[
+          { label: 'Cursos', link: '/languages' },
+          { label: 'Curso de ' + detail.language.name + ' ' + detail.language.version },
+        ]"
+      />
       <h1 id="course-heading" class="page__title">{{ detail.title }}</h1>
       <p class="page__lead">{{ detail.summary }}</p>
       @if (detail.description) {

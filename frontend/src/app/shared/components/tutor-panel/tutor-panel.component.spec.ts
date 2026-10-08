@@ -21,11 +21,10 @@ describe('TutorPanelComponent', () => {
     element = fixture.nativeElement as HTMLElement;
   }
 
-  it('says how to turn the tutor on when the server has none', async () => {
+  it('shows nothing when the server has no tutor', async () => {
     await render(false, () => of(''));
 
-    expect(element.querySelector('button')).toBeNull();
-    expect(element.querySelector('.tutor__off')?.textContent).toContain('ANTHROPIC_API_KEY');
+    expect(element.querySelector('.tutor')).toBeNull();
   });
 
   it('shows the answer', async () => {

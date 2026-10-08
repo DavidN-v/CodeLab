@@ -7,7 +7,7 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
-import { rxResource } from '@angular/core/rxjs-interop';
+import { rxResource, toSignal } from '@angular/core/rxjs-interop';
 import { Title } from '@angular/platform-browser';
 import { Router, RouterLink } from '@angular/router';
 import { Observable, catchError, forkJoin, of, switchMap, tap } from 'rxjs';
@@ -20,6 +20,7 @@ import { CourseService } from '../../../../core/services/course.service';
 import { NotificationService } from '../../../../core/services/notification.service';
 import { ProgressService } from '../../../../core/services/progress.service';
 import { TutorService } from '../../../../core/services/tutor.service';
+import { BreadcrumbsComponent } from '../../../../shared/components/breadcrumbs/breadcrumbs.component';
 import { MarkdownComponent } from '../../../../shared/components/markdown/markdown.component';
 import { ProgressBarComponent } from '../../../../shared/components/progress-bar/progress-bar.component';
 import { TutorPanelComponent } from '../../../../shared/components/tutor-panel/tutor-panel.component';
@@ -30,6 +31,7 @@ import { LessonQuizComponent } from '../../components/lesson-quiz/lesson-quiz.co
 @Component({
   selector: 'app-lesson-page',
   imports: [
+    BreadcrumbsComponent,
     RouterLink,
     MarkdownComponent,
     ProgressBarComponent,
@@ -49,6 +51,8 @@ export class LessonPageComponent {
   protected readonly router = inject(Router);
   private readonly title = inject(Title);
   protected readonly auth = inject(AuthService);
+  /** The tutor's corner only shows when the server has a tutor. */
+  protected readonly tutorEnabled = toSignal(this.tutor.isEnabled(), { initialValue: false });
 
   /** Route parameters. */
   readonly languageSlug = input.required<string>();

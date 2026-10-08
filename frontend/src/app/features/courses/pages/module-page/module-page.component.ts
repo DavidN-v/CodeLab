@@ -15,9 +15,10 @@ import {
 } from '../../../../shared/utils/labels';
 
 /** A module's lessons, in reading order, and its exercises. */
+import { BreadcrumbsComponent } from '../../../../shared/components/breadcrumbs/breadcrumbs.component';
 @Component({
   selector: 'app-module-page',
-  imports: [RouterLink],
+  imports: [BreadcrumbsComponent, RouterLink],
   templateUrl: './module-page.component.html',
   styleUrl: './module-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

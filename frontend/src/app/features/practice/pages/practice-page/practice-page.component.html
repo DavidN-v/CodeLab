@@ -81,11 +81,24 @@
   } @else if (groups().length === 0) {
     <p class="state">Ningún ejercicio coincide con los filtros.</p>
   } @else {
+    <p class="groups__hint">
+      Los ejercicios están agrupados por módulo, en el mismo orden que las lecciones. Abre un módulo
+      para ver los suyos.
+    </p>
     @for (group of groups(); track group.module.id) {
-      <section class="group" [attr.aria-labelledby]="'group-' + group.module.id">
-        <h2 class="section-title" [id]="'group-' + group.module.id">
-          {{ group.module.position }}. {{ group.module.title }}
-        </h2>
+      @let done = solvedIn(group);
+      <details class="group" [open]="isOpen(group)">
+        <summary class="group__summary">
+          <span class="group__number">{{ group.module.position }}</span>
+          <span class="group__title">{{ group.module.title }}</span>
+          <span class="group__count" [class.group__count--done]="done === group.exercises.length">
+            @if (auth.isAuthenticated()) {
+              {{ done }}/{{ group.exercises.length }} resueltos
+            } @else {
+              {{ group.exercises.length }} ejercicios
+            }
+          </span>
+        </summary>
         <ul class="rows">
           @for (exercise of group.exercises; track exercise.id) {
             @let state = exerciseState(exercise.slug);
@@ -118,7 +131,7 @@
             </li>
           }
         </ul>
-      </section>
+      </details>
     }
   }
 </section>

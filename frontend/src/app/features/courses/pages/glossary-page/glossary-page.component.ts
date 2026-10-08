@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
-import { RouterLink } from '@angular/router';
 import { map, switchMap } from 'rxjs';
 
 import { CourseService } from '../../../../core/services/course.service';
@@ -11,9 +10,10 @@ function fold(text: string): string {
 }
 
 /** Every term of a course, explained in plain words, with a search box. */
+import { BreadcrumbsComponent } from '../../../../shared/components/breadcrumbs/breadcrumbs.component';
 @Component({
   selector: 'app-glossary-page',
-  imports: [RouterLink],
+  imports: [BreadcrumbsComponent],
   templateUrl: './glossary-page.component.html',
   styleUrl: './glossary-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -80,7 +80,9 @@ describe('DashboardPageComponent', () => {
 
     expect(element.querySelector('h1')?.textContent).toContain('Ada');
     expect(element.querySelector('.level')?.textContent).toContain('75 para el siguiente nivel');
-    expect(element.querySelector('[role="progressbar"]')?.getAttribute('aria-valuenow')).toBe('50');
+    expect(
+      element.querySelector('.level [role="progressbar"]')?.getAttribute('aria-valuenow'),
+    ).toBe('50');
     expect(element.querySelector('.streak__value')?.textContent).toContain('3 días');
     expect(element.querySelector('.course-card__action')?.getAttribute('href')).toBe(
       '/learn/java/variables/declarar',

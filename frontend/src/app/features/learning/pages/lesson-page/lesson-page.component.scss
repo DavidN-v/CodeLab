@@ -58,6 +58,36 @@
   }
 }
 
+.study__module {
+  margin: 0 0 var(--space-5);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--color-border);
+  font-weight: 600;
+  line-height: 1.3;
+
+  a {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    color: var(--color-text);
+    text-decoration: none;
+
+    &:hover {
+      color: var(--color-accent);
+    }
+  }
+}
+
+.study__module-label {
+  @include mono-label;
+  color: var(--color-accent);
+}
+
+.lesson__time {
+  color: var(--color-text-subtle);
+  font-size: var(--text-sm);
+}
+
 .index,
 .toc {
   margin: 0 0 var(--space-5);

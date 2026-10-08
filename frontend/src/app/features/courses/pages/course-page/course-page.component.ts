@@ -16,9 +16,16 @@ import { ModuleRowComponent } from '../../components/module-row/module-row.compo
 const VIEW_KEY = 'forja.courseView';
 
 /** A language's course: what it covers, the learner's progress and the module outline. */
+import { BreadcrumbsComponent } from '../../../../shared/components/breadcrumbs/breadcrumbs.component';
 @Component({
   selector: 'app-course-page',
-  imports: [RouterLink, ModuleRowComponent, ModulePathComponent, ProgressBarComponent],
+  imports: [
+    BreadcrumbsComponent,
+    RouterLink,
+    ModuleRowComponent,
+    ModulePathComponent,
+    ProgressBarComponent,
+  ],
   templateUrl: './course-page.component.html',
   styleUrl: './course-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -67,9 +67,11 @@ function readJson<T>(key: string, fallback: T): T {
 }
 
 /** Statement, work area and grading for one exercise, whatever its kind. */
+import { BreadcrumbsComponent } from '../../../../shared/components/breadcrumbs/breadcrumbs.component';
 @Component({
   selector: 'app-exercise-page',
   imports: [
+    BreadcrumbsComponent,
     RouterLink,
     MarkdownComponent,
     CodeEditorComponent,

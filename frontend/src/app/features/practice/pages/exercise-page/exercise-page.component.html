@@ -15,14 +15,16 @@
   <section class="workbench" aria-labelledby="exercise-heading">
     <header class="workbench__header">
       <div>
-        <p class="page__eyebrow">
-          <a routerLink="/practice">Práctica</a> /
-          <a
-            [routerLink]="['/languages', detail.course.languageSlug, 'modules', detail.module.slug]"
-          >
-            Módulo {{ detail.module.position }} · {{ detail.module.title }}
-          </a>
-        </p>
+        <app-breadcrumbs
+          [crumbs]="[
+            { label: detail.course.title, link: ['/languages', detail.course.languageSlug] },
+            {
+              label: 'Módulo ' + detail.module.position + ' · ' + detail.module.title,
+              link: ['/languages', detail.course.languageSlug, 'modules', detail.module.slug],
+            },
+            { label: 'Ejercicio' },
+          ]"
+        />
         <h1 id="exercise-heading" class="workbench__title">{{ detail.title }}</h1>
       </div>
       <div class="workbench__actions">
