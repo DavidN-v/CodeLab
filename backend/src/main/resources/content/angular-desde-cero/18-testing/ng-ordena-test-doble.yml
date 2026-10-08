@@ -1,0 +1,79 @@
+title: Un componente con un carrito de mentira
+summary: Ordena una prueba que usa un doble para comprobar que el componente delega.
+difficulty: MEDIUM
+kind: parsons
+statement: |
+  `ResumenCarrito` muestra el total y tiene un botón «Vaciar» que llama a `carrito.vaciar()`. La prueba ya sustituye el servicio real por `carritoFalso`. Ordena las líneas del `it` para que:
+
+  1. Cree el componente.
+  2. Espere a que Angular lo pinte.
+  3. Pulse el botón.
+  4. Compruebe que el doble recibió **una** llamada a `vaciar`.
+
+  Cuidado: dos líneas sobran.
+starter: |
+  // src/app/resumen-carrito/resumen-carrito.spec.ts
+  import { signal } from '@angular/core';
+  import { TestBed } from '@angular/core/testing';
+  import { Carrito } from '../carrito';
+  import { ResumenCarrito } from './resumen-carrito';
+
+  describe('ResumenCarrito', () => {
+    const carritoFalso = {
+      cantidad: signal(3),
+      total: signal(45),
+      vaciar: vi.fn(),
+    };
+
+    beforeEach(() => {
+      TestBed.configureTestingModule({
+        providers: [{ provide: Carrito, useValue: carritoFalso }],
+      });
+    });
+
+  {{lines}}
+  });
+solution: |
+  // src/app/resumen-carrito/resumen-carrito.spec.ts
+  import { signal } from '@angular/core';
+  import { TestBed } from '@angular/core/testing';
+  import { Carrito } from '../carrito';
+  import { ResumenCarrito } from './resumen-carrito';
+
+  describe('ResumenCarrito', () => {
+    const carritoFalso = {
+      cantidad: signal(3),
+      total: signal(45),
+      vaciar: vi.fn(),
+    };
+
+    beforeEach(() => {
+      TestBed.configureTestingModule({
+        providers: [{ provide: Carrito, useValue: carritoFalso }],
+      });
+    });
+
+    it('pide al carrito que se vacíe al pulsar Vaciar', async () => {
+      const fixture = TestBed.createComponent(ResumenCarrito);
+      await fixture.whenStable();
+      (fixture.nativeElement as HTMLElement).querySelector('button')?.click();
+      expect(carritoFalso.vaciar).toHaveBeenCalledTimes(1);
+    });
+  });
+lines:
+  - "  it('pide al carrito que se vacíe al pulsar Vaciar', async () => {"
+  - '    const fixture = TestBed.createComponent(ResumenCarrito);'
+  - '    await fixture.whenStable();'
+  - "    (fixture.nativeElement as HTMLElement).querySelector('button')?.click();"
+  - '    expect(carritoFalso.vaciar).toHaveBeenCalledTimes(1);'
+  - '  });'
+distractors:
+  - '    const fixture = TestBed.inject(ResumenCarrito);'
+  - '    expect(carritoFalso.vaciar).not.toHaveBeenCalled();'
+hints:
+  - 'La idea: preparar (crear y esperar), actuar (pulsar) y comprobar (mirar el espía), dentro de un `it`.'
+  - 'Qué usar: los componentes se crean con `TestBed.createComponent`; `TestBed.inject` es para servicios. Tras el clic, el espía sí se ha llamado.'
+  - 'El plan: abre el `it`; `createComponent`; `await fixture.whenStable()`; el `click()`; el `expect` con `toHaveBeenCalledTimes(1)`; y cierra con `});`.'
+tests:
+  - output: ' ✓ ResumenCarrito > pide al carrito que se vacíe al pulsar Vaciar'
+    sample: true

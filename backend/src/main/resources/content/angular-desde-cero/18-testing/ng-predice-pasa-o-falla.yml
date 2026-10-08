@@ -1,0 +1,54 @@
+title: ¿Pasa o falla?
+summary: Predice el resultado de tres pruebas de un componente con un input.
+difficulty: EASY
+kind: predict
+statement: |
+  El componente `Saludo` tiene este código:
+
+  ```typescript
+  @Component({
+    selector: 'app-saludo',
+    template: `<h1>Hola, {{ nombre() }}</h1>`,
+  })
+  export class Saludo {
+    readonly nombre = input('mundo');
+  }
+  ```
+
+  Lee las tres pruebas de `saludo.spec.ts` y escribe, **una línea por prueba y en orden**, la palabra `pasa` o `falla`.
+starter: |
+  import { TestBed } from '@angular/core/testing';
+  import { Saludo } from './saludo';
+
+  describe('Saludo', () => {
+    it('uno', async () => {
+      const fixture = TestBed.createComponent(Saludo);
+      await fixture.whenStable();
+      const h1 = (fixture.nativeElement as HTMLElement).querySelector('h1');
+      expect(h1?.textContent).toBe('Hola, mundo');
+    });
+
+    it('dos', () => {
+      const fixture = TestBed.createComponent(Saludo);
+      fixture.componentRef.setInput('nombre', 'Ada');
+      const h1 = (fixture.nativeElement as HTMLElement).querySelector('h1');
+      expect(h1?.textContent).toBe('Hola, Ada');
+    });
+
+    it('tres', async () => {
+      const fixture = TestBed.createComponent(Saludo);
+      fixture.componentRef.setInput('nombre', 'Grace');
+      await fixture.whenStable();
+      const h1 = (fixture.nativeElement as HTMLElement).querySelector('h1');
+      expect(h1?.textContent).toContain('Grace');
+    });
+  });
+hints:
+  - 'La idea: fíjate en qué pruebas esperan a Angular antes de mirar el DOM y en qué valor tiene el input en cada una.'
+  - 'Qué usar: en una app zoneless, Angular programa el pintado; `await fixture.whenStable()` espera a que termine. Sin esa espera, la plantilla todavía no tiene el texto. `toContain` pasa si el texto incluye el fragmento.'
+  - 'El plan: la primera usa el valor por defecto y espera; la segunda no espera nada; la tercera da un nombre, espera y busca un trozo que sí está.'
+tests:
+  - output: |
+      pasa
+      falla
+      pasa

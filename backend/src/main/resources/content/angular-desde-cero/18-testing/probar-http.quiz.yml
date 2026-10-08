@@ -1,0 +1,25 @@
+questions:
+  - type: choice
+    prompt: "¿Qué hace `peticion.flush([{ id: 1, nombre: 'Ada' }])` en una prueba con `HttpTestingController`?"
+    options:
+      - Responde a la petición pendiente con esos datos, y en ese momento se ejecuta el `subscribe`
+      - Borra la petición sin responderla
+      - Envía la petición al servidor real
+    answer: 0
+    explanation: '`flush` hace de servidor: entrega la respuesta. Hasta ese momento el `subscribe` de tu servicio no recibe nada.'
+  - type: choice
+    prompt: Llamas a `api.crear('Grace')` pero sin `.subscribe()`. Después, `servidor.expectOne('/api/usuarios')` falla. ¿Por qué?
+    options:
+      - Los observables de `HttpClient` son fríos y no envían la petición hasta que alguien se suscribe
+      - '`expectOne` solo funciona con GET'
+      - Falta llamar a `verify()` antes
+    answer: 0
+    explanation: 'Sin suscripción no hay petición, así que no hay nada que esperar. Por eso incluso la prueba del POST hace `.subscribe()` aunque ignore la respuesta.'
+  - type: choice
+    prompt: ¿Para qué sirve `servidor.verify()` en `afterEach`?
+    options:
+      - Comprueba que no queda ninguna petición sin responder al acabar cada prueba
+      - Comprueba que el servidor real está encendido
+      - Repite todas las peticiones para ver si dan lo mismo
+    answer: 0
+    explanation: 'Si tu código hace una petición que la prueba no esperaba (o no respondía), `verify()` hace fallar la prueba y te dice cuál quedó pendiente.'

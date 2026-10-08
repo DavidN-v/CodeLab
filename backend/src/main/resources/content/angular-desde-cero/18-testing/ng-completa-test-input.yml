@@ -1,0 +1,51 @@
+title: Probar un componente con un input
+summary: Da un valor al input, espera a Angular y lee lo que se ve.
+difficulty: MEDIUM
+kind: fill
+statement: |
+  El componente `Saludo` muestra `<h1>Hola, {{ nombre() }}</h1>`, donde `nombre` es un `input()`. Completa la prueba para que:
+
+  1. Le dé al input `nombre` el valor `'Lin'`, como lo haría un componente padre.
+  2. **Espere** a que Angular termine de pintar.
+  3. Lea el elemento HTML del componente para buscar el `h1`.
+starter: |
+  // src/app/saludo/saludo.spec.ts
+  import { TestBed } from '@angular/core/testing';
+  import { Saludo } from './saludo';
+
+  describe('Saludo', () => {
+    it('saluda con el nombre que recibe', async () => {
+      const fixture = TestBed.createComponent(Saludo);
+      fixture.componentRef.{{?}}('nombre', 'Lin');
+      await fixture.{{?}}();
+
+      const pagina = fixture.{{?}} as HTMLElement;
+      expect(pagina.querySelector('h1')?.textContent).toBe('Hola, Lin');
+    });
+  });
+solution: |
+  // src/app/saludo/saludo.spec.ts
+  import { TestBed } from '@angular/core/testing';
+  import { Saludo } from './saludo';
+
+  describe('Saludo', () => {
+    it('saluda con el nombre que recibe', async () => {
+      const fixture = TestBed.createComponent(Saludo);
+      fixture.componentRef.setInput('nombre', 'Lin');
+      await fixture.whenStable();
+
+      const pagina = fixture.nativeElement as HTMLElement;
+      expect(pagina.querySelector('h1')?.textContent).toBe('Hola, Lin');
+    });
+  });
+answers:
+  - setInput
+  - whenStable
+  - nativeElement
+hints:
+  - 'La idea: tres pasos del *fixture*: dar el input, esperar el repintado y coger el elemento del DOM.'
+  - 'Qué usar: el método de `componentRef` que fija un input por su nombre; el método del *fixture* que devuelve una promesa cuando Angular está estable; la propiedad del *fixture* con el elemento HTML anfitrión (no `componentInstance`, que es la clase).'
+  - 'El plan: `setInput`, `whenStable` y `nativeElement`.'
+tests:
+  - output: ' ✓ Saludo > saluda con el nombre que recibe'
+    sample: true

@@ -1,0 +1,35 @@
+questions:
+  - type: choice
+    prompt: El componente `Tarjeta` tiene `readonly titulo = input.required<string>();`. ¿Cómo le das un valor en una prueba?
+    options:
+      - "`fixture.componentRef.setInput('titulo', 'Hola')`"
+      - "`fixture.componentInstance.titulo = 'Hola'`"
+      - "`fixture.componentInstance.titulo.set('Hola')`"
+    answer: 0
+    explanation: 'Un `input()` es de solo lectura dentro del componente: no tiene `set` y no se puede reasignar. `setInput` hace lo mismo que el padre en la plantilla y avisa a Angular.'
+  - type: choice
+    prompt: ¿Qué es `vi.fn()` en una prueba de Vitest?
+    options:
+      - Una función espía que apunta cuántas veces y con qué argumentos la llaman
+      - Una función que repite la prueba varias veces
+      - Un atajo para `fixture.whenStable()`
+    answer: 0
+    explanation: 'Los espías sirven para comprobar llamadas: por ejemplo, suscribirlos a un `output()` y verificar con `toHaveBeenCalledWith` qué emitió el componente.'
+  - type: output
+    prompt: 'Esta prueba pasa. ¿Qué texto tiene el párrafo justo antes del `expect`? Escribe solo el texto.'
+    code: |
+      // contador.ts: plantilla <p>Clics: {{ clics() }}</p> y un botón que hace clics.update(n => n + 1)
+      it('suma al pulsar', async () => {
+        const fixture = TestBed.createComponent(Contador);
+        await fixture.whenStable();
+        const pagina = fixture.nativeElement as HTMLElement;
+
+        pagina.querySelector('button')?.click();
+        pagina.querySelector('button')?.click();
+        await fixture.whenStable();
+
+        expect(pagina.querySelector('p')?.textContent).toBe(/* ... */);
+      });
+    answer: |
+      Clics: 2
+    explanation: 'Cada clic ejecuta `sumar()` y el signal pasa de 0 a 1 y de 1 a 2. Tras `whenStable()` Angular ha repintado una vez con el valor final.'

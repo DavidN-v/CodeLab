@@ -1,0 +1,93 @@
+title: Un servidor de mentira para LibrosApi
+summary: Completa una prueba de HTTP con provideHttpClientTesting y HttpTestingController.
+difficulty: HARD
+kind: fill
+statement: |
+  `LibrosApi` tiene un método `listar()` que hace `GET /api/libros`. Completa la prueba para que no use la red real:
+
+  1. La ruta del paquete de Angular con las herramientas de prueba de HTTP.
+  2. La función que cambia la red real por una falsa (en `providers`).
+  3. La clase que controla ese servidor falso (para pedirla a `TestBed`).
+  4. El método que comprueba que hay **exactamente una** petición a esa URL.
+  5. El método que **responde** a la petición con datos.
+  6. El método que, al final de cada prueba, comprueba que no quedó **ninguna petición pendiente**.
+starter: |
+  // src/app/libros-api.spec.ts
+  import { provideHttpClient } from '@angular/common/http';
+  import { HttpTestingController, provideHttpClientTesting } from '{{?}}';
+  import { TestBed } from '@angular/core/testing';
+  import { Libro, LibrosApi } from './libros-api';
+
+  describe('LibrosApi', () => {
+    let api: LibrosApi;
+    let servidor: HttpTestingController;
+
+    beforeEach(() => {
+      TestBed.configureTestingModule({
+        providers: [provideHttpClient(), {{?}}()],
+      });
+      api = TestBed.inject(LibrosApi);
+      servidor = TestBed.inject({{?}});
+    });
+
+    afterEach(() => {
+      servidor.{{?}}();
+    });
+
+    it('devuelve los libros que responde el servidor', () => {
+      let libros: Libro[] = [];
+      api.listar().subscribe((respuesta) => (libros = respuesta));
+
+      const peticion = servidor.{{?}}('/api/libros');
+      peticion.{{?}}([{ id: 7, titulo: 'Rayuela' }]);
+
+      expect(libros).toEqual([{ id: 7, titulo: 'Rayuela' }]);
+    });
+  });
+solution: |
+  // src/app/libros-api.spec.ts
+  import { provideHttpClient } from '@angular/common/http';
+  import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+  import { TestBed } from '@angular/core/testing';
+  import { Libro, LibrosApi } from './libros-api';
+
+  describe('LibrosApi', () => {
+    let api: LibrosApi;
+    let servidor: HttpTestingController;
+
+    beforeEach(() => {
+      TestBed.configureTestingModule({
+        providers: [provideHttpClient(), provideHttpClientTesting()],
+      });
+      api = TestBed.inject(LibrosApi);
+      servidor = TestBed.inject(HttpTestingController);
+    });
+
+    afterEach(() => {
+      servidor.verify();
+    });
+
+    it('devuelve los libros que responde el servidor', () => {
+      let libros: Libro[] = [];
+      api.listar().subscribe((respuesta) => (libros = respuesta));
+
+      const peticion = servidor.expectOne('/api/libros');
+      peticion.flush([{ id: 7, titulo: 'Rayuela' }]);
+
+      expect(libros).toEqual([{ id: 7, titulo: 'Rayuela' }]);
+    });
+  });
+answers:
+  - '@angular/common/http/testing'
+  - provideHttpClientTesting
+  - HttpTestingController
+  - verify
+  - expectOne
+  - flush
+hints:
+  - 'La idea: configurar un HTTP falso, pedir su mando, esperar la petición, responderla y, al final, comprobar que no queda nada pendiente.'
+  - 'Qué usar: las herramientas de prueba de un paquete de Angular viven en su subruta `/testing`. Los nombres de la función y de la clase ya aparecen en la línea del `import`. Los métodos del mando son: «espera una», «vacía la respuesta» y «verifica».'
+  - 'El plan: `@angular/common/http/testing`, `provideHttpClientTesting`, `HttpTestingController`, `verify` (en `afterEach`), `expectOne` y `flush`.'
+tests:
+  - output: ' ✓ LibrosApi > devuelve los libros que responde el servidor'
+    sample: true

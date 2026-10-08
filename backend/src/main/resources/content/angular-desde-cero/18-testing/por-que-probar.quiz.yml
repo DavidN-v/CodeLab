@@ -1,0 +1,25 @@
+questions:
+  - type: choice
+    prompt: ¿Por qué en la pirámide de pruebas hay muchas unitarias y pocas E2E?
+    options:
+      - Las unitarias son rapidísimas y estables; las E2E son lentas y fallan por más motivos ajenos al código
+      - Las E2E no pueden comprobar nada importante
+      - Angular no permite más de unas pocas pruebas E2E
+    answer: 0
+    explanation: 'Las E2E son las más realistas, pero abren un navegador de verdad y tardan segundos cada una. Se reservan para los recorridos críticos; el resto se cubre con pruebas unitarias que tardan milisegundos.'
+  - type: choice
+    prompt: En un proyecto nuevo de Angular 22, ¿qué es jsdom?
+    options:
+      - Un DOM imitado en JavaScript donde se pintan los componentes durante las pruebas, sin abrir un navegador
+      - El ejecutor que busca y lanza los archivos `.spec.ts`
+      - La extensión de Chrome para depurar Angular
+    answer: 0
+    explanation: 'Vitest es el ejecutor; jsdom es el entorno que imita `document`, los elementos y los eventos dentro de Node.js. Por eso `ng test` no necesita ningún navegador instalado.'
+  - type: choice
+    prompt: Quieres ejecutar las pruebas una sola vez y que el comando termine, como en un servidor de integración continua. ¿Qué escribes?
+    options:
+      - '`ng test --watch=false`'
+      - '`ng test --once`'
+      - '`ng build --test`'
+    answer: 0
+    explanation: 'Por defecto, en una terminal interactiva, `ng test` se queda vigilando los archivos. `--watch=false` ejecuta las pruebas una vez y devuelve el resultado.'
