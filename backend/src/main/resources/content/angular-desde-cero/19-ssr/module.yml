@@ -5,8 +5,12 @@ lessons:
     minutes: 7
   - slug: proyecto-con-ssr
     title: Un proyecto con SSR por dentro
-    summary: Qué crean ng new --ssr y ng add @angular/ssr, archivo por archivo.
-    minutes: 10
+    summary: Qué crean ng new --ssr y ng add @angular/ssr - server.ts, main.server.ts y la configuración del servidor.
+    minutes: 6
+  - slug: compilar-y-arrancar-ssr
+    title: Compilar y arrancar con SSR
+    summary: Los cambios en angular.json y package.json, ng build y el servidor de producción.
+    minutes: 5
   - slug: hidratacion
     title: Hidratación
     summary: Dar vida al HTML del servidor con provideClientHydration y @defer (hydrate …).

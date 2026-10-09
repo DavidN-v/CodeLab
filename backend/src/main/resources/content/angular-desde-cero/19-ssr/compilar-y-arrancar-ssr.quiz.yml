@@ -1,0 +1,25 @@
+questions:
+  - type: choice
+    prompt: Arrancas el servidor de producción recién creado y `localhost:4000` responde «400 Bad Request». ¿Qué falta?
+    options:
+      - Añadir `localhost` a `security.allowedHosts` en `angular.json` (o usar `NG_ALLOWED_HOSTS`)
+      - Ejecutar `npm install express`
+      - Cambiar `outputMode` a `"static"`
+    answer: 0
+    explanation: 'Por seguridad, el servidor solo atiende peticiones dirigidas a los dominios autorizados y la lista empieza vacía. Express ya está instalado, y `"static"` quitaría el servidor por completo.'
+  - type: choice
+    prompt: ¿Qué carpeta de `dist/tienda/` descarga el navegador?
+    options:
+      - '`browser/`'
+      - '`server/`'
+      - Las dos
+    answer: 0
+    explanation: '`browser/` contiene lo que se envía al visitante; `server/` contiene lo que ejecuta Node.js y nunca viaja al navegador.'
+  - type: choice
+    prompt: ¿Qué hace `outputMode` con el valor `"server"`?
+    options:
+      - Pide al build una carpeta con servidor Node
+      - Genera solo archivos estáticos
+      - Desactiva el prerenderizado
+    answer: 0
+    explanation: La alternativa, `"static"`, solo genera archivos estáticos y no incluye servidor.

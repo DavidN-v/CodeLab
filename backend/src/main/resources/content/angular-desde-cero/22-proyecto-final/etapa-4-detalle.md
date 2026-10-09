@@ -284,6 +284,9 @@ Checklist de la etapa:
 - Escribir a mano `localhost:4200/tareas/99` te devuelve a `/tareas`.
 - `ng build` muestra los *lazy chunks* `nueva-tarea`, `detalle-tarea` y `resumen-tareas`.
 
+> [!prueba]
+> Visita `localhost:4200/tareas/abc` a mano. El guard no encuentra ninguna tarea con ese id y te devuelve a `/tareas`, igual que con el 99. Piensa por qué: el parámetro llega siempre como texto y el guard lo convierte a número.
+
 > [!resumen]
 > - `withComponentInputBinding()` pasa `:id` de la URL al `input()` llamado `id` (siempre como texto).
 > - Un guard funcional `CanActivateFn` puede ser `async` y devolver `true` o un `UrlTree` para redirigir.

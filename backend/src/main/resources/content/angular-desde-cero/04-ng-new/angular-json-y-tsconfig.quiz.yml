@@ -16,10 +16,10 @@ questions:
   answer: 0
   explanation: El build empieza en `main.ts` y recorre cada `import` para reunir todo el código de la app. El HTML es `src/index.html`.
 - type: choice
-  prompt: ¿Por qué en un archivo `.spec.ts` puedes usar `describe` e `it` sin importarlos?
+  prompt: '¿Qué hace el target `serve` con el target `build`?'
   options:
-  - Porque `describe` e `it` son parte de JavaScript
-  - Porque `@angular/core` los exporta automáticamente
-  - Porque `tsconfig.spec.json` añade los tipos globales `vitest/globals`
-  answer: 2
-  explanation: '`"types": ["vitest/globals"]` en `tsconfig.spec.json` hace que TypeScript conozca esas funciones globales de Vitest. `tsconfig.app.json` no las incluye, porque la app no las necesita.'
+  - Lo reutiliza mediante `buildTarget` y sirve el resultado
+  - Lo ignora y compila por su cuenta con otro programa
+  - Lo ejecuta solo cuando se escribe `ng build`
+  answer: 0
+  explanation: '`buildTarget` se lee `proyecto:target:configuración`. Por eso `ng serve` compila igual que `ng build`, pero con la configuración `development` por defecto.'

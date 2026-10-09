@@ -1,0 +1,25 @@
+questions:
+- type: choice
+  prompt: ¿En qué orden trabaja `ng new`?
+  options:
+  - Ejecuta npm install, genera los archivos y arranca ng serve
+  - Genera los archivos con schematics, los escribe, ejecuta npm install y hace el primer commit de Git
+  - Descarga una plantilla de internet y la descomprime
+  answer: 1
+  explanation: Los schematics preparan los archivos en memoria, después se escriben en la carpeta, `npm install` descarga las librerías y, por último, se crea el repositorio Git con un primer commit. `ng serve` lo lanzas tú.
+- type: choice
+  prompt: ¿Qué es un schematic?
+  options:
+  - Una plantilla de código con instrucciones para crear o modificar archivos
+  - Un diagrama del proyecto
+  - Una librería de estilos
+  answer: 0
+  explanation: '`ng new` ejecuta schematics que generan primero los archivos en memoria; por eso `--dry-run` puede enseñarte el resultado sin escribir nada.'
+- type: choice
+  prompt: ¿Qué pasa si ejecutas `ng new` dentro de otro proyecto Angular?
+  options:
+  - La CLI se niega a crearlo
+  - Crea un proyecto anidado sin problema
+  - Sobrescribe el proyecto actual
+  answer: 0
+  explanation: 'La CLI responde con `This command is not available when running the Angular CLI inside a workspace`. Ve a una carpeta de proyectos y vuelve a intentarlo.'

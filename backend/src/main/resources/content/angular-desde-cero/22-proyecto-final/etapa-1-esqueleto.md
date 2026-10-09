@@ -234,6 +234,9 @@ Checklist de la etapa:
 - El enlace «Lista» aparece en azul y negrita.
 - Una URL inventada muestra «Esta página no existe» y su enlace te devuelve a la lista.
 
+> [!prueba]
+> Añade una tercera ruta de prueba: en `app.routes.ts`, antes de `'**'`, escribe `{ path: 'acerca', component: NoEncontrada, title: 'Acerca' }` y visita `localhost:4200/acerca`. Verás la página 404 con otro título de pestaña. Después bórrala: era solo para ver que el orden de las rutas importa.
+
 > [!resumen]
 > - `ng new mis-tareas --defaults` y `ng generate` crean el proyecto y las piezas.
 > - El modelo `Tarea` usa una unión de literales para la prioridad.

@@ -1,4 +1,4 @@
-Abres `localhost:4200` y en menos de un segundo aparece «Hello, mi-app». Pero si miras el HTML que envía el servidor, dentro del `<body>` solo hay una etiqueta vacía: `<app-root></app-root>`. ¿Quién escribe el título? ¿Cuándo? ¿En qué orden? En esta lección seguimos el arranque **paso a paso**, archivo por archivo, línea por línea.
+Abres `localhost:4200` y en menos de un segundo aparece «Hello, mi-app». Pero si miras el HTML que envía el servidor, dentro del `<body>` solo hay una etiqueta vacía: `<app-root></app-root>`. ¿Quién escribe el título? ¿Cuándo? ¿En qué orden? En esta lección seguimos los tres primeros pasos del arranque, archivo por archivo, y en la siguiente veremos cómo se pinta el componente.
 
 > [!analogia]
 > Arrancar una app Angular es como abrir un teatro. `index.html` es el **escenario vacío** con una marca en el suelo (`<app-root>`). `main.ts` es el **regidor** que da la orden de empezar. `app.config.ts` es la **lista del equipo técnico** que tiene que estar en su puesto antes de subir el telón. Y `App` es la **obra**, que se representa justo encima de la marca.
@@ -74,94 +74,12 @@ export const routes: Routes = [];
 
 Una lista vacía de rutas con su tipo, `Routes`. La rellenarás en el módulo 11.
 
-## 4. app.ts y app.html: la obra
-
-```typescript
-// src/app/app.ts
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-
-@Component({
-  imports: [RouterOutlet],
-  selector: 'app-root',
-  styleUrl: './app.css',
-  templateUrl: './app.html',
-})
-export class App {
-  protected readonly title = signal('mi-app');
-}
-```
-
-- `@Component({...})` es un **decorador**: una etiqueta que convierte la clase en componente y le da sus datos.
-- `selector: 'app-root'`: "píntame donde haya un `<app-root>`". Así se conecta con `index.html`.
-- `templateUrl` y `styleUrl`: su HTML y su CSS, en archivos aparte.
-- `imports: [RouterOutlet]`: los componentes y directivas que usa su plantilla. Usa `<router-outlet />`, así que lo importa.
-- `export class App`: la clase. `export` permite que `main.ts` la importe.
-- `title = signal('mi-app')`: un *signal*, un valor que avisa a Angular cuando cambia (módulo 7). `protected` hace que lo use la plantilla pero no otras clases; `readonly`, que nadie lo sustituya por otro signal.
-
-Dentro de los 20 kB de `app.html`, lo esencial es esto:
-
-```html
-<!-- src/app/app.html (resumido) -->
-<h1>Hello, {{ title() }}</h1>
-<p>Congratulations! Your app is running. 🎉</p>
-
-<router-outlet />
-```
-
-`{{ title() }}` lee el signal y escribe su valor. `<router-outlet />` es el hueco donde el router pintará la página de la ruta actual (de momento, nada).
-
-## El arranque completo
-
-```mermaid
-sequenceDiagram
-    participant N as Navegador
-    participant M as main.js
-    participant A as Angular
-    participant D as DOM
-    N->>N: Descarga index.html y ve app-root vacío
-    N->>M: Descarga y ejecuta main.js
-    M->>M: Evalúa los imports: app.routes, app.config, app
-    M->>A: bootstrapApplication(App, appConfig)
-    A->>A: Crea el inyector con los providers
-    A->>A: Crea una instancia de App
-    A->>D: Busca el elemento app-root
-    A->>D: Ejecuta la plantilla: crea h1, p, router-outlet
-    A-->>M: La promesa se cumple: app en marcha
-    N->>N: El usuario ve Hello, mi-app
-```
-
-Fíjate en el tercer paso: antes de ejecutar la línea de `bootstrapApplication`, el navegador **evalúa todos los archivos importados**, en el orden de los `import`. Solo entonces se ejecuta el cuerpo de `main.ts`.
-
-Y un detalle que impresiona: el navegador nunca ve tu plantilla HTML. El compilador de Angular la convierte en una función de JavaScript. Esto es un trozo real de lo que `ng serve` envía para `App`:
-
-```javascript
-static ɵcmp = i0.ɵɵdefineComponent({
-  type: _App,
-  selectors: [["app-root"]],
-  template: function App_Template(rf, ctx) {
-    // ...
-    i0.ɵɵtextInterpolate1("Hello, ", ctx.title());
-  }
-});
-```
-
-Tu decorador se ha convertido en una propiedad estática (`ɵcmp`), tu selector en `selectors` y `{{ title() }}` en una instrucción que escribe el texto. La `ɵ` marca código interno: nunca lo escribirás tú.
-
-> [!cuidado]
-> Si cambias el `selector` de `App` a `'mi-raiz'` y no cambias `index.html`, la página sale **en blanco** y la consola dice `NG05104: The selector "mi-raiz" did not match any elements`. El selector y la etiqueta de `index.html` tienen que coincidir.
-
-```pantalla
-@url localhost:4200/
-<h1>Hello, mi-app</h1>
-<p>Congratulations! Your app is running. 🎉</p>
-```
+Hasta aquí, el navegador tiene una página vacía y Angular ya sabe con qué configuración arrancar. Falta lo más visible: el componente `App`, que veremos en la siguiente lección.
 
 > [!prueba]
-> En tu proyecto, cambia `signal('mi-app')` por `signal('Ada')` en `app.ts` y guarda. Con `ng serve` en marcha, el navegador se recarga solo y muestra «Hello, Ada».
+> Abre `src/index.html` y cambia `<title>MiApp</title>` por `<title>Mi primera app</title>`. Guarda con `ng serve` en marcha: la pestaña del navegador cambia de nombre.
 
 > [!resumen]
-> - `index.html` solo tiene `<app-root>` vacío; el build le añade `<script src="main.js">`.
+> - `index.html` solo tiene `<app-root>` vacío; el build le añade el `<script src="main.js">`.
 > - `main.ts` llama a `bootstrapApplication(App, appConfig)`: primero se evalúan los imports, después arranca.
-> - `appConfig.providers` prepara las piezas globales (errores, router); luego Angular crea `App` y pinta su plantilla dentro del elemento que coincide con su `selector`.
-> - Las plantillas se compilan a funciones JavaScript; el navegador nunca lee tu HTML de Angular.
+> - `appConfig.providers` prepara las piezas globales: el router y la escucha de errores.

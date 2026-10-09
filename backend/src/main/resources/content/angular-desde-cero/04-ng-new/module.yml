@@ -1,24 +1,40 @@
 lessons:
   - slug: que-hace-ng-new
     title: ¿Qué ocurre al ejecutar ng new?
-    summary: Las preguntas que hace, sus opciones y las cuatro fases que convierten un comando en un proyecto.
-    minutes: 8
+    summary: Las preguntas que hace la CLI y las opciones de la línea de comandos.
+    minutes: 5
+  - slug: fases-de-ng-new
+    title: Las cuatro fases de ng new
+    summary: Schematics, escritura de archivos, npm install y primer commit de Git.
+    minutes: 5
   - slug: archivos-del-proyecto
     title: Cada archivo del proyecto
     summary: El árbol completo que genera ng new, para qué sirve cada archivo y cuáles no debes tocar.
     minutes: 8
   - slug: librerias-del-proyecto
-    title: package.json y cada librería
-    summary: dependencies y devDependencies una a una, los scripts y qué descarga de verdad npm install.
-    minutes: 9
+    title: package.json y las dependencies
+    summary: Cada línea de package.json, los scripts y las librerías que viajan con la app.
+    minutes: 6
+  - slug: devdependencies-y-node-modules
+    title: Las devDependencies y node_modules
+    summary: Las herramientas que construyen y prueban, y qué descarga de verdad npm install.
+    minutes: 6
   - slug: angular-json-y-tsconfig
-    title: angular.json y los tsconfig
-    summary: Targets, builders, configuraciones y budgets; y qué hace cada opción de TypeScript y Angular.
-    minutes: 10
+    title: angular.json
+    summary: Targets, builders, configuraciones y budgets; cómo sabe la CLI construir y servir tu proyecto.
+    minutes: 7
+  - slug: los-tsconfig
+    title: Los archivos tsconfig
+    summary: Qué reglas aplica TypeScript, qué hace cada opción y por qué hay tres archivos.
+    minutes: 6
   - slug: el-arranque
     title: El arranque, paso a paso
-    summary: De index.html a main.ts, bootstrapApplication, appConfig y App pintado en app-root.
-    minutes: 10
+    summary: De index.html a main.ts, bootstrapApplication, appConfig y las rutas.
+    minutes: 6
+  - slug: el-componente-raiz
+    title: El componente raíz App
+    summary: app.ts y app.html, el selector app-root y el recorrido completo del arranque.
+    minutes: 6
   - slug: ng-serve-y-ng-build
     title: ng serve y ng build
     summary: Compilar, servir con recarga en caliente y construir para producción con nombres con huella.

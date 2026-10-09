@@ -100,6 +100,9 @@ En Angular verás genéricos todo el rato: `signal<number>(0)`, `Array<string>`,
 > [!cuidado]
 > Si escribes una flecha con llaves, **necesitas** `return`. `(n: number) => { n * 2 }` no devuelve nada (devuelve `undefined`), y si la usas en un `map` obtendrás una lista llena de `undefined`. O quitas las llaves (`n => n * 2`) o añades `return`.
 
+> [!prueba]
+> Con el array `precios`, escribe tú un `filter` que se quede con los precios menores de 20 y un `map` que sume 1 a cada uno. Antes de ejecutar, predice el resultado de cada uno.
+
 > [!resumen]
 > - Una función recibe parámetros con tipo y devuelve un valor del tipo de retorno (`void` si no devuelve nada).
 > - Las funciones flecha (`(x) => ...`) son la forma corta; sin llaves devuelven la expresión.

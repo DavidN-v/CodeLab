@@ -83,6 +83,9 @@ Ese archivo está escrito en **TypeScript**, el lenguaje de Angular. Es JavaScri
 > [!cuidado]
 > Si buscas ayuda en internet verás «AngularJS». Es el **antiguo** framework (de 2010), ya sin soporte y muy distinto. El Angular actual se llama solo **Angular** (versión 2 en adelante). Si un tutorial habla de `$scope` o de `ng-app`, es AngularJS: no te sirve.
 
+> [!prueba]
+> Mira el contador de Angular y localiza tres cosas: dónde se guarda el dato (`clics`), dónde se muestra (`{{ clics() }}`) y dónde se reacciona al clic (`(click)="sumar()"`). Si quisieras que sumara de 5 en 5, ¿qué línea cambiarías? (Pista: está dentro de `sumar`.)
+
 > [!resumen]
 > - Una librería es código que llamas tú; un framework es una estructura que llama a tu código.
 > - Angular es un framework de Google, gratuito, para construir SPA; la versión actual es la 22.

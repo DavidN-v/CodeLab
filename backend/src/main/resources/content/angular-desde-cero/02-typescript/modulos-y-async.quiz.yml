@@ -9,27 +9,6 @@ questions:
       - De internet, cada vez que se abre la página
     answer: 1
     explanation: 'La ruta no empieza por `./` ni `../`, así que es un paquete instalado en `node_modules`. `@angular/core` es la librería principal de Angular.'
-  - type: output
-    prompt: ¿En qué orden aparecen los mensajes en la consola?
-    code: |
-      async function pedir(): Promise<string> {
-        await new Promise((resolve) => setTimeout(resolve, 500));
-        return 'datos';
-      }
-
-      async function cargar(): Promise<void> {
-        console.log('A');
-        const r = await pedir();
-        console.log('B ' + r);
-      }
-
-      cargar();
-      console.log('C');
-    answer: |
-      A
-      C
-      B datos
-    explanation: '`cargar` escribe `A` y se pausa en el `await`. Mientras espera, el programa sigue y escribe `C`. Medio segundo después, `cargar` continúa y escribe `B datos`.'
   - type: choice
     prompt: En `utilidades.ts` hay `function formatear() {...}` sin `export`. ¿Qué pasa si otro archivo hace `import { formatear } from './utilidades';`?
     options:
@@ -38,3 +17,11 @@ questions:
       - Se importa, pero vale `undefined`
     answer: 1
     explanation: 'Cada archivo es un módulo cerrado: solo se puede importar lo que lleva `export`. Lo demás es privado del archivo.'
+  - type: choice
+    prompt: ¿Qué significa que una ruta de import empiece por `../`?
+    options:
+      - Es un archivo en la carpeta de arriba
+      - Es un paquete de `node_modules`
+      - Es un archivo en la misma carpeta
+    answer: 0
+    explanation: '`./` es la misma carpeta y `../` es la carpeta de arriba. Sin punto inicial sería un paquete.'

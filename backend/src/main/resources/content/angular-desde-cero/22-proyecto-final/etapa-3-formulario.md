@@ -169,6 +169,9 @@ Checklist de la etapa:
 - Una tarea válida aparece en la lista como pendiente y los contadores se actualizan.
 - `ng build` muestra un *lazy chunk* llamado `nueva-tarea`.
 
+> [!prueba]
+> Cambia el mínimo del título de 3 a 5 letras (`Validators.minLength(5)`) y actualiza el texto del mensaje de error. Escribe «Ir a» (4 letras) y comprueba que ahora falla; con «Ir al médico» pasa.
+
 > [!resumen]
 > - `FormBuilder.nonNullable.group` crea un formulario tipado con sus validadores.
 > - `[formGroup]`, `formControlName` y `(ngSubmit)` conectan la plantilla; hacen falta en `imports` con `ReactiveFormsModule`.

@@ -1,4 +1,4 @@
-Un proyecto de Angular tiene decenas de archivos, y cada uno usa cosas de otros: el componente usa una interfaz, la interfaz vive en otro archivo, y casi todos usan piezas de Angular. ¿Cómo se pasan las cosas de un archivo a otro? Con `import` y `export`. Y hay una segunda pregunta que aparece en cuanto pides datos a un servidor: ¿qué hace tu código mientras **espera** la respuesta? Para eso están las promesas y `async`/`await`. Esta lección cubre las dos, porque las dos responden a lo mismo: **usar algo que no está aquí** (en otro archivo) **o todavía no** (llegará más tarde).
+Un proyecto de Angular tiene decenas de archivos, y cada uno usa cosas de otros: el componente usa una interfaz, la interfaz vive en otro archivo, y casi todos usan piezas de Angular. ¿Cómo se pasan las cosas de un archivo a otro? Con `import` y `export`.
 
 ## Módulos: cada archivo es una caja cerrada
 
@@ -64,85 +64,13 @@ flowchart TD
 
 En el módulo 3 verás cómo llegan los paquetes a `node_modules`, y en el módulo 4, para qué sirve cada librería de Angular.
 
-## Código asíncrono: no bloquear mientras esperas
-
-Pedir datos a un servidor tarda: quizá medio segundo, quizá tres. Si el navegador se quedara **parado** esperando, la página se congelaría. Por eso esas operaciones son **asíncronas**: se lanzan, el programa sigue, y la respuesta llega más tarde.
-
-Una **promesa** (`Promise`) es un objeto que representa un valor que **llegará** (o un error). Con `async` y `await` puedes escribir código que espera promesas como si fuera código normal, de arriba abajo:
-
-```typescript
-function esperar(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-async function cargarNombre(): Promise<string> {
-  await esperar(1000);   // simula un servidor que tarda 1 segundo
-  return 'Ada';
-}
-
-async function mostrarSaludo(): Promise<void> {
-  console.log('Cargando…');
-  const nombre = await cargarNombre();
-  console.log(`Hola, ${nombre}`);
-}
-
-mostrarSaludo();
-console.log('Mientras tanto, la página sigue viva');
-```
-
-```text
-Cargando…
-Mientras tanto, la página sigue viva
-Hola, Ada
-```
-
-- `async function` marca una función asíncrona. **Siempre** devuelve una promesa: `Promise<string>` es «una promesa de un texto» (otra vez un genérico).
-- `await` **pausa esa función** hasta que la promesa se cumple y te da su valor. Solo se puede usar dentro de una función `async`.
-- Mientras `mostrarSaludo` está en pausa, el resto del programa **sigue**: por eso «Mientras tanto…» sale antes que «Hola, Ada».
-
-```mermaid
-sequenceDiagram
-    participant P as Programa
-    participant M as mostrarSaludo
-    P->>M: mostrarSaludo()
-    M->>M: console.log('Cargando…')
-    M-->>P: await, me pauso y sigue tú
-    P->>P: console.log('Mientras tanto…')
-    Note over M: 1 segundo después
-    M->>M: nombre = 'Ada'
-    M->>M: console.log('Hola, Ada')
-```
-
-> [!analogia]
-> Una promesa es el tique de una pescadería: no tienes el pescado, pero tienes la promesa de que te lo darán. `await` es quedarte en esa cola; mientras tanto, la tienda sigue atendiendo a otros clientes.
-
-Si la promesa **falla** (el servidor no responde), `await` lanza un error que puedes atrapar con `try`/`catch`:
-
-```typescript
-interface Producto {
-  id: number;
-  nombre: string;
-}
-
-async function cargarProductos(): Promise<Producto[]> {
-  try {
-    const respuesta = await fetch('/api/productos');
-    const datos: Producto[] = await respuesta.json();
-    return datos;
-  } catch (error) {
-    console.error('No se pudo cargar', error);
-    return [];
-  }
-}
-```
-
-`fetch` es la función del navegador para pedir datos. En Angular normalmente usarás `HttpClient` (módulo 13), que trabaja con **observables**, un primo de las promesas que verás en el módulo 14.
-
 > [!cuidado]
-> Olvidar el `await` es un error muy común: `const nombre = cargarNombre();` no te da `'Ada'`, sino **la promesa**. Si después haces `` `Hola, ${nombre}` ``, verás `Hola, [object Promise]`. TypeScript te ayuda: el tipo de `nombre` será `Promise<string>` y no `string`.
+> Si importas algo que no se ha exportado, TypeScript lo marca en rojo: `Module './precios' has no exported member 'secreto'`. La solución es añadir `export` en el archivo de origen, no copiar el código.
+
+> [!prueba]
+> Imagina que `precios.ts` tiene `export const IVA = 0.21;`. En `carrito.ts`, cambia `IVA` por `IVAA` en el `import`. ¿Qué mensaje esperas del editor? Después vuelve a escribirlo bien.
 
 > [!resumen]
 > - Cada archivo es un módulo: `export` hace visible algo y `import { ... } from '...'` lo trae.
 > - Rutas con `./` o `../` son archivos tuyos; sin punto, son paquetes de `node_modules` (como `@angular/core`).
-> - Una `Promise` es un valor que llegará más tarde; `async`/`await` permiten esperarlo sin bloquear la página.
-> - Los errores de una promesa se capturan con `try`/`catch`.
+> - Las llaves del `import` llevan el nombre exacto de lo exportado.

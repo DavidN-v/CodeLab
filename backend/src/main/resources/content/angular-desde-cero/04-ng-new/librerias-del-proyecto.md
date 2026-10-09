@@ -1,4 +1,4 @@
-Angular no es un único programa: es un **equipo de librerías**, cada una con un trabajo. Unas viajan dentro de tu aplicación hasta el navegador del usuario; otras se quedan en tu ordenador y solo sirven para construir, probar y formatear. La lista completa está en `package.json`, y entenderla te dice exactamente con qué está hecho tu proyecto.
+Angular no es un único programa: es un **equipo de librerías**, cada una con un trabajo. Unas viajan dentro de tu aplicación hasta el navegador del usuario; otras se quedan en tu ordenador y solo sirven para construir, probar y formatear. La lista completa está en `package.json`. En esta lección leemos el archivo y las librerías que viajan con la app; en la siguiente, las herramientas que se quedan en tu ordenador.
 
 > [!analogia]
 > Piensa en una película. Los **actores** salen en pantalla: son las `dependencies`, que acaban dentro de la app que ve el usuario. El **equipo técnico** (cámaras, focos, montadores) es imprescindible para rodar, pero no sale en la película: son las `devDependencies`.
@@ -59,43 +59,14 @@ Angular no es un único programa: es un **equipo de librerías**, cada una con u
 | `rxjs` | La librería de *observables*: flujos de valores en el tiempo (respuestas HTTP, eventos del router). Angular la usa por dentro. Módulo 14. |
 | `tslib` | Pequeñas funciones de ayuda que TypeScript necesita al traducir ciertas construcciones (decoradores, `async`…). Con la opción `importHelpers` se importan de aquí en vez de copiarse en cada archivo. |
 
-## Las devDependencies: el equipo técnico
-
-| Librería | Para qué sirve |
-| --- | --- |
-| `@angular/cli` | El comando `ng`: `ng serve`, `ng build`, `ng generate`, `ng test`, `ng add`, `ng update`. Lee `angular.json` y delega el trabajo en los *builders*. |
-| `@angular/build` | Los *builders*, las piezas que hacen el trabajo pesado: `application` (compila con **esbuild**, un empaquetador muy rápido), `dev-server` (sirve la app con **Vite**, un servidor de desarrollo con recarga instantánea) y `unit-test` (lanza Vitest). También compila Sass (y Less, si instalas el paquete `less`). |
-| `@angular/compiler-cli` | El compilador de Angular para la línea de comandos (`ngc`). Envuelve a TypeScript, compila las plantillas y comprueba sus tipos: si escribes `{{ titel() }}` por error, el fallo aparece al compilar, no al usuario. |
-| `typescript` | El compilador de TypeScript (versión 6.0): comprueba los tipos y traduce a JavaScript. |
-| `vitest` | El ejecutor de pruebas: encuentra los `*.spec.ts`, ejecuta `describe`/`it`/`expect` y te dice qué pasa y qué falla. Módulo 18. |
-| `jsdom` | Un navegador falso hecho en JavaScript: imita `document` y el DOM dentro de Node.js para que las pruebas puedan "pintar" componentes sin abrir Chrome. |
-| `prettier` | El formateador de código. Lo usas tú (o tu editor) y también la CLI, que formatea con él los archivos que genera. |
-
 > [!idea]
 > Fíjate en lo que **no** está: `zone.js`. Las versiones antiguas de Angular la necesitaban para enterarse de los cambios. Las apps nuevas de Angular 22 son *zoneless*: Angular sabe qué repintar gracias a los *signals* y a los eventos de la plantilla.
-
-## Qué descarga de verdad npm install
-
-Ocho dependencias más siete de desarrollo son quince librerías… pero `node_modules` acaba con **unos 400 paquetes y unos 300 MB**. Cada librería trae las suyas: `@angular/build` necesita `esbuild`, `vite`, `sass`, `postcss`, `browserslist`…; `vitest` y `jsdom` traen decenas más. npm resuelve ese árbol entero, descarga cada paquete una vez y anota la versión exacta de todos en `package-lock.json`.
-
-```mermaid
-flowchart LR
-    P[package.json<br/>15 librerías] --> N[npm install]
-    N --> M[node_modules<br/>unos 400 paquetes]
-    N --> L[package-lock.json<br/>versiones exactas]
-    M --> B[Solo lo que importas<br/>acaba en el navegador]
-```
-
-Lo importante es la última caja: el navegador **no** recibe 300 MB. En el build solo entra el código que tu aplicación importa de verdad, y el resto se descarta (a eso se le llama *tree shaking*, "sacudir el árbol" para que caigan las hojas que no usas). La app de bienvenida ocupa unos 216 kB, unos 59 kB comprimidos.
-
-> [!cuidado]
-> No muevas una librería de `dependencies` a `devDependencies` "para que pese menos": el tamaño final no depende de esa lista, sino de lo que importas. Y no instales paquetes de Angular con versiones mezcladas (`@angular/core` 22 con `@angular/router` 21): deben ir siempre juntos. Para actualizar, usa `ng update` (módulo 21).
 
 > [!prueba]
 > En tu proyecto, abre `node_modules/@angular/core/package.json` y busca `"version"`. Después ejecuta `ng version`: verás la misma versión junto a la de cada paquete de la lista.
 
 > [!resumen]
-> - `dependencies` viajan con la app (core, common, platform-browser, router, forms, compiler, rxjs, tslib); `devDependencies` solo construyen y prueban (cli, build, compiler-cli, typescript, vitest, jsdom, prettier).
+> - `dependencies` viajan con la app: core, common, platform-browser, router, forms, compiler, rxjs y tslib.
 > - Los `scripts` son atajos a la CLI del proyecto: `npm start` = `ng serve`.
-> - npm descarga unos 400 paquetes, pero al navegador solo llega lo que importas.
+> - `^` acepta versiones *minor* nuevas; `~`, solo *patch*.
 > - Angular 22 ya no usa zone.js.

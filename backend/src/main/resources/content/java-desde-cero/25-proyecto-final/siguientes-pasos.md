@@ -59,6 +59,9 @@ Y mientras tanto, sigue resolviendo ejercicios aquí: repetir y variar es lo que
 
 ¡Enhorabuena por llegar hasta aquí! Empezaste sin saber qué era una variable y has terminado escribiendo aplicaciones completas. Eso es mérito tuyo.
 
+> [!prueba]
+> Elige un proyecto pequeño de la lista (por ejemplo, un gestor de gastos) y escribe en tres líneas qué haría: qué datos guarda, qué opciones tiene el menú y qué pasa al salir. Ese esquema es el primer paso de cualquier programa.
+
 > [!resumen]
 > - Instala un JDK y un IDE para programar en tu ordenador.
 > - Maven o Gradle gestionan dependencias, pruebas y empaquetado; Git guarda el historial.

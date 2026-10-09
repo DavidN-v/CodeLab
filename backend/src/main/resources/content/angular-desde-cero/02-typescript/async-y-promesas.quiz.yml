@@ -1,0 +1,38 @@
+questions:
+  - type: output
+    prompt: ¿En qué orden aparecen los mensajes en la consola?
+    code: |
+      async function pedir(): Promise<string> {
+        await new Promise((resolve) => setTimeout(resolve, 500));
+        return 'datos';
+      }
+
+      async function cargar(): Promise<void> {
+        console.log('A');
+        const r = await pedir();
+        console.log('B ' + r);
+      }
+
+      cargar();
+      console.log('C');
+    answer: |
+      A
+      C
+      B datos
+    explanation: '`cargar` escribe `A` y se pausa en el `await`. Mientras espera, el programa sigue y escribe `C`. Medio segundo después, `cargar` continúa y escribe `B datos`.'
+  - type: choice
+    prompt: Olvidas el `await` en `const nombre = cargarNombre();`. ¿Qué vale `nombre`?
+    options:
+      - El texto devuelto
+      - Una promesa (`Promise<string>`)
+      - '`undefined`'
+    answer: 1
+    explanation: Sin `await` no se espera, así que obtienes la promesa y no su valor. TypeScript lo avisa porque el tipo es `Promise<string>`.
+  - type: choice
+    prompt: ¿Dónde se puede usar `await`?
+    options:
+      - Solo dentro de una función `async`
+      - En cualquier parte del código
+      - Solo dentro de una clase
+    answer: 0
+    explanation: '`await` pausa la función que lo contiene, así que esa función debe estar marcada como `async`.'
