@@ -89,9 +89,11 @@ pre {
     scroll-behavior: auto;
   }
 
-  *,
-  *::before,
-  *::after {
+  // SVG content is left alone: Mermaid measures its labels while it draws, and
+  // a forced transition there makes it lay the diagram out thousands of pixels wide.
+  *:not(svg *),
+  *:not(svg *)::before,
+  *:not(svg *)::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
