@@ -16,18 +16,38 @@
 
 .hero__eyebrow {
   @include mono-label;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
   margin-bottom: var(--space-5);
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--color-border-strong);
+  border-radius: 999px;
+  background-color: var(--color-surface);
   color: var(--color-text-muted);
+
+  &::before {
+    content: '';
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background-color: var(--color-success);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-success) 25%, transparent);
+  }
 }
 
 .hero__heading {
   font-size: var(--text-display);
+  font-weight: 700;
   letter-spacing: -0.03em;
   line-height: 1.05;
 }
 
 .hero__emphasis {
-  color: var(--color-accent);
+  background: linear-gradient(100deg, var(--color-accent), var(--color-accent-hover));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 .hero__lead {
@@ -48,4 +68,36 @@
   display: block;
   // Lets the code scroll inside its own box instead of widening the page.
   min-width: 0;
+}
+
+:host {
+  display: block;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+
+  // A warm glow behind the preview and a faint grid that fades out downwards.
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  &::before {
+    background:
+      radial-gradient(42rem 26rem at 78% 30%, color-mix(in srgb, var(--color-accent) 16%, transparent), transparent 70%),
+      radial-gradient(30rem 20rem at 8% 0%, color-mix(in srgb, var(--color-info) 8%, transparent), transparent 70%);
+  }
+
+  &::after {
+    background-image:
+      linear-gradient(var(--color-border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--color-border) 1px, transparent 1px);
+    background-size: 3rem 3rem;
+    opacity: 0.35;
+    mask-image: radial-gradient(60rem 30rem at 50% 0%, #000, transparent 75%);
+  }
 }

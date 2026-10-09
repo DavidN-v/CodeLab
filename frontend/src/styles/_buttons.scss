@@ -19,7 +19,13 @@
   transition:
     background-color var(--transition-fast),
     border-color var(--transition-fast),
-    color var(--transition-fast);
+    color var(--transition-fast),
+    box-shadow var(--transition-base),
+    transform var(--transition-fast);
+
+  &:active {
+    transform: translateY(1px);
+  }
 }
 
 .button--primary {
@@ -28,6 +34,8 @@
 
   &:hover {
     background-color: var(--color-accent-hover);
+    box-shadow: var(--shadow-accent);
+    transform: translateY(-1px);
   }
 }
 

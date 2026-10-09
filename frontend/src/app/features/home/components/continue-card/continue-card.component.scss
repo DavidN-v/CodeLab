@@ -4,6 +4,11 @@
   display: block;
   @include container;
   padding-top: var(--space-5);
+
+  // Signed out there is no card, so the hero starts right under the navbar.
+  &:empty {
+    display: none;
+  }
 }
 
 .continue {
