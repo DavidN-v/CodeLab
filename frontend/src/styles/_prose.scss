@@ -14,8 +14,11 @@
 
   h2 {
     margin-top: var(--space-7);
-    padding-top: var(--space-2);
+    padding: var(--space-1) 0 var(--space-1) var(--space-3);
+    // Amber marker: makes each section easy to find while scrolling.
+    border-left: 4px solid var(--color-accent);
     font-size: var(--text-xl);
+
     scroll-margin-top: calc(var(--navbar-height) + var(--space-4));
   }
 
@@ -71,23 +74,44 @@
 
   table {
     display: block;
-    width: 100%;
+    width: fit-content;
+    max-width: 100%;
     overflow-x: auto;
-    border-collapse: collapse;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    border-collapse: separate;
+    border-spacing: 0;
     font-size: var(--text-sm);
   }
 
   th,
   td {
-    padding: var(--space-2) var(--space-3);
-    border: 1px solid var(--color-border);
+    padding: var(--space-3) var(--space-4);
+    border-bottom: 1px solid var(--color-border);
     text-align: left;
     vertical-align: top;
   }
 
+  th + th,
+  td + td {
+    border-left: 1px solid var(--color-border);
+  }
+
+  tr:last-child td {
+    border-bottom: 0;
+  }
+
+  tbody tr:nth-child(even) td {
+    background-color: color-mix(in srgb, var(--color-surface) 55%, transparent);
+  }
+
   th {
     background-color: var(--color-surface);
+    color: var(--color-text-muted);
+    font-size: var(--text-xs);
     font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
   }
 
   hr {
@@ -102,6 +126,7 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   background-color: var(--color-code-bg);
+  box-shadow: var(--shadow-md);
 
   pre {
     margin: 0;
@@ -160,10 +185,15 @@
 
 // Callouts: > [!analogia], [!idea], [!prueba], [!cuidado], [!resumen].
 .callout {
-  padding: var(--space-3) var(--space-4);
-  border-left: 3px solid var(--callout-color, var(--color-accent));
-  border-radius: var(--radius-sm);
-  background-color: color-mix(in srgb, var(--callout-color, var(--color-accent)) 9%, transparent);
+  padding: var(--space-4) var(--space-5);
+  border: 1px solid color-mix(in srgb, var(--callout-color, var(--color-accent)) 28%, transparent);
+  border-left: 4px solid var(--callout-color, var(--color-accent));
+  border-radius: var(--radius-md);
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--callout-color, var(--color-accent)) 13%, transparent),
+    color-mix(in srgb, var(--callout-color, var(--color-accent)) 4%, transparent)
+  );
 
   > * + * {
     margin-top: var(--space-2);
@@ -178,7 +208,8 @@
 .callout__title {
   color: var(--callout-color, var(--color-accent));
   font-size: var(--text-sm);
-  font-weight: 600;
+  font-weight: 700;
+  letter-spacing: 0.02em;
 }
 
 .callout--analogia {
