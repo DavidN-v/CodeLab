@@ -1,0 +1,221 @@
+@use 'mixins' as *;
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+
+  .section-title {
+    margin-bottom: 0;
+  }
+}
+
+.card__detail {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+
+  strong {
+    color: var(--color-text);
+  }
+}
+
+.next-up {
+  margin-bottom: var(--space-7);
+
+  .section-title {
+    margin-bottom: var(--space-3);
+  }
+}
+
+.overview {
+  display: grid;
+  gap: var(--space-4);
+  margin: var(--space-3) 0 var(--space-4);
+
+  @include from('md') {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @include from('lg') {
+    grid-template-columns: 1.2fr 1fr 1.4fr;
+  }
+}
+
+.level__title,
+.streak__value {
+  font-size: var(--text-xl);
+  font-weight: 600;
+}
+
+.streak--active {
+  border-color: color-mix(in srgb, var(--color-accent) 50%, var(--color-border));
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-2);
+  margin: 0 0 var(--space-7);
+  padding: 0;
+  list-style: none;
+
+  @include from('md') {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.stat__value {
+  color: var(--color-text);
+  font-family: var(--font-mono);
+  font-size: var(--text-xl);
+}
+
+.columns {
+  display: grid;
+  gap: var(--space-7);
+
+  @include from('lg') {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  }
+}
+
+.columns__heading {
+  margin-top: var(--space-6);
+}
+
+.course-card + .course-card {
+  margin-top: var(--space-3);
+}
+
+.course-card__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.course-card__title {
+  font-size: var(--text-lg);
+
+  a {
+    text-decoration: none;
+  }
+}
+
+.course-card__percent {
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+}
+
+.course-card__steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: var(--space-2) 0 0;
+  padding: 0;
+  list-style: none;
+  color: var(--color-text-subtle);
+  font-size: var(--text-sm);
+
+  li {
+    padding: var(--space-1) var(--space-3);
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+  }
+}
+
+.course-card__step--now {
+  border-color: var(--color-accent) !important;
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+.course-card__action {
+  align-self: flex-start;
+  margin-top: var(--space-2);
+}
+
+.submission {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.submission__meta,
+.submission__time {
+  color: var(--color-text-subtle);
+  font-size: var(--text-xs);
+}
+
+.achievements {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+}
+
+.achievement {
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-subtle);
+
+  &--earned {
+    border-color: color-mix(in srgb, var(--color-accent) 40%, var(--color-border));
+    color: var(--color-text);
+
+    .achievement__icon {
+      color: var(--color-accent);
+    }
+  }
+}
+
+.achievement__icon {
+  font-size: var(--text-lg);
+  line-height: 1.2;
+}
+
+.achievement__title {
+  display: block;
+  font-weight: 500;
+}
+
+.achievement__description {
+  display: block;
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+}
+
+.risk {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-warning);
+  border-radius: var(--radius-md);
+  background-color: color-mix(in srgb, var(--color-warning) 12%, transparent);
+}
+
+.reviews .rows {
+  margin-top: var(--space-3);
+}

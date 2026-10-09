@@ -1,0 +1,60 @@
+questions:
+  - type: choice
+    prompt: En `assertEquals(a, b)`, ¿qué va en primer lugar?
+    options:
+      - El valor esperado
+      - El valor que devuelve tu código
+      - Da igual, y el mensaje de error es el mismo
+      - El nombre de la prueba
+    answer: 0
+    explanation: 'Primero el esperado y después el real. Si los inviertes la prueba sigue funcionando, pero el mensaje «se esperaba X pero fue Y» saldrá al revés y te confundirá.'
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      import static org.junit.jupiter.api.Assertions.assertEquals;
+      import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+
+      import org.junit.jupiter.api.Test;
+      import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
+      import org.junit.platform.launcher.core.LauncherFactory;
+      import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
+
+      class Texto {
+          static String gritar(String s) {
+              return s.toUpperCase() + "!";
+          }
+      }
+
+      class TextoTest {
+          @Test
+          void poneMayusculas() {
+              assertEquals("HOLA!", Texto.gritar("hola"));
+          }
+
+          @Test
+          void funcionaConTextoVacio() {
+              assertEquals("", Texto.gritar(""));
+          }
+      }
+
+      public class Main {
+          public static void main(String[] args) {
+              var peticion = LauncherDiscoveryRequestBuilder.request().selectors(selectClass(TextoTest.class)).build();
+              var resumen = new SummaryGeneratingListener();
+              LauncherFactory.create().execute(peticion, resumen);
+              System.out.println(resumen.getSummary().getTestsSucceededCount() + "/"
+                      + resumen.getSummary().getTestsFoundCount() + " pruebas superadas");
+          }
+      }
+    answer: |
+      1/2 pruebas superadas
+    explanation: '`gritar("")` devuelve `"!"`, no `""`, así que la segunda prueba falla. La primera pasa: «hola» en mayúsculas más la exclamación es `"HOLA!"`.'
+  - type: choice
+    prompt: ¿Para qué sirve un método marcado con `@BeforeEach`?
+    options:
+      - Para preparar un estado limpio antes de cada prueba
+      - Para ejecutar las pruebas en un orden fijo
+      - Para que se ejecute una sola vez antes de todas las pruebas
+      - Para marcar qué pruebas pueden fallar
+    answer: 0
+    explanation: Se ejecuta antes de **cada** `@Test`, así cada prueba empieza con objetos nuevos y no depende de lo que dejó otra. El que se ejecuta una sola vez es `@BeforeAll`.

@@ -1,0 +1,28 @@
+lessons:
+  - slug: etapa-1-esqueleto
+    title: 'Etapa 1: el esqueleto de Mis tareas'
+    summary: Crear el proyecto, el modelo, la cabecera, las rutas y la página 404.
+    minutes: 12
+  - slug: etapa-2-datos
+    title: 'Etapa 2: datos con HttpClient y signals'
+    summary: Un JSON como backend falso, un servicio con estado y la lista con filtros.
+    minutes: 14
+  - slug: etapa-3-formulario
+    title: 'Etapa 3: crear tareas con un formulario'
+    summary: Formulario reactivo con validaciones y una ruta con carga diferida.
+    minutes: 12
+  - slug: etapa-4-detalle
+    title: 'Etapa 4: detalle, guard y @defer'
+    summary: Parámetros de ruta como inputs, un guard asíncrono y un resumen diferido.
+    minutes: 14
+  - slug: etapa-5-pruebas-y-build
+    title: 'Etapa 5: pruebas y versión final'
+    summary: Arreglar y escribir pruebas con Vitest y TestBed, y generar el build de producción.
+    minutes: 14
+exercises:
+  - ng-final-contadores
+  - ng-final-rutas
+  - ng-final-formulario
+  - ng-final-store-metodos
+  - ng-final-detalle
+  - ng-final-guard

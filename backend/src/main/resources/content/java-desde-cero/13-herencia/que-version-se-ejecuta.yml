@@ -1,0 +1,56 @@
+title: ¿Qué versión se ejecuta?
+summary: Sigue una cadena de herencia y descubre qué método sobrescrito responde.
+difficulty: EASY
+kind: predict
+statement: |
+  Este programa tiene una jerarquía de tres niveles: `Animal → Mamifero → Perro`, y además un `Gato` que no sobrescribe nada.
+
+  `saludar()` solo está escrito en `Animal`, pero llama a `describir()`, que algunas subclases sobrescriben. Lee el programa con calma y escribe **exactamente** lo que imprime.
+
+  Recuerda: manda el objeto real. Si su clase no tiene el método, se busca en el padre, y luego en el abuelo.
+starter: |
+  class Animal {
+      String describir() {
+          return "animal";
+      }
+
+      String saludar() {
+          return "Soy un " + describir();
+      }
+  }
+
+  class Mamifero extends Animal {
+      @Override
+      String describir() {
+          return "mamífero";
+      }
+  }
+
+  class Perro extends Mamifero {
+      @Override
+      String describir() {
+          return "perro y " + super.describir();
+      }
+  }
+
+  class Gato extends Mamifero {
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          System.out.println(new Animal().saludar());
+          System.out.println(new Mamifero().saludar());
+          System.out.println(new Perro().saludar());
+          System.out.println(new Gato().saludar());
+      }
+  }
+hints:
+  - 'La idea: `saludar()` siempre es el de `Animal`, pero el `describir()` que usa depende del objeto que lo llama.'
+  - 'Qué usar: para cada línea del `main`, busca `describir()` empezando por la clase del objeto y subiendo hacia el padre hasta encontrarlo. `super.describir()` salta a la versión del padre.'
+  - 'El plan: `Animal` usa el suyo ("animal"); `Mamifero`, el suyo; `Perro` junta "perro y " con el de `Mamifero`; `Gato` no tiene, así que sube a `Mamifero`.'
+tests:
+  - output: |
+      Soy un animal
+      Soy un mamífero
+      Soy un perro y mamífero
+      Soy un mamífero

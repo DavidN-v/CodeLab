@@ -1,0 +1,43 @@
+title: El plan B de nginx
+summary: Completa la configuración de nginx para que las rutas de la SPA no den 404.
+difficulty: MEDIUM
+kind: fill
+statement: |
+  Al recargar la página en `https://mitienda.com/productos/7`, nginx responde **404 Not Found**. Completa la configuración para que:
+
+  1. si el archivo pedido existe (`/main-AB12CD34.js`), lo envíe;
+  2. si no, envíe la página única de la app, para que el router de Angular resuelva la ruta.
+
+  Escribe la directiva de nginx y el archivo de respaldo (con su `/` inicial).
+starter: |
+  server {
+    listen 80;
+    root /usr/share/nginx/html;
+    index index.html;
+
+    location / {
+      {{?}} $uri $uri/ {{?}};
+    }
+  }
+solution: |
+  server {
+    listen 80;
+    root /usr/share/nginx/html;
+    index index.html;
+
+    location / {
+      try_files $uri $uri/ /index.html;
+    }
+  }
+answers:
+  - try_files
+  - /index.html
+hints:
+  - 'La idea: nginx debe «probar» varias opciones en orden: el archivo, una carpeta y, si nada existe, la página de la app.'
+  - 'Qué usar: la directiva de nginx que significa «intenta estos archivos» y, como última opción, el único HTML de una SPA.'
+  - 'El plan: `try_files $uri $uri/ /index.html;`.'
+tests:
+  - output: |
+      GET /main-AB12CD34.js → el archivo JavaScript
+      GET /productos/7      → index.html (y el router pinta el producto 7)
+    sample: true

@@ -1,0 +1,48 @@
+title: El portero del panel
+summary: Ordena las líneas de un guard funcional que redirige a /login.
+difficulty: MEDIUM
+kind: parsons
+statement: |
+  El guard `authGuard` debe dejar pasar a quien tenga la sesión iniciada (`sesion.conectado()` devuelve `true`) y mandar a `/login` a todos los demás.
+
+  Ordena las líneas del cuerpo de la función. Cuidado: alguna línea sobra.
+starter: |
+  // src/app/auth-guard.ts
+  import { inject } from '@angular/core';
+  import { CanActivateFn, Router } from '@angular/router';
+  import { Sesion } from './sesion';
+
+  export const authGuard: CanActivateFn = (route, state) => {
+  {{lines}}
+  };
+solution: |
+  // src/app/auth-guard.ts
+  import { inject } from '@angular/core';
+  import { CanActivateFn, Router } from '@angular/router';
+  import { Sesion } from './sesion';
+
+  export const authGuard: CanActivateFn = (route, state) => {
+    const sesion = inject(Sesion);
+    if (sesion.conectado()) {
+      return true;
+    }
+    return inject(Router).createUrlTree(['/login']);
+  };
+lines:
+  - '  const sesion = inject(Sesion);'
+  - '  if (sesion.conectado()) {'
+  - '    return true;'
+  - '  }'
+  - "  return inject(Router).createUrlTree(['/login']);"
+distractors:
+  - '  const sesion = new Sesion();'
+  - "  return inject(Router).createUrlTree(['login'], true);"
+hints:
+  - 'La idea: primero consigues la sesión, después preguntas si hay alguien conectado; si lo hay, dejas pasar, y si no, devuelves una dirección alternativa.'
+  - 'Qué usar: `inject()` para pedir servicios (los guards se ejecutan en un contexto de inyección), un `if` y `createUrlTree` del `Router` para redirigir.'
+  - 'El plan: `const sesion = inject(Sesion)` → `if (conectado)` → `return true` → cierra la llave → `return` del `UrlTree` hacia `/login`.'
+tests:
+  - output: |
+      Con sesión: entra en /admin
+      Sin sesión: acaba en /login
+    sample: true

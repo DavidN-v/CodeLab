@@ -1,0 +1,41 @@
+title: El estado de un formulario recién creado
+summary: Predice qué muestra un formulario reactivo antes de que nadie lo toque.
+difficulty: EASY
+kind: predict
+statement: |
+  Este componente crea un formulario reactivo y muestra parte de su estado. La página acaba de cargar y **nadie ha tocado nada**.
+
+  ¿Qué se ve en la página? Escribe el texto de cada párrafo, **una línea por párrafo**, en orden.
+starter: |
+  // src/app/alta/alta.ts
+  import { Component, inject } from '@angular/core';
+  import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+
+  @Component({
+    selector: 'app-alta',
+    imports: [ReactiveFormsModule],
+    template: `
+      <p>Válido: {{ form.valid }}</p>
+      <p>Tocado: {{ form.touched }}</p>
+      <p>Email: {{ form.controls.email.value }}</p>
+      <p>Falta nombre: {{ form.controls.nombre.hasError('required') }}</p>
+    `,
+  })
+  export class Alta {
+    private readonly fb = inject(NonNullableFormBuilder);
+
+    protected readonly form = this.fb.group({
+      nombre: ['', Validators.required],
+      email: ['ada@ejemplo.com', Validators.email],
+    });
+  }
+hints:
+  - 'La idea: los validadores se ejecutan desde el primer momento, con los valores iniciales, aunque nadie haya escrito nada.'
+  - 'Qué usar: mira el valor inicial de cada campo. Un campo vacío con `Validators.required` tiene el error `required`. Un formulario es válido solo si todos sus campos lo son.'
+  - 'El plan: nombre vacío + required → error, así que el grupo no es válido. Nadie ha salido de ningún campo, así que no está tocado. El email se muestra tal cual.'
+tests:
+  - output: |
+      Válido: false
+      Tocado: false
+      Email: ada@ejemplo.com
+      Falta nombre: true

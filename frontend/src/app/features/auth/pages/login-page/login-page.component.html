@@ -1,0 +1,49 @@
+<app-auth-card
+  heading="Entrar"
+  lead="Sigue donde lo dejaste: tu progreso, tu racha y tus ejercicios."
+>
+  <form class="auth-form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <div class="field">
+      <label class="field__label" for="login-email">Correo electrónico</label>
+      <input
+        id="login-email"
+        class="input"
+        type="email"
+        autocomplete="email"
+        formControlName="email"
+        [attr.aria-invalid]="form.controls.email.touched && form.controls.email.invalid"
+      />
+      @if (form.controls.email.touched && form.controls.email.invalid) {
+        <p class="field__error">Escribe un correo válido.</p>
+      }
+    </div>
+
+    <div class="field">
+      <label class="field__label" for="login-password">Contraseña</label>
+      <input
+        id="login-password"
+        class="input"
+        type="password"
+        autocomplete="current-password"
+        formControlName="password"
+        [attr.aria-invalid]="form.controls.password.touched && form.controls.password.invalid"
+      />
+      @if (form.controls.password.touched && form.controls.password.invalid) {
+        <p class="field__error">Escribe tu contraseña.</p>
+      }
+    </div>
+
+    @if (error(); as message) {
+      <p class="state state--error" role="alert">{{ message }}</p>
+    }
+
+    <button type="submit" class="button button--primary" [disabled]="submitting()">
+      {{ submitting() ? 'Entrando…' : 'Entrar' }}
+    </button>
+
+    <p class="auth-form__switch">
+      ¿Aún no tienes cuenta?
+      <a routerLink="/register" [queryParams]="{ returnUrl: returnUrl() }">Crea una gratis</a>
+    </p>
+  </form>
+</app-auth-card>

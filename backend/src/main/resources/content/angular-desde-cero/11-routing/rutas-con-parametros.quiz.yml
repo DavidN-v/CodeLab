@@ -1,0 +1,30 @@
+questions:
+  - type: output
+    prompt: 'Con `withComponentInputBinding()` y la ruta `{ path: ''usuarios/:nombre'', component: Perfil }`, ¿qué se ve en `/usuarios/grace`?'
+    code: |
+      @Component({
+        selector: 'app-perfil',
+        template: `<h1>Perfil de {{ nombre() }}</h1>`,
+      })
+      export class Perfil {
+        readonly nombre = input.required<string>();
+      }
+    answer: |
+      Perfil de grace
+    explanation: 'El router guarda `grace` como el parámetro `nombre` y lo copia en el `input` que se llama igual.'
+  - type: choice
+    prompt: '¿Qué dirección genera `<a [routerLink]="[''/tiendas'', 3]" [queryParams]="{ dia: ''lunes'' }">`?'
+    options:
+      - '`/tiendas/3?dia=lunes`'
+      - '`/tiendas?3&dia=lunes`'
+      - '`/tiendas/3/lunes`'
+    answer: 0
+    explanation: 'Los segmentos del array se unen con `/` y los query params se añaden detrás de `?` con la forma `clave=valor`.'
+  - type: choice
+    prompt: 'En `/productos/7`, ¿por qué `id() === 7` es `false`?'
+    options:
+      - Porque los parámetros de ruta siempre son texto y `'7'` no es igual al número `7`
+      - Porque `id()` vale `undefined` hasta que se pulsa un enlace
+      - Porque el router quita los números de la dirección
+    answer: 0
+    explanation: 'La dirección es texto y el router no adivina tipos. Convierte con `Number(id())` o con `transform: numberAttribute` en el `input`.'

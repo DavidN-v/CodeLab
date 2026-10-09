@@ -1,8 +1,8 @@
 # Arquitectura de Forja
 
-Este documento es la propuesta de arquitectura de la plataforma: estructura del
-proyecto, modelo de datos, organización de Angular, rutas, API REST y flujo de
-ejecución segura de código. Cada sección indica qué existe ya (Fase 1) y qué
+Este documento describe la arquitectura de la plataforma: estructura del
+proyecto, modelo de datos, organización de Angular, rutas, API REST, contenido
+del curso y ejecución segura de código. Cada sección indica qué existe ya y qué
 llega en fases posteriores.
 
 > **Forja** es un nombre de trabajo. En el frontend vive solo en
@@ -27,13 +27,13 @@ llega en fases posteriores.
         └───────────┬────────────┘
                     │ red runner (interna, sin salida a internet)
                     ▼
-        ┌────────────────────────┐
-        │ code-runner            │  único servicio que toca código de usuario
-        │ Spring Boot            │
-        └───────────┬────────────┘
-                    │ Fase 4
-                    ▼
-        sandbox efímero por ejecución (contenedor con JDK)
+        ┌────────────────────────┐        ┌──────────────┐
+        │ code-runner            ├───────►│ docker-proxy │──► socket de Docker
+        │ Spring Boot            │        └──────────────┘
+        └────────────────────────┘                │
+                                                  ▼
+                         un contenedor sandbox-java por ejecución
+                         (sin red, solo lectura, sin capabilities)
 ```
 
 Decisiones que condicionan todo lo demás:
@@ -41,21 +41,24 @@ Decisiones que condicionan todo lo demás:
 | Decisión | Motivo |
 | --- | --- |
 | El navegador solo habla con un origen; nginx reenvía `/api` | Sin URLs de API en el frontend ni CORS en producción |
-| El backend nunca compila ni ejecuta código de usuario | Un fallo del sandbox no compromete la API ni la base de datos |
-| `code-runner` es un servicio aparte, en una red interna | No ve PostgreSQL, no tiene puertos publicados ni salida a internet |
-| El lenguaje es un dato (`languages.slug`), no código | Añadir Python es insertar filas y registrar un runtime, no tocar tablas ni rutas |
+| Ni el backend ni el code-runner ejecutan código de usuario en su proceso | Un fallo del sandbox no compromete la API, la base de datos ni el runner |
+| Un contenedor nuevo por ejecución, creado a través de un proxy del socket | Aislamiento fuerte y ningún servicio con acceso directo a Docker |
+| `code-runner` y `docker-proxy` viven en una red interna | No ven PostgreSQL, no tienen puertos publicados ni salida a internet |
+| El lenguaje es un dato (`languages.slug`), no código | Añadir Python es insertar filas y configurar un runtime, no tocar tablas ni rutas |
 | El esquema lo gobierna Flyway; Hibernate solo valida | Los cambios de base de datos son explícitos, versionados y revisables |
+| El contenido del curso son archivos del repositorio | Se revisa como código, se versiona y se verifica contra el sandbox |
 | Configuración solo por variables de entorno | Ninguna credencial ni URL en el código |
 
 ## 2. Estructura del proyecto
 
 ```
 forja/
-├── docker-compose.yml        4 servicios y 3 redes
+├── docker-compose.yml        servicios y 3 redes
+├── docker-compose.dev.yml    publica el code-runner para desarrollo local
 ├── .env.example              plantilla de configuración
 ├── docs/ARCHITECTURE.md
 ├── backend/                  API REST (Spring Boot 4, Java 21, Maven)
-├── code-runner/              servicio de ejecución aislada (Spring Boot 4)
+├── code-runner/              ejecución aislada (Spring Boot 4) e imagen del sandbox
 └── frontend/                 SPA (Angular 22) + nginx
 ```
 
@@ -63,50 +66,65 @@ forja/
 
 ```
 backend/src/main/java/com/forja/api/
-├── config/        Seguridad, CORS, OpenAPI, propiedades tipadas, clientes HTTP
+├── config/        Seguridad, JWT, CORS, OpenAPI, límites de peticiones, clientes HTTP, reloj
+├── content/       Importa las lecciones y ejercicios de resources/content al arrancar
 ├── controller/    Solo HTTP: rutas, validación de entrada, documentación OpenAPI
 ├── dto/           Contratos de la API (records). Las entidades nunca salen de aquí
 ├── entity/        Entidades JPA
 ├── exception/     Excepciones de dominio, ErrorCode y GlobalExceptionHandler
+├── learning/      Reglas puras: corrección, comparación de salidas, XP, niveles, rachas
 ├── mapper/        Entidad → DTO
-├── repository/    Spring Data JPA
-├── security/      Respuestas 401/403 en JSON (y, en Fase 3, el filtro JWT)
+├── repository/    Spring Data JPA, con proyecciones ligeras (LessonOutline, ExerciseOutline)
+├── security/      Emisión de tokens, respuestas 401/403 en JSON, usuario actual
 ├── service/       Interfaces de la lógica de negocio
 │   └── impl/      Implementaciones, transaccionales
-├── client/        Clientes de otros servicios (code-runner)
+├── client/        Cliente del code-runner
 └── util/          Constantes y reglas compartidas (p. ej. formato de slug)
 
 backend/src/main/resources/
 ├── application.yml
-└── db/migration/  Migraciones Flyway (V1__..., V2__...)
+├── content/       El curso: un directorio por módulo (ver sección 6)
+└── db/migration/  Migraciones Flyway (V1__..., V2__..., V3__...)
 ```
 
-`client/` es la única carpeta añadida a la estructura pedida: separa las
-llamadas salientes a otros servicios de la lógica de negocio.
+### 2.2 Code-runner
 
-### 2.2 Frontend
+```
+code-runner/
+├── sandbox/java/Dockerfile          imagen de los contenedores de ejecución (JDK 21, H2, JUnit)
+└── src/main/
+    ├── java/com/forja/runner/
+    │   ├── api/                     POST /internal/executions y errores
+    │   ├── config/                  runtimes y límites, cliente HTTP de Docker
+    │   ├── docker/                  cliente mínimo de la API de Docker
+    │   ├── execution/               cola, sandbox, layout de fuentes, lectura del protocolo
+    │   └── health/                  limpieza al arrancar y estado del sandbox
+    └── resources/sandbox/harness.sh guion que corre dentro de cada contenedor
+```
+
+### 2.3 Frontend
 
 ```
 frontend/src/
 ├── environments/             apiBaseUrl por entorno
-├── styles/                   tokens de diseño, base, botones, mixins
+├── styles/                   tokens, base, botones, formularios, páginas, prosa, sintaxis, workbench
 └── app/
     ├── core/                 singletons de toda la aplicación
     │   ├── config/           API_BASE_URL, marca
-    │   ├── interceptors/     errores HTTP → AppError + aviso al usuario
+    │   ├── guards/           authGuard
+    │   ├── interceptors/     token en cada petición; errores HTTP → AppError + aviso
     │   ├── models/           contratos de la API y tipos compartidos
-    │   ├── services/         LanguageService, NotificationService, títulos
-    │   └── guards/           (Fase 3: autenticación)
+    │   └── services/         auth, cursos, ejercicios, ejecución, progreso, panel, avisos
     ├── shared/               piezas reutilizables sin estado de negocio
-    │   ├── components/       toast-outlet, page-placeholder, language-list-item
-    │   ├── directives/       (según se necesiten)
-    │   └── pipes/            (según se necesiten)
-    ├── layout/               navbar, footer (sidebar en Fase 2)
+    │   ├── components/       markdown, progress-bar, toast-outlet, language-list-item
+    │   └── utils/            etiquetas y plurales
+    ├── layout/               navbar (con la sesión), footer
     ├── features/
-    │   ├── home/             components/ + pages/
-    │   ├── courses/          catálogo, portada de lenguaje, módulos
-    │   ├── learning/         vista de lección en tres columnas
-    │   ├── practice/         playground y ejercicios (editor + consola)
+    │   ├── home/             portada
+    │   ├── auth/             login y registro
+    │   ├── courses/          catálogo de lenguajes, curso y módulo
+    │   ├── learning/         lección en tres columnas
+    │   ├── practice/         catálogo de ejercicios, playground y ejercicio (editor, consola, resultados)
     │   ├── dashboard/        panel del estudiante
     │   └── not-found/
     ├── app.component.*       shell: navbar + router-outlet + footer + toasts
@@ -120,122 +138,156 @@ Reglas:
 - `pages/` son componentes enrutados que obtienen datos; `components/` son
   presentacionales (reciben `input()`, emiten `output()`).
 - Una feature no importa de otra feature. Lo común sube a `shared/` o `core/`.
-- Los servicios usados por una sola feature viven en `features/<x>/services/`;
-  los transversales, en `core/services/`.
-- Componentes standalone, `OnPush`, estado con signals. No hay NgModules.
+- Componentes standalone, `OnPush`, estado con signals; los datos de las
+  páginas se cargan con `rxResource`. No hay NgModules.
+- Los estilos de página compartidos viven en `styles/`, para que cada
+  componente se mantenga dentro del presupuesto de tamaño.
 
 ## 3. Modelo de datos
 
 ### 3.1 Entidades
 
 ```
-Language 1──* Course 1──* Module 1──* Lesson *──* Concept
-                              │           │
-                              │           └──* Exercise 1──* TestCase
-                              │                    │    1──* Hint
-                              │                    └──* Submission *──1 User
-                              └──* Project (se desbloquea con módulos)
+Language 1──* Course 1──* Module 1──* Lesson
+                              └──* Exercise 1──* TestCase
+                                       │   1──* Hint
+                                       └──* Submission *──1 User
 
-User 1──1 UserStats            XP, racha, tiempo de aprendizaje
-User *──* Achievement          vía UserAchievement
-User 1──* LessonProgress / ExerciseProgress / ModuleProgress
-User 1──* CourseEnrollment     curso activo y punto de reanudación
-Level                          umbrales de XP → nivel y título
+User 1──* LessonProgress    lecciones completadas
+User 1──* ExerciseProgress  intentos, pistas vistas, solución vista, resuelto, XP y repaso espaciado
+Course 1──* GlossaryTerm    términos explicados en las lecciones
 ```
 
-| Tabla | Propósito | Campos principales | Fase |
+| Tabla | Propósito | Campos principales | Estado |
 | --- | --- | --- | --- |
-| `languages` | Lenguaje o tecnología | slug, name, version, icon, tagline, active, display_order | **1** |
-| `courses` | Curso de un lenguaje | language_id, slug, title, summary, published | **1** |
-| `modules` | Unidad de un curso | course_id, slug, title, summary, published, display_order | **1** |
-| `lessons` | Lección de un módulo | module_id, slug, title, kind (THEORY, PRACTICE, CHALLENGE, ASSESSMENT), content_markdown, estimated_minutes | 2 |
-| `concepts`, `lesson_concepts` | Conceptos y qué lección los trata | language_id, slug, name | 3 |
-| `users` | Cuenta | email, display_name, password_hash, role | 3 |
-| `course_enrollments` | Curso en marcha | user_id, course_id, current_lesson_id, last_accessed_at | 3 |
-| `lesson_progress`, `module_progress` | Avance | user_id, lesson_id/module_id, status, completed_at | 3 |
-| `exercises` | Ejercicio | lesson_id, concept_id, slug, title, description, instructions, difficulty, starter_code, solution_code, requires_stdin | 5 |
-| `exercise_test_cases` | Tests automáticos y ejemplos | exercise_id, stdin, expected_stdout, hidden, sample | 5 |
-| `exercise_hints` | Pistas progresivas | exercise_id, position, content, unlock_after_attempts | 5 |
-| `submissions` | Intento de solución | user_id, exercise_id, source_code, status, passed_tests, total_tests, execution_time_ms | 5 |
-| `exercise_progress` | Estado por ejercicio | user_id, exercise_id, attempts, hints_revealed, solution_viewed, completed_at | 5 |
-| `user_stats`, `levels` | XP, nivel, racha | total_xp, current_streak_days, learning_seconds; level_number, title, min_xp | 6 |
-| `achievements`, `user_achievements` | Logros | code, title, criteria; earned_at | 6 |
-| `projects`, `project_required_modules` | Proyectos guiados | language_id, slug, title; módulos que lo desbloquean | 8 |
+| `languages` | Lenguaje o tecnología | slug, name, version, tagline, active, display_order | Hecha (V1) |
+| `courses` | Curso de un lenguaje | language_id, slug, title, summary, published | Hecha (V1) |
+| `modules` | Unidad de un curso | course_id, slug, title, summary, published, display_order | Hecha (V1) |
+| `lessons` | Lección de un módulo | module_id, slug, title, summary, content_markdown, quiz_json, estimated_minutes, published | Hecha (V3, quiz en V5) |
+| `exercises` | Ejercicio de un módulo | module_id, slug (único global), title, difficulty, kind, statement_markdown, starter_code, solution_code, parsons_json | Hecha (V3, tipos en V5) |
+| `glossary_terms` | Glosario del curso | course_id, term, aliases_json, definition, display_order | Hecha (V5) |
+| `exercise_test_cases` | Pruebas; las de ejemplo se muestran, las demás no salen de la API | exercise_id, position, stdin, expected_stdout, sample | Hecha (V3) |
+| `exercise_hints` | Pistas progresivas | exercise_id, position, content | Hecha (V3) |
+| `users` | Cuenta | email (en minúsculas, único), display_name, password_hash (BCrypt), role, daily_goal_xp | Hecha (V3, meta en V5) |
+| `lesson_progress` | Lección completada | user_id, lesson_id, completed_at | Hecha (V3) |
+| `exercise_progress` | Estado por ejercicio | user_id, exercise_id, attempts, hints_revealed, solution_viewed, solved_at, xp_awarded, review_stage, next_review_at | Hecha (V3, repaso en V5) |
+| `submissions` | Intento de solución | user_id, exercise_id, source_code, status, passed_tests, total_tests, execution_time_ms | Hecha (V3) |
+| `concepts`, `achievements` | Conceptos, logros persistidos | — | Futuras |
 
-El esquema crece con cada fase mediante una migración nueva, en lugar de crear
-de entrada tablas que todavía no usa ningún código. Lo ya migrado en la Fase 1:
+La experiencia, el nivel, la racha, la actividad, la experiencia del día y los
+logros **se calculan** a partir del progreso y los envíos (`learning/` y
+`ExperienceTracker` en el backend), en lugar de guardarse: así nunca se
+desincronizan.
 
-- `V1__create_catalog_schema.sql`: `languages`, `courses`, `modules`.
-- `V2__seed_initial_catalog.sql`: Java (activo), Python/JavaScript/TypeScript
-  (anunciados), el curso «Java desde cero» y sus 25 módulos, con los 5 primeros
-  publicados.
+**Tipos de ejercicio** (`kind`): `CODE` (escribir el programa), `FIX` (arreglar
+uno roto), `FILL` (completar huecos `{{?}}`), `PARSONS` (ordenar líneas
+desordenadas, con alguna que sobra), `PREDICT` (escribir qué imprime) y
+`PROJECT` (un programa más grande). Todos se corrigen ejecutando las pruebas,
+salvo `PREDICT`, que compara la respuesta con la salida esperada sin ejecutar
+nada y devuelve una pista de cuántas líneas acierta. En `FILL` y `PARSONS` el
+alumno envía las partes (`parts`) y el backend monta el programa a partir del
+código inicial (`ContentTemplates`).
+
+**Repaso espaciado**: al resolver un ejercicio, `next_review_at` se fija a un
+día después. Cada repaso superado (un envío correcto cuando ya tocaba) lo
+aleja: 3, 7, 21 y 60 días; después ya no vuelve (`ReviewSchedule`).
+
+**Celebraciones**: la respuesta de completar una lección o resolver un
+ejercicio por primera vez incluye `celebration` cuando ese paso sube de nivel o
+termina un módulo; el frontend lanza confeti y una tarjeta.
 
 ### 3.2 Convenciones
 
 - Clave primaria `BIGINT` autogenerada; hacia fuera se usan **slugs** en las
   URLs siempre que el recurso los tenga.
 - `created_at` / `updated_at` (`TIMESTAMPTZ`) en todas las tablas.
-- El orden es un dato (`display_order`), no el id: los módulos se reordenan,
-  añaden o retiran desde la base de datos.
-- `published` / `active` separan «existe» de «visible para el alumno».
+- El orden es un dato (`display_order`), no el id.
+- `published` / `active` separan «existe» de «visible para el alumno». El
+  contenido retirado de los archivos se despublica, no se borra, para que el
+  progreso que apunta a él sobreviva.
 - Ninguna tabla ni columna menciona un lenguaje concreto.
 
 ## 4. Frontend: features y rutas
 
-| Ruta | Feature | Página | Fase |
-| --- | --- | --- | --- |
-| `/` | home | Hero, flujo de aprendizaje, catálogo | **1** |
-| `/languages` | courses | Catálogo de lenguajes | 2 |
-| `/languages/:languageSlug` | courses | Portada del lenguaje: progreso, módulo actual, índice | 2 |
-| `/languages/:languageSlug/modules/:moduleSlug` | courses | Portada del módulo: lecciones, práctica, desafío, evaluación | 2 |
-| `/learn/:languageSlug/:moduleSlug/:lessonSlug` | learning | Lección en tres columnas | 3 |
-| `/practice` | practice | Playground libre | 4 |
-| `/practice/:exerciseSlug` | practice | Ejercicio: enunciado, editor, consola | 5 |
-| `/dashboard` | dashboard | Panel del estudiante | 2 |
-| `/projects`, `/projects/:projectSlug` | projects | Proyectos guiados | 8 |
-| `**` | not-found | 404 | **1** |
+| Ruta | Feature | Página |
+| --- | --- | --- |
+| `/` | home | Portada: hero, flujo de aprendizaje, catálogo |
+| `/languages` | courses | Catálogo de lenguajes |
+| `/languages/:languageSlug` | courses | Curso: progreso, continuar y temario como camino o como lista |
+| `/languages/:languageSlug/glossary` | courses | Glosario con buscador |
+| `/languages/:languageSlug/modules/:moduleSlug` | courses | Módulo: lecciones y ejercicios con su estado |
+| `/learn/:languageSlug/:moduleSlug/:lessonSlug` | learning | Lección en tres columnas: ejemplos ejecutables, recuadros, diagramas, glosario, quiz y tutor |
+| `/practice` | practice | Catálogo de ejercicios con filtros |
+| `/practice/playground` | practice | Playground libre |
+| `/practice/visualizer` | practice | Visualizador paso a paso |
+| `/practice/:exerciseSlug` | practice | Ejercicio de cualquier tipo: enunciado, zona de trabajo, consola, corrección, repaso y tutor |
+| `/dashboard` | dashboard | Panel: meta diaria, racha en peligro, repasos, nivel, cursos, actividad y logros |
+| `/login`, `/register` | auth | Entrar y crear cuenta |
+| `**` | not-found | 404 |
 
-Todas las features salvo `home` se cargan con `loadChildren` desde su propio
-`<feature>.routes.ts`. Las páginas aún no construidas están enrutadas hacia un
-marcador (`placeholderRoute`) para que la navegación y la carga diferida
-funcionen desde el primer día; al construir la página real solo se sustituye
-esa entrada.
+Todas las features salvo `home` se cargan con `loadChildren`. Las URLs solo
+llevan el lenguaje; `CourseService.getPrimaryCourse` resuelve su curso una vez
+y lo cachea.
 
-Piezas transversales ya en su sitio:
+Piezas transversales:
 
 - **`API_BASE_URL`**: los servicios construyen sus URLs a partir de este token.
+- **`authInterceptor`**: añade el token a las peticiones a la API y cierra la
+  sesión si la API lo rechaza.
 - **`httpErrorInterceptor`**: convierte cualquier fallo HTTP en un `AppError`
-  con un mensaje apto para el usuario (0, 400, 401, 403, 404, 409, 5xx) y lo
-  muestra como aviso. Quien pinta el error por su cuenta lo desactiva con
-  `withoutErrorNotification()`.
-- **`NotificationService` + `ToastOutletComponent`**: cola de avisos.
-- **`PageTitleStrategy`**: título de pestaña por ruta.
-
-El editor será **Monaco** (Fase 4), cargado de forma diferida dentro de la
-feature `practice` para que no pese en el resto de la aplicación.
+  con un mensaje apto para el usuario y lo muestra como aviso. Quien pinta el
+  error por su cuenta lo desactiva con `withoutErrorNotification()`.
+- **`AuthService`**: sesión en signals, guardada en `localStorage` hasta que
+  caduca el token.
+- **`MarkdownComponent`**: renderiza lecciones (marked + highlight.js) y escapa
+  el HTML crudo. Parte la página en trozos: HTML, ejemplos ejecutables
+  (`RunnableExampleComponent`: ejecutar, editar, paso a paso, playground) y
+  diagramas Mermaid (`MermaidDiagramComponent`, Mermaid cargado solo si hay
+  diagramas). Convierte `> [!tipo]` en recuadros, dibuja los bloques
+  ` ```memoria ` y marca la primera aparición de cada término del glosario.
+- **`CodeEditorComponent`**: **CodeMirror 6**, cargado de forma diferida. Se
+  eligió en lugar de Monaco porque es ESM, encaja con el builder de Angular sin
+  cargadores AMD ni workers, y pesa mucho menos. Subraya las líneas con errores
+  y tiene control de tamaño de letra.
+- **`java-errors.ts`** y **`FriendlyErrorsComponent`**: traducen los mensajes
+  de `javac` y las excepciones a una explicación en español con su línea.
+- **`OutputDiffComponent`**: salida esperada contra la del alumno, línea a
+  línea, con la primera diferencia marcada y una pista de la causa probable.
+- **`TraceViewerComponent`**: reproduce una traza del visualizador.
+- **`SettingsService`**: tema claro u oscuro y tamaño de letra del código, en
+  `localStorage`. **`CelebrationService`**: confeti y tarjetas de hito.
 
 ## 5. API REST
 
 Prefijo `/api`. JSON. Documentación viva en `/swagger-ui.html`.
 
-| Método y ruta | Descripción | Fase |
+| Método y ruta | Descripción | Acceso |
 | --- | --- | --- |
-| `GET /api/languages` | Lenguajes en orden de catálogo | **1** |
-| `GET /api/languages/{slug}` | Un lenguaje | **1** |
-| `GET /api/courses?language={slug}` | Cursos publicados | **1** |
-| `GET /api/courses/{id}` | Curso con su índice de módulos | **1** |
-| `GET /api/modules/{id}` | Módulo con sus lecciones | 2 |
-| `GET /api/lessons/{id}` | Contenido de una lección | 2 |
-| `POST /api/auth/register`, `POST /api/auth/login` | Alta e inicio de sesión (JWT) | 3 |
-| `GET /api/progress?course={id}` | Progreso del usuario | 3 |
-| `POST /api/progress` | Marcar lección como completada | 3 |
-| `POST /api/executions` | Ejecutar código (playground) | 4 |
-| `GET /api/exercises/{id}` | Enunciado, código inicial, ejemplos | 5 |
-| `POST /api/submissions` | Comprobar solución contra los tests | 5 |
-| `POST /api/exercises/{id}/hints` | Revelar la siguiente pista | 5 |
-| `GET /api/me/stats`, `GET /api/me/achievements` | XP, nivel, racha, logros | 6 |
-| `POST /api/ai/hint`, `POST /api/ai/explain-error` | Tutor | 7 |
-| `GET /api/projects`, `GET /api/projects/{id}` | Proyectos | 8 |
+| `GET /api/languages`, `GET /api/languages/{slug}` | Lenguajes | Público |
+| `GET /api/courses?language={slug}` | Cursos publicados | Público |
+| `GET /api/courses/{id}` | Curso con sus módulos y recuentos | Público |
+| `GET /api/courses/{id}/modules/{moduleSlug}` | Módulo con lecciones y ejercicios | Público |
+| `GET /api/courses/{id}/modules/{moduleSlug}/lessons/{lessonSlug}` | Lección, con anterior y siguiente | Público |
+| `GET /api/courses/{id}/exercises` | Ejercicios del curso | Público |
+| `GET /api/exercises/{slug}` | Enunciado, código inicial y pruebas de ejemplo | Público |
+| `POST /api/auth/register`, `POST /api/auth/login` | Alta e inicio de sesión; devuelven un JWT | Público |
+| `GET /api/auth/me` | Usuario actual | Sesión |
+| `GET /api/courses/{id}/glossary` | Glosario del curso | Público |
+| `PUT /api/auth/me/daily-goal` | Cambiar la meta diaria de XP | Sesión |
+| `POST /api/executions` | Ejecutar código en el playground | Sesión |
+| `POST /api/executions/trace` | Ejecutar paso a paso (visualizador) | Sesión |
+| `POST /api/exercises/{slug}/submissions` | Corregir: `sourceCode` (código o predicción) o `parts` (huecos o líneas) | Sesión |
+| `GET /api/exercises/{slug}/progress` | Intentos, pistas vistas, últimos envíos | Sesión |
+| `POST /api/exercises/{slug}/hints` | Revelar la siguiente pista | Sesión |
+| `POST /api/exercises/{slug}/solution` | Ver la solución | Sesión |
+| `POST /api/progress/lessons/{id}` | Completar una lección (idempotente) | Sesión |
+| `GET /api/progress/courses/{id}` | Progreso en un curso | Sesión |
+| `GET /api/dashboard?timezone=` | XP, nivel, racha, meta diaria, repasos, actividad, cursos, logros | Sesión |
+| `GET /api/tutor/status` | Si el tutor está configurado | Sesión |
+| `POST /api/tutor/explain`, `/debug`, `/review` | Tutor: otra explicación, pista de depuración, revisión | Sesión |
+
+Las ejecuciones (también las trazas), los envíos y las preguntas al tutor
+tienen un límite por alumno (30, 20 y 6 por minuto).
 
 ### Errores
 
@@ -255,83 +307,150 @@ de llegar a un controlador, comparten este cuerpo:
 
 `error` es un código estable (`VALIDATION_ERROR`, `BAD_REQUEST`,
 `UNAUTHORIZED`, `FORBIDDEN`, `RESOURCE_NOT_FOUND`, `METHOD_NOT_ALLOWED`,
-`CONFLICT`, `INTERNAL_ERROR`). `fieldErrors` solo aparece en errores de
-validación. Los 5xx nunca incluyen detalles internos; quedan en el log.
+`CONFLICT`, `TOO_MANY_REQUESTS`, `EXECUTION_UNAVAILABLE`, `TUTOR_UNAVAILABLE`,
+`INTERNAL_ERROR`).
+`fieldErrors` solo aparece en errores de validación. Los 5xx nunca incluyen
+detalles internos, salvo `EXECUTION_UNAVAILABLE`, cuyo mensaje está escrito para
+el alumno.
 
 ### Seguridad
 
-API sin estado. Hoy son públicas las lecturas del catálogo, la documentación y
-el estado de salud; cualquier otra ruta responde 401. La autenticación JWT se
-añade en la Fase 3 como un filtro dentro de la misma cadena, sin cambiar los
-controladores existentes.
+API sin estado. La autenticación usa JWT firmados con HS256 y una clave de
+`JWT_SECRET`; las contraseñas se guardan con BCrypt. Leer el catálogo, las
+lecciones y los enunciados es público; ejecutar código, enviar soluciones y el
+progreso requieren un token.
 
-## 6. Ejecución segura de código
+### Corrección
 
-> Fase 1 entrega el servicio `code-runner` desplegado, aislado en su red y
-> vigilado por el backend (`/actuator/health` → `codeRunner`). La ejecución en
-> sí es la Fase 4; este es su diseño.
+El backend envía al runner el código y las **entradas** de todas las pruebas;
+las salidas esperadas nunca salen de la API. Compara cada salida ignorando
+finales de línea, espacios al final y líneas vacías finales. El primer caso que
+falla decide el veredicto (`WRONG_ANSWER`, `RUNTIME_ERROR`,
+`TIME_LIMIT_EXCEEDED`). De las pruebas ocultas solo se devuelve si pasaron.
 
-### 6.1 Flujo
+La experiencia: 10 XP por lección; por ejercicio 20, 35 o 50 según la
+dificultad, 5 menos por pista vista (mínimo 5) y ninguna si se vio la solución
+antes de resolverlo.
+
+### Tutor
+
+`TutorService` llama a Claude (`claude-opus-5-5`) con el SDK oficial de Java
+(`anthropic-java`), con los fallbacks del servidor activados para que una
+petición rechazada se reintente en el modelo que recomienda Anthropic. Hay
+tres modos: explicar la lección de otra forma, dar una pista sobre un programa
+que falla sin escribir la solución, y revisar una solución correcta. Las
+instrucciones están en `TutorPrompts`. Sin `ANTHROPIC_API_KEY` el tutor queda
+apagado y el frontend oculta sus botones.
+
+## 6. El contenido del curso
+
+Las lecciones y ejercicios se escriben como archivos y `ContentImporter` los
+sincroniza con la base de datos al arrancar. El catálogo (lenguajes, cursos y
+módulos) sigue viniendo de las migraciones.
+
+```
+content/<curso>/
+├── glossary.yml          términos del glosario
+└── <NN>-<módulo>/
+    ├── module.yml        lecciones (slug, title, summary, minutes) y slugs de ejercicios, en orden
+    ├── <lección>.md      cuerpo de la lección en Markdown
+    ├── <lección>.quiz.yml preguntas del final de la lección
+    └── <ejercicio>.yml   title, summary, difficulty, kind, statement, starter, solution, hints, tests
+```
+
+El formato completo y las pautas de estilo están en [CONTENT.md](CONTENT.md).
+
+- Lecciones y ejercicios se casan por slug y se actualizan en el sitio; lo que
+  desaparece de los archivos se despublica.
+- Un módulo con contenido se publica automáticamente.
+- En Markdown, ` ```java ` con un `main` es un ejemplo ejecutable; ` ```java
+  fragment ` y ` ```java error ` son fragmentos y errores intencionados.
+- `tools/verify_content.py` (y `ContentVerificationTest`, que hace lo mismo
+  desde Maven) ejecuta contra un code-runner real todas las soluciones, los
+  programas de las predicciones y de los quizzes, los códigos iniciales y los
+  ejemplos, y comprueba la estructura de cada tipo de ejercicio.
+
+## 7. Ejecución segura de código
+
+### 7.1 Flujo
 
 ```
 1. Angular            POST /api/executions { languageSlug, sourceCode, stdin }
-2. Backend            valida tamaño y lenguaje, aplica límite de peticiones por usuario
-3. Backend            POST http://code-runner:8090/internal/executions
-4. code-runner        busca el runtime del lenguaje (imagen, fichero, comandos, límites)
-5. code-runner        crea un contenedor efímero y copia el código en él
-6. sandbox            compila y ejecuta, con stdin si lo hay
-7. code-runner        recoge stdout, stderr, código de salida y tiempos; destruye el contenedor
-8. Backend → Angular  { status, stdout, stderr, exitCode, durationMs, truncated }
+                      POST /api/exercises/{slug}/submissions { sourceCode }
+2. Backend            valida, aplica el límite por alumno
+3. Backend            POST http://code-runner:8090/internal/executions { language, sourceCode, inputs[] }
+4. code-runner        espera un hueco (cola con concurrencia máxima)
+5. code-runner        crea un contenedor sandbox-java a través de docker-proxy;
+                      el código y las entradas viajan como variables de entorno
+6. sandbox            harness.sh compila una vez y ejecuta el programa por cada entrada,
+                      cada vez en un directorio vacío propio
+7. code-runner        lee la salida del harness, borra el contenedor
+8. Backend → Angular  resultado de la ejecución, o veredicto prueba a prueba
 ```
 
-`POST /api/submissions` reutiliza el mismo camino: el backend lanza una
-ejecución por caso de prueba y compara la salida con la esperada. Los tests
-ocultos nunca viajan al navegador.
-
-### 6.2 Aislamiento de cada ejecución
+### 7.2 Aislamiento de cada ejecución
 
 | Riesgo | Control |
 | --- | --- |
-| Bucle infinito | Límite de tiempo de reloj; al vencer se mata el contenedor |
-| Consumo de memoria | `--memory` y `--memory-swap` iguales, más `-Xmx` en la JVM |
-| Consumo de CPU | `--cpus` |
-| Bomba de procesos | `--pids-limit` |
-| Salida gigantesca | Se corta la lectura de stdout/stderr a un máximo y se marca `truncated` |
-| Acceso a la red | `--network none` |
-| Escritura en disco | `--read-only`, con un `tmpfs` pequeño y `noexec` como único directorio de trabajo |
-| Escalada de privilegios | Usuario sin privilegios, `--cap-drop ALL`, `no-new-privileges`, perfil seccomp |
-| Rastro entre ejecuciones | Un contenedor nuevo por ejecución, eliminado siempre (`--rm` y limpieza en `finally`) |
-| Avalancha de peticiones | Cola con concurrencia máxima en el runner y límite por usuario en el backend |
+| Bucle infinito | `timeout -s KILL` por ejecución (5 s) y por compilación (20 s); tras un tiempo agotado se saltan las entradas restantes |
+| Consumo de memoria | `Memory` y `MemorySwap` iguales (512 MB), más `-Xmx` en la JVM |
+| Consumo de CPU | `NanoCpus` (1 CPU) |
+| Bomba de procesos o hilos | `PidsLimit` (128) |
+| Salida gigantesca | Se guardan 64 KB por flujo y se marca `truncated`; logs del contenedor limitados |
+| Acceso a la red | `NetworkMode: none` |
+| Escritura en disco | Raíz de solo lectura; `/sandbox` y `/tmp` en tmpfs pequeños, `noexec` |
+| Escalada de privilegios | Usuario `nobody`, `CapDrop: ALL`, `no-new-privileges` |
+| Rastro entre ejecuciones | Un contenedor nuevo por ejecución, siempre eliminado; los que queden tras una caída se limpian al arrancar |
+| Avalancha de peticiones | Cola con concurrencia máxima en el runner y límite por alumno en el backend |
 
-El `code-runner` no monta el socket de Docker directamente: habla con un
-**proxy del socket** que solo permite crear, arrancar, esperar y borrar
-contenedores. Así, comprometer el runner no equivale a controlar el host.
-
-Para producción el mismo contrato admite un aislamiento más fuerte sin tocar
-el backend: gVisor (`runsc`) como runtime de los contenedores, o microVMs
+El code-runner no monta el socket de Docker: habla con `docker-proxy`, que solo
+deja pasar las rutas de contenedores e imágenes y rechaza el resto de la API
+(`exec`, `build`, redes, volúmenes, swarm…). El proxy no inspecciona el cuerpo
+de las peticiones, así que un code-runner comprometido podría pedir un
+contenedor menos restringido: por eso el runner no ejecuta código de usuario en
+su proceso y solo acepta peticiones del backend por la red interna. Para
+producción, el mismo contrato admite un aislamiento más fuerte sin tocar el
+backend: gVisor (`runsc`) como runtime de los contenedores, o microVMs
 Firecracker.
 
-### 6.3 Preparado para más lenguajes
+### 7.3 El visualizador paso a paso
 
-El runner no sabe nada de Java. Cada lenguaje es una entrada de configuración:
+`POST /internal/traces` ejecuta el programa una vez en el mismo sandbox, pero
+con otro comando: `ForjaTracer` (en la imagen, `/opt/forja/tracer`) lanza el
+programa bajo el depurador de Java (JDI), avanza línea a línea solo por el
+código del alumno (las clases del JDK se excluyen) y escribe un JSON con cada
+paso: la línea, la pila de llamadas con sus variables, los campos `static`, los
+objetos alcanzables (arrays, listas, mapas, objetos propios, `StringBuilder`),
+lo impreso en ese paso, el valor devuelto por un método y la excepción final si
+la hubo. El código se compila con `-g` para que las variables locales tengan
+nombre. Límites propios: 400 pasos, 12 s y 4 MB de traza; un programa que los
+supera se muestra hasta donde llegó.
+
+El depurado conecta por `127.0.0.1` dentro del contenedor (que no tiene red):
+dejar que JDI eligiera la dirección le hacía buscar el nombre del host y
+esperar segundos a que fallara la resolución DNS.
+
+### 7.4 Preparado para más lenguajes
+
+El runner no sabe nada de Java salvo cómo nombrar el archivo
+(`JavaSourceLayout`). Cada lenguaje es una entrada de configuración:
 
 ```yaml
 forja:
   runner:
     runtimes:
       java:
-        image: eclipse-temurin:21-jdk-alpine
-        source-file: Main.java
-        compile: [javac, Main.java]
-        run: [java, -Xmx128m, Main]
-        limits: { timeout: 10s, memory: 256m, cpus: 0.5, pids: 64, output: 64KB }
-      python:
-        image: python:3.13-alpine
-        source-file: main.py
-        run: [python, main.py]
+        image: forja-sandbox-java:21
+        layout: java
+        compile-command: javac ... -d classes "$FORJA_SOURCE_FILE"
+        run-command: java ... "$FORJA_MAIN"
+        limits: { compile-timeout: 20s, run-timeout: 5s, memory: 512MB, cpus: 1.0, pids: 128, output: 64KB }
 ```
 
-## 7. Identidad visual
+Añadir Python sería una imagen `sandbox-python`, una entrada `python` sin
+`compile-command` y un `SourceLayout` que siempre use `main.py`.
+
+## 8. Identidad visual
 
 Herramienta para desarrolladores, no panel genérico. Los valores viven en
 `frontend/src/styles/_tokens.scss`.
@@ -343,22 +462,22 @@ Herramienta para desarrolladores, no panel genérico. Los valores viven en
   etiquetas y metadatos. Ambas autoalojadas.
 - **Código y consola**: el código va sobre una superficie más oscura que el
   contenido, y la consola sobre una aún más oscura, para que nunca se confundan.
+  El editor y el resaltado de las lecciones usan los mismos tokens de sintaxis.
 - **Forma**: bordes de 1 px, radios de 3–6 px, sin sombras ni degradados;
   botones compactos.
 - **Motivo**: el cursor de bloque ámbar tras el nombre.
 
-## 8. Fases
+## 9. Fases
 
 | Fase | Contenido | Estado |
 | --- | --- | --- |
 | 1 | Arquitectura base: Angular, Spring Boot, PostgreSQL, Docker | **Hecha** |
-| 2 | Layout y navegación; home, dashboard, cursos, módulos, lecciones | |
-| 3 | Sistema educativo: contenido, usuarios (JWT), progreso | |
-| 4 | Playground: Monaco, consola, ejecución segura | |
-| 5 | Ejercicios: tests, evaluación, pistas | |
-| 6 | Gamificación: XP, niveles, logros, rachas | |
-| 7 | Tutor IA: pistas, explicación de errores | |
-| 8 | Proyectos guiados y proyecto final | |
-| 9 | Nuevos lenguajes | |
-
-El MVP son las fases 1 a 5 con los 5 primeros módulos de Java.
+| 2 | Layout y navegación; catálogo, curso, módulos y lecciones | **Hecha** |
+| 3 | Sistema educativo: contenido, usuarios (JWT), progreso | **Hecha** |
+| 4 | Playground: editor, consola, ejecución segura | **Hecha** |
+| 5 | Ejercicios: pruebas, corrección, pistas, solución | **Hecha** |
+| 6 | Gamificación: XP, niveles, logros, rachas | **Hecha** (calculada; los logros no se persisten) |
+| 7 | Tutor IA: otra explicación, pistas de depuración, revisión | **Hecha** (necesita `ANTHROPIC_API_KEY`) |
+| 8 | Proyectos guiados y proyecto final | **Hecha**: miniproyectos en los módulos 6, 8, 9, 12 y 17, y proyecto final en el 25 |
+| 8b | Ayudas para aprender desde cero: visualizador, errores en español, quizzes, tipos de ejercicio, glosario, repaso espaciado, meta diaria | **Hecha** |
+| 9 | Nuevos lenguajes | Pendiente |

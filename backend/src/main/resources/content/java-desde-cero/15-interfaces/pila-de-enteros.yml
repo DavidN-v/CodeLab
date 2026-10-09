@@ -1,0 +1,167 @@
+title: Una pila detrás de una interfaz
+summary: Implementa una estructura de datos y úsala solo a través de su contrato.
+difficulty: HARD
+statement: |
+  Una **pila** guarda elementos de forma que el último en entrar es el primero en salir. La interfaz `Pila` ya está declarada. Implementa `PilaArray`, que guarde los elementos en un array que **duplique su tamaño** cuando se llene (empieza con capacidad 2).
+
+  - `apilar(x)` añade arriba.
+  - `desapilar()` quita y devuelve el de arriba; si está vacía lanza `IllegalStateException`.
+  - `cima()` devuelve el de arriba sin quitarlo (misma excepción si está vacía).
+  - `tamano()` y `estaVacia()`.
+
+  El `main` ejecuta órdenes `push <n>`, `pop`, `top` y `size`, e imprime `vacía` cuando una operación lanza la excepción.
+starter: |
+  import java.util.Scanner;
+
+  interface Pila {
+      void apilar(int x);
+
+      int desapilar();
+
+      int cima();
+
+      int tamano();
+
+      default boolean estaVacia() {
+          return tamano() == 0;
+      }
+  }
+
+  class PilaArray implements Pila {
+      private int[] datos = new int[2];
+      private int cantidad = 0;
+
+      @Override
+      public void apilar(int x) {
+          // Tu código
+      }
+
+      @Override
+      public int desapilar() {
+          return 0; // Tu código
+      }
+
+      @Override
+      public int cima() {
+          return 0; // Tu código
+      }
+
+      @Override
+      public int tamano() {
+          return cantidad;
+      }
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          Pila pila = new PilaArray();
+          while (entrada.hasNext()) {
+              String orden = entrada.next();
+              try {
+                  switch (orden) {
+                      case "push" -> pila.apilar(entrada.nextInt());
+                      case "pop" -> System.out.println(pila.desapilar());
+                      case "top" -> System.out.println(pila.cima());
+                      case "size" -> System.out.println(pila.tamano());
+                      default -> { }
+                  }
+              } catch (IllegalStateException e) {
+                  System.out.println("vacía");
+              }
+          }
+      }
+  }
+solution: |
+  import java.util.Arrays;
+  import java.util.Scanner;
+
+  interface Pila {
+      void apilar(int x);
+
+      int desapilar();
+
+      int cima();
+
+      int tamano();
+
+      default boolean estaVacia() {
+          return tamano() == 0;
+      }
+  }
+
+  class PilaArray implements Pila {
+      private int[] datos = new int[2];
+      private int cantidad = 0;
+
+      @Override
+      public void apilar(int x) {
+          if (cantidad == datos.length) {
+              datos = Arrays.copyOf(datos, datos.length * 2);
+          }
+          datos[cantidad] = x;
+          cantidad++;
+      }
+
+      @Override
+      public int desapilar() {
+          int valor = cima();
+          cantidad--;
+          return valor;
+      }
+
+      @Override
+      public int cima() {
+          if (estaVacia()) {
+              throw new IllegalStateException("Pila vacía");
+          }
+          return datos[cantidad - 1];
+      }
+
+      @Override
+      public int tamano() {
+          return cantidad;
+      }
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          Pila pila = new PilaArray();
+          while (entrada.hasNext()) {
+              String orden = entrada.next();
+              try {
+                  switch (orden) {
+                      case "push" -> pila.apilar(entrada.nextInt());
+                      case "pop" -> System.out.println(pila.desapilar());
+                      case "top" -> System.out.println(pila.cima());
+                      case "size" -> System.out.println(pila.tamano());
+                      default -> { }
+                  }
+              } catch (IllegalStateException e) {
+                  System.out.println("vacía");
+              }
+          }
+      }
+  }
+hints:
+  - 'La idea: una pila es como un montón de platos: pones arriba y quitas de arriba. `cantidad` dice cuántos platos hay y, a la vez, en qué posición va el siguiente.'
+  - 'Qué usar: el array `datos`, `Arrays.copyOf(datos, datos.length * 2)` para hacerlo crecer y `throw new IllegalStateException(...)` cuando la pila está vacía.'
+  - 'El plan: `apilar`: si `cantidad == datos.length`, duplica el array; luego `datos[cantidad] = x; cantidad++;`. `cima`: si `estaVacia()`, lanza la excepción; si no, devuelve `datos[cantidad - 1]`. `desapilar`: guarda `cima()`, resta 1 a `cantidad` y devuelve el valor guardado.'
+tests:
+  - input: "push 1 push 2 push 3 top size pop pop pop pop\n"
+    output: |
+      3
+      3
+      3
+      2
+      1
+      vacía
+    sample: true
+  - input: "top\n"
+    output: "vacía\n"
+  - input: "push 5 push 6 push 7 push 8 push 9 size pop top\n"
+    output: |
+      5
+      9
+      8

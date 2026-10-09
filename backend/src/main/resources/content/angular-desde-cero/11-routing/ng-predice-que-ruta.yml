@@ -1,0 +1,41 @@
+title: ¿Qué página se ve?
+summary: Predice qué componente pinta el router para varias direcciones.
+difficulty: EASY
+kind: predict
+statement: |
+  Esta es la tabla de rutas de una tienda y el `<h1>` que pinta cada componente.
+
+  Para cada dirección, en este orden, escribe **en una línea** el texto del `<h1>` que se ve:
+
+  1. `localhost:4200/productos`
+  2. `localhost:4200/tienda`
+  3. `localhost:4200/productos/42`
+  4. `localhost:4200/contacto`
+starter: |
+  // src/app/app.routes.ts
+  // Inicio        pinta <h1>Bienvenida</h1>
+  // Catalogo      pinta <h1>Catálogo</h1>
+  // Detalle       pinta <h1>Producto {{ id() }}</h1>  (id es un input)
+  // NoEncontrada  pinta <h1>Página no encontrada</h1>
+  import { Routes } from '@angular/router';
+
+  export const routes: Routes = [
+    { path: '', component: Inicio },
+    { path: 'tienda', redirectTo: '' },
+    { path: 'productos', component: Catalogo },
+    { path: 'productos/:id', component: Detalle },
+    { path: '**', component: NoEncontrada },
+  ];
+
+  // src/app/app.config.ts
+  // providers: [provideRouter(routes, withComponentInputBinding())]
+hints:
+  - 'La idea: para cada dirección, recorre la tabla de arriba abajo y quédate con la primera ruta que coincida.'
+  - 'Qué usar: `redirectTo` cambia la dirección por otra; `:id` coincide con cualquier segmento y llega al `input` `id`; `**` coincide con todo lo que no coincidió antes.'
+  - 'El plan: `productos` va al catálogo; `tienda` redirige a la portada; `productos/42` es el detalle con id 42; `contacto` no está en la tabla.'
+tests:
+  - output: |
+      Catálogo
+      Bienvenida
+      Producto 42
+      Página no encontrada

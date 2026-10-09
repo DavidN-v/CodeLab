@@ -1,0 +1,74 @@
+title: Sumar números escritos como texto
+summary: Convierte texto en números con las clases envoltorio.
+difficulty: MEDIUM
+statement: |
+  La entrada tiene dos líneas, cada una con un número entero escrito como texto. Escribe dos líneas:
+
+  1. Los dos textos **unidos** (concatenados).
+  2. La **suma** de los dos números.
+
+  **Ejemplo**
+
+  Entrada:
+
+  ```
+  12
+  30
+  ```
+
+  Salida:
+
+  ```
+  Unidos: 1230
+  Suma: 42
+  ```
+
+  Lee cada línea con `nextLine()` y conviértela tú.
+starter: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          String primero = entrada.nextLine();
+          String segundo = entrada.nextLine();
+
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          String primero = entrada.nextLine();
+          String segundo = entrada.nextLine();
+          int suma = Integer.parseInt(primero.trim()) + Integer.parseInt(segundo.trim());
+          System.out.println("Unidos: " + primero + segundo);
+          System.out.println("Suma: " + suma);
+      }
+  }
+hints:
+  - 'La idea: con los mismos dos textos tienes que hacer dos cosas: pegarlos y sumarlos como números.'
+  - 'Qué usar: `+` entre dos `String` los concatena. `Integer.parseInt(texto)` convierte un texto como `"12"` en el número 12.'
+  - 'El plan: imprime `"Unidos: " + primero + segundo`. Después calcula `int suma = Integer.parseInt(primero) + Integer.parseInt(segundo);` e imprime `"Suma: " + suma`.'
+tests:
+  - input: |
+      12
+      30
+    output: |
+      Unidos: 1230
+      Suma: 42
+    sample: true
+  - input: |
+      -5
+      5
+    output: |
+      Unidos: -55
+      Suma: 0
+  - input: |
+      1000
+      2345
+    output: |
+      Unidos: 10002345
+      Suma: 3345

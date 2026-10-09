@@ -1,0 +1,25 @@
+questions:
+- type: choice
+  prompt: ¿Por qué `vitest` y `jsdom` están en `devDependencies`?
+  options:
+  - Porque son librerías experimentales
+  - Porque solo sirven para ejecutar las pruebas en tu ordenador; no viajan al navegador del usuario
+  - Porque se descargan solo cuando ejecutas `ng build`
+  answer: 1
+  explanation: Vitest ejecuta las pruebas y jsdom simula el DOM dentro de Node.js para que esas pruebas puedan pintar componentes. Son herramientas de desarrollo, como `typescript` o `@angular/cli`.
+- type: choice
+  prompt: '`npm install` descarga unos 400 paquetes y 300 MB. ¿Cuánto de eso llega al navegador?'
+  options:
+  - Solo el código que tu aplicación importa, ya minimizado (unos 216 kB en la app de bienvenida)
+  - Los 300 MB, la primera vez que se abre la página
+  - Todas las `dependencies` completas, pero ninguna `devDependency`
+  answer: 0
+  explanation: 'El build sigue los `import` desde `main.ts`, descarta lo que no se usa (tree shaking) y minimiza el resto. La lista de `dependencies` no decide el tamaño final: lo deciden tus imports.'
+- type: choice
+  prompt: ¿Para qué sirve `package-lock.json`?
+  options:
+  - Para anotar la versión exacta de cada paquete instalado
+  - Para bloquear el acceso al proyecto
+  - Para listar los scripts disponibles
+  answer: 0
+  explanation: Así dos personas que ejecutan `npm install` obtienen exactamente las mismas versiones.

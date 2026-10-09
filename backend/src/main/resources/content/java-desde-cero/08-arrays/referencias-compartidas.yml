@@ -1,0 +1,46 @@
+title: Dos nombres, un mismo array
+summary: Predice qué pasa cuando dos variables apuntan al mismo array.
+difficulty: MEDIUM
+kind: predict
+statement: |
+  Lee el programa y escribe **exactamente** lo que imprime.
+
+  Fíjate bien en qué líneas crean un array **nuevo** y cuáles solo copian la referencia (la flecha) a uno que ya existe.
+starter: |
+  import java.util.Arrays;
+
+  public class Main {
+      static void ponerACero(int[] valores) {
+          valores[0] = 0;
+      }
+
+      static void cambiarNumero(int numero) {
+          numero = 0;
+      }
+
+      public static void main(String[] args) {
+          int[] a = {5, 6, 7};
+          int[] b = a;
+          int[] c = Arrays.copyOf(a, 3);
+          b[1] = 60;
+          c[2] = 70;
+          System.out.println(Arrays.toString(a));
+          ponerACero(a);
+          System.out.println(Arrays.toString(b));
+          System.out.println(Arrays.toString(c));
+          int x = 9;
+          cambiarNumero(x);
+          System.out.println(x);
+      }
+  }
+hints:
+  - 'La idea: un array vive en el montón y las variables solo guardan una flecha hacia él. Dos variables pueden apuntar al mismo array.'
+  - 'Qué usar: dibuja la memoria. `int[] b = a;` copia la flecha (mismo array); `Arrays.copyOf` crea un array nuevo. Un método que recibe un array recibe la misma flecha; uno que recibe un `int` recibe una copia del número.'
+  - 'El plan: `a` y `b` son el mismo array, así que `b[1] = 60` se ve desde `a`, y `ponerACero(a)` se ve desde `b`. `c` es independiente. `cambiarNumero(x)` no cambia `x`.'
+tests:
+  - output: |
+      [5, 60, 7]
+      [0, 60, 7]
+      [5, 6, 70]
+      9
+    sample: true

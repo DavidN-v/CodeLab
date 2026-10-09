@@ -1,0 +1,31 @@
+questions:
+  - type: choice
+    prompt: ¿Cuántas peticiones llegan al servidor con este código?
+    code: |
+      const crear$ = this.http.post<Tarea>('/api/tareas', { titulo: 'Pan' });
+    options:
+      - Ninguna, porque nadie se suscribe
+      - Una
+      - Dos, una para preparar y otra para enviar
+    answer: 0
+    explanation: 'El observable es frío: `post(...)` solo prepara la petición. Hasta que alguien llama a `crear$.subscribe()`, no sale nada hacia la red.'
+  - type: output
+    prompt: 'El servidor responde con 3 tareas. ¿Qué aparece en la consola?'
+    code: |
+      const t$ = this.http.get<Tarea[]>('/api/tareas');
+      console.log('A');
+      t$.subscribe((t) => console.log('B ' + t.length));
+      console.log('C');
+    answer: |
+      A
+      C
+      B 3
+    explanation: '`subscribe` lanza la petición, pero JavaScript no espera la respuesta: escribe `C` enseguida. La función de `subscribe` se ejecuta después, cuando llegan los datos.'
+  - type: choice
+    prompt: ¿Qué hace `catchError(() => of([]))` en la tubería de una petición?
+    options:
+      - Si la petición falla, sustituye el error por una lista vacía y `subscribe` la recibe como un valor normal
+      - Repite la petición hasta que funcione
+      - Oculta el error pero la pantalla se queda cargando para siempre
+    answer: 0
+    explanation: '`catchError` atrapa el error y devuelve otro observable en su lugar. `of([])` emite `[]` y termina, así que el `next` de `subscribe` recibe una lista vacía.'

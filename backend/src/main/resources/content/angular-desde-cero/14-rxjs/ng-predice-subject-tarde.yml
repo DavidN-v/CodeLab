@@ -1,0 +1,34 @@
+title: Llegar tarde a la emisión
+summary: Predice qué recibe quien se suscribe tarde a un Subject y a un BehaviorSubject.
+difficulty: MEDIUM
+kind: predict
+statement: |
+  Dos fuentes, un `Subject` y un `BehaviorSubject`, emiten valores **antes y después** de que alguien se suscriba.
+
+  ¿Qué aparece en la consola? Escribe **una línea por mensaje**, en orden.
+starter: |
+  import { BehaviorSubject, Subject } from 'rxjs';
+
+  const avisos = new Subject<string>();
+  const precio = new BehaviorSubject(10);
+
+  avisos.next('a');
+  precio.next(20);
+
+  avisos.subscribe((v) => console.log('Subject: ' + v));
+  precio.subscribe((v) => console.log('Behavior: ' + v));
+
+  avisos.next('b');
+  precio.next(30);
+
+  console.log('Actual: ' + precio.value);
+hints:
+  - 'La idea: un `Subject` es una radio en directo (lo que se dijo antes, se perdió) y un `BehaviorSubject` es una pantalla que siempre muestra el último valor.'
+  - 'Qué usar: al suscribirse, el `BehaviorSubject` entrega enseguida su valor actual; el `Subject` no entrega nada hasta el siguiente `next`. `.value` lee el valor actual.'
+  - 'El plan: al suscribirse, solo el Behavior escribe algo (¿qué valor tiene en ese momento?). Después cada `next` llega a su suscriptor en el orden del código. Termina con la línea de `Actual`.'
+tests:
+  - output: |
+      Behavior: 20
+      Subject: b
+      Behavior: 30
+      Actual: 30

@@ -1,5 +1,6 @@
 package com.forja.api.dto;
 
+import com.forja.api.entity.LanguageCategory;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(name = "Language", description = "A programming language or technology that can be learned on the platform.")
@@ -11,5 +12,7 @@ public record LanguageResponse(
 		@Schema(description = "Icon key resolved by the client.", example = "java") String icon,
 		@Schema(example = "Aprende Java desde cero hasta construir aplicaciones reales.") String tagline,
 		String description,
-		@Schema(description = "Whether the language has content available to learners.") boolean active) {
+		@Schema(description = "Whether the language has content available to learners.") boolean active,
+		@Schema(description = "LANGUAGE or FRAMEWORK.", example = "LANGUAGE") LanguageCategory category,
+		@Schema(description = "Whether learners' programs can be run in the sandbox.") boolean runnable) {
 }

@@ -1,0 +1,43 @@
+title: ¿Qué entorno ves?
+summary: Predice qué valores muestra la app con ng serve.
+difficulty: EASY
+kind: predict
+statement: |
+  El proyecto tiene estos dos entornos, creados con `ng generate environments` (que configuró `fileReplacements` en la configuración `development`). El componente muestra dos valores.
+
+  Ejecutas **`ng serve`** y abres `localhost:4200`. Escribe el texto que se ve en la página, **una línea por párrafo**.
+starter: |
+  // src/environments/environment.ts
+  export const environment = {
+    nombre: 'Producción',
+    apiUrl: 'https://api.mitienda.com',
+  };
+
+  // src/environments/environment.development.ts
+  export const environment = {
+    nombre: 'Desarrollo',
+    apiUrl: 'http://localhost:3000',
+  };
+
+  // src/app/app.ts
+  import { Component } from '@angular/core';
+  import { environment } from '../environments/environment';
+
+  @Component({
+    selector: 'app-root',
+    template: `
+      <p>Entorno: {{ entorno.nombre }}</p>
+      <p>API: {{ entorno.apiUrl }}</p>
+    `,
+  })
+  export class App {
+    protected readonly entorno = environment;
+  }
+hints:
+  - 'La idea: aunque el código importa `environment.ts`, el build puede cambiarlo por otro archivo.'
+  - 'Qué usar: `ng serve` usa la configuración `development`, y esa configuración tiene un `fileReplacements`.'
+  - 'El plan: averigua qué archivo sustituye a `environment.ts` en `development` y escribe sus dos valores.'
+tests:
+  - output: |
+      Entorno: Desarrollo
+      API: http://localhost:3000

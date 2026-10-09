@@ -1,0 +1,81 @@
+title: Par genérico
+summary: Escribe una clase con dos parámetros de tipo.
+difficulty: EASY
+statement: |
+  Crea una clase genérica `Par<A, B>` inmutable con:
+
+  - un constructor `Par(A primero, B segundo)`,
+  - los getters `getPrimero()` y `getSegundo()`,
+  - `Par<B, A> invertir()`, que devuelve un par nuevo con los elementos cambiados,
+  - un `toString()` que devuelva `(<primero>, <segundo>)`.
+
+  El `main` lee líneas `<palabra> <número>`, crea un `Par<String, Integer>` por línea y escribe el par y su inverso separados por ` -> `.
+starter: |
+  import java.util.Scanner;
+
+  // Crea aquí la clase Par<A, B>
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          while (entrada.hasNext()) {
+              String palabra = entrada.next();
+              int numero = entrada.nextInt();
+              // Par<String, Integer> par = new Par<>(palabra, numero);
+              // System.out.println(par + " -> " + par.invertir());
+          }
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  class Par<A, B> {
+      private final A primero;
+      private final B segundo;
+
+      Par(A primero, B segundo) {
+          this.primero = primero;
+          this.segundo = segundo;
+      }
+
+      A getPrimero() {
+          return primero;
+      }
+
+      B getSegundo() {
+          return segundo;
+      }
+
+      Par<B, A> invertir() {
+          return new Par<>(segundo, primero);
+      }
+
+      @Override
+      public String toString() {
+          return "(" + primero + ", " + segundo + ")";
+      }
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          while (entrada.hasNext()) {
+              String palabra = entrada.next();
+              int numero = entrada.nextInt();
+              Par<String, Integer> par = new Par<>(palabra, numero);
+              System.out.println(par + " -> " + par.invertir());
+          }
+      }
+  }
+hints:
+  - 'La idea: quieres una sola clase que sirva para cualquier pareja de tipos, por ejemplo un texto y un número, sin escribir una clase para cada combinación.'
+  - 'Qué usar: `class Par<A, B>` con dos parámetros de tipo; dentro, `A` y `B` se usan como tipos de los campos, del constructor y de los getters. Para el texto, sobrescribe `toString()` con `@Override`.'
+  - 'El plan: campos `private final A primero;` y `private final B segundo;`, constructor que los rellena, getters, `Par<B, A> invertir() { return new Par<>(segundo, primero); }` y `toString()` que devuelva `"(" + primero + ", " + segundo + ")"`. En el `main`, quita los comentarios de las dos líneas.'
+tests:
+  - input: "Ada 36\n"
+    output: "(Ada, 36) -> (36, Ada)\n"
+    sample: true
+  - input: "uno 1\ndos 2\n"
+    output: |
+      (uno, 1) -> (1, uno)
+      (dos, 2) -> (2, dos)

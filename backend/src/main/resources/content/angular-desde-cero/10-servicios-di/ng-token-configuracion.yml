@@ -1,0 +1,54 @@
+title: Configuración con un token
+summary: Crea un InjectionToken, provéelo con useValue y léelo con inject().
+difficulty: MEDIUM
+kind: fill
+statement: |
+  La app necesita saber cuántos productos mostrar por página. Como no es una clase, usamos un token.
+
+  Completa los huecos:
+
+  1. la clase de `@angular/core` que crea un token para valores que no son clases;
+  2. la clave del proveedor que indica **qué token** se provee;
+  3. la clave que entrega un **valor ya hecho**;
+  4. la función que lee el token en el componente.
+starter: |
+  // src/app/paginacion.ts
+  import { Component, InjectionToken, inject } from '@angular/core';
+
+  export const POR_PAGINA = new {{?}}<number>('POR_PAGINA');
+
+  @Component({
+    selector: 'app-paginacion',
+    providers: [{ {{?}}: POR_PAGINA, {{?}}: 20 }],
+    template: `<p>Mostrando {{ porPagina }} por página</p>`,
+  })
+  export class Paginacion {
+    protected readonly porPagina = {{?}}(POR_PAGINA);
+  }
+answers:
+  - InjectionToken
+  - provide
+  - useValue
+  - inject
+solution: |
+  // src/app/paginacion.ts
+  import { Component, InjectionToken, inject } from '@angular/core';
+
+  export const POR_PAGINA = new InjectionToken<number>('POR_PAGINA');
+
+  @Component({
+    selector: 'app-paginacion',
+    providers: [{ provide: POR_PAGINA, useValue: 20 }],
+    template: `<p>Mostrando {{ porPagina }} por página</p>`,
+  })
+  export class Paginacion {
+    protected readonly porPagina = inject(POR_PAGINA);
+  }
+hints:
+  - 'La idea: un número no puede ser token por sí mismo; necesitas crear una «etiqueta» única, registrar un valor con esa etiqueta y pedirla.'
+  - 'Qué usar: `new InjectionToken<T>(descripción)`, un proveedor con la forma `{ provide: token, useValue: valor }` e `inject(token)`.'
+  - 'El plan: `new InjectionToken<number>(...)`; en `providers`, `provide: POR_PAGINA` y `useValue: 20`; en el campo, `inject(POR_PAGINA)`.'
+tests:
+  - output: |
+      Mostrando 20 por página
+    sample: true

@@ -1,0 +1,25 @@
+questions:
+- type: choice
+  prompt: Con `ng serve` en marcha cambias un texto de `app.html` y guardas. ¿Qué pasa?
+  options:
+  - No pasa nada hasta que paras y vuelves a lanzar `ng serve`
+  - Escribe una carpeta `dist/` nueva
+  - Recompila solo ese cambio y sustituye el componente en el navegador sin recargar la página
+  answer: 2
+  explanation: 'ng serve vigila los archivos. Un cambio de plantilla o de estilos se envía en caliente (HMR, "Component update sent to client(s)"); un cambio de TypeScript recarga la página. Todo en memoria: no escribe `dist/`.'
+- type: choice
+  prompt: ¿Para qué sirve la huella en `main-O7QUVEYP.js`?
+  options:
+  - Para proteger el código con una contraseña
+  - Para que el navegador descargue el archivo nuevo cuando cambia y reutilice su caché cuando no
+  - Para indicar la versión de Angular con la que se compiló
+  answer: 1
+  explanation: La huella se calcula con el contenido. Si el código cambia, cambia el nombre y el navegador no puede usar la copia vieja de su caché; si no cambia, la reutiliza.
+- type: choice
+  prompt: ¿Qué carpeta subes a un servidor web para publicar tu app?
+  options:
+  - '`dist/mi-app/browser/`'
+  - '`src/`'
+  - La carpeta del proyecto entera, con `node_modules`
+  answer: 0
+  explanation: '`ng build` deja en `dist/mi-app/browser/` el `index.html`, el JavaScript y el CSS ya optimizados. Es todo lo que el navegador necesita.'

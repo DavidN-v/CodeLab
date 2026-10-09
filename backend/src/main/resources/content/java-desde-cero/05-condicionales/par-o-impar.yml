@@ -1,0 +1,54 @@
+title: Par, impar o cero
+summary: Clasifica un número con if, else if y else.
+difficulty: EASY
+statement: |
+  Lee un número entero y escribe:
+
+  - `cero` si es 0,
+  - `par` si es par y distinto de cero,
+  - `impar` si es impar.
+
+  Los números negativos también pueden ser pares o impares.
+starter: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int n = entrada.nextInt();
+
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int n = entrada.nextInt();
+          if (n == 0) {
+              System.out.println("cero");
+          } else if (n % 2 == 0) {
+              System.out.println("par");
+          } else {
+              System.out.println("impar");
+          }
+      }
+  }
+hints:
+  - 'La idea: hay tres casos posibles y solo uno es verdad. Atiende primero el caso especial, el cero, para que no se cuele entre los pares.'
+  - 'Qué usar: una cadena `if` / `else if` / `else` y el resto `%`: un número es par si `n % 2 == 0`. Ojo, `-3 % 2` vale `-1`, así que no compares con 1.'
+  - 'El plan: si n == 0, imprime cero; si no, si n % 2 == 0, imprime par; si no, imprime impar.'
+tests:
+  - input: "4\n"
+    output: "par\n"
+    sample: true
+  - input: "7\n"
+    output: "impar\n"
+    sample: true
+  - input: "0\n"
+    output: "cero\n"
+  - input: "-3\n"
+    output: "impar\n"
+  - input: "-10\n"
+    output: "par\n"

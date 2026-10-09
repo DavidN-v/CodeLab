@@ -1,0 +1,25 @@
+questions:
+  - type: choice
+    prompt: Según los tipos de Angular 22, ¿qué API del navegador usa `HttpClient` por defecto?
+    options:
+      - '`fetch`; por eso `withFetch()` está marcado como obsoleto'
+      - '`XMLHttpRequest`; hay que añadir `withFetch()` para usar fetch'
+      - Ninguna; abre su propia conexión de red
+    answer: 0
+    explanation: 'En Angular 22 el backend por defecto es `FetchBackend` y `withFetch()` lleva `@deprecated`. Para volver a `XMLHttpRequest` (por ejemplo, para el progreso de subida) existe `withXhr()`.'
+  - type: choice
+    prompt: ¿Qué hace el `<Tarea[]>` en `this.http.get<Tarea[]>('/api/tareas')`?
+    options:
+      - Le dice a TypeScript qué forma tendrá la respuesta; no comprueba lo que llega
+      - Comprueba en tiempo de ejecución que el JSON tiene esa forma
+      - Convierte cada objeto del JSON en una instancia de una clase
+    answer: 0
+    explanation: 'Los tipos de TypeScript desaparecen al compilar. `<Tarea[]>` solo da autocompletado y comprobaciones en el editor; si el servidor envía otra cosa, nadie te avisa.'
+  - type: choice
+    prompt: ¿Dónde se escriben normalmente las llamadas a `HttpClient`?
+    options:
+      - En un servicio, que los componentes inyectan
+      - Directamente en la plantilla HTML
+      - En `main.ts`
+    answer: 0
+    explanation: 'Agrupar las peticiones en un servicio (`TareasApi`) permite reutilizarlas, cambiar la URL en un solo sitio y sustituir el servicio por un doble en las pruebas.'

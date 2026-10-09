@@ -1,0 +1,25 @@
+questions:
+  - type: output
+    prompt: '`votos` empieza en `signal(5)`. Pulsas el botón dos veces. ¿Qué texto muestra el párrafo?'
+    code: |
+      <p>Votos: {{ votos() }}</p>
+      <button (click)="votos.update((v) => v + 10)">Votar</button>
+    answer: |
+      Votos: 25
+    explanation: 'Cada clic ejecuta `update`, que suma 10 al valor anterior: 5 → 15 → 25. El signal avisa a Angular y el texto se repinta.'
+  - type: choice
+    prompt: ¿Qué escribes para llamar a `buscar()` solo cuando se suelta la tecla Enter en un `<input>`?
+    options:
+      - '`(keyup.enter)="buscar()"`'
+      - '`[keyup.enter]="buscar()"`'
+      - '`(enter)="buscar"`'
+    answer: 0
+    explanation: 'Los eventos van entre paréntesis y `keyup.enter` filtra por la tecla Enter. Los corchetes son para propiedades, `enter` no es un evento del DOM, y sin `()` el método no se llama.'
+  - type: choice
+    prompt: 'En `<input #correo /> <button (click)="enviar(correo.value)">`, ¿qué es `correo`?'
+    options:
+      - Una variable de plantilla que apunta al elemento `<input>`
+      - Una propiedad que hay que declarar en la clase
+      - El nombre del evento que lanza el input
+    answer: 0
+    explanation: '`#correo` crea una variable de plantilla: un nombre para el elemento que solo existe en esa plantilla. `correo.value` lee lo escrito en el momento del clic.'

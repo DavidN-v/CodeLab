@@ -1,0 +1,30 @@
+title: Valores por defecto
+summary: Predice qué escribe la consola cuando faltan datos y se usa ??.
+difficulty: EASY
+kind: predict
+statement: |
+  Dos perfiles de usuario: a uno le falta la ciudad y el otro no tiene datos de seguidores. Lee el código y escribe **exactamente** lo que aparece en la consola, una línea por cada `console.log`.
+starter: |
+  interface Perfil {
+    nombre: string;
+    ciudad?: string;
+    seguidores: number | null;
+  }
+
+  const ada: Perfil = { nombre: 'Ada', seguidores: 0 };
+  const alan: Perfil = { nombre: 'Alan', ciudad: 'Londres', seguidores: null };
+
+  console.log(`${ada.nombre} vive en ${ada.ciudad ?? 'algún lugar'}`);
+  console.log(`${alan.nombre} vive en ${alan.ciudad ?? 'algún lugar'}`);
+  console.log(ada.seguidores ?? 'sin datos');
+  console.log(alan.seguidores ?? 'sin datos');
+hints:
+  - 'La idea: `a ?? b` usa `a` si existe y `b` solo si `a` es `null` o `undefined`.'
+  - 'Qué usar: revisa cada perfil. ¿Tiene `ciudad`? ¿Cuánto vale `seguidores`? Recuerda que `0` es un número válido, no un dato que falta.'
+  - 'El plan: Ada no tiene ciudad (es `undefined`) y tiene 0 seguidores; Alan tiene ciudad y sus seguidores son `null`. Aplica `??` a cada línea.'
+tests:
+  - output: |
+      Ada vive en algún lugar
+      Alan vive en Londres
+      0
+      sin datos

@@ -1,0 +1,60 @@
+title: El estado del carrito
+summary: Ordena un servicio de estado con signal privado, selectores computed y métodos inmutables.
+difficulty: HARD
+kind: parsons
+statement: |
+  `CarritoStore` es la capa de estado del carrito. Debe:
+
+  - guardar las líneas en un signal **privado**, para que nadie lo cambie desde fuera;
+  - exponer `lineas` de **solo lectura**, y dos valores derivados: `cantidad` (número de productos) y `total` (suma de precios);
+  - tener `anadir(producto)` y `quitar(id)`, que **crean una lista nueva** en vez de modificar la existente.
+
+  Ordena las líneas. Cuidado: hay líneas que sobran.
+starter: |
+  import { Service, computed, signal } from '@angular/core';
+  import { Producto } from './producto';
+
+  @Service()
+  export class CarritoStore {
+  {{lines}}
+    }
+  }
+solution: |
+  import { Service, computed, signal } from '@angular/core';
+  import { Producto } from './producto';
+
+  @Service()
+  export class CarritoStore {
+    private readonly _lineas = signal<Producto[]>([]);
+    readonly lineas = this._lineas.asReadonly();
+    readonly cantidad = computed(() => this._lineas().length);
+    readonly total = computed(() => this._lineas().reduce((suma, p) => suma + p.precio, 0));
+    anadir(producto: Producto): void {
+      this._lineas.update((lineas) => [...lineas, producto]);
+    }
+    quitar(id: number): void {
+      this._lineas.update((lineas) => lineas.filter((p) => p.id !== id));
+    }
+  }
+lines:
+  - '  private readonly _lineas = signal<Producto[]>([]);'
+  - '  readonly lineas = this._lineas.asReadonly();'
+  - '  readonly cantidad = computed(() => this._lineas().length);'
+  - '  readonly total = computed(() => this._lineas().reduce((suma, p) => suma + p.precio, 0));'
+  - '  anadir(producto: Producto): void {'
+  - '    this._lineas.update((lineas) => [...lineas, producto]);'
+  - '  }'
+  - '  quitar(id: number): void {'
+  - '    this._lineas.update((lineas) => lineas.filter((p) => p.id !== id));'
+distractors:
+  - '    this._lineas().push(producto);'
+  - '  readonly lineas = this._lineas;'
+hints:
+  - 'La idea: primero el estado privado, después lo que se expone (lectura y derivados) y al final los métodos que lo cambian.'
+  - 'Qué usar: `asReadonly()` para exponer sin permitir cambios, `computed` para los derivados y `update` con una lista nueva (`[...lineas, producto]`, `filter`). `push` cambiaría la lista existente y el signal no se enteraría.'
+  - 'El plan: `_lineas`; `lineas` con asReadonly; `cantidad`; `total` con reduce; `anadir` con su update y su llave de cierre; `quitar` con su update (su llave de cierre ya está en el código).'
+tests:
+  - output: |
+      anadir(taza 12 €), anadir(plato 8 €) → cantidad 2, total 20
+      quitar(id de la taza) → cantidad 1, total 8
+    sample: true

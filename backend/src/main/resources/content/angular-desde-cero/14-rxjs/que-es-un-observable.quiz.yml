@@ -1,0 +1,31 @@
+questions:
+  - type: output
+    prompt: ¿Qué aparece en la consola?
+    code: |
+      of('a', 'b').subscribe({
+        next: (v) => console.log(v),
+        complete: () => console.log('fin'),
+      });
+      console.log('después');
+    answer: |
+      a
+      b
+      fin
+      después
+    explanation: '`of` emite sus valores de forma **síncrona** al suscribirse: `a`, `b` y `complete` ocurren dentro de `subscribe`, antes de pasar a la línea siguiente.'
+  - type: choice
+    prompt: ¿Qué Observable necesita que te des de baja para no dejar código ejecutándose?
+    options:
+      - '`interval(1000)`, porque no termina nunca'
+      - '`of(1, 2, 3)`, porque emite tres valores'
+      - '`http.get(...)`, porque va a la red'
+    answer: 0
+    explanation: '`of` y las peticiones HTTP terminan solos (`complete`). `interval` emite para siempre: si no te das de baja, sigue funcionando aunque el componente ya no exista.'
+  - type: choice
+    prompt: Un Observable emite `1`, después un error y en su código aparece un `next(2)` posterior. ¿Qué recibe el suscriptor?
+    options:
+      - '`1` y el error; el `2` nunca llega'
+      - '`1`, el error y después `2`'
+      - Solo el error
+    answer: 0
+    explanation: 'Un `error` es definitivo: el Observable se da por terminado y no entrega nada más.'

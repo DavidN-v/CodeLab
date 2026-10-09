@@ -1,0 +1,28 @@
+<figure class="heatmap">
+  <div
+    class="heatmap__grid"
+    role="img"
+    [attr.aria-label]="activeDays() + ' días con actividad en las últimas 12 semanas'"
+  >
+    @for (week of weeks(); track $index) {
+      <div class="heatmap__week">
+        @for (cell of week; track cell.date) {
+          <span class="heatmap__day" [attr.data-level]="cell.level" [title]="cell.label"></span>
+        }
+      </div>
+    }
+  </div>
+  <figcaption class="heatmap__caption">
+    <span
+      >{{ activeDays() }} {{ activeDays() === 1 ? 'día activo' : 'días activos' }} · últimas 12
+      semanas</span
+    >
+    <span class="heatmap__legend" aria-hidden="true">
+      Menos
+      @for (level of [0, 1, 2, 3, 4]; track level) {
+        <span class="heatmap__day" [attr.data-level]="level"></span>
+      }
+      Más
+    </span>
+  </figcaption>
+</figure>

@@ -1,0 +1,27 @@
+lessons:
+  - slug: por-que-probar
+    title: Por qué probar y cómo se ejecuta ng test
+    summary: La pirámide de pruebas, Vitest con jsdom en Angular 22 y E2E con Playwright.
+    minutes: 9
+  - slug: el-spec-generado
+    title: El app.spec.ts generado, línea a línea
+    summary: describe, it, expect, TestBed, el fixture y whenStable.
+    minutes: 9
+  - slug: probar-componentes
+    title: Probar componentes con inputs, clics y outputs
+    summary: setInput, eventos del DOM, espías con vi.fn y harnesses del CDK.
+    minutes: 10
+  - slug: probar-servicios-y-dobles
+    title: Probar servicios y usar dobles
+    summary: TestBed.inject para servicios y useValue para sustituir dependencias.
+    minutes: 9
+  - slug: probar-http
+    title: Probar peticiones HTTP
+    summary: provideHttpClientTesting y HttpTestingController como servidor de mentira.
+    minutes: 9
+exercises:
+  - ng-predice-pasa-o-falla
+  - ng-completa-expect-carrito
+  - ng-completa-test-input
+  - ng-ordena-test-doble
+  - ng-completa-test-http

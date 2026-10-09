@@ -1,0 +1,34 @@
+questions:
+  - type: choice
+    prompt: ¿Qué método lanza de verdad un hilo nuevo en paralelo?
+    options:
+      - '`start()`'
+      - '`run()`'
+      - '`join()`'
+      - '`sleep()`'
+    answer: 0
+    explanation: '`start()` crea el hilo y vuelve enseguida. `run()` solo ejecuta el código en el hilo actual, sin paralelismo; `join()` espera a que un hilo termine y `sleep()` pausa.'
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      public class Main {
+          public static void main(String[] args) throws InterruptedException {
+              Thread hilo = new Thread(() -> System.out.println("trabajando"));
+              hilo.start();
+              hilo.join();
+              System.out.println("fin");
+          }
+      }
+    answer: |
+      trabajando
+      fin
+    explanation: '`join()` hace que `main` espere a que el hilo termine. Por eso «trabajando» siempre sale antes que «fin»: el orden está garantizado gracias a la espera.'
+  - type: choice
+    prompt: Lanzas dos hilos que imprimen «A» y «B» y esperas a los dos con `join`. ¿En qué orden aparecen las letras?
+    options:
+      - Puede variar de una ejecución a otra
+      - Siempre A y luego B, porque `a` se lanzó primero
+      - Siempre B y luego A
+      - Salen en la misma línea, mezcladas
+    answer: 0
+    explanation: El sistema operativo decide cuándo corre cada hilo. Lanzar `a` primero no garantiza que imprima primero; `join` solo asegura que los dos han terminado antes de seguir.

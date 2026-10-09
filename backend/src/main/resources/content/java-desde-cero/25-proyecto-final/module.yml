@@ -1,0 +1,22 @@
+lessons:
+  - slug: fechas-con-java-time
+    title: Fechas y horas con java.time
+    summary: LocalDate, LocalDateTime, Duration y cómo formatear fechas.
+    minutes: 6
+  - slug: disenar-la-aplicacion
+    title: Diseñar la aplicación
+    summary: De los requisitos al modelo, paso a paso.
+    minutes: 6
+  - slug: construir-el-gestor
+    title: Construir el gestor de tareas
+    summary: Juntar records, enums, colecciones, streams y excepciones en un programa completo.
+    minutes: 7
+  - slug: siguientes-pasos
+    title: Siguientes pasos
+    summary: Maven, Git, Spring Boot y cómo seguir aprendiendo.
+    minutes: 5
+exercises:
+  - ordenar-las-tareas
+  - gestor-de-tareas
+  - inventario-persistente
+  - biblioteca-con-prestamos

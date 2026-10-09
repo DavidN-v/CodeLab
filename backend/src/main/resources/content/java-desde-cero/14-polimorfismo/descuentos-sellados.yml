@@ -1,0 +1,91 @@
+title: Descuentos sellados
+summary: Una jerarquía sellada de records procesada con switch con patrones.
+difficulty: HARD
+statement: |
+  Modela los descuentos de una tienda como una interfaz sellada `Descuento` con tres records:
+
+  - `Porcentaje(int porcentaje)`: descuenta ese porcentaje del precio.
+  - `Fijo(int cantidad)`: resta esa cantidad (sin bajar de 0).
+  - `DosPorUno()`: si se compran 2 o más unidades, una de cada dos es gratis.
+
+  Escribe un método `static int precioFinal(int precioUnidad, int unidades, Descuento d)` usando un `switch` con patrones **sin `default`**. Los cálculos son con enteros (división entera).
+
+  La entrada tiene líneas `<precioUnidad> <unidades> <descuento>`, donde el descuento es `porcentaje <n>`, `fijo <n>` o `dosporuno`. Escribe el precio final de cada línea.
+
+  **Ejemplos:** `100 3 porcentaje 10` → `270`; `50 2 fijo 120` → `0`; `30 5 dosporuno` → `90`.
+starter: |
+  import java.util.Scanner;
+
+  // Declara aquí la interfaz sellada y los records
+
+  public class Main {
+      // static int precioFinal(int precioUnidad, int unidades, Descuento d) { ... }
+
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          while (entrada.hasNext()) {
+              int precio = entrada.nextInt();
+              int unidades = entrada.nextInt();
+              String tipo = entrada.next();
+              // Crea el descuento según el tipo e imprime precioFinal(...)
+          }
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  sealed interface Descuento permits Porcentaje, Fijo, DosPorUno {}
+
+  record Porcentaje(int porcentaje) implements Descuento {}
+
+  record Fijo(int cantidad) implements Descuento {}
+
+  record DosPorUno() implements Descuento {}
+
+  public class Main {
+      static int precioFinal(int precioUnidad, int unidades, Descuento d) {
+          int bruto = precioUnidad * unidades;
+          return switch (d) {
+              case Porcentaje p -> bruto - bruto * p.porcentaje() / 100;
+              case Fijo f -> Math.max(0, bruto - f.cantidad());
+              case DosPorUno dosPorUno -> precioUnidad * (unidades - unidades / 2);
+          };
+      }
+
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          while (entrada.hasNext()) {
+              int precio = entrada.nextInt();
+              int unidades = entrada.nextInt();
+              String tipo = entrada.next();
+              Descuento descuento = switch (tipo) {
+                  case "porcentaje" -> new Porcentaje(entrada.nextInt());
+                  case "fijo" -> new Fijo(entrada.nextInt());
+                  default -> new DosPorUno();
+              };
+              System.out.println(precioFinal(precio, unidades, descuento));
+          }
+      }
+  }
+hints:
+  - 'La idea: hay exactamente tres tipos de descuento, y cada uno cambia el precio de una forma. Una lista cerrada de tipos encaja con una interfaz sellada.'
+  - 'Qué usar: `sealed interface Descuento permits Porcentaje, Fijo, DosPorUno {}`, tres `record` con `implements Descuento`, y un `switch (d)` con patrones como `case Porcentaje p -> ...`.'
+  - 'El plan: calcula `bruto = precioUnidad * unidades`. Porcentaje: `bruto - bruto * p.porcentaje() / 100`. Fijo: `Math.max(0, bruto - f.cantidad())`. Dos por uno: pagas `unidades - unidades / 2` unidades.'
+tests:
+  - input: |
+      100 3 porcentaje 10
+      50 2 fijo 120
+      30 5 dosporuno
+    output: |
+      270
+      0
+      90
+    sample: true
+  - input: |
+      10 1 dosporuno
+      99 1 porcentaje 50
+      40 4 fijo 15
+    output: |
+      10
+      50
+      145

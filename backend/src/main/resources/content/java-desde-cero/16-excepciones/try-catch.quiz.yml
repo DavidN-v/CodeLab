@@ -1,0 +1,37 @@
+questions:
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              try {
+                  System.out.println("A");
+                  int n = Integer.parseInt("doce");
+                  System.out.println("B");
+              } catch (NumberFormatException e) {
+                  System.out.println("C");
+              }
+              System.out.println("D");
+          }
+      }
+    answer: |
+      A
+      C
+      D
+    explanation: '"A" se imprime antes del fallo. `parseInt("doce")` lanza la excepción, así que el resto del `try` (la "B") se salta y la ejecución salta al `catch` ("C"). Después, el programa sigue con normalidad ("D").'
+  - type: choice
+    prompt: ¿Qué ocurre con un `catch` si dentro del `try` no se lanza ninguna excepción?
+    options:
+      - Se ignora; el programa sigue después del último `catch`
+      - Se ejecuta igualmente al final del `try`
+      - El programa no compila
+    answer: 0
+    explanation: El `catch` solo se ejecuta si se lanza una excepción de su tipo. Lo que se ejecuta siempre es `finally`, no `catch`.
+  - type: choice
+    prompt: ¿Por qué es mala idea dejar un `catch` vacío?
+    options:
+      - Porque esconde el error y el programa falla más tarde, lejos de la causa
+      - Porque Java no permite bloques vacíos
+      - Porque hace que el programa vaya más lento
+    answer: 0
+    explanation: Un `catch` vacío compila, pero «se traga» el error en silencio. Si capturas, haz algo útil, como informar o usar un valor alternativo.

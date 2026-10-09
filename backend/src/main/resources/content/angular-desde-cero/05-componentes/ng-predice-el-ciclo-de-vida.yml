@@ -1,0 +1,60 @@
+title: ¿En qué orden vive y muere?
+summary: Predice el orden de los ganchos del ciclo de vida al mostrar y ocultar un componente.
+difficulty: HARD
+kind: predict
+statement: |
+  La app arranca mostrando `Hijo`. Después el usuario pulsa **una vez** el botón «Ocultar».
+
+  Escribe **los mensajes que aparecen en la consola**, en orden, uno por línea.
+starter: |
+  // src/app/hijo/hijo.ts
+  import { Component, DestroyRef, OnDestroy, OnInit, afterNextRender, inject } from '@angular/core';
+
+  @Component({
+    selector: 'app-hijo',
+    template: `<p>Soy el hijo</p>`,
+  })
+  export class Hijo implements OnInit, OnDestroy {
+    constructor() {
+      console.log('constructor');
+      inject(DestroyRef).onDestroy(() => console.log('DestroyRef'));
+      afterNextRender(() => console.log('afterNextRender'));
+    }
+
+    ngOnInit() {
+      console.log('ngOnInit');
+    }
+
+    ngOnDestroy() {
+      console.log('ngOnDestroy');
+    }
+  }
+
+  // src/app/app.ts
+  import { Component, signal } from '@angular/core';
+  import { Hijo } from './hijo/hijo';
+
+  @Component({
+    selector: 'app-root',
+    imports: [Hijo],
+    template: `
+      @if (visible()) {
+        <app-hijo />
+      }
+      <button (click)="visible.set(false)">Ocultar</button>
+    `,
+  })
+  export class App {
+    protected readonly visible = signal(true);
+  }
+hints:
+  - 'La idea: dentro del constructor, `onDestroy` y `afterNextRender` solo **registran** funciones para más tarde; lo único que se escribe en el momento es `constructor`.'
+  - 'Qué usar: el orden del ciclo de vida: constructor → ngOnInit → plantilla en el DOM → afterNextRender. Al destruirse: primero el método `ngOnDestroy` y después las funciones registradas en `DestroyRef`.'
+  - 'El plan: tres mensajes al mostrarse (constructor, el gancho de inicio, el de después de pintar) y dos al pulsar Ocultar (el método de destrucción y luego DestroyRef).'
+tests:
+  - output: |
+      constructor
+      ngOnInit
+      afterNextRender
+      ngOnDestroy
+      DestroyRef

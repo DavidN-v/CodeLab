@@ -1,0 +1,45 @@
+title: Completar una tarea sin mutar
+summary: Ordena un método de store que cambia una tarea de forma inmutable.
+difficulty: MEDIUM
+kind: parsons
+statement: |
+  El store guarda las tareas en `private readonly tareas = signal<Tarea[]>([])`. Escribe el método `completar(id)` que marca como hecha la tarea con ese `id` **sin mutar** ni el array ni el objeto de la tarea, para que los `computed` se enteren del cambio.
+
+  Ordena las líneas. Sobran dos (mutan el estado).
+
+  Con las tareas `[{ id: 1, hecha: false }, { id: 2, hecha: false }]`, después de `completar(2)` el `computed` de pendientes vale:
+
+  ```text
+  1
+  ```
+starter: |
+  // src/app/tareas/tareas-store.ts (fragmento)
+  {{lines}}
+solution: |
+  // src/app/tareas/tareas-store.ts (fragmento)
+  completar(id: number) {
+    this.tareas.update((tareas) =>
+      tareas.map((tarea) =>
+        tarea.id === id ? { ...tarea, hecha: true } : tarea,
+      ),
+    );
+  }
+lines:
+  - 'completar(id: number) {'
+  - '  this.tareas.update((tareas) =>'
+  - '    tareas.map((tarea) =>'
+  - '      tarea.id === id ? { ...tarea, hecha: true } : tarea,'
+  - '    ),'
+  - '  );'
+  - '}'
+distractors:
+  - '      tarea.id === id ? (tarea.hecha = true) : tarea,'
+  - '  this.tareas().find((tarea) => tarea.id === id)!.hecha = true;'
+hints:
+  - 'La idea: crea una lista nueva donde todas las tareas son las mismas excepto la que coincide con el id, que se sustituye por una copia con `hecha: true`.'
+  - 'Qué usar: `update` para partir de la lista anterior, `map` para crear un array nuevo y el spread `{ ...tarea, hecha: true }` para crear un objeto nuevo.'
+  - 'El plan: método → this.tareas.update((tareas) => → tareas.map((tarea) => → la condición con el spread → cerrar el map → cerrar el update → cerrar el método.'
+tests:
+  - output: |
+      1
+    sample: true

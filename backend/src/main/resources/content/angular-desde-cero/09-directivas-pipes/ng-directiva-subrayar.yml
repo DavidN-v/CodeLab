@@ -1,0 +1,58 @@
+title: La directiva subrayar
+summary: Completa una directiva de atributo que subraya el elemento al pasar el ratón.
+difficulty: MEDIUM
+kind: fill
+statement: |
+  Queremos una directiva que se use así: `<a appSubrayar>Ver ofertas</a>`. Cuando el ratón está encima, el texto se subraya; al salir, deja de estarlo.
+
+  Completa los huecos:
+
+  - el **decorador** que convierte la clase en directiva;
+  - el **selector** que la activa con el atributo `appSubrayar`;
+  - la propiedad del decorador que enlaza cosas con el **elemento anfitrión**;
+  - los dos **eventos** del anfitrión: usa `mouseenter` y `mouseleave`, con la sintaxis de event binding.
+starter: |
+  // src/app/subrayar.ts
+  import { Directive, signal } from '@angular/core';
+
+  @{{?}}({
+    selector: '{{?}}',
+    {{?}}: {
+      '[style.textDecoration]': "encima() ? 'underline' : null",
+      '{{?}}': 'encima.set(true)',
+      '{{?}}': 'encima.set(false)',
+    },
+  })
+  export class Subrayar {
+    protected readonly encima = signal(false);
+  }
+answers:
+  - Directive
+  - '[appSubrayar]'
+  - host
+  - (mouseenter)
+  - (mouseleave)
+solution: |
+  // src/app/subrayar.ts
+  import { Directive, signal } from '@angular/core';
+
+  @Directive({
+    selector: '[appSubrayar]',
+    host: {
+      '[style.textDecoration]': "encima() ? 'underline' : null",
+      '(mouseenter)': 'encima.set(true)',
+      '(mouseleave)': 'encima.set(false)',
+    },
+  })
+  export class Subrayar {
+    protected readonly encima = signal(false);
+  }
+hints:
+  - 'La idea: una directiva de atributo es una clase con un decorador, un selector de atributo y una lista de bindings sobre el elemento donde se pega.'
+  - 'Qué usar: el decorador `@Directive`, un selector CSS de atributo (entre corchetes) y la propiedad `host`, donde los eventos se escriben entre paréntesis.'
+  - 'El plan: `@Directive`, selector `[appSubrayar]`, propiedad `host`, y dentro `(mouseenter)` pone la signal a `true` y `(mouseleave)` la pone a `false`.'
+tests:
+  - output: |
+      Con el ratón encima: <a style="text-decoration: underline;">Ver ofertas</a>
+      Sin el ratón: <a>Ver ofertas</a>
+    sample: true

@@ -1,0 +1,28 @@
+lessons:
+  - slug: input
+    title: 'input(): datos que bajan del padre al hijo'
+    summary: Inputs opcionales y obligatorios, transform, alias y cómo los pasa el padre.
+    minutes: 9
+  - slug: output
+    title: 'output(): avisos que suben del hijo al padre'
+    summary: Declarar eventos propios, emitirlos y escucharlos con $event.
+    minutes: 8
+  - slug: model-y-two-way
+    title: 'model() y el enlace bidireccional [( )]'
+    summary: Un valor que el padre da y el hijo puede editar, en los dos sentidos.
+    minutes: 8
+  - slug: ng-content
+    title: Proyección de contenido con ng-content
+    summary: Componentes marco que reciben contenido libre del padre, con huecos selectivos.
+    minutes: 8
+  - slug: consultas-y-patrones
+    title: viewChild, viewChildren, contentChild y qué patrón elegir
+    summary: Acceder a elementos e hijos desde la clase y elegir la comunicación adecuada.
+    minutes: 10
+exercises:
+  - ng-predice-saludos
+  - ng-ficha-con-inputs
+  - ng-borrar-con-output
+  - ng-ordena-interruptor
+  - ng-predice-aviso-proyectado
+  - ng-limpiar-con-viewchild

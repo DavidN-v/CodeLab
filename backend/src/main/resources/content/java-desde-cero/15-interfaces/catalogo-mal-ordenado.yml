@@ -1,0 +1,119 @@
+title: El catálogo desordenado
+summary: Arregla una implementación de Comparable que no compila y ordena al revés.
+difficulty: MEDIUM
+kind: fix
+statement: |
+  Una tienda quiere mostrar su catálogo del producto **más barato al más caro**. Si dos productos cuestan lo mismo, van por **nombre alfabético**.
+
+  La entrada empieza con `n` y sigue con `n` líneas `<nombre> <precio>` (precio entero). El programa ordena con `Collections.sort` y escribe `<nombre>: <precio>` por cada producto.
+
+  **El problema:** el programa ni siquiera compila. Y cuando lo consigas compilar, verás que el catálogo sale empezando por el producto más caro. Hay dos errores: encuéntralos y corrígelos.
+starter: |
+  import java.util.ArrayList;
+  import java.util.Collections;
+  import java.util.List;
+  import java.util.Scanner;
+
+  class Producto implements Comparable<Producto> {
+      final String nombre;
+      final int precio;
+
+      Producto(String nombre, int precio) {
+          this.nombre = nombre;
+          this.precio = precio;
+      }
+
+      @Override
+      int compareTo(Producto otro) {
+          int porPrecio = Integer.compare(otro.precio, precio);
+          if (porPrecio != 0) {
+              return porPrecio;
+          }
+          return nombre.compareTo(otro.nombre);
+      }
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int n = entrada.nextInt();
+          List<Producto> catalogo = new ArrayList<>();
+          for (int i = 0; i < n; i++) {
+              catalogo.add(new Producto(entrada.next(), entrada.nextInt()));
+          }
+          Collections.sort(catalogo);
+          for (Producto p : catalogo) {
+              System.out.println(p.nombre + ": " + p.precio);
+          }
+      }
+  }
+solution: |
+  import java.util.ArrayList;
+  import java.util.Collections;
+  import java.util.List;
+  import java.util.Scanner;
+
+  class Producto implements Comparable<Producto> {
+      final String nombre;
+      final int precio;
+
+      Producto(String nombre, int precio) {
+          this.nombre = nombre;
+          this.precio = precio;
+      }
+
+      @Override
+      public int compareTo(Producto otro) {
+          int porPrecio = Integer.compare(precio, otro.precio);
+          if (porPrecio != 0) {
+              return porPrecio;
+          }
+          return nombre.compareTo(otro.nombre);
+      }
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int n = entrada.nextInt();
+          List<Producto> catalogo = new ArrayList<>();
+          for (int i = 0; i < n; i++) {
+              catalogo.add(new Producto(entrada.next(), entrada.nextInt()));
+          }
+          Collections.sort(catalogo);
+          for (Producto p : catalogo) {
+              System.out.println(p.nombre + ": " + p.precio);
+          }
+      }
+  }
+hints:
+  - 'La idea: hay un error que impide compilar (lee el mensaje del compilador) y otro que hace que el orden de los precios salga al revés.'
+  - 'Qué usar: recuerda que los métodos de una interfaz son siempre públicos, también `compareTo`. Y en `Integer.compare(a, b)` el resultado es negativo cuando `a` es menor, así que el orden de los argumentos decide si se ordena de menor a mayor o al revés.'
+  - 'El plan: escribe `public int compareTo(Producto otro)` y cambia la comparación a `Integer.compare(precio, otro.precio)`. El desempate por nombre ya está bien.'
+tests:
+  - input: |
+      3
+      Libro 18
+      Taza 6
+      Lapiz 1
+    output: |
+      Lapiz: 1
+      Taza: 6
+      Libro: 18
+    sample: true
+  - input: |
+      4
+      Zumo 2
+      Agua 2
+      Pan 1
+      Queso 9
+    output: |
+      Pan: 1
+      Agua: 2
+      Zumo: 2
+      Queso: 9
+  - input: |
+      1
+      Mochila 45
+    output: |
+      Mochila: 45

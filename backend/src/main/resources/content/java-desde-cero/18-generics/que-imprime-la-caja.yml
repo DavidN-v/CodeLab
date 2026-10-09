@@ -1,0 +1,59 @@
+title: ¿Qué sale de la caja?
+summary: Predice la salida de una clase genérica usada con dos tipos distintos.
+difficulty: EASY
+kind: predict
+statement: |
+  La clase `Caja<T>` guarda cosas en una lista y `sacarUltima()` quita y devuelve la última que entró. El método genérico `mostrar` escribe una etiqueta y un valor de cualquier tipo.
+
+  Lee el programa y escribe **exactamente** lo que imprime.
+starter: |
+  import java.util.ArrayList;
+  import java.util.List;
+
+  class Caja<T> {
+      private final List<T> cosas = new ArrayList<>();
+
+      void meter(T cosa) {
+          cosas.add(cosa);
+      }
+
+      T sacarUltima() {
+          return cosas.remove(cosas.size() - 1);
+      }
+
+      int cuantas() {
+          return cosas.size();
+      }
+  }
+
+  public class Main {
+      static <T> void mostrar(String etiqueta, T valor) {
+          System.out.println(etiqueta + ": " + valor);
+      }
+
+      public static void main(String[] args) {
+          Caja<String> frutas = new Caja<>();
+          frutas.meter("pera");
+          frutas.meter("uva");
+          frutas.meter("kiwi");
+          mostrar("Sale", frutas.sacarUltima());
+          mostrar("Quedan", frutas.cuantas());
+
+          Caja<Integer> numeros = new Caja<>();
+          numeros.meter(5);
+          numeros.meter(20);
+          int suma = numeros.sacarUltima() + numeros.sacarUltima();
+          mostrar("Suma", suma);
+          mostrar("Vacía", numeros.cuantas() == 0);
+      }
+  }
+hints:
+  - 'La idea: sigue las dos cajas por separado y apunta qué contiene cada una después de cada línea.'
+  - 'Qué usar: `sacarUltima()` quita el último elemento, así que la caja tiene uno menos. `mostrar` admite cualquier tipo: un texto, un número o un `boolean`.'
+  - 'El plan: frutas = [pera, uva, kiwi]; sale kiwi y quedan 2. numeros = [5, 20]; se sacan 20 y 5 y se suman (son `Integer`, se suman como números). Al final, ¿cuántas quedan en `numeros`? Eso decide si `cuantas() == 0` es `true` o `false`.'
+tests:
+  - output: |
+      Sale: kiwi
+      Quedan: 2
+      Suma: 25
+      Vacía: true

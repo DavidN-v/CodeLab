@@ -1,0 +1,23 @@
+lessons:
+  - slug: que-es-un-componente
+    title: ¿Qué es un componente?
+    summary: Clase, plantilla y estilos unidos por @Component, y la app como un árbol de componentes.
+    minutes: 7
+  - slug: el-decorador-component
+    title: El decorador @Component, campo a campo
+    summary: selector, template, styles, imports, changeDetection y host; y qué hace el compilador con ellos.
+    minutes: 9
+  - slug: crear-y-usar-componentes
+    title: Crear un componente y usarlo en otro
+    summary: ng generate component, los tres pasos para usarlo (import, imports y etiqueta) y el error NG8001.
+    minutes: 8
+  - slug: ciclo-de-vida
+    title: El ciclo de vida
+    summary: constructor, ngOnInit, afterNextRender, ngOnDestroy y DestroyRef, en qué orden ocurren y para qué usar cada uno.
+    minutes: 9
+exercises:
+  - ng-predice-las-tarjetas
+  - ng-completa-el-decorador
+  - ng-usa-el-componente
+  - ng-ordena-el-reloj
+  - ng-predice-el-ciclo-de-vida

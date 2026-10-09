@@ -1,0 +1,37 @@
+questions:
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      import java.time.LocalDate;
+
+      public class Main {
+          public static void main(String[] args) {
+              LocalDate fecha = LocalDate.of(2026, 1, 30);
+              fecha.plusDays(5);
+              System.out.println(fecha);
+              LocalDate despues = fecha.plusDays(5);
+              System.out.println(despues);
+          }
+      }
+    answer: |
+      2026-01-30
+      2026-02-04
+    explanation: 'Las fechas son inmutables: `fecha.plusDays(5)` sin guardar el resultado no cambia `fecha`. Al guardarlo en `despues`, 30 de enero más 5 días es 4 de febrero; Java cambia de mes solo.'
+  - type: choice
+    prompt: ¿Qué clase usarías para guardar la fecha de un cumpleaños (sin hora)?
+    options:
+      - '`LocalDate`'
+      - '`LocalTime`'
+      - '`Duration`'
+      - '`Instant`'
+    answer: 0
+    explanation: '`LocalDate` es un día del calendario, sin hora. `LocalTime` es solo una hora, `Duration` una cantidad de tiempo e `Instant` un instante exacto para marcas de tiempo.'
+  - type: choice
+    prompt: ¿Cuál es la forma más directa de contar los días de retraso entre `vence` y `devolucion`?
+    options:
+      - '`ChronoUnit.DAYS.between(vence, devolucion)`'
+      - '`devolucion - vence`'
+      - '`Period.between(vence, devolucion).getDays()`'
+      - '`vence.isBefore(devolucion)`'
+    answer: 0
+    explanation: '`ChronoUnit.DAYS.between` da el total de días. Las fechas no se restan con `-`, y `Period.getDays()` solo da la parte de días de «X meses y Y días», no el total. `isBefore` solo dice sí o no.'

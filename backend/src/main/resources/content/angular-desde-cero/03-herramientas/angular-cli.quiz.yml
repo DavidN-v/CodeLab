@@ -1,0 +1,26 @@
+questions:
+  - type: choice
+    prompt: ¿Qué significa `-g` en `npm install -g @angular/cli`?
+    options:
+      - Que se instala en todo el ordenador, y la orden `ng` funciona desde cualquier carpeta
+      - Que se descarga desde Google
+      - Que se instala solo en la carpeta actual
+    answer: 0
+    explanation: '`-g` es global. Sin él, el paquete se instalaría en el `node_modules` de la carpeta actual y `ng` no estaría disponible en otras.'
+  - type: choice
+    prompt: ¿Qué orden crea un proyecto nuevo llamado `tienda`?
+    options:
+      - '`ng serve tienda`'
+      - '`ng build tienda`'
+      - '`ng new tienda`'
+      - '`npm start tienda`'
+    answer: 2
+    explanation: '`ng new` crea el proyecto (carpeta, archivos y paquetes). `ng serve` lo arranca y `ng build` lo compila, pero ambos necesitan un proyecto que ya exista.'
+  - type: choice
+    prompt: Tienes la CLI 22 instalada de forma global y abres un proyecto antiguo que usa Angular 20. Al escribir `ng serve` dentro de él, ¿qué versión de la CLI trabaja?
+    options:
+      - La 22 global, siempre
+      - La del proyecto, instalada en su `node_modules`
+      - 'Ninguna: hay que desinstalar la global'
+    answer: 1
+    explanation: 'Dentro de un proyecto, la CLI global delega en la del proyecto. Así cada proyecto usa su propia versión sin conflictos.'

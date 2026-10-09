@@ -1,0 +1,63 @@
+title: ¿Quién responde?
+summary: Un array del tipo padre, tres objetos distintos y métodos sobrescritos.
+difficulty: MEDIUM
+kind: predict
+statement: |
+  Todos los objetos se guardan en un array de tipo `Empleado`, pero cada uno es de una clase distinta. `ficha()` solo está escrito en `Empleado` y llama a `rol()` y `sueldo()`, que algunas subclases sobrescriben.
+
+  Escribe **exactamente** lo que imprime el programa. Recuerda: el tipo de la variable dice qué puedes llamar; el objeto real decide qué versión se ejecuta.
+starter: |
+  class Empleado {
+      String rol() {
+          return "empleado";
+      }
+
+      int sueldo() {
+          return 1000;
+      }
+
+      String ficha() {
+          return rol() + ": " + sueldo();
+      }
+  }
+
+  class Jefe extends Empleado {
+      @Override
+      String rol() {
+          return "jefe";
+      }
+
+      @Override
+      int sueldo() {
+          return super.sueldo() * 2;
+      }
+  }
+
+  class Becario extends Empleado {
+      @Override
+      int sueldo() {
+          return 500;
+      }
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Empleado[] plantilla = {new Becario(), new Jefe(), new Empleado()};
+          int total = 0;
+          for (Empleado e : plantilla) {
+              System.out.println(e.ficha());
+              total += e.sueldo();
+          }
+          System.out.println("Total: " + total);
+      }
+  }
+hints:
+  - 'La idea: aunque el array sea de `Empleado`, cada casilla guarda un objeto concreto, y ese objeto decide qué `rol()` y qué `sueldo()` se usan dentro de `ficha()`.'
+  - 'Qué usar: para cada objeto, busca el método en su clase; si no está, usa el de `Empleado`. `super.sueldo()` es el sueldo de `Empleado` (1000).'
+  - 'El plan: el becario no cambia `rol()` pero sí `sueldo()`; el jefe cambia los dos y dobla el sueldo base; el empleado usa los originales. Suma los tres sueldos para el total.'
+tests:
+  - output: |
+      empleado: 500
+      jefe: 2000
+      empleado: 1000
+      Total: 3500

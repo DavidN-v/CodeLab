@@ -1,0 +1,71 @@
+@use 'mixins' as *;
+
+.languages {
+  display: grid;
+  gap: var(--space-4);
+  margin: 0;
+
+  @include from('md') {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.language {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+
+  &--upcoming {
+    background-color: transparent;
+
+    .language__name,
+    .language__tagline {
+      color: var(--color-text-subtle);
+    }
+  }
+}
+
+.language__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-3);
+}
+
+.language__name {
+  font-size: var(--text-xl);
+}
+
+.language__version {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-text-subtle);
+}
+
+.language__tagline {
+  color: var(--color-text-muted);
+}
+
+.language__description {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.language__action {
+  align-self: flex-start;
+  margin-top: var(--space-2);
+}
+
+.languages__group {
+  margin: var(--space-6) 0 var(--space-3);
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}

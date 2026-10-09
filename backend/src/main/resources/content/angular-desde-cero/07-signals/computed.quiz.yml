@@ -1,0 +1,31 @@
+questions:
+  - type: output
+    prompt: ¿Qué aparece en la consola?
+    code: |
+      const ancho = signal(4);
+      const alto = signal(3);
+      const area = computed(() => ancho() * alto());
+      ancho.set(10);
+      console.log(area());
+      alto.update((h) => h + 1);
+      console.log(area());
+    answer: |
+      30
+      40
+    explanation: 'El computed se calcula al leerlo con los valores actuales: 10 × 3 = 30. Después `alto` pasa a 4 y la siguiente lectura recalcula: 10 × 4 = 40.'
+  - type: choice
+    prompt: '¿Qué pasa si escribes `total.set(100)` cuando `total` es un `computed`?'
+    options:
+      - 'Error de TypeScript: un computed no tiene `set`'
+      - El total vale 100 hasta que cambie el precio
+      - El total vale 100 para siempre
+    answer: 0
+    explanation: 'Un computed es de solo lectura (tipo `Signal`, no `WritableSignal`). Su valor solo lo decide su fórmula.'
+  - type: choice
+    prompt: 'Un `computed` se lee 50 veces en la plantilla y sus dependencias no han cambiado. ¿Cuántas veces se ejecuta su fórmula?'
+    options:
+      - Ninguna más; devuelve el resultado guardado
+      - 50 veces, una por lectura
+      - Una vez por segundo
+    answer: 0
+    explanation: 'Un computed tiene memoria: solo recalcula cuando alguna de sus dependencias cambia y alguien vuelve a leerlo.'

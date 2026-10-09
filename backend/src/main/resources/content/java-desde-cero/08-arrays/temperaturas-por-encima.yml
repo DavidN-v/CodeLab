@@ -1,0 +1,67 @@
+title: Días por encima de la media
+summary: Recorre un array dos veces, primero para la media y luego para comparar.
+difficulty: MEDIUM
+statement: |
+  Lee `n` y después `n` temperaturas enteras (una por día, empezando en el día 1). Escribe la media con un decimal y, a continuación, los números de día cuya temperatura supera **estrictamente** la media, separados por espacios.
+
+  ```
+  Media: <media>
+  Días: <d1> <d2> ...
+  ```
+
+  Si ningún día la supera, la segunda línea es `Días: ninguno`.
+starter: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int n = entrada.nextInt();
+          int[] temperaturas = new int[n];
+          int suma = 0;
+          for (int i = 0; i < n; i++) {
+              temperaturas[i] = entrada.nextInt();
+              suma += temperaturas[i];
+          }
+          double media = (double) suma / n;
+          System.out.printf("Media: %.1f%n", media);
+          StringBuilder dias = new StringBuilder();
+          for (int i = 0; i < n; i++) {
+              if (temperaturas[i] > media) {
+                  if (dias.length() > 0) {
+                      dias.append(' ');
+                  }
+                  dias.append(i + 1);
+              }
+          }
+          System.out.println("Días: " + (dias.length() == 0 ? "ninguno" : dias));
+      }
+  }
+hints:
+  - 'La idea: no sabes qué días superan la media hasta conocerla, y para conocerla tienes que haber leído todos los días. Por eso necesitas guardarlos.'
+  - 'Qué usar: un array `int[]` de tamaño `n`, una suma para la media (`(double) suma / n`), `printf("%.1f")` y un segundo recorrido del array.'
+  - 'El plan: lee y suma → calcula la media e imprímela → recorre otra vez y, si `temperaturas[i] > media`, apunta el día `i + 1` (los días empiezan en 1, las posiciones en 0) → si no apuntaste ninguno, escribe `ninguno`.'
+tests:
+  - input: "5\n20 25 18 30 22\n"
+    output: |
+      Media: 23.0
+      Días: 2 4
+    sample: true
+  - input: "3\n10 10 10\n"
+    output: |
+      Media: 10.0
+      Días: ninguno
+    sample: true
+  - input: "4\n-5 0 5 1\n"
+    output: |
+      Media: 0.3
+      Días: 3 4

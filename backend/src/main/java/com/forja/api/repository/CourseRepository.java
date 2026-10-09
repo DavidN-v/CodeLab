@@ -14,6 +14,8 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
 	@EntityGraph(attributePaths = "language")
 	List<Course> findByLanguageSlugAndPublishedTrueOrderByDisplayOrderAsc(String languageSlug);
 
+	Optional<Course> findBySlug(String slug);
+
 	@EntityGraph(attributePaths = { "language", "modules" })
 	Optional<Course> findByIdAndPublishedTrue(Long id);
 

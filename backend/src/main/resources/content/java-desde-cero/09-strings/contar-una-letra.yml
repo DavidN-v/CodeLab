@@ -1,0 +1,69 @@
+title: ¿Cuántas veces aparece?
+summary: Arregla un programa que cuenta una letra en un texto.
+difficulty: MEDIUM
+kind: fix
+statement: |
+  El programa lee un texto (primera línea) y una letra (segunda línea) y debe escribir cuántas veces aparece esa letra en el texto, **sin distinguir mayúsculas de minúsculas**:
+
+  ```
+  La letra a aparece 3 veces.
+  ```
+
+  La letra se escribe en minúscula en el mensaje, aunque llegue en mayúscula.
+
+  **Síntomas:**
+
+  1. Con cualquier entrada, el programa se detiene con un error `StringIndexOutOfBoundsException`.
+  2. Y cuando arregles eso, descubrirás que con `Ana` y `a` cuenta 1 en vez de 2.
+
+  Hay dos errores. Encuéntralos y corrígelos.
+starter: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          String texto = entrada.nextLine();
+          char letra = Character.toLowerCase(entrada.nextLine().strip().charAt(0));
+          texto.toLowerCase();
+          int veces = 0;
+          for (int i = 0; i <= texto.length(); i++) {
+              if (texto.charAt(i) == letra) {
+                  veces++;
+              }
+          }
+          System.out.println("La letra " + letra + " aparece " + veces + " veces.");
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          String texto = entrada.nextLine();
+          char letra = Character.toLowerCase(entrada.nextLine().strip().charAt(0));
+          texto = texto.toLowerCase();
+          int veces = 0;
+          for (int i = 0; i < texto.length(); i++) {
+              if (texto.charAt(i) == letra) {
+                  veces++;
+              }
+          }
+          System.out.println("La letra " + letra + " aparece " + veces + " veces.");
+      }
+  }
+hints:
+  - 'La idea: el primer error es de «contar una de más» con las posiciones; el segundo, de un String que crees que ha cambiado pero no.'
+  - 'Qué usar: las posiciones de un texto van de 0 a `length() - 1`. Y los String son inmutables: `toLowerCase()` devuelve un texto nuevo que hay que guardar.'
+  - 'El plan: cambia la condición del bucle a `i < texto.length()` y la línea suelta por `texto = texto.toLowerCase();`.'
+tests:
+  - input: "Ana\na\n"
+    output: "La letra a aparece 2 veces.\n"
+    sample: true
+  - input: "Programar en Java\nA\n"
+    output: "La letra a aparece 4 veces.\n"
+  - input: "hola\nz\n"
+    output: "La letra z aparece 0 veces.\n"
+  - input: "RRR rr\nr\n"
+    output: "La letra r aparece 5 veces.\n"

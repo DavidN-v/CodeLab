@@ -1,0 +1,170 @@
+title: Transferencias con transacciones
+summary: Agrupa dos actualizaciones para que se apliquen todas o ninguna.
+difficulty: HARD
+statement: |
+  Hay una tabla `cuentas (titular, saldo)` con la restricción `CHECK (saldo >= 0)`, así que la base de datos rechaza cualquier actualización que deje un saldo negativo.
+
+  Implementa `transferir(Connection c, String origen, String destino, int cantidad)` usando una **transacción**:
+
+  - Si el origen no tiene saldo suficiente (la base de datos lanzará una `SQLException`) o el destino no existe (el `UPDATE` no afecta a ninguna fila), **ninguna** cuenta debe cambiar y el método debe lanzar `SQLException`.
+  - Si todo va bien, confirma los cambios.
+
+  La entrada empieza con las cuentas (`cuenta <titular> <saldo>`) y sigue con transferencias (`transferir <origen> <destino> <cantidad>`). El `main` escribe `ok` o `fallida` por cada transferencia y al final todos los saldos.
+starter: |
+  import java.sql.Connection;
+  import java.sql.DriverManager;
+  import java.sql.PreparedStatement;
+  import java.sql.ResultSet;
+  import java.sql.SQLException;
+  import java.sql.Statement;
+  import java.util.Scanner;
+
+  public class Main {
+      static void transferir(Connection c, String origen, String destino, int cantidad) throws SQLException {
+          // Sin transacción: si falla el segundo UPDATE, el primero ya se ha aplicado
+          try (PreparedStatement restar = c.prepareStatement("UPDATE cuentas SET saldo = saldo - ? WHERE titular = ?");
+               PreparedStatement sumar = c.prepareStatement("UPDATE cuentas SET saldo = saldo + ? WHERE titular = ?")) {
+              restar.setInt(1, cantidad);
+              restar.setString(2, origen);
+              restar.executeUpdate();
+              sumar.setInt(1, cantidad);
+              sumar.setString(2, destino);
+              if (sumar.executeUpdate() == 0) {
+                  throw new SQLException("Destino inexistente");
+              }
+          }
+      }
+
+      public static void main(String[] args) throws SQLException {
+          Scanner entrada = new Scanner(System.in);
+          try (Connection c = DriverManager.getConnection("jdbc:h2:mem:banco")) {
+              try (Statement s = c.createStatement()) {
+                  s.execute("CREATE TABLE cuentas (titular VARCHAR(20) PRIMARY KEY, saldo INT CHECK (saldo >= 0))");
+              }
+              while (entrada.hasNext()) {
+                  String orden = entrada.next();
+                  if (orden.equals("cuenta")) {
+                      try (PreparedStatement ps = c.prepareStatement("INSERT INTO cuentas VALUES (?, ?)")) {
+                          ps.setString(1, entrada.next());
+                          ps.setInt(2, entrada.nextInt());
+                          ps.executeUpdate();
+                      }
+                  } else {
+                      String origen = entrada.next();
+                      String destino = entrada.next();
+                      int cantidad = entrada.nextInt();
+                      try {
+                          transferir(c, origen, destino, cantidad);
+                          System.out.println("ok");
+                      } catch (SQLException e) {
+                          System.out.println("fallida");
+                      }
+                  }
+              }
+              try (Statement s = c.createStatement();
+                   ResultSet r = s.executeQuery("SELECT titular, saldo FROM cuentas ORDER BY titular")) {
+                  while (r.next()) {
+                      System.out.println(r.getString(1) + ": " + r.getInt(2));
+                  }
+              }
+          }
+      }
+  }
+solution: |
+  import java.sql.Connection;
+  import java.sql.DriverManager;
+  import java.sql.PreparedStatement;
+  import java.sql.ResultSet;
+  import java.sql.SQLException;
+  import java.sql.Statement;
+  import java.util.Scanner;
+
+  public class Main {
+      static void transferir(Connection c, String origen, String destino, int cantidad) throws SQLException {
+          c.setAutoCommit(false);
+          try (PreparedStatement restar = c.prepareStatement("UPDATE cuentas SET saldo = saldo - ? WHERE titular = ?");
+               PreparedStatement sumar = c.prepareStatement("UPDATE cuentas SET saldo = saldo + ? WHERE titular = ?")) {
+              restar.setInt(1, cantidad);
+              restar.setString(2, origen);
+              if (restar.executeUpdate() == 0) {
+                  throw new SQLException("Origen inexistente");
+              }
+              sumar.setInt(1, cantidad);
+              sumar.setString(2, destino);
+              if (sumar.executeUpdate() == 0) {
+                  throw new SQLException("Destino inexistente");
+              }
+              c.commit();
+          } catch (SQLException e) {
+              c.rollback();
+              throw e;
+          } finally {
+              c.setAutoCommit(true);
+          }
+      }
+
+      public static void main(String[] args) throws SQLException {
+          Scanner entrada = new Scanner(System.in);
+          try (Connection c = DriverManager.getConnection("jdbc:h2:mem:banco")) {
+              try (Statement s = c.createStatement()) {
+                  s.execute("CREATE TABLE cuentas (titular VARCHAR(20) PRIMARY KEY, saldo INT CHECK (saldo >= 0))");
+              }
+              while (entrada.hasNext()) {
+                  String orden = entrada.next();
+                  if (orden.equals("cuenta")) {
+                      try (PreparedStatement ps = c.prepareStatement("INSERT INTO cuentas VALUES (?, ?)")) {
+                          ps.setString(1, entrada.next());
+                          ps.setInt(2, entrada.nextInt());
+                          ps.executeUpdate();
+                      }
+                  } else {
+                      String origen = entrada.next();
+                      String destino = entrada.next();
+                      int cantidad = entrada.nextInt();
+                      try {
+                          transferir(c, origen, destino, cantidad);
+                          System.out.println("ok");
+                      } catch (SQLException e) {
+                          System.out.println("fallida");
+                      }
+                  }
+              }
+              try (Statement s = c.createStatement();
+                   ResultSet r = s.executeQuery("SELECT titular, saldo FROM cuentas ORDER BY titular")) {
+                  while (r.next()) {
+                      System.out.println(r.getString(1) + ": " + r.getInt(2));
+                  }
+              }
+          }
+      }
+  }
+hints:
+  - 'La idea: los dos `UPDATE` deben aplicarse juntos o no aplicarse ninguno. Si algo falla a mitad, hay que deshacer lo que ya se hizo.'
+  - 'Qué usar: `c.setAutoCommit(false)` para empezar la transacción, `c.commit()` para confirmar, `c.rollback()` para deshacer y un `finally` para volver a `setAutoCommit(true)`. Comprueba lo que devuelve `executeUpdate()`: 0 significa que esa cuenta no existe.'
+  - 'El plan: `setAutoCommit(false)`; dentro de un `try`, ejecuta la resta y la suma (si alguna afecta a 0 filas, lanza `SQLException`) y termina con `commit()`; en el `catch`, `rollback()` y relanza la excepción; en el `finally`, `setAutoCommit(true)`.'
+tests:
+  - input: |
+      cuenta ada 100
+      cuenta alan 50
+      transferir ada alan 30
+      transferir ada nadie 30
+      transferir alan ada 500
+    output: |
+      ok
+      fallida
+      fallida
+      ada: 70
+      alan: 80
+    sample: true
+  - input: |
+      cuenta a 10
+      cuenta b 0
+      transferir a b 10
+      transferir b a 5
+      transferir a b 6
+    output: |
+      ok
+      ok
+      fallida
+      a: 5
+      b: 5

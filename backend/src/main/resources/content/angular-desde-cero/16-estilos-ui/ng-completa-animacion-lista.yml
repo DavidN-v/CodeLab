@@ -1,0 +1,75 @@
+title: Tareas que entran y salen con suavidad
+summary: Añade animate.enter, animate.leave y respeta a quien prefiere menos movimiento.
+difficulty: MEDIUM
+kind: fill
+statement: |
+  En esta lista de tareas, cada tarea nueva debe **aparecer** con la clase `aparecer` y cada tarea quitada debe **desvanecerse** con la clase `desaparecer` antes de que Angular la borre. Además, quien haya pedido en su sistema operativo «reducir el movimiento» no debe ver ninguna animación.
+
+  Completa los tres huecos:
+
+  1. La parte del atributo que anima la **entrada**.
+  2. La parte del atributo que anima la **salida**.
+  3. La característica de `@media` que indica que el usuario prefiere menos movimiento.
+starter: |
+  // src/app/tareas/tareas.ts
+  import { Component, signal } from '@angular/core';
+
+  @Component({
+    selector: 'app-tareas',
+    template: `
+      <ul>
+        @for (tarea of tareas(); track tarea.id) {
+          <li animate.{{?}}="aparecer" animate.{{?}}="desaparecer">{{ tarea.texto }}</li>
+        }
+      </ul>
+    `,
+    styles: `
+      .aparecer { animation: entrar 300ms ease-out; }
+      .desaparecer { animation: salir 200ms ease-in forwards; }
+      @keyframes entrar { from { opacity: 0; } }
+      @keyframes salir { to { opacity: 0; } }
+      @media ({{?}}: reduce) {
+        .aparecer, .desaparecer { animation: none; }
+      }
+    `,
+  })
+  export class Tareas {
+    protected readonly tareas = signal([{ id: 1, texto: 'Regar las plantas' }]);
+  }
+solution: |
+  // src/app/tareas/tareas.ts
+  import { Component, signal } from '@angular/core';
+
+  @Component({
+    selector: 'app-tareas',
+    template: `
+      <ul>
+        @for (tarea of tareas(); track tarea.id) {
+          <li animate.enter="aparecer" animate.leave="desaparecer">{{ tarea.texto }}</li>
+        }
+      </ul>
+    `,
+    styles: `
+      .aparecer { animation: entrar 300ms ease-out; }
+      .desaparecer { animation: salir 200ms ease-in forwards; }
+      @keyframes entrar { from { opacity: 0; } }
+      @keyframes salir { to { opacity: 0; } }
+      @media (prefers-reduced-motion: reduce) {
+        .aparecer, .desaparecer { animation: none; }
+      }
+    `,
+  })
+  export class Tareas {
+    protected readonly tareas = signal([{ id: 1, texto: 'Regar las plantas' }]);
+  }
+answers:
+  - enter
+  - leave
+  - prefers-reduced-motion
+hints:
+  - 'La idea: Angular 22 tiene dos atributos especiales, uno para cuando el elemento entra en el DOM y otro para cuando va a salir. La tercera pieza es CSS puro: una consulta de medios sobre las preferencias del usuario.'
+  - 'Qué usar: los atributos son `animate.` seguido de «entrar» y «salir» en inglés. La característica de `@media` empieza por `prefers-` y habla de *motion*.'
+  - 'El plan: escribe `enter` en el primer hueco, `leave` en el segundo y `prefers-reduced-motion` en el tercero.'
+tests:
+  - output: 'Las tareas nuevas aparecen con un fundido, las quitadas se desvanecen antes de borrarse, y sin animación si el usuario pidió reducir el movimiento.'
+    sample: true

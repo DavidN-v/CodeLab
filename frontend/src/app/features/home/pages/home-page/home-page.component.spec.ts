@@ -16,8 +16,19 @@ const PYTHON: Language = {
   tagline: 'Sintaxis clara.',
   description: null,
   active: false,
+  category: 'LANGUAGE',
+  runnable: true,
 };
-const JAVA: Language = { ...PYTHON, id: 1, slug: 'java', name: 'Java', version: '21', active: true };
+const JAVA: Language = {
+  ...PYTHON,
+  id: 1,
+  slug: 'java',
+  name: 'Java',
+  version: '21',
+  active: true,
+  category: 'LANGUAGE',
+  runnable: true,
+};
 
 describe('HomePageComponent', () => {
   let fixture: ComponentFixture<HomePageComponent>;
@@ -50,7 +61,9 @@ describe('HomePageComponent', () => {
   });
 
   it('shows the failure inline and reloads on retry', async () => {
-    getLanguages.mockReturnValue(throwError(() => new AppError(0, 'NETWORK_ERROR', 'Sin conexión')));
+    getLanguages.mockReturnValue(
+      throwError(() => new AppError(0, 'NETWORK_ERROR', 'Sin conexión')),
+    );
     await render();
     expect(element.querySelector('[role="alert"]')).not.toBeNull();
     expect(element.querySelector('.hero__actions .button--primary')).toBeNull();

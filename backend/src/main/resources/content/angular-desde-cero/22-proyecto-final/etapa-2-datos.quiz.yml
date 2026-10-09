@@ -1,0 +1,29 @@
+questions:
+  - type: choice
+    prompt: ¿Por qué `TareasStore` expone `tareas = this._tareas.asReadonly()` en vez del signal `_tareas` directamente?
+    options:
+      - Para que los componentes puedan leer las tareas pero solo cambiarlas a través de los métodos del servicio
+      - Porque los signals privados no se pueden leer desde la plantilla
+      - Para que la lista se cargue más rápido
+    answer: 0
+    explanation: 'Con la versión de solo lectura nadie puede hacer `set` desde fuera. Todos los cambios pasan por `agregar`, `alternar` y `borrar`, así el estado es predecible.'
+  - type: output
+    prompt: Con las tres tareas del JSON cargadas (una hecha y dos pendientes), el usuario marca «Estudiar signals» y después pulsa el filtro «Hechas». ¿Qué títulos se ven en la lista? Uno por línea.
+    code: |
+      [
+        { "id": 1, "titulo": "Comprar pan", "prioridad": "media", "hecha": true },
+        { "id": 2, "titulo": "Estudiar signals", "prioridad": "alta", "hecha": false },
+        { "id": 3, "titulo": "Regar las plantas", "prioridad": "baja", "hecha": false }
+      ]
+    answer: |
+      Comprar pan
+      Estudiar signals
+    explanation: '`alternar(2)` pone `hecha: true` en la tarea 2. El filtro «Hechas» deja las tareas con `hecha` verdadero, en el orden de la lista.'
+  - type: choice
+    prompt: ¿Qué hace el operador `??=` en `this.carga ??= firstValueFrom(...)`?
+    options:
+      - Asigna la promesa solo si `carga` todavía es `null`, así el JSON se pide una sola vez
+      - Compara `carga` con la promesa
+      - Asigna siempre una promesa nueva
+    answer: 0
+    explanation: '`a ??= b` significa «si `a` es `null` o `undefined`, asígnale `b`». La segunda llamada a `cargar()` reutiliza la misma promesa.'

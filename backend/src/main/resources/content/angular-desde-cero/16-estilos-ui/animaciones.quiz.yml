@@ -1,0 +1,25 @@
+questions:
+  - type: choice
+    prompt: ¿Qué hace Angular con `<li animate.leave="desaparecer">` cuando ese elemento tiene que salir?
+    options:
+      - Le pone la clase `desaparecer` y espera a que termine su animación CSS antes de borrarlo
+      - Lo borra al instante y después ejecuta la animación
+      - Lo oculta con `display:none` pero lo deja en el DOM
+    answer: 0
+    explanation: 'Sin `animate.leave`, Angular borra el elemento inmediatamente y no hay tiempo para animar. Con él, añade la clase, espera al final de la animación y solo entonces lo quita.'
+  - type: choice
+    prompt: Usas `(animate.leave)="alSalir($event)"` con una animación hecha en JavaScript. ¿Qué tienes que hacer al terminar tu animación?
+    options:
+      - Llamar a `$event.animationComplete()` para que Angular borre el elemento
+      - Borrar tú el elemento con `remove()`
+      - Nada, Angular sabe cuándo acaba cualquier animación
+    answer: 0
+    explanation: 'Con la forma de evento, Angular no puede saber cuándo acaba tu animación. `animationComplete()` es tu aviso. Si nunca la llamas, Angular lo borra pasado un tiempo máximo, pero tu animación quedará cortada o la espera será larga.'
+  - type: choice
+    prompt: 'Abres un proyecto antiguo con `trigger()`, `transition()` y `animations: [...]` en `@Component`. ¿Qué sabes de esa API en Angular 22?'
+    options:
+      - 'Es `@angular/animations`, que está obsoleto: lo recomendado es migrar a `animate.enter`/`animate.leave`'
+      - Es la forma moderna; `animate.enter` es la antigua
+      - Es una librería de terceros sin relación con Angular
+    answer: 0
+    explanation: 'Desde Angular 20.2 `@angular/animations` está marcado como obsoleto, y el campo `animations` de `@Component` anuncia su eliminación en la versión 23. Los proyectos nuevos de Angular 22 ya no lo instalan.'

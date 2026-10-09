@@ -1,0 +1,51 @@
+title: Predice las plazas libres
+summary: Sigue un @let, un @if con @else if y un @switch antes y después de un clic.
+difficulty: MEDIUM
+kind: predict
+statement: |
+  La página de un curso muestra cuántas plazas quedan y su nivel. La persona pulsa **Inscribirme una vez**.
+
+  Escribe el texto que se ve **después de ese clic**, una línea por elemento (cada `p` y el `button`), en orden.
+starter: |
+  // src/app/plazas/plazas.ts
+  import { Component, signal } from '@angular/core';
+
+  type Nivel = 'basico' | 'medio' | 'avanzado';
+
+  @Component({
+    selector: 'app-plazas',
+    template: `
+      @let restantes = maximo - inscritos();
+      @if (restantes === 0) {
+        <p>Curso completo</p>
+      } @else if (restantes < 3) {
+        <p>¡Últimas {{ restantes }} plazas!</p>
+      } @else {
+        <p>Quedan {{ restantes }} plazas</p>
+      }
+      @switch (nivel()) {
+        @case ('basico') { <p>Nivel: principiante</p> }
+        @case ('medio') { <p>Nivel: intermedio</p> }
+        @default { <p>Nivel: experto</p> }
+      }
+      <button (click)="inscribir()">Inscribirme</button>
+    `,
+  })
+  export class Plazas {
+    protected readonly maximo = 10;
+    protected readonly inscritos = signal(7);
+    protected readonly nivel = signal<Nivel>('avanzado');
+
+    protected inscribir(): void {
+      this.inscritos.update((n) => n + 1);
+    }
+  }
+hints:
+  - 'La idea: primero calcula cuántos inscritos hay tras el clic; con eso, `@let` da las plazas restantes y el `@if` elige una sola rama.'
+  - 'Qué usar: `update` suma 1 a 7. Las ramas del `@if` se miran en orden. En el `@switch`, si ningún `@case` coincide, gana `@default`.'
+  - 'El plan: inscritos = 8 → restantes = 10 - 8 = 2 → ¿2 === 0? no; ¿2 < 3? sí. Nivel ''avanzado'' no es ni ''basico'' ni ''medio''. Y el botón siempre está.'
+tests:
+  - output: |
+      ¡Últimas 2 plazas!
+      Nivel: experto
+      Inscribirme

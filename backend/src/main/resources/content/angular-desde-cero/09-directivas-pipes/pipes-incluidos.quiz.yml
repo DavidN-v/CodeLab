@@ -1,0 +1,24 @@
+questions:
+  - type: output
+    prompt: Con el idioma por defecto (en-US), ¿qué texto muestra este párrafo?
+    code: |
+      <p>{{ 'hola mundo' | titlecase }} - {{ 0.5 | percent }}</p>
+    answer: |
+      Hola Mundo - 50%
+    explanation: '`titlecase` pone en mayúscula la primera letra de cada palabra y `percent` multiplica por 100 y añade el símbolo `%`.'
+  - type: choice
+    prompt: 'Si `stock = { zumo: 2, agua: 5 }`, ¿en qué orden pinta `@for (p of stock | keyvalue; track p.key)` los pares?'
+    options:
+      - 'Primero `agua`, después `zumo`'
+      - 'Primero `zumo`, después `agua`'
+      - Depende del navegador
+    answer: 0
+    explanation: '`keyvalue` ordena los pares por clave, alfabéticamente, salvo que le pases otra función de comparación.'
+  - type: choice
+    prompt: ¿Qué hace falta para que `{{ 1234.5 | currency }}` muestre `1.234,50 €`?
+    options:
+      - Registrar los datos de `es` y proveer `LOCALE_ID` con `'es'` y `DEFAULT_CURRENCY_CODE` con `'EUR'`
+      - Escribir el número como texto `'1.234,50'`
+      - Cambiar el atributo `lang` de `index.html` a `es`
+    answer: 0
+    explanation: 'Los pipes leen el idioma de `LOCALE_ID` (con sus datos registrados mediante `registerLocaleData`) y la moneda por defecto de `DEFAULT_CURRENCY_CODE`. El `lang` del HTML no les afecta.'

@@ -1,0 +1,63 @@
+title: Contadores y filtro
+summary: Predice qué muestra la lista de Mis tareas con un filtro y estado derivado.
+difficulty: EASY
+kind: predict
+statement: |
+  Esta es una versión reducida de la lista de **Mis tareas**, con las tareas ya cargadas y el filtro empezando en `'pendientes'`.
+
+  Escribe el texto que se ve en la página, **una línea por elemento** (`p` y cada `li`), en orden.
+starter: |
+  import { Component, computed, signal } from '@angular/core';
+
+  interface Tarea {
+    id: number;
+    titulo: string;
+    hecha: boolean;
+  }
+
+  @Component({
+    selector: 'app-lista-tareas',
+    template: `
+      <p>Pendientes: {{ pendientes() }} · Hechas: {{ hechas() }}</p>
+      <ul>
+        @for (tarea of visibles(); track tarea.id) {
+          <li>{{ tarea.titulo }}</li>
+        } @empty {
+          <li>No hay tareas en esta vista.</li>
+        }
+      </ul>
+    `,
+  })
+  export class ListaTareas {
+    private readonly tareas = signal<Tarea[]>([
+      { id: 1, titulo: 'Comprar pan', hecha: true },
+      { id: 2, titulo: 'Estudiar signals', hecha: false },
+      { id: 3, titulo: 'Regar las plantas', hecha: false },
+      { id: 4, titulo: 'Pagar la luz', hecha: true },
+    ]);
+    protected readonly filtro = signal<'todas' | 'pendientes' | 'hechas'>('pendientes');
+
+    protected readonly pendientes = computed(() => this.tareas().filter((t) => !t.hecha).length);
+    protected readonly hechas = computed(() => this.tareas().length - this.pendientes());
+
+    protected readonly visibles = computed(() => {
+      const tareas = this.tareas();
+      switch (this.filtro()) {
+        case 'pendientes':
+          return tareas.filter((t) => !t.hecha);
+        case 'hechas':
+          return tareas.filter((t) => t.hecha);
+        default:
+          return tareas;
+      }
+    });
+  }
+hints:
+  - 'La idea: los contadores usan todas las tareas; la lista solo las que deja pasar el filtro.'
+  - 'Qué usar: cuenta las tareas con `hecha: false` para `pendientes`; `hechas` es el total menos ese número. El filtro `''pendientes''` deja las de `hecha: false`, en el mismo orden.'
+  - 'El plan: primera línea con los dos contadores; después un `li` por cada tarea pendiente.'
+tests:
+  - output: |
+      Pendientes: 2 · Hechas: 2
+      Estudiar signals
+      Regar las plantas

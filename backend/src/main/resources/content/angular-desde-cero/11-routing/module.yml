@@ -1,0 +1,28 @@
+lessons:
+  - slug: que-es-el-router
+    title: ¿Qué es el router?
+    summary: Por qué una SPA necesita un router, la tabla Routes, provideRouter, router-outlet y los títulos.
+    minutes: 8
+  - slug: enlaces-y-navegacion
+    title: Enlaces y navegación
+    summary: routerLink, routerLinkActive, rutas relativas y navegar desde el código con Router.
+    minutes: 8
+  - slug: rutas-con-parametros
+    title: Rutas con parámetros
+    summary: ':id, withComponentInputBinding, enlaces con datos y query params.'
+    minutes: 8
+  - slug: rutas-hijas-y-carga-diferida
+    title: Rutas hijas, redirecciones y carga diferida
+    summary: children, redirectTo, la página 404 con '**', loadComponent y loadChildren.
+    minutes: 10
+  - slug: guards-y-resolvers
+    title: Guards y resolvers
+    summary: Proteger rutas con guards funcionales y preparar datos con resolvers.
+    minutes: 10
+exercises:
+  - ng-predice-que-ruta
+  - ng-completar-rutas
+  - ng-menu-con-enlaces
+  - ng-ordenar-guard
+  - ng-rutas-diferidas
+  - ng-predice-orden-rutas

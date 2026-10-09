@@ -1,0 +1,76 @@
+title: Me gusta y comentarios
+summary: Completa los eventos, la variable de plantilla y la actualización del signal.
+difficulty: EASY
+kind: fill
+statement: |
+  Una publicación tiene dos acciones:
+
+  1. El botón ♥ suma 1 al contador `likes` **cada vez que se pulsa**.
+  2. El botón **Comentar** lee lo escrito en la caja de texto (a la que llamamos `comentario` en la plantilla) y lo muestra en el párrafo.
+
+  Completa los huecos. Si pulsas ♥ dos veces, escribes «Genial» y pulsas **Comentar**, se ve lo que indica el resultado esperado.
+starter: |
+  // src/app/me-gusta/me-gusta.ts
+  import { Component, signal } from '@angular/core';
+
+  @Component({
+    selector: 'app-me-gusta',
+    template: `
+      <button {{?}}="meGusta()">♥ {{ likes() }}</button>
+      <input {{?}} placeholder="Escribe un comentario" />
+      <button (click)="comentar({{?}}.value)">Comentar</button>
+      <p>{{ ultimo() }}</p>
+    `,
+  })
+  export class MeGusta {
+    protected readonly likes = signal(0);
+    protected readonly ultimo = signal('Sin comentarios');
+
+    protected meGusta(): void {
+      this.likes.{{?}}((n) => n + 1);
+    }
+
+    protected comentar(texto: string): void {
+      this.ultimo.set(`Último comentario: ${texto}`);
+    }
+  }
+answers:
+  - (click)
+  - '#comentario'
+  - comentario
+  - update
+solution: |
+  // src/app/me-gusta/me-gusta.ts
+  import { Component, signal } from '@angular/core';
+
+  @Component({
+    selector: 'app-me-gusta',
+    template: `
+      <button (click)="meGusta()">♥ {{ likes() }}</button>
+      <input #comentario placeholder="Escribe un comentario" />
+      <button (click)="comentar(comentario.value)">Comentar</button>
+      <p>{{ ultimo() }}</p>
+    `,
+  })
+  export class MeGusta {
+    protected readonly likes = signal(0);
+    protected readonly ultimo = signal('Sin comentarios');
+
+    protected meGusta(): void {
+      this.likes.update((n) => n + 1);
+    }
+
+    protected comentar(texto: string): void {
+      this.ultimo.set(`Último comentario: ${texto}`);
+    }
+  }
+hints:
+  - 'La idea: un hueco escucha el clic, otro le pone nombre a la caja de texto, otro usa ese nombre y el último cambia el signal a partir de su valor anterior.'
+  - 'Qué usar: los eventos van entre paréntesis; una variable de plantilla se declara con `#` y se usa sin él; el método de los signals que recibe una función con el valor anterior es `update`.'
+  - 'El plan: `(click)` en el botón ♥; `#comentario` en el input; `comentario` dentro de `comentar(...)`; y `update` en `meGusta()`.'
+tests:
+  - output: |
+      ♥ 2
+      Comentar
+      Último comentario: Genial
+    sample: true

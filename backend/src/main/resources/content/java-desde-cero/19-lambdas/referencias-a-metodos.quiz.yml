@@ -1,0 +1,37 @@
+questions:
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      import java.util.List;
+
+      public class Main {
+          public static void main(String[] args) {
+              List.of("sol", "Mar", "cielo").stream()
+                  .map(String::toUpperCase)
+                  .map(String::length)
+                  .forEach(System.out::println);
+          }
+      }
+    answer: |
+      3
+      3
+      5
+    explanation: Primero cada texto pasa a mayúsculas (no cambia su longitud) y luego se convierte en su número de letras. `System.out::println` imprime cada número en su línea.
+  - type: choice
+    prompt: ¿A qué lambda equivale `Integer::parseInt`?
+    options:
+      - '`s -> Integer.parseInt(s)`'
+      - '`() -> Integer.parseInt()`'
+      - '`s -> s.parseInt()`'
+      - '`Integer -> parseInt`'
+    answer: 0
+    explanation: '`parseInt` es un método estático de `Integer` que recibe un texto. La referencia pasa el parámetro de la lambda como argumento del método: `s -> Integer.parseInt(s)`.'
+  - type: choice
+    prompt: ¿Cuál de estas lambdas **no** se puede escribir como referencia a método?
+    options:
+      - '`s -> s.length() * 2`'
+      - '`s -> s.length()`'
+      - '`x -> System.out.println(x)`'
+      - '`() -> new ArrayList<>()`'
+    answer: 0
+    explanation: 'Una referencia a método solo sirve cuando la lambda se limita a llamar a un método. `s -> s.length() * 2` hace algo más (multiplicar), así que necesita la lambda. Las otras son `String::length`, `System.out::println` y `ArrayList::new`.'

@@ -1,0 +1,30 @@
+questions:
+  - type: output
+    prompt: 'Con `nota = signal(7)`, ¿qué texto se ve?'
+    code: |
+      @if (nota() >= 9) {
+        <p>Sobresaliente</p>
+      } @else if (nota() >= 5) {
+        <p>Aprobado</p>
+      } @else {
+        <p>Suspenso</p>
+      }
+    answer: |
+      Aprobado
+    explanation: 'Las condiciones se comprueban en orden. 7 no es mayor o igual que 9, pero sí que 5, así que se pinta «Aprobado» y la última rama ni se mira.'
+  - type: choice
+    prompt: 'Cuando la condición de un `@if` pasa de verdadera a falsa, ¿qué hace Angular con su contenido?'
+    options:
+      - Lo quita del DOM; si vuelve a ser verdadera, lo crea de nuevo
+      - Lo oculta con `display:none` pero lo deja en el DOM
+      - Nada hasta que recargas la página
+    answer: 0
+    explanation: '`@if` crea y destruye elementos. Lo que no toca no existe en la página, ni ocupa memoria ni se puede encontrar en el DOM.'
+  - type: choice
+    prompt: ¿Qué hace `@let total = precio() * cantidad();` en una plantilla?
+    options:
+      - Crea una variable de plantilla con ese cálculo para usarla más abajo
+      - Crea una nueva propiedad `total` en la clase del componente
+      - Pinta el resultado del cálculo en la página
+    answer: 0
+    explanation: '`@let` solo vive en la plantilla: no toca la clase y no pinta nada por sí mismo. Para verlo tienes que escribir `{{ total }}`.'

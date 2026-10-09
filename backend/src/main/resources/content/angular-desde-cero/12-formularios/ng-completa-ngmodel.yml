@@ -1,0 +1,76 @@
+title: Tu primer ngModel
+summary: Completa un formulario de plantilla que guarda la ciudad en un signal.
+difficulty: EASY
+kind: fill
+statement: |
+  Este componente pregunta a qué ciudad viajas y lo repite debajo mientras escribes. Al enviar el formulario, escribe la ciudad en la consola.
+
+  Completa los tres huecos:
+
+  1. Lo que hay que importar para poder usar `ngModel`.
+  2. El evento de Angular que se dispara al enviar el formulario.
+  3. El enlace **bidireccional** entre la caja y el signal `ciudad`.
+
+  Si la persona escribe «Lima», la página muestra:
+
+  ```text
+  Viajas a: Lima
+  ```
+starter: |
+  // src/app/viaje/viaje.ts
+  import { Component, signal } from '@angular/core';
+  import { FormsModule } from '@angular/forms';
+
+  @Component({
+    selector: 'app-viaje',
+    imports: [{{?}}],
+    template: `
+      <form ({{?}})="guardar()">
+        <input name="ciudad" {{?}}="ciudad" />
+        <button type="submit">Guardar</button>
+      </form>
+      <p>Viajas a: {{ ciudad() }}</p>
+    `,
+  })
+  export class Viaje {
+    protected readonly ciudad = signal('');
+
+    protected guardar() {
+      console.log('Destino:', this.ciudad());
+    }
+  }
+answers:
+  - FormsModule
+  - ngSubmit
+  - '[(ngModel)]'
+solution: |
+  // src/app/viaje/viaje.ts
+  import { Component, signal } from '@angular/core';
+  import { FormsModule } from '@angular/forms';
+
+  @Component({
+    selector: 'app-viaje',
+    imports: [FormsModule],
+    template: `
+      <form (ngSubmit)="guardar()">
+        <input name="ciudad" [(ngModel)]="ciudad" />
+        <button type="submit">Guardar</button>
+      </form>
+      <p>Viajas a: {{ ciudad() }}</p>
+    `,
+  })
+  export class Viaje {
+    protected readonly ciudad = signal('');
+
+    protected guardar() {
+      console.log('Destino:', this.ciudad());
+    }
+  }
+hints:
+  - 'La idea: el componente tiene que declarar qué directivas usa, la caja tiene que copiar su valor en los dos sentidos y el formulario tiene que avisar al enviarse.'
+  - 'Qué usar: el paquete de directivas de los formularios de plantilla ya está importado arriba; el enlace bidireccional es la «caja con plátano» `[( )]`; el evento de envío de Angular empieza por `ng`.'
+  - 'El plan: imports: [FormsModule]; en el form, (ngSubmit); en la caja, [(ngModel)]="ciudad".'
+tests:
+  - output: |
+      Viajas a: Lima
+    sample: true

@@ -1,0 +1,87 @@
+title: Carga con espera
+summary: Ordena una función async que espera un dato y maneja el error.
+difficulty: HARD
+kind: parsons
+statement: |
+  `buscarProducto` simula un servidor: tarda medio segundo y devuelve la gorra si el `id` es 1, o falla si no existe. Completa `mostrarProducto` para que **espere** el producto y escriba `nombre: precio €`; si la búsqueda falla, debe escribir `No se pudo cargar el producto`.
+
+  Con `mostrarProducto(1)` la consola muestra:
+
+  ```text
+  Cargando…
+  Gorra: 15 €
+  ```
+
+  Ordena las líneas. Cuidado: algunas sobran.
+starter: |
+  interface Producto {
+    nombre: string;
+    precio: number;
+  }
+
+  function buscarProducto(id: number): Promise<Producto> {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        if (id === 1) {
+          resolve({ nombre: 'Gorra', precio: 15 });
+        } else {
+          reject(new Error('No existe'));
+        }
+      }, 500);
+    });
+  }
+
+  async function mostrarProducto(id: number): Promise<void> {
+    console.log('Cargando…');
+  {{lines}}
+  }
+
+  mostrarProducto(1);
+lines:
+  - '  try {'
+  - '    const producto = await buscarProducto(id);'
+  - '    console.log(`${producto.nombre}: ${producto.precio} €`);'
+  - '  } catch {'
+  - '    console.log(''No se pudo cargar el producto'');'
+  - '  }'
+distractors:
+  - '    const producto = buscarProducto(id);'
+  - '    return ''No se pudo cargar el producto'';'
+solution: |
+  interface Producto {
+    nombre: string;
+    precio: number;
+  }
+
+  function buscarProducto(id: number): Promise<Producto> {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        if (id === 1) {
+          resolve({ nombre: 'Gorra', precio: 15 });
+        } else {
+          reject(new Error('No existe'));
+        }
+      }, 500);
+    });
+  }
+
+  async function mostrarProducto(id: number): Promise<void> {
+    console.log('Cargando…');
+    try {
+      const producto = await buscarProducto(id);
+      console.log(`${producto.nombre}: ${producto.precio} €`);
+    } catch {
+      console.log('No se pudo cargar el producto');
+    }
+  }
+
+  mostrarProducto(1);
+hints:
+  - 'La idea: hay que intentar algo que puede fallar (pedir el producto) y tener preparado un plan B por si falla.'
+  - 'Qué usar: un bloque `try { ... } catch { ... }`. Dentro del `try`, `await` para obtener el producto de verdad y no la promesa; dentro del `catch`, el mensaje de error.'
+  - 'El plan: abre el try; guarda en producto el resultado de await buscarProducto(id); escribe el nombre y el precio; cierra el try abriendo el catch; escribe el mensaje de error; cierra el catch.'
+tests:
+  - output: |
+      Cargando…
+      Gorra: 15 €
+    sample: true

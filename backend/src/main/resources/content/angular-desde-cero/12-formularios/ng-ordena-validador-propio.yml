@@ -1,0 +1,54 @@
+title: Un validador de código postal
+summary: Ordena las líneas de un validador propio que exige cinco dígitos.
+difficulty: MEDIUM
+kind: parsons
+statement: |
+  Quieres un validador `codigoPostal` para formularios reactivos: el valor debe tener **exactamente cinco dígitos** (como `28013`).
+
+  - Si el valor es correcto, el validador devuelve `null`.
+  - Si no, devuelve el error `{ codigoPostal: true }`.
+
+  Ordena las líneas del cuerpo de la función. Cuidado: hay dos líneas que sobran.
+
+  Con este validador en un campo que vale `"2801"`, `campo.errors` es:
+
+  ```text
+  { codigoPostal: true }
+  ```
+starter: |
+  // src/app/validadores.ts
+  import { AbstractControl, ValidationErrors } from '@angular/forms';
+
+  export function codigoPostal(control: AbstractControl): ValidationErrors | null {
+  {{lines}}
+  }
+solution: |
+  // src/app/validadores.ts
+  import { AbstractControl, ValidationErrors } from '@angular/forms';
+
+  export function codigoPostal(control: AbstractControl): ValidationErrors | null {
+    const valor = String(control.value ?? '');
+    const valido = /^\d{5}$/.test(valor);
+    if (valido) {
+      return null;
+    }
+    return { codigoPostal: true };
+  }
+lines:
+  - "  const valor = String(control.value ?? '');"
+  - '  const valido = /^\d{5}$/.test(valor);'
+  - '  if (valido) {'
+  - '    return null;'
+  - '  }'
+  - '  return { codigoPostal: true };'
+distractors:
+  - '    return { codigoPostal: false };'
+  - '  const valido = /^\d{5}$/.test(control);'
+hints:
+  - 'La idea: primero obtienes el texto del campo, después compruebas si cumple la regla y, según el resultado, devuelves «sin error» o el error.'
+  - 'Qué usar: `control.value` tiene el valor (conviértelo a texto por si llega `null`); la expresión regular `/^\d{5}$/` comprueba los cinco dígitos con `.test(texto)`; «sin error» se dice con `null`.'
+  - 'El plan: const valor = ...; const valido = ...test(valor); if (valido) { return null; } y, fuera del if, return { codigoPostal: true }.'
+tests:
+  - output: |
+      { codigoPostal: true }
+    sample: true

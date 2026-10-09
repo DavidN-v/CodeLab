@@ -1,0 +1,36 @@
+questions:
+  - type: choice
+    prompt: ¿Para qué sirve Maven?
+    options:
+      - Descargar las bibliotecas que usa el proyecto, compilarlo, ejecutar las pruebas y empaquetarlo
+      - Guardar el historial de cambios del código
+      - Escribir el código con autocompletado
+      - Ejecutar Java sin instalar el JDK
+    answer: 0
+    explanation: Maven gestiona dependencias y construcción (`mvn test`, `mvn package`). El historial lo guarda Git, y el autocompletado lo da el IDE.
+  - type: choice
+    prompt: ¿Qué herramienta te permite volver a una versión anterior de tu código?
+    options:
+      - Git
+      - Maven
+      - JUnit
+      - Spring Boot
+    answer: 0
+    explanation: Cada `commit` de Git es un punto guardado al que puedes volver, como guardar partida en un videojuego.
+  - type: output
+    prompt: 'Un último programa con piezas de todo el curso: ¿qué imprime?'
+    code: |
+      import java.util.List;
+
+      public class Main {
+          public static void main(String[] args) {
+              List<String> modulos = List.of("variables", "bucles", "streams", "pruebas");
+              long largos = modulos.stream().filter(m -> m.length() > 7).count();
+              System.out.println(modulos.size() + " módulos, " + largos + " con nombre largo");
+              System.out.println("¡Enhorabuena!");
+          }
+      }
+    answer: |
+      4 módulos, 1 con nombre largo
+      ¡Enhorabuena!
+    explanation: 'De los cuatro nombres, solo «variables» (9 letras) tiene más de 7. «streams» y «pruebas» tienen exactamente 7, y `> 7` no incluye el 7.'

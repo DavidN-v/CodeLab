@@ -1,0 +1,90 @@
+title: Un formulario reactivo de producto
+summary: Conecta un FormGroup con su plantilla y añade un validador de mínimo.
+difficulty: MEDIUM
+kind: fill
+statement: |
+  Este formulario da de alta un producto con nombre y precio. El nombre es obligatorio y el precio debe ser **como mínimo 1**. Al enviarlo, se llama a `guardar()`.
+
+  Completa los cuatro huecos, en orden:
+
+  1. La directiva que conecta el `<form>` con el objeto `producto` de la clase.
+  2. El evento de envío de Angular.
+  3. La directiva que conecta la caja del nombre con el campo `nombre`.
+  4. El validador incluido que exige un valor mínimo.
+
+  Con el nombre «Café» y el precio 3, al enviar la consola muestra:
+
+  ```text
+  Guardado: Café, 3
+  ```
+starter: |
+  // src/app/alta-producto/alta-producto.ts
+  import { Component, inject } from '@angular/core';
+  import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+
+  @Component({
+    selector: 'app-alta-producto',
+    imports: [ReactiveFormsModule],
+    template: `
+      <form [{{?}}]="producto" ({{?}})="guardar()">
+        <input {{?}}="nombre" />
+        <input formControlName="precio" type="number" />
+        <button type="submit" [disabled]="producto.invalid">Guardar</button>
+      </form>
+    `,
+  })
+  export class AltaProducto {
+    private readonly fb = inject(NonNullableFormBuilder);
+
+    protected readonly producto = this.fb.group({
+      nombre: ['', Validators.required],
+      precio: [0, Validators.{{?}}(1)],
+    });
+
+    protected guardar() {
+      const { nombre, precio } = this.producto.getRawValue();
+      console.log(`Guardado: ${nombre}, ${precio}`);
+    }
+  }
+answers:
+  - formGroup
+  - ngSubmit
+  - formControlName
+  - min
+solution: |
+  // src/app/alta-producto/alta-producto.ts
+  import { Component, inject } from '@angular/core';
+  import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+
+  @Component({
+    selector: 'app-alta-producto',
+    imports: [ReactiveFormsModule],
+    template: `
+      <form [formGroup]="producto" (ngSubmit)="guardar()">
+        <input formControlName="nombre" />
+        <input formControlName="precio" type="number" />
+        <button type="submit" [disabled]="producto.invalid">Guardar</button>
+      </form>
+    `,
+  })
+  export class AltaProducto {
+    private readonly fb = inject(NonNullableFormBuilder);
+
+    protected readonly producto = this.fb.group({
+      nombre: ['', Validators.required],
+      precio: [0, Validators.min(1)],
+    });
+
+    protected guardar() {
+      const { nombre, precio } = this.producto.getRawValue();
+      console.log(`Guardado: ${nombre}, ${precio}`);
+    }
+  }
+hints:
+  - 'La idea: el formulario ya existe en la clase; falta engancharlo al HTML (el formulario entero y cada caja) y poner la regla del precio.'
+  - 'Qué usar: `ReactiveFormsModule` trae una directiva para el `<form>` (va entre corchetes porque recibe un objeto) y otra para cada campo (recibe el nombre como texto). En `Validators` hay `min` y `max`.'
+  - 'El plan: [formGroup]="producto", (ngSubmit)="guardar()", formControlName="nombre" y Validators.min(1).'
+tests:
+  - output: |
+      Guardado: Café, 3
+    sample: true

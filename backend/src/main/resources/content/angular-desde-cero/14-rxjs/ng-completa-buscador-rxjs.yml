@@ -1,0 +1,90 @@
+title: El buscador que no satura
+summary: Completa la tubería de un buscador con debounceTime, distinctUntilChanged y switchMap.
+difficulty: MEDIUM
+kind: fill
+statement: |
+  Este buscador de libros debe:
+
+  1. Esperar a que la persona deje de teclear **300 ms** antes de buscar.
+  2. No repetir la búsqueda si el texto es **igual al anterior**.
+  3. Lanzar la petición y **cancelar la anterior** si llega un texto nuevo.
+
+  Completa los tres operadores, en ese orden. Si busca «dune» y la API devuelve un libro, la página muestra:
+
+  ```text
+  Dune
+  ```
+starter: |
+  // src/app/libros/buscador-libros.ts
+  import { Component, inject } from '@angular/core';
+  import { toSignal } from '@angular/core/rxjs-interop';
+  import { FormControl, ReactiveFormsModule } from '@angular/forms';
+  import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
+  import { LibrosApi } from './libros-api';
+
+  @Component({
+    selector: 'app-buscador-libros',
+    imports: [ReactiveFormsModule],
+    template: `
+      <input [formControl]="texto" />
+      @for (libro of libros(); track libro.id) {
+        <p>{{ libro.titulo }}</p>
+      }
+    `,
+  })
+  export class BuscadorLibros {
+    private readonly api = inject(LibrosApi);
+    protected readonly texto = new FormControl('', { nonNullable: true });
+
+    protected readonly libros = toSignal(
+      this.texto.valueChanges.pipe(
+        {{?}}(300),
+        {{?}}(),
+        {{?}}((t) => this.api.buscar(t)),
+      ),
+      { initialValue: [] },
+    );
+  }
+answers:
+  - debounceTime
+  - distinctUntilChanged
+  - switchMap
+solution: |
+  // src/app/libros/buscador-libros.ts
+  import { Component, inject } from '@angular/core';
+  import { toSignal } from '@angular/core/rxjs-interop';
+  import { FormControl, ReactiveFormsModule } from '@angular/forms';
+  import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
+  import { LibrosApi } from './libros-api';
+
+  @Component({
+    selector: 'app-buscador-libros',
+    imports: [ReactiveFormsModule],
+    template: `
+      <input [formControl]="texto" />
+      @for (libro of libros(); track libro.id) {
+        <p>{{ libro.titulo }}</p>
+      }
+    `,
+  })
+  export class BuscadorLibros {
+    private readonly api = inject(LibrosApi);
+    protected readonly texto = new FormControl('', { nonNullable: true });
+
+    protected readonly libros = toSignal(
+      this.texto.valueChanges.pipe(
+        debounceTime(300),
+        distinctUntilChanged(),
+        switchMap((t) => this.api.buscar(t)),
+      ),
+      { initialValue: [] },
+    );
+  }
+hints:
+  - 'La idea: tres estaciones en la cinta: una que espera la calma, otra que descarta repetidos y otra que convierte el texto en una petición cancelable.'
+  - 'Qué usar: los tres operadores ya están importados de `rxjs`; el primero recibe milisegundos, el segundo no recibe nada y el tercero recibe una función que devuelve un Observable.'
+  - 'El plan: debounceTime(300), distinctUntilChanged(), switchMap((t) => ...).'
+tests:
+  - output: |
+      Dune
+    sample: true

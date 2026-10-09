@@ -1,0 +1,28 @@
+lessons:
+  - slug: por-que-servicios
+    title: ¿Por qué servicios?
+    summary: Sacar datos y lógica compartidos de los componentes con @Service() y ng generate service.
+    minutes: 8
+  - slug: inject-y-el-inyector
+    title: inject() y el inyector
+    summary: Qué es la inyección de dependencias, el inyector raíz, @Service frente a @Injectable y el contexto de inyección.
+    minutes: 8
+  - slug: jerarquia-de-inyectores
+    title: El árbol de inyectores
+    summary: Inyector raíz e inyectores de componente, cómo busca Angular y cuántas instancias hay.
+    minutes: 9
+  - slug: proveedores-y-tokens
+    title: Proveedores e InjectionToken
+    summary: useClass, useValue, useFactory, useExisting, tokens de configuración y funciones provide*.
+    minutes: 9
+  - slug: probar-con-dobles
+    title: Probar con dobles
+    summary: Sustituir servicios por objetos falsos en las pruebas gracias a la inyección de dependencias.
+    minutes: 7
+exercises:
+  - ng-predice-numerador
+  - ng-inyectar-servicio
+  - ng-predice-saludador
+  - ng-token-configuracion
+  - ng-predice-grupos
+  - ng-test-con-doble

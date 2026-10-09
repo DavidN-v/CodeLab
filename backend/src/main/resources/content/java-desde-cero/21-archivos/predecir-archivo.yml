@@ -1,0 +1,40 @@
+title: ¿Qué queda en el archivo?
+summary: Sigue escrituras con y sin APPEND y predice el resultado.
+difficulty: EASY
+kind: predict
+statement: |
+  Este programa escribe cuatro veces en el mismo archivo y después lo lee. Escribe **exactamente** lo que imprime.
+
+  Recuerda:
+
+  - `Files.writeString` sin opciones **sobrescribe** el archivo.
+  - Con `StandardOpenOption.APPEND`, **añade** al final.
+  - `Files.size` cuenta bytes: cada letra sin tilde ocupa 1 y cada salto de línea `\n` también ocupa 1.
+starter: |
+  import java.io.IOException;
+  import java.nio.file.Files;
+  import java.nio.file.Path;
+  import java.nio.file.StandardOpenOption;
+  import java.util.List;
+
+  public class Main {
+      public static void main(String[] args) throws IOException {
+          Path nota = Path.of("nota.txt");
+          Files.writeString(nota, "uno\n");
+          Files.writeString(nota, "dos\n", StandardOpenOption.APPEND);
+          Files.writeString(nota, "tres\n");
+          Files.writeString(nota, "cuatro\n", StandardOpenOption.APPEND);
+
+          List<String> lineas = Files.readAllLines(nota);
+          System.out.println(lineas);
+          System.out.println(lineas.size() + " líneas, " + Files.size(nota) + " bytes");
+      }
+  }
+hints:
+  - 'La idea: imagina el contenido del archivo después de cada escritura, como una hoja que unas veces se arranca y otras se sigue escribiendo.'
+  - 'Qué usar: sin `APPEND` el archivo se vacía antes de escribir; `readAllLines` devuelve una lista con una entrada por línea, sin el `\n`.'
+  - 'El plan: tras la tercera escritura solo queda `tres`; la cuarta añade `cuatro`. Para el tamaño cuenta las letras de `tres` y `cuatro` y suma un byte por cada salto de línea.'
+tests:
+  - output: |
+      [tres, cuatro]
+      2 líneas, 12 bytes

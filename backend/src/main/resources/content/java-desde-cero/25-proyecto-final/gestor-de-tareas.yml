@@ -1,0 +1,189 @@
+title: Gestor de tareas
+summary: Una aplicación completa de consola con modelo, reglas, consultas y errores.
+difficulty: HARD
+statement: |
+  Construye un gestor de tareas que procese órdenes, una por línea, con los campos separados por `;`:
+
+  | Orden | Efecto y salida |
+  | --- | --- |
+  | `añadir;<título>;<prioridad>;<límite>` | Añade una tarea pendiente con el siguiente id (empieza en 1). La prioridad es `alta`, `media` o `baja`; el límite (fecha `AAAA-MM-DD`) es opcional. Escribe `Añadida #<id>`. |
+  | `completar;<id>` | Marca la tarea como completada. Escribe `Completada #<id>`. |
+  | `pendientes` | Escribe las tareas pendientes ordenadas por prioridad (alta primero), después por fecha límite (las que no tienen van al final) y después por id. |
+  | `vencidas;<fecha>` | Igual, pero solo las pendientes con límite **anterior** a esa fecha. |
+  | `resumen` | Escribe `Pendientes: <n> (alta <a>, media <m>, baja <b>), completadas: <c>`. |
+
+  Cada tarea se escribe como `#<id> [<PRIORIDAD>] <título>` y, si tiene límite, ` (vence <fecha>)` al final.
+
+  Errores (el programa sigue con la siguiente orden):
+
+  - Título vacío → `Error: título vacío`
+  - Prioridad desconocida → `Error: prioridad no válida`
+  - Completar un id inexistente → `Error: no existe la tarea #<id>`
+  - Completar una tarea ya completada → `Error: la tarea #<id> ya está completada`
+  - Cualquier otra orden → `Error: orden desconocida`
+starter: |
+  import java.time.LocalDate;
+  import java.util.Comparator;
+  import java.util.LinkedHashMap;
+  import java.util.Map;
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          while (entrada.hasNextLine()) {
+              String[] partes = entrada.nextLine().split(";", -1);
+          }
+      }
+  }
+solution: |
+  import java.time.LocalDate;
+  import java.util.Comparator;
+  import java.util.LinkedHashMap;
+  import java.util.List;
+  import java.util.Map;
+  import java.util.Scanner;
+
+  enum Prioridad { ALTA, MEDIA, BAJA }
+
+  record Tarea(int id, String titulo, Prioridad prioridad, LocalDate limite, boolean completada) {
+      Tarea completar() {
+          return new Tarea(id, titulo, prioridad, limite, true);
+      }
+
+      @Override
+      public String toString() {
+          return "#" + id + " [" + prioridad + "] " + titulo + (limite == null ? "" : " (vence " + limite + ")");
+      }
+  }
+
+  class Gestor {
+      private static final Comparator<Tarea> ORDEN = Comparator.comparing(Tarea::prioridad)
+          .thenComparing(Tarea::limite, Comparator.nullsLast(Comparator.naturalOrder()))
+          .thenComparing(Tarea::id);
+
+      private final Map<Integer, Tarea> tareas = new LinkedHashMap<>();
+      private int siguienteId = 1;
+
+      int anadir(String titulo, String prioridad, String limite) {
+          if (titulo.isBlank()) {
+              throw new IllegalArgumentException("título vacío");
+          }
+          Prioridad p;
+          try {
+              p = Prioridad.valueOf(prioridad.strip().toUpperCase());
+          } catch (IllegalArgumentException e) {
+              throw new IllegalArgumentException("prioridad no válida");
+          }
+          LocalDate fecha = limite == null || limite.isBlank() ? null : LocalDate.parse(limite.strip());
+          int id = siguienteId++;
+          tareas.put(id, new Tarea(id, titulo.strip(), p, fecha, false));
+          return id;
+      }
+
+      void completar(int id) {
+          Tarea tarea = tareas.get(id);
+          if (tarea == null) {
+              throw new IllegalArgumentException("no existe la tarea #" + id);
+          }
+          if (tarea.completada()) {
+              throw new IllegalStateException("la tarea #" + id + " ya está completada");
+          }
+          tareas.put(id, tarea.completar());
+      }
+
+      List<Tarea> pendientes() {
+          return tareas.values().stream().filter(t -> !t.completada()).sorted(ORDEN).toList();
+      }
+
+      List<Tarea> vencidas(LocalDate fecha) {
+          return pendientes().stream().filter(t -> t.limite() != null && t.limite().isBefore(fecha)).toList();
+      }
+
+      String resumen() {
+          List<Tarea> pendientes = pendientes();
+          long completadas = tareas.size() - pendientes.size();
+          return "Pendientes: " + pendientes.size() + " (alta " + contar(pendientes, Prioridad.ALTA) + ", media "
+                  + contar(pendientes, Prioridad.MEDIA) + ", baja " + contar(pendientes, Prioridad.BAJA)
+                  + "), completadas: " + completadas;
+      }
+
+      private static long contar(List<Tarea> tareas, Prioridad prioridad) {
+          return tareas.stream().filter(t -> t.prioridad() == prioridad).count();
+      }
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          Gestor gestor = new Gestor();
+          while (entrada.hasNextLine()) {
+              String[] partes = entrada.nextLine().split(";", -1);
+              try {
+                  switch (partes[0].strip()) {
+                      case "añadir" -> System.out.println("Añadida #" + gestor.anadir(partes[1], partes[2],
+                              partes.length > 3 ? partes[3] : null));
+                      case "completar" -> {
+                          int id = Integer.parseInt(partes[1].strip());
+                          gestor.completar(id);
+                          System.out.println("Completada #" + id);
+                      }
+                      case "pendientes" -> gestor.pendientes().forEach(System.out::println);
+                      case "vencidas" -> gestor.vencidas(LocalDate.parse(partes[1].strip())).forEach(System.out::println);
+                      case "resumen" -> System.out.println(gestor.resumen());
+                      default -> System.out.println("Error: orden desconocida");
+                  }
+              } catch (IllegalArgumentException | IllegalStateException e) {
+                  System.out.println("Error: " + e.getMessage());
+              }
+          }
+      }
+  }
+hints:
+  - 'La idea: es el gestor de la lección «Construir el gestor de tareas», con sus propios mensajes. Ve paso a paso: primero el modelo, después las reglas y al final la lectura de órdenes. Comprueba cada orden con el ejemplo antes de pasar a la siguiente.'
+  - 'Qué usar: un `enum Prioridad { ALTA, MEDIA, BAJA }` (su orden natural ya es el de urgencia), un `record Tarea`, un `LinkedHashMap<Integer, Tarea>` y el comparador `Comparator.comparing(Tarea::prioridad).thenComparing(Tarea::limite, Comparator.nullsLast(Comparator.naturalOrder())).thenComparing(Tarea::id)`. Usa `split(";", -1)` para conservar un título vacío.'
+  - 'El plan: crea una clase `Gestor` cuyos métodos lancen excepciones con el mensaje exacto (`título vacío`, `prioridad no válida`, `no existe la tarea #<id>`…). En `main`, lee cada línea, decide la orden con un `switch` sobre `partes[0]` y envuélvelo en un `try`/`catch` que escriba `Error: ` + el mensaje.'
+tests:
+  - input: |
+      añadir;Estudiar streams;alta;2026-10-10
+      añadir;Comprar café;baja
+      añadir;Entregar proyecto;alta;2026-10-05
+      añadir;Llamar al banco;media;2026-10-01
+      completar;2
+      completar;2
+      completar;9
+      pendientes
+      vencidas;2026-10-07
+      resumen
+    output: |
+      Añadida #1
+      Añadida #2
+      Añadida #3
+      Añadida #4
+      Completada #2
+      Error: la tarea #2 ya está completada
+      Error: no existe la tarea #9
+      #3 [ALTA] Entregar proyecto (vence 2026-10-05)
+      #1 [ALTA] Estudiar streams (vence 2026-10-10)
+      #4 [MEDIA] Llamar al banco (vence 2026-10-01)
+      #3 [ALTA] Entregar proyecto (vence 2026-10-05)
+      #4 [MEDIA] Llamar al banco (vence 2026-10-01)
+      Pendientes: 3 (alta 2, media 1, baja 0), completadas: 1
+    sample: true
+  - input: |
+      añadir;;alta
+      añadir;Algo;urgente
+      borrar;1
+      añadir;Sin fecha;baja
+      añadir;Con fecha;baja;2027-01-01
+      pendientes
+      resumen
+    output: |
+      Error: título vacío
+      Error: prioridad no válida
+      Error: orden desconocida
+      Añadida #1
+      Añadida #2
+      #2 [BAJA] Con fecha (vence 2027-01-01)
+      #1 [BAJA] Sin fecha
+      Pendientes: 2 (alta 0, media 0, baja 2), completadas: 0

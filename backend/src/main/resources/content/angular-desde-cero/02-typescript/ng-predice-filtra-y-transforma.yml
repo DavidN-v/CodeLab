@@ -1,0 +1,33 @@
+title: Filtra y transforma
+summary: Predice el resultado de filter, map y forEach sobre una lista de productos.
+difficulty: MEDIUM
+kind: predict
+statement: |
+  La tienda quiere mostrar solo los productos con existencias, con 5 € de descuento. Lee el código y escribe **exactamente** lo que aparece en la consola, una línea por mensaje.
+starter: |
+  interface Producto {
+    nombre: string;
+    precio: number;
+    stock: number;
+  }
+
+  const productos: Producto[] = [
+    { nombre: 'Gorra', precio: 15, stock: 4 },
+    { nombre: 'Botas', precio: 80, stock: 0 },
+    { nombre: 'Camiseta', precio: 20, stock: 9 },
+  ];
+
+  const disponibles = productos.filter((p) => p.stock > 0);
+  const etiquetas = disponibles.map((p) => `${p.nombre}: ${p.precio - 5} €`);
+
+  console.log(disponibles.length);
+  etiquetas.forEach((e) => console.log(e));
+hints:
+  - 'La idea: el código hace dos pasos seguidos. Primero se queda con algunos productos y después convierte cada uno en un texto.'
+  - 'Qué usar: `filter` conserva los productos cuya función devuelve `true` (stock mayor que 0). `map` crea un texto por producto. `forEach` escribe cada texto en su línea.'
+  - 'El plan: las Botas no tienen stock, así que quedan 2 productos. Escribe ese número y después el texto de cada uno, con el precio menos 5.'
+tests:
+  - output: |
+      2
+      Gorra: 10 €
+      Camiseta: 15 €

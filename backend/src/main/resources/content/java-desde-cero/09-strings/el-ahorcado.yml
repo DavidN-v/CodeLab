@@ -1,0 +1,267 @@
+title: 'Proyecto: el ahorcado'
+summary: Programa el juego del ahorcado paso a paso con String, StringBuilder y métodos.
+difficulty: HARD
+kind: project
+statement: |
+  Vas a programar el clásico juego del **ahorcado**: hay una palabra secreta oculta con guiones bajos y el jugador va diciendo letras. Si acierta, la letra se descubre; si falla, pierde una vida. Tiene **6 vidas**.
+
+  Lo construirás **por pasos**. Ejecuta el programa al terminar cada uno.
+
+  ## La entrada
+
+  - La primera línea es la palabra secreta, en minúsculas y sin acentos (solo letras de la `a` a la `z`).
+  - Cada línea siguiente es un intento: una letra. Puede venir en mayúscula; trátala siempre como minúscula. Ignora las líneas vacías.
+  - Las pruebas siempre terminan la partida (ganando o perdiendo) antes de que se acaben las líneas. En cuanto la partida termina, deja de leer.
+
+  ## La salida
+
+  Al empezar, y después de **cada** intento, escribe dos líneas:
+
+  ```
+  Palabra: <palabra oculta>
+  Vidas: <vidas que quedan>
+  ```
+
+  La palabra oculta muestra cada letra ya descubierta y un `_` para las que faltan, **separadas por un espacio**. Por ejemplo, `casa` con la `a` descubierta se escribe `_ a _ a`.
+
+  Antes de esas dos líneas, cada intento escribe uno de estos mensajes (con la letra en minúscula):
+
+  | Situación | Mensaje |
+  | --- | --- |
+  | La letra ya se había probado antes (acertada o no) | `Ya habías probado la <letra>.` (no pierdes vida) |
+  | La letra está en la palabra | `¡Bien! La <letra> está en la palabra.` |
+  | La letra no está | `La <letra> no está. Pierdes una vida.` |
+
+  Si después de un intento ya no quedan `_`, escribe `¡Ganaste! La palabra era <palabra>.` y termina. Si las vidas llegan a 0, escribe `¡Ahorcado! La palabra era <palabra>.` y termina.
+
+  ## Ejemplo 1: ganar
+
+  Entrada:
+
+  ```
+  casa
+  a
+  x
+  C
+  a
+  s
+  ```
+
+  Salida:
+
+  ```
+  Palabra: _ _ _ _
+  Vidas: 6
+  ¡Bien! La a está en la palabra.
+  Palabra: _ a _ a
+  Vidas: 6
+  La x no está. Pierdes una vida.
+  Palabra: _ a _ a
+  Vidas: 5
+  ¡Bien! La c está en la palabra.
+  Palabra: c a _ a
+  Vidas: 5
+  Ya habías probado la a.
+  Palabra: c a _ a
+  Vidas: 5
+  ¡Bien! La s está en la palabra.
+  Palabra: c a s a
+  Vidas: 5
+  ¡Ganaste! La palabra era casa.
+  ```
+
+  ## Ejemplo 2: perder
+
+  Con la palabra `sol` y los intentos `a`, `e`, `i`, `u`, `b`, `c`, el jugador falla seis veces y la salida termina así:
+
+  ```
+  La c no está. Pierdes una vida.
+  Palabra: _ _ _
+  Vidas: 0
+  ¡Ahorcado! La palabra era sol.
+  ```
+
+  ## Paso 1: leer la palabra y preparar la partida
+
+  Lee la palabra secreta con `nextLine()`. Crea `int vidas = 6` y un `StringBuilder probadas` donde irás guardando todas las letras que se prueben.
+
+  ## Paso 2: el método `ocultar`
+
+  Escribe `static String ocultar(String secreta, String probadas)`: recorre la palabra y, para cada letra, pon la letra si está en `probadas` (`probadas.indexOf(c) >= 0`) o `_` si no. Separa con un espacio, sin espacio al final. Usa este método para escribir el estado inicial.
+
+  ## Paso 3: leer los intentos
+
+  Con `while (entrada.hasNextLine())`, lee cada línea, quítale los espacios con `strip()`, sáltala si está vacía y quédate con su primer carácter en minúscula (`Character.toLowerCase`).
+
+  ## Paso 4: decidir qué pasa con cada letra
+
+  Si ya está en `probadas`, es repetida. Si no, añádela a `probadas` y comprueba si está en la palabra (`secreta.indexOf(letra) >= 0`); si no está, resta una vida. Escribe el mensaje y después `Palabra:` y `Vidas:`.
+
+  ## Paso 5: el final de la partida
+
+  Escribe `static boolean completa(String oculta)`, que diga si ya no queda ningún `_`. Tras cada intento, si la palabra está completa o las vidas son 0, escribe el mensaje final y sal del bucle con `break`.
+starter: |
+  import java.util.Scanner;
+
+  public class Main {
+      // Paso 2: la palabra con _ en las letras que faltan, separadas por espacios
+      static String ocultar(String secreta, String probadas) {
+          return "";
+      }
+
+      // Paso 5: ¿quedan letras por descubrir?
+      static boolean completa(String oculta) {
+          return false;
+      }
+
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          // Paso 1: lee la palabra y prepara vidas y letras probadas
+
+          // Pasos 3, 4 y 5: un intento por línea
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  public class Main {
+      static String ocultar(String secreta, String probadas) {
+          StringBuilder oculta = new StringBuilder();
+          for (int i = 0; i < secreta.length(); i++) {
+              char c = secreta.charAt(i);
+              if (i > 0) {
+                  oculta.append(' ');
+              }
+              if (probadas.indexOf(c) >= 0) {
+                  oculta.append(c);
+              } else {
+                  oculta.append('_');
+              }
+          }
+          return oculta.toString();
+      }
+
+      static boolean completa(String oculta) {
+          return oculta.indexOf('_') < 0;
+      }
+
+      static void mostrar(String secreta, String probadas, int vidas) {
+          System.out.println("Palabra: " + ocultar(secreta, probadas));
+          System.out.println("Vidas: " + vidas);
+      }
+
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          String secreta = entrada.nextLine().strip();
+          int vidas = 6;
+          StringBuilder probadas = new StringBuilder();
+          mostrar(secreta, probadas.toString(), vidas);
+          while (entrada.hasNextLine()) {
+              String linea = entrada.nextLine().strip();
+              if (linea.isEmpty()) {
+                  continue;
+              }
+              char letra = Character.toLowerCase(linea.charAt(0));
+              if (probadas.indexOf(String.valueOf(letra)) >= 0) {
+                  System.out.println("Ya habías probado la " + letra + ".");
+              } else {
+                  probadas.append(letra);
+                  if (secreta.indexOf(letra) >= 0) {
+                      System.out.println("¡Bien! La " + letra + " está en la palabra.");
+                  } else {
+                      vidas--;
+                      System.out.println("La " + letra + " no está. Pierdes una vida.");
+                  }
+              }
+              mostrar(secreta, probadas.toString(), vidas);
+              if (completa(ocultar(secreta, probadas.toString()))) {
+                  System.out.println("¡Ganaste! La palabra era " + secreta + ".");
+                  break;
+              }
+              if (vidas == 0) {
+                  System.out.println("¡Ahorcado! La palabra era " + secreta + ".");
+                  break;
+              }
+          }
+      }
+  }
+hints:
+  - 'La idea: el estado de la partida son tres cosas: la palabra secreta (no cambia), las letras probadas (crece) y las vidas (baja). Todo lo que escribes se calcula a partir de esas tres.'
+  - 'Qué usar: un `StringBuilder` para las letras probadas, `indexOf(...) >= 0` para saber si una letra está en un texto, un método `ocultar` que construye la palabra con `_` y un bucle `while (entrada.hasNextLine())` que termina con `break`.'
+  - 'El plan: mostrar estado → bucle: leer letra → si `probadas` la contiene, «Ya habías probado»; si no, añadirla y, según `secreta.indexOf(letra) >= 0`, «¡Bien!» o restar vida → mostrar estado → si `ocultar(...)` no tiene `_`, ganaste y `break`; si `vidas == 0`, ahorcado y `break`.'
+tests:
+  - input: "casa\na\nx\nC\na\ns\n"
+    output: |
+      Palabra: _ _ _ _
+      Vidas: 6
+      ¡Bien! La a está en la palabra.
+      Palabra: _ a _ a
+      Vidas: 6
+      La x no está. Pierdes una vida.
+      Palabra: _ a _ a
+      Vidas: 5
+      ¡Bien! La c está en la palabra.
+      Palabra: c a _ a
+      Vidas: 5
+      Ya habías probado la a.
+      Palabra: c a _ a
+      Vidas: 5
+      ¡Bien! La s está en la palabra.
+      Palabra: c a s a
+      Vidas: 5
+      ¡Ganaste! La palabra era casa.
+    sample: true
+  - input: "sol\na\ne\ni\nu\nb\nc\nz\n"
+    output: |
+      Palabra: _ _ _
+      Vidas: 6
+      La a no está. Pierdes una vida.
+      Palabra: _ _ _
+      Vidas: 5
+      La e no está. Pierdes una vida.
+      Palabra: _ _ _
+      Vidas: 4
+      La i no está. Pierdes una vida.
+      Palabra: _ _ _
+      Vidas: 3
+      La u no está. Pierdes una vida.
+      Palabra: _ _ _
+      Vidas: 2
+      La b no está. Pierdes una vida.
+      Palabra: _ _ _
+      Vidas: 1
+      La c no está. Pierdes una vida.
+      Palabra: _ _ _
+      Vidas: 0
+      ¡Ahorcado! La palabra era sol.
+  - input: "java\nx\nx\n\nJ\nV\nb\na\n"
+    output: |
+      Palabra: _ _ _ _
+      Vidas: 6
+      La x no está. Pierdes una vida.
+      Palabra: _ _ _ _
+      Vidas: 5
+      Ya habías probado la x.
+      Palabra: _ _ _ _
+      Vidas: 5
+      ¡Bien! La j está en la palabra.
+      Palabra: j _ _ _
+      Vidas: 5
+      ¡Bien! La v está en la palabra.
+      Palabra: j _ v _
+      Vidas: 5
+      La b no está. Pierdes una vida.
+      Palabra: j _ v _
+      Vidas: 4
+      ¡Bien! La a está en la palabra.
+      Palabra: j a v a
+      Vidas: 4
+      ¡Ganaste! La palabra era java.
+  - input: "o\no\n"
+    output: |
+      Palabra: _
+      Vidas: 6
+      ¡Bien! La o está en la palabra.
+      Palabra: o
+      Vidas: 6
+      ¡Ganaste! La palabra era o.

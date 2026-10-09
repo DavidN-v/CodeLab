@@ -1,0 +1,28 @@
+lessons:
+  - slug: estructura-por-funcionalidad
+    title: Carpetas por funcionalidad
+    summary: core, shared y features; reglas de dependencia y nombres de Angular 22.
+    minutes: 9
+  - slug: presentacion-y-contenedores
+    title: Presentación, contenedores y capas
+    summary: Componentes que pintan, componentes que coordinan, y servicios de datos y de estado.
+    minutes: 9
+  - slug: librerias-y-monorepos
+    title: Librerías y monorepos
+    summary: ng generate library, public-api.ts, ng-packagr y Nx en panorama.
+    minutes: 8
+  - slug: seguridad
+    title: Seguridad en el frontend
+    summary: XSS, sanitización, innerHTML, bypassSecurityTrust, CSRF y por qué no hay secretos en el navegador.
+    minutes: 9
+  - slug: i18n-y-equipos
+    title: Varios idiomas y equipos grandes
+    summary: '@angular/localize en panorama y prácticas para escalar un equipo.'
+    minutes: 7
+exercises:
+  - ng-arq-texto-o-html
+  - ng-arq-tarjeta-presentacion
+  - ng-arq-rutas-de-feature
+  - ng-arq-pagina-contenedora
+  - ng-arq-public-api
+  - ng-arq-store-del-carrito

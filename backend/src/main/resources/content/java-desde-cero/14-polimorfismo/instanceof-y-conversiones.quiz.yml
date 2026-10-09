@@ -1,0 +1,47 @@
+questions:
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      class Figura {}
+
+      class Circulo extends Figura {}
+
+      class Cuadrado extends Figura {}
+
+      public class Main {
+          static String que(Figura f) {
+              if (f instanceof Circulo c) {
+                  return "círculo";
+              } else if (f instanceof Cuadrado q) {
+                  return "cuadrado";
+              }
+              return "otra";
+          }
+
+          public static void main(String[] args) {
+              System.out.println(que(new Cuadrado()));
+              System.out.println(que(new Figura()));
+              System.out.println(que(new Circulo()));
+          }
+      }
+    answer: |
+      cuadrado
+      otra
+      círculo
+    explanation: '`instanceof` mira el tipo real del objeto. Un `Cuadrado` entra en la segunda rama; una `Figura` genérica no es ni círculo ni cuadrado, así que llega al `return "otra"`; un `Circulo` entra en la primera.'
+  - type: choice
+    prompt: '`Animal b = new Gato();` y después `Perro p = (Perro) b;`. ¿Qué ocurre?'
+    options:
+      - Compila, pero al ejecutar lanza `ClassCastException`
+      - No compila
+      - Funciona y convierte el gato en un perro
+    answer: 0
+    explanation: El compilador lo acepta porque una variable `Animal` podría guardar un perro. Pero al ejecutar Java ve que el objeto es un `Gato` y lanza `ClassCastException`. Un cast nunca transforma el objeto.
+  - type: choice
+    prompt: ¿Cuál de estas conversiones es automática y siempre segura?
+    options:
+      - '`Animal a = new Perro();` (de hijo a padre)'
+      - '`Perro p = (Perro) animal;` (de padre a hijo)'
+      - Ninguna de las dos necesita cuidado
+    answer: 0
+    explanation: Todo perro es un animal, así que subir (upcasting) siempre es correcto y no necesita nada. Bajar (downcasting) necesita el `(Perro)` y solo funciona si el objeto realmente es un perro; por eso conviene comprobarlo antes con `instanceof`.

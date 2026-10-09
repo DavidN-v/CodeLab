@@ -1,0 +1,102 @@
+title: La pila que no apila
+summary: Arregla una pila genérica que no compila y devuelve los elementos en mal orden.
+difficulty: MEDIUM
+kind: fix
+statement: |
+  Este programa usa una clase genérica `Pila<T>` para invertir una secuencia de números enteros: los apila todos y después los desapila, y una pila siempre devuelve primero el **último** que entró.
+
+  Con la entrada `1 2 3` debería escribir:
+
+  ```
+  Al revés: 3 2 1
+  ```
+
+  **El síntoma:** el programa ni siquiera compila. Y cuando consigas que compile, verás que escribe los números en el mismo orden en que entraron. Encuentra los dos errores y corrígelos.
+starter: |
+  import java.util.ArrayList;
+  import java.util.List;
+  import java.util.Scanner;
+
+  class Pila<T> {
+      private final List<T> elementos = new ArrayList<>();
+
+      void apilar(T elemento) {
+          elementos.add(elemento);
+      }
+
+      T desapilar() {
+          return elementos.remove(0);
+      }
+
+      boolean estaVacia() {
+          return elementos.isEmpty();
+      }
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          Pila<int> pila = new Pila<>();
+          while (entrada.hasNextInt()) {
+              pila.apilar(entrada.nextInt());
+          }
+          StringBuilder salida = new StringBuilder();
+          while (!pila.estaVacia()) {
+              salida.append(pila.desapilar()).append(" ");
+          }
+          System.out.println("Al revés: " + salida.toString().strip());
+      }
+  }
+solution: |
+  import java.util.ArrayList;
+  import java.util.List;
+  import java.util.Scanner;
+
+  class Pila<T> {
+      private final List<T> elementos = new ArrayList<>();
+
+      void apilar(T elemento) {
+          elementos.add(elemento);
+      }
+
+      T desapilar() {
+          return elementos.remove(elementos.size() - 1);
+      }
+
+      boolean estaVacia() {
+          return elementos.isEmpty();
+      }
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          Pila<Integer> pila = new Pila<>();
+          while (entrada.hasNextInt()) {
+              pila.apilar(entrada.nextInt());
+          }
+          StringBuilder salida = new StringBuilder();
+          while (!pila.estaVacia()) {
+              salida.append(pila.desapilar()).append(" ");
+          }
+          System.out.println("Al revés: " + salida.toString().strip());
+      }
+  }
+hints:
+  - 'La idea: un error es de compilación y está en el `main`; el otro es de lógica y está en la clase `Pila`: saca el elemento equivocado.'
+  - 'Qué usar: recuerda que los parámetros de tipo no admiten primitivos y que `apilar` añade siempre al **final** de la lista con `add`.'
+  - 'El plan: cambia `Pila<int>` por `Pila<Integer>`. En `desapilar`, en vez de quitar la posición 0 (el primero que entró), quita la última: `elementos.remove(elementos.size() - 1)`.'
+tests:
+  - input: "1 2 3\n"
+    output: |
+      Al revés: 3 2 1
+    sample: true
+  - input: "10 -4\n"
+    output: |
+      Al revés: -4 10
+  - input: "7\n"
+    output: |
+      Al revés: 7
+  - input: "5 5 9 1\n"
+    output: |
+      Al revés: 1 9 5 5

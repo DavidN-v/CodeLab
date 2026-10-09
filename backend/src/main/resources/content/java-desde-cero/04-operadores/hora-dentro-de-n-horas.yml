@@ -1,0 +1,51 @@
+title: ¿Qué hora será?
+summary: Completa el programa que da la vuelta al reloj con el resto.
+difficulty: EASY
+kind: fill
+statement: |
+  Un reloj de 24 horas da la vuelta: si son las 22 y pasan 5 horas, no son las 27, sino las 3.
+
+  El programa lee la hora actual (de 0 a 23) y cuántas horas pasan, y escribe la hora resultante. Completa los huecos.
+
+  **Ejemplo:** `22 5` → `Serán las 3:00`.
+starter: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int hora = entrada.nextInt();
+          int horas = entrada.nextInt();
+          int futura = ({{?}}) {{?}} 24;
+          System.out.println("Serán las " + futura + ":00");
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int hora = entrada.nextInt();
+          int horas = entrada.nextInt();
+          int futura = (hora + horas) % 24;
+          System.out.println("Serán las " + futura + ":00");
+      }
+  }
+answers:
+  - hora + horas
+  - '%'
+hints:
+  - 'La idea: primero sumas las horas como si el reloj no tuviera fin (22 + 5 = 27) y luego le «das la vuelta» quitando los días completos de 24 horas.'
+  - 'Qué usar: el operador resto `%`. `27 % 24` es lo que sobra al quitar un día entero: 3.'
+  - 'El plan: en el primer hueco va la suma de la hora actual y las horas que pasan; en el segundo, el operador que da el resto.'
+tests:
+  - input: "22 5\n"
+    output: "Serán las 3:00\n"
+    sample: true
+  - input: "10 3\n"
+    output: "Serán las 13:00\n"
+  - input: "23 1\n"
+    output: "Serán las 0:00\n"
+  - input: "5 48\n"
+    output: "Serán las 5:00\n"

@@ -1,0 +1,58 @@
+title: Los métodos del servicio de tareas
+summary: Ordena los métodos agregar y alternar de TareasStore sin modificar la lista existente.
+difficulty: MEDIUM
+kind: parsons
+statement: |
+  Completa `TareasStore` con dos métodos:
+
+  - `agregar(titulo, prioridad)`: calcula el siguiente `id` (el mayor actual más uno, o 1 si no hay tareas) y añade al final una tarea **pendiente**;
+  - `alternar(id)`: cambia `hecha` de la tarea con ese `id` y deja las demás igual.
+
+  Los dos deben **crear una lista nueva** con `update`, nunca modificar la existente. Ordena las líneas. Cuidado: hay líneas que sobran.
+starter: |
+  @Service()
+  export class TareasStore {
+    private readonly _tareas = signal<Tarea[]>([]);
+    readonly tareas = this._tareas.asReadonly();
+
+  {{lines}}
+    }
+  }
+solution: |
+  @Service()
+  export class TareasStore {
+    private readonly _tareas = signal<Tarea[]>([]);
+    readonly tareas = this._tareas.asReadonly();
+
+    agregar(titulo: string, prioridad: Prioridad): void {
+      const id = Math.max(0, ...this._tareas().map((t) => t.id)) + 1;
+      this._tareas.update((tareas) => [...tareas, { id, titulo, prioridad, hecha: false }]);
+    }
+    alternar(id: number): void {
+      this._tareas.update((tareas) =>
+        tareas.map((t) => (t.id === id ? { ...t, hecha: !t.hecha } : t)),
+      );
+    }
+  }
+lines:
+  - '  agregar(titulo: string, prioridad: Prioridad): void {'
+  - '    const id = Math.max(0, ...this._tareas().map((t) => t.id)) + 1;'
+  - '    this._tareas.update((tareas) => [...tareas, { id, titulo, prioridad, hecha: false }]);'
+  - '  }'
+  - '  alternar(id: number): void {'
+  - '    this._tareas.update((tareas) =>'
+  - '      tareas.map((t) => (t.id === id ? { ...t, hecha: !t.hecha } : t)),'
+  - '    );'
+distractors:
+  - '    this._tareas().push({ id, titulo, prioridad, hecha: false });'
+  - '      tareas.map((t) => (t.id === id ? { ...t, hecha: true } : t)),'
+hints:
+  - 'La idea: cada método abre su llave, hace su trabajo y la cierra. `agregar` necesita el `id` antes de crear la tarea.'
+  - 'Qué usar: `update` con una lista nueva: `[...tareas, nueva]` para añadir y `map` para cambiar una. `push` modifica la lista existente, y `hecha: true` no alterna (una tarea hecha seguiría hecha).'
+  - 'El plan: cabecera de agregar → const id → update con spread → `}` → cabecera de alternar → `update((tareas) =>` → la línea del map con `!t.hecha` → `);`. La llave de cierre de alternar ya está en el código.'
+tests:
+  - output: |
+      agregar('Leer', 'media') con la lista vacía → { id: 1, titulo: 'Leer', prioridad: 'media', hecha: false }
+      alternar(1) → hecha: true
+      alternar(1) → hecha: false
+    sample: true

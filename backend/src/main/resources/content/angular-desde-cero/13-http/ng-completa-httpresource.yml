@@ -1,0 +1,80 @@
+title: Un detalle con httpResource
+summary: Completa un componente que carga un usuario según su id con httpResource.
+difficulty: MEDIUM
+kind: fill
+statement: |
+  Este componente recibe el `id` de un usuario y carga sus datos de `/api/usuarios/<id>` con `httpResource` (estable en Angular 22). Cada vez que cambia el `id`, debe volver a cargar.
+
+  Completa los tres huecos, en orden:
+
+  1. La propiedad del resource que vale `true` mientras se está cargando.
+  2. El método que dice si ya hay un valor que mostrar.
+  3. La función de `@angular/common/http` que crea el resource.
+
+  Cuando la API devuelve `{ "id": 7, "nombre": "Grace" }`, la página muestra:
+
+  ```text
+  Grace
+  ```
+starter: |
+  // src/app/usuario/ficha-usuario.ts
+  import { httpResource } from '@angular/common/http';
+  import { Component, input } from '@angular/core';
+
+  interface Usuario {
+    id: number;
+    nombre: string;
+  }
+
+  @Component({
+    selector: 'app-ficha-usuario',
+    template: `
+      @if (usuario.{{?}}()) {
+        <p>Cargando…</p>
+      } @else if (usuario.{{?}}()) {
+        <h2>{{ usuario.value().nombre }}</h2>
+      }
+    `,
+  })
+  export class FichaUsuario {
+    readonly id = input.required<number>();
+
+    protected readonly usuario = {{?}}<Usuario>(() => `/api/usuarios/${this.id()}`);
+  }
+answers:
+  - isLoading
+  - hasValue
+  - httpResource
+solution: |
+  // src/app/usuario/ficha-usuario.ts
+  import { httpResource } from '@angular/common/http';
+  import { Component, input } from '@angular/core';
+
+  interface Usuario {
+    id: number;
+    nombre: string;
+  }
+
+  @Component({
+    selector: 'app-ficha-usuario',
+    template: `
+      @if (usuario.isLoading()) {
+        <p>Cargando…</p>
+      } @else if (usuario.hasValue()) {
+        <h2>{{ usuario.value().nombre }}</h2>
+      }
+    `,
+  })
+  export class FichaUsuario {
+    readonly id = input.required<number>();
+
+    protected readonly usuario = httpResource<Usuario>(() => `/api/usuarios/${this.id()}`);
+  }
+hints:
+  - 'La idea: el resource se crea con una función que devuelve la URL; en la plantilla preguntas primero si está cargando y después si ya tiene valor.'
+  - 'Qué usar: la función que crea el resource está importada en la primera línea. Del resource, una propiedad signal dice si está cargando y un método dice si hay valor (dentro de ese `@if`, `value()` ya no es `undefined`).'
+  - 'El plan: usuario.isLoading(), usuario.hasValue() y httpResource<Usuario>(...).'
+tests:
+  - output: |
+      Grace
+    sample: true

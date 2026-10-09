@@ -1,0 +1,47 @@
+questions:
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      class Luz implements AutoCloseable {
+          Luz() {
+              System.out.println("encender");
+          }
+
+          @Override
+          public void close() {
+              System.out.println("apagar");
+          }
+      }
+
+      public class Main {
+          public static void main(String[] args) {
+              try (Luz luz = new Luz()) {
+                  System.out.println("leer");
+              }
+              System.out.println("dormir");
+          }
+      }
+    answer: |
+      encender
+      leer
+      apagar
+      dormir
+    explanation: 'Primero se crea el recurso (`encender`), luego se ejecuta el bloque (`leer`) y, al salir del `try`, Java llama a `close()` automáticamente (`apagar`). Solo después sigue el resto del programa.'
+  - type: choice
+    prompt: '¿Qué devuelve `lector.readLine()` cuando ya no quedan más líneas?'
+    options:
+      - '`null`'
+      - 'Un texto vacío `""`'
+      - '`-1`'
+      - Lanza una excepción
+    answer: 0
+    explanation: '`readLine` devuelve `null` al llegar al final; por eso el bucle clásico es `while ((linea = lector.readLine()) != null)`. Un texto vacío significaría una línea en blanco, que sí existe en el archivo.'
+  - type: choice
+    prompt: ¿Por qué es mejor `Files.newBufferedReader` en un try-with-resources que `Files.readAllLines` para un archivo de varios gigas?
+    options:
+      - Porque lee línea a línea sin cargar el archivo entero en memoria
+      - Porque lee más rápido los archivos pequeños
+      - Porque no puede lanzar `IOException`
+      - Porque no hace falta cerrarlo
+    answer: 0
+    explanation: '`readAllLines` mete todo el archivo en una lista en memoria. El lector va trayendo una línea cada vez, así que gasta muy poca memoria; eso sí, hay que cerrarlo, y de eso se encarga el `try`.'

@@ -1,0 +1,28 @@
+lessons:
+  - slug: como-llega-una-pagina
+    title: Cómo llega una página a tu navegador
+    summary: Navegador y servidor, la URL y la conversación HTTP que trae cada archivo.
+    minutes: 6
+  - slug: html-y-css
+    title: HTML y CSS
+    summary: Etiquetas que dicen qué es cada cosa y reglas que dicen cómo se ve.
+    minutes: 7
+  - slug: javascript-y-el-dom
+    title: JavaScript, el DOM y los eventos
+    summary: El árbol que pinta la pantalla, cómo cambiarlo y cómo reaccionar a un clic.
+    minutes: 8
+  - slug: varias-paginas-o-spa
+    title: Web de varias páginas o SPA
+    summary: Por qué una aplicación de una sola página no recarga y qué es app-root.
+    minutes: 6
+  - slug: que-resuelve-angular
+    title: Librerías, frameworks y Angular
+    summary: Qué es un framework, qué problemas resuelve Angular y un primer vistazo a su código.
+    minutes: 7
+exercises:
+  - ng-predice-la-pagina
+  - ng-completa-el-html
+  - ng-estilo-de-oferta
+  - ng-contador-a-mano
+  - ng-escucha-el-clic
+  - ng-ordena-el-contador

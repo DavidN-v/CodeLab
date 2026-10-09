@@ -1,0 +1,82 @@
+title: Numerador de tickets
+summary: Un campo static que comparten todos los objetos.
+difficulty: MEDIUM
+statement: |
+  En una panadería cada cliente saca un ticket numerado. Crea una clase `Ticket` que:
+
+  - Asigne a cada ticket nuevo el siguiente número, empezando en 1, usando un contador `static`.
+  - Guarde el nombre del cliente.
+  - Tenga `String texto()` que devuelva `Ticket <número>: <nombre>`.
+  - Tenga un método `static int emitidos()` con el total de tickets creados.
+
+  La entrada es una lista de nombres, uno por línea. Escribe el texto de cada ticket y, al final, `Emitidos: <total>`.
+starter: |
+  import java.util.Scanner;
+
+  class Ticket {
+
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          while (entrada.hasNextLine()) {
+              String nombre = entrada.nextLine();
+              // Crea el ticket e imprime su texto
+          }
+          // System.out.println("Emitidos: " + Ticket.emitidos());
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  class Ticket {
+      private static int ultimoNumero = 0;
+      private final int numero;
+      private final String cliente;
+
+      Ticket(String cliente) {
+          ultimoNumero++;
+          this.numero = ultimoNumero;
+          this.cliente = cliente;
+      }
+
+      String texto() {
+          return "Ticket " + numero + ": " + cliente;
+      }
+
+      static int emitidos() {
+          return ultimoNumero;
+      }
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          while (entrada.hasNextLine()) {
+              String nombre = entrada.nextLine();
+              System.out.println(new Ticket(nombre).texto());
+          }
+          System.out.println("Emitidos: " + Ticket.emitidos());
+      }
+  }
+hints:
+  - 'La idea: hay un número que comparten todos los tickets (el último emitido) y otro que es de cada ticket (el suyo).'
+  - 'Qué usar: un campo `private static int ultimoNumero` compartido y un campo de instancia `private final int numero`.'
+  - 'El plan: en el constructor haz `ultimoNumero++;` y copia su valor a `this.numero`. `texto()` devuelve `"Ticket " + numero + ": " + cliente` y `static int emitidos()` devuelve `ultimoNumero`.'
+tests:
+  - input: |
+      Ada
+      Grace
+      Alan
+    output: |
+      Ticket 1: Ada
+      Ticket 2: Grace
+      Ticket 3: Alan
+      Emitidos: 3
+    sample: true
+  - input: |
+      Linus
+    output: |
+      Ticket 1: Linus
+      Emitidos: 1

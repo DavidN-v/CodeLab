@@ -1,0 +1,36 @@
+title: ¿Qué se ve en la página?
+summary: Lee un HTML y escribe el texto que muestra el navegador.
+difficulty: EASY
+kind: predict
+statement: |
+  Este es el `index.html` de una pequeña cafetería. Léelo **sin abrirlo en el navegador** y escribe el texto que se ve en la página, **una línea por elemento** (el título, el párrafo y cada elemento de la lista), en el mismo orden en que aparecen.
+
+  Recuerda: lo que va en `<head>` no se pinta dentro de la página, y las etiquetas no se ven, solo su contenido.
+starter: |
+  <!doctype html>
+  <html lang="es">
+    <head>
+      <meta charset="utf-8" />
+      <title>Café Lunares</title>
+    </head>
+    <body>
+      <h1>Carta del día</h1>
+      <p>Todo recién hecho</p>
+      <ul>
+        <li>Café con leche</li>
+        <li>Tostada</li>
+        <li>Zumo de naranja</li>
+      </ul>
+    </body>
+  </html>
+hints:
+  - 'La idea: el navegador solo pinta lo que hay dentro de `<body>`. El `<title>` aparece en la pestaña, no en la página.'
+  - 'Qué usar: recorre el `<body>` de arriba abajo. Cada `<h1>`, `<p>` y `<li>` es un elemento visible con su propio texto.'
+  - 'El plan: escribe el texto del `<h1>`, después el del `<p>` y después el de cada `<li>`, cada uno en su línea.'
+tests:
+  - output: |
+      Carta del día
+      Todo recién hecho
+      Café con leche
+      Tostada
+      Zumo de naranja

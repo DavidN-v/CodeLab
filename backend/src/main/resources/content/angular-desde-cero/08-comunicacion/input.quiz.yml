@@ -1,0 +1,28 @@
+questions:
+  - type: output
+    prompt: 'El hijo declara `titulo = input(''Sin título'')` y pinta `<h2>{{ titulo() }}</h2>`. ¿Qué se ve con este padre? Una línea por elemento.'
+    code: |
+      <app-libro titulo="Dune" />
+      <app-libro />
+      <app-libro [titulo]="'Solaris'" />
+    answer: |
+      Dune
+      Sin título
+      Solaris
+    explanation: 'El primero pasa el texto «Dune»; el segundo no pasa nada y se usa el valor por defecto; el tercero pasa una expresión que es el texto «Solaris».'
+  - type: choice
+    prompt: '¿Para qué sirve `input(false, { transform: booleanAttribute })`?'
+    options:
+      - Para que el padre pueda escribir el atributo sin valor (`<app-x activo />`) y llegue `true`
+      - Para que el hijo pueda cambiar el input con `set`
+      - Para que el input sea obligatorio
+    answer: 0
+    explanation: '`booleanAttribute` convierte lo que llega en un booleano. Un atributo sin valor llega como texto vacío y se convierte en `true`, como `disabled` en HTML.'
+  - type: choice
+    prompt: 'Dentro del hijo intentas `this.nombre.set(''Otro'')` sobre un `input.required<string>()`. ¿Qué pasa?'
+    options:
+      - 'Error de TypeScript: los inputs son signals de solo lectura'
+      - El nombre cambia en el hijo y también en el padre
+      - El nombre cambia solo en el hijo
+    answer: 0
+    explanation: 'Un input es un `InputSignal`, que no tiene `set`. El dato pertenece al padre; si el hijo necesita cambiarlo, debe avisar al padre con un output o usar `model()`.'

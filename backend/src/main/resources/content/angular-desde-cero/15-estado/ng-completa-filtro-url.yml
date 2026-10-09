@@ -1,0 +1,96 @@
+title: El filtro que vive en la URL
+summary: Completa un listado cuyo filtro se lee y se cambia a través de los query params.
+difficulty: MEDIUM
+kind: fill
+statement: |
+  El listado de cursos se filtra por nivel con la URL `/cursos?nivel=avanzado`. La app usa `provideRouter(routes, withComponentInputBinding())`, así que el query param llega como input.
+
+  Completa los tres huecos, en orden:
+
+  1. La función que declara la entrada `nivel` que rellena el router.
+  2. La función que calcula la lista visible a partir del nivel.
+  3. La opción de `navigate` que pone los parámetros después del `?`.
+
+  Con la URL `/cursos?nivel=avanzado`, la página muestra:
+
+  ```text
+  RxJS
+  ```
+starter: |
+  // src/app/cursos/cursos.ts
+  import { Component, computed, inject, input } from '@angular/core';
+  import { Router } from '@angular/router';
+
+  const CURSOS = [
+    { nombre: 'HTML', nivel: 'basico' },
+    { nombre: 'RxJS', nivel: 'avanzado' },
+  ];
+
+  @Component({
+    selector: 'app-cursos',
+    template: `
+      <button (click)="filtrar('basico')">Básico</button>
+      @for (c of visibles(); track c.nombre) {
+        <p>{{ c.nombre }}</p>
+      }
+    `,
+  })
+  export class Cursos {
+    private readonly router = inject(Router);
+
+    readonly nivel = {{?}}<string>();
+
+    protected readonly visibles = {{?}}(() => {
+      const nivel = this.nivel();
+      return nivel ? CURSOS.filter((c) => c.nivel === nivel) : CURSOS;
+    });
+
+    protected filtrar(nivel: string) {
+      this.router.navigate([], { {{?}}: { nivel } });
+    }
+  }
+answers:
+  - input
+  - computed
+  - queryParams
+solution: |
+  // src/app/cursos/cursos.ts
+  import { Component, computed, inject, input } from '@angular/core';
+  import { Router } from '@angular/router';
+
+  const CURSOS = [
+    { nombre: 'HTML', nivel: 'basico' },
+    { nombre: 'RxJS', nivel: 'avanzado' },
+  ];
+
+  @Component({
+    selector: 'app-cursos',
+    template: `
+      <button (click)="filtrar('basico')">Básico</button>
+      @for (c of visibles(); track c.nombre) {
+        <p>{{ c.nombre }}</p>
+      }
+    `,
+  })
+  export class Cursos {
+    private readonly router = inject(Router);
+
+    readonly nivel = input<string>();
+
+    protected readonly visibles = computed(() => {
+      const nivel = this.nivel();
+      return nivel ? CURSOS.filter((c) => c.nivel === nivel) : CURSOS;
+    });
+
+    protected filtrar(nivel: string) {
+      this.router.navigate([], { queryParams: { nivel } });
+    }
+  }
+hints:
+  - 'La idea: el componente no guarda el filtro; lo recibe de la URL, deriva la lista de él y, para cambiarlo, cambia la URL.'
+  - 'Qué usar: las dos primeras funciones están importadas de `@angular/core`: una declara entradas del componente y otra crea valores derivados. La opción de `navigate` se llama como los «parámetros de consulta» en inglés.'
+  - 'El plan: input<string>(), computed(() => ...) y { queryParams: { nivel } }.'
+tests:
+  - output: |
+      RxJS
+    sample: true

@@ -1,0 +1,48 @@
+title: ¿Se entera la pantalla?
+summary: Predice qué muestra un componente zoneless cuando cambia una propiedad normal.
+difficulty: MEDIUM
+kind: predict
+statement: |
+  Esta app es zoneless, como toda app nueva de Angular 22, y el componente usa la estrategia por defecto.
+
+  El usuario hace exactamente esto:
+
+  1. Pulsa **«Sumar en 1 s»**.
+  2. Espera **dos segundos** sin tocar nada.
+  3. Pulsa **«Sumar»** una vez.
+
+  Escribe el texto de los **dos párrafos** tal como se ven después del paso 3, una línea por párrafo.
+starter: |
+  import { Component, signal } from '@angular/core';
+
+  @Component({
+    selector: 'app-contador',
+    template: `
+      <p>Clics: {{ clics() }}</p>
+      <p>Normal: {{ normal }}</p>
+      <button type="button" (click)="sumar()">Sumar</button>
+      <button type="button" (click)="sumarLuego()">Sumar en 1 s</button>
+    `,
+  })
+  export class Contador {
+    protected readonly clics = signal(0);
+    protected normal = 0;
+
+    protected sumar() {
+      this.clics.update((n) => n + 1);
+    }
+
+    protected sumarLuego() {
+      setTimeout(() => {
+        this.normal++;
+      }, 1000);
+    }
+  }
+hints:
+  - 'La idea: piensa qué vale cada dato por dentro y cuándo recibe Angular un aviso para revisar la plantilla.'
+  - 'Qué usar: la regla de las apps zoneless con OnPush. Cambiar una propiedad normal en un `setTimeout` no avisa a nadie; un evento de la plantilla y un signal que cambia, sí. Cuando Angular revisa la plantilla, evalúa todas sus expresiones.'
+  - 'El plan: tras el paso 2, `normal` vale 1 por dentro, pero en pantalla sigue el 0. En el paso 3, `clics` pasa a 1 y el clic marca el componente: Angular revisa toda su plantilla.'
+tests:
+  - output: |
+      Clics: 1
+      Normal: 1

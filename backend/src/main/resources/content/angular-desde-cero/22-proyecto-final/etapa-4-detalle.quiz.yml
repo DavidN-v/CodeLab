@@ -1,0 +1,25 @@
+questions:
+  - type: choice
+    prompt: Con `withComponentInputBinding()`, abres `/tareas/2`. ¿Qué valor tiene `this.id()` en `DetalleTarea`?
+    options:
+      - "El texto `'2'`"
+      - El número `2`
+      - '`undefined`, hay que leerlo con `ActivatedRoute`'
+    answer: 0
+    explanation: 'Los parámetros de una URL siempre son texto. Por eso el componente usa `Number(this.id())` antes de buscar la tarea.'
+  - type: choice
+    prompt: ¿Por qué el guard hace `await store.cargar()` antes de buscar la tarea?
+    options:
+      - Porque si el usuario abre la URL del detalle directamente, las tareas todavía no se han cargado
+      - Porque `porId` es una función asíncrona
+      - Porque los guards siempre deben ser `async`
+    answer: 0
+    explanation: 'Si se entra por `/tareas/2` sin pasar por la lista, nadie ha pedido aún el JSON. Sin esperar la carga, `porId` no encontraría nada y redirigiría siempre.'
+  - type: choice
+    prompt: Si la ruta `tareas/:id` estuviera ANTES que `tareas/nueva`, ¿qué pasaría al pulsar «Nueva tarea»?
+    options:
+      - '`:id` encajaría con `''nueva''`, el guard no encontraría esa tarea y te devolvería a la lista'
+      - Se abriría el formulario igualmente
+      - Se vería la página 404
+    answer: 0
+    explanation: 'El router usa la primera ruta que encaja, y `:id` encaja con cualquier texto. Las rutas concretas deben ir antes que las de parámetro.'

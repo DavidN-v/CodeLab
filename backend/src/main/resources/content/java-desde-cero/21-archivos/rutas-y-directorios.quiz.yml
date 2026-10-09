@@ -1,0 +1,42 @@
+questions:
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      import java.io.IOException;
+      import java.nio.file.Files;
+      import java.nio.file.Path;
+
+      public class Main {
+          public static void main(String[] args) throws IOException {
+              Path carpeta = Path.of("viaje", "fotos");
+              Files.createDirectories(carpeta);
+              Path foto = carpeta.resolve("playa.jpg");
+              Files.writeString(foto, "...");
+              System.out.println(foto.getFileName());
+              System.out.println(Files.isDirectory(carpeta) + " " + Files.isDirectory(foto));
+              System.out.println(Files.deleteIfExists(foto) + " " + Files.deleteIfExists(foto));
+          }
+      }
+    answer: |
+      playa.jpg
+      true false
+      true false
+    explanation: '`resolve` añade `playa.jpg` a la ruta de la carpeta. La carpeta es un directorio y la foto no. El primer `deleteIfExists` borra la foto (`true`); el segundo ya no la encuentra (`false`).'
+  - type: choice
+    prompt: '¿Qué diferencia hay entre `Files.list` y `Files.walk`?'
+    options:
+      - '`list` ve solo el primer nivel; `walk` entra también en las subcarpetas'
+      - '`list` devuelve una lista y `walk` un stream'
+      - '`walk` solo devuelve carpetas'
+      - No hay diferencia
+    answer: 0
+    explanation: 'Los dos devuelven un `Stream<Path>` que hay que cerrar. `list` mira lo que hay directamente dentro de la carpeta; `walk` recorre todos los niveles, incluida la propia carpeta de partida.'
+  - type: choice
+    prompt: '¿Qué pasa con `Files.createDirectory(Path.of("a/b/c"))` si no existe la carpeta `a`?'
+    options:
+      - Lanza una excepción porque falta la carpeta padre
+      - Crea `a`, `b` y `c`
+      - No hace nada y devuelve `false`
+      - Crea solo `c` en el directorio actual
+    answer: 0
+    explanation: '`createDirectory` crea una sola carpeta y necesita que su padre exista (lanza `NoSuchFileException`). Para crear toda la ruta de golpe se usa `createDirectories`.'

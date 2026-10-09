@@ -1,0 +1,70 @@
+title: Ranking de jugadores
+summary: Construye comparadores con referencias a métodos y criterios de desempate.
+difficulty: MEDIUM
+statement: |
+  Cada línea describe un jugador: `<nombre> <puntos> <partidas>`. Modela el jugador con un `record` y ordena la lista con `Comparator.comparing(...)`, referencias a métodos y `thenComparing`:
+
+  1. Más puntos primero.
+  2. A igualdad de puntos, menos partidas primero.
+  3. Después, por nombre alfabético.
+
+  Escribe el ranking con el formato `<posición>. <nombre> (<puntos> pts, <partidas> partidas)`.
+starter: |
+  import java.util.ArrayList;
+  import java.util.Comparator;
+  import java.util.List;
+  import java.util.Scanner;
+
+  // record Jugador(...) {}
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+
+      }
+  }
+solution: |
+  import java.util.ArrayList;
+  import java.util.Comparator;
+  import java.util.List;
+  import java.util.Scanner;
+
+  record Jugador(String nombre, int puntos, int partidas) {}
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          List<Jugador> jugadores = new ArrayList<>();
+          while (entrada.hasNext()) {
+              jugadores.add(new Jugador(entrada.next(), entrada.nextInt(), entrada.nextInt()));
+          }
+          jugadores.sort(Comparator.comparing(Jugador::puntos)
+              .reversed()
+              .thenComparing(Jugador::partidas)
+              .thenComparing(Jugador::nombre));
+          for (int i = 0; i < jugadores.size(); i++) {
+              Jugador j = jugadores.get(i);
+              System.out.println((i + 1) + ". " + j.nombre() + " (" + j.puntos() + " pts, " + j.partidas() + " partidas)");
+          }
+      }
+  }
+hints:
+  - 'La idea: ordenar con tres criterios en cascada: primero puntos (de más a menos); si empatan, partidas (de menos a más); si siguen empatados, nombre.'
+  - 'Qué usar: un `record Jugador(String nombre, int puntos, int partidas)`, `Comparator.comparing(Jugador::puntos)`, `.reversed()` y `.thenComparing(...)`.'
+  - 'El plan: lee los jugadores en una lista; ordénala con `Comparator.comparing(Jugador::puntos).reversed().thenComparing(Jugador::partidas).thenComparing(Jugador::nombre)`; imprime con un `for` usando `i + 1` como posición.'
+tests:
+  - input: |
+      Ada 30 10
+      Grace 45 12
+      Alan 30 8
+      Linus 30 8
+    output: |
+      1. Grace (45 pts, 12 partidas)
+      2. Alan (30 pts, 8 partidas)
+      3. Linus (30 pts, 8 partidas)
+      4. Ada (30 pts, 10 partidas)
+    sample: true
+  - input: |
+      Solo 0 0
+    output: |
+      1. Solo (0 pts, 0 partidas)

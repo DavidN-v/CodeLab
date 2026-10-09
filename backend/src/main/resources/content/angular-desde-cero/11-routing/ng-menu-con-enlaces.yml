@@ -1,0 +1,74 @@
+title: Un menú que no recarga
+summary: Completa un menú con routerLink, routerLinkActive y enlaces con parámetros.
+difficulty: MEDIUM
+kind: fill
+statement: |
+  El componente `Menu` debe:
+
+  1. enlazar a `/productos` **sin recargar la página**;
+  2. poner la clase `activo` en ese enlace cuando sea la ruta actual;
+  3. enlazar cada producto a `/productos/<su id>` usando un array de segmentos.
+
+  Completa los huecos (incluidas las dos directivas del array `imports`).
+starter: |
+  // src/app/menu.ts
+  import { Component } from '@angular/core';
+  import { RouterLink, RouterLinkActive } from '@angular/router';
+
+  @Component({
+    selector: 'app-menu',
+    imports: [{{?}}, {{?}}],
+    template: `
+      <nav>
+        <a {{?}}="/productos" {{?}}="activo">Productos</a>
+        @for (producto of destacados; track producto.id) {
+          <a [routerLink]="['/productos', {{?}}]">{{ producto.nombre }}</a>
+        }
+      </nav>
+    `,
+  })
+  export class Menu {
+    protected readonly destacados = [
+      { id: 1, nombre: 'Libro' },
+      { id: 2, nombre: 'Taza' },
+    ];
+  }
+answers:
+  - RouterLink
+  - RouterLinkActive
+  - routerLink
+  - routerLinkActive
+  - producto.id
+solution: |
+  // src/app/menu.ts
+  import { Component } from '@angular/core';
+  import { RouterLink, RouterLinkActive } from '@angular/router';
+
+  @Component({
+    selector: 'app-menu',
+    imports: [RouterLink, RouterLinkActive],
+    template: `
+      <nav>
+        <a routerLink="/productos" routerLinkActive="activo">Productos</a>
+        @for (producto of destacados; track producto.id) {
+          <a [routerLink]="['/productos', producto.id]">{{ producto.nombre }}</a>
+        }
+      </nav>
+    `,
+  })
+  export class Menu {
+    protected readonly destacados = [
+      { id: 1, nombre: 'Libro' },
+      { id: 2, nombre: 'Taza' },
+    ];
+  }
+hints:
+  - 'La idea: las directivas del router se importan como cualquier otra y se usan como atributos en las etiquetas `<a>`.'
+  - 'Qué usar: `RouterLink` (atributo `routerLink`) para navegar sin recargar y `RouterLinkActive` (atributo `routerLinkActive`) para la clase del enlace activo. En el array de segmentos, el segundo es el dato del producto.'
+  - 'El plan: `imports: [RouterLink, RouterLinkActive]`; `<a routerLink="/productos" routerLinkActive="activo">`; y `[''/productos'', producto.id]`.'
+tests:
+  - output: |
+      <a href="/productos" class="activo">Productos</a>
+      <a href="/productos/1">Libro</a>
+      <a href="/productos/2">Taza</a>
+    sample: true

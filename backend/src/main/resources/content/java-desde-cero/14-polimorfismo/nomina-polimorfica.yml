@@ -1,0 +1,144 @@
+title: Nómina polimórfica
+summary: Calcula el coste de una plantilla con tipos de contrato distintos.
+difficulty: MEDIUM
+statement: |
+  Una empresa tiene tres tipos de trabajador, todos con un nombre y un método `int pagoMensual()`:
+
+  - `Fijo <nombre> <sueldo>`: cobra su sueldo.
+  - `PorHoras <nombre> <horas> <precioHora>`: cobra horas × precio; las horas que pasen de 160 se pagan al doble.
+  - `Comercial <nombre> <base> <ventas>`: cobra la base más el 5 % de sus ventas (división entera).
+
+  Diseña una clase abstracta `Trabajador` y las tres subclases. La entrada tiene una línea por trabajador (el primer dato es el tipo, tal cual aparece arriba). Escribe `<nombre>: <pago>` por cada uno, en orden, y al final `Total: <suma>` y `Mayor: <nombre del que más cobra>` (si empatan, el primero).
+starter: |
+  import java.util.ArrayList;
+  import java.util.List;
+  import java.util.Scanner;
+
+  abstract class Trabajador {
+
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          List<Trabajador> plantilla = new ArrayList<>();
+
+      }
+  }
+solution: |
+  import java.util.ArrayList;
+  import java.util.List;
+  import java.util.Scanner;
+
+  abstract class Trabajador {
+      private final String nombre;
+
+      Trabajador(String nombre) {
+          this.nombre = nombre;
+      }
+
+      String getNombre() {
+          return nombre;
+      }
+
+      abstract int pagoMensual();
+  }
+
+  class Fijo extends Trabajador {
+      private final int sueldo;
+
+      Fijo(String nombre, int sueldo) {
+          super(nombre);
+          this.sueldo = sueldo;
+      }
+
+      @Override
+      int pagoMensual() {
+          return sueldo;
+      }
+  }
+
+  class PorHoras extends Trabajador {
+      private static final int HORAS_NORMALES = 160;
+      private final int horas;
+      private final int precioHora;
+
+      PorHoras(String nombre, int horas, int precioHora) {
+          super(nombre);
+          this.horas = horas;
+          this.precioHora = precioHora;
+      }
+
+      @Override
+      int pagoMensual() {
+          int normales = Math.min(horas, HORAS_NORMALES);
+          int extra = Math.max(0, horas - HORAS_NORMALES);
+          return normales * precioHora + extra * precioHora * 2;
+      }
+  }
+
+  class Comercial extends Trabajador {
+      private final int base;
+      private final int ventas;
+
+      Comercial(String nombre, int base, int ventas) {
+          super(nombre);
+          this.base = base;
+          this.ventas = ventas;
+      }
+
+      @Override
+      int pagoMensual() {
+          return base + ventas * 5 / 100;
+      }
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          List<Trabajador> plantilla = new ArrayList<>();
+          while (entrada.hasNext()) {
+              String tipo = entrada.next();
+              String nombre = entrada.next();
+              plantilla.add(switch (tipo) {
+                  case "Fijo" -> new Fijo(nombre, entrada.nextInt());
+                  case "PorHoras" -> new PorHoras(nombre, entrada.nextInt(), entrada.nextInt());
+                  default -> new Comercial(nombre, entrada.nextInt(), entrada.nextInt());
+              });
+          }
+          int total = 0;
+          Trabajador mayor = null;
+          for (Trabajador t : plantilla) {
+              int pago = t.pagoMensual();
+              System.out.println(t.getNombre() + ": " + pago);
+              total += pago;
+              if (mayor == null || pago > mayor.pagoMensual()) {
+                  mayor = t;
+              }
+          }
+          System.out.println("Total: " + total);
+          System.out.println("Mayor: " + mayor.getNombre());
+      }
+  }
+hints:
+  - 'La idea: cada tipo de trabajador calcula su pago de forma distinta, pero al final todos responden a la misma pregunta: «¿cuánto cobras este mes?».'
+  - 'Qué usar: una clase abstracta `Trabajador` con el nombre, un getter y `abstract int pagoMensual();`, tres subclases con `@Override`, y `Math.min`/`Math.max` para separar las horas normales de las extra.'
+  - 'El plan: crea cada trabajador según el tipo y guárdalo en la lista. Luego recórrela sin preguntar el tipo de nadie: imprime `t.pagoMensual()`, súmalo al total y quédate con el mayor solo si su pago es estrictamente mayor (así gana el primero en caso de empate).'
+tests:
+  - input: |
+      Fijo Ada 2500
+      PorHoras Grace 170 15
+      Comercial Alan 1200 30000
+    output: |
+      Ada: 2500
+      Grace: 2700
+      Alan: 2700
+      Total: 7900
+      Mayor: Grace
+    sample: true
+  - input: |
+      PorHoras Linus 100 20
+    output: |
+      Linus: 2000
+      Total: 2000
+      Mayor: Linus

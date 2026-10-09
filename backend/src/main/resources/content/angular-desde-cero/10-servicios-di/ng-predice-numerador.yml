@@ -1,0 +1,45 @@
+title: Fichas numeradas
+summary: Predice qué número recibe cada componente que comparte un servicio singleton.
+difficulty: EASY
+kind: predict
+statement: |
+  Tres componentes `Ficha` piden el mismo servicio `Numerador` y cada uno guarda el número que le toca al crearse.
+
+  Escribe el texto que se ve en la página, **una línea por cada `<p>`**.
+starter: |
+  // src/app/fichas.ts
+  import { Component, Service, inject } from '@angular/core';
+
+  @Service()
+  export class Numerador {
+    private ultimo = 0;
+
+    siguiente(): number {
+      this.ultimo = this.ultimo + 1;
+      return this.ultimo;
+    }
+  }
+
+  @Component({
+    selector: 'app-ficha',
+    template: `<p>Ficha {{ numero }}</p>`,
+  })
+  export class Ficha {
+    protected readonly numero = inject(Numerador).siguiente();
+  }
+
+  @Component({
+    selector: 'app-fichas',
+    imports: [Ficha],
+    template: `<app-ficha /><app-ficha /><app-ficha />`,
+  })
+  export class Fichas {}
+hints:
+  - 'La idea: ¿cuántos `Numerador` existen? Si es uno solo, su contador sigue avanzando con cada ficha.'
+  - 'Qué usar: `@Service()` registra el servicio en el inyector raíz, que crea una sola instancia para todos.'
+  - 'El plan: cada ficha llama a `siguiente()` una vez al crearse, en orden de aparición, sobre el mismo objeto.'
+tests:
+  - output: |
+      Ficha 1
+      Ficha 2
+      Ficha 3

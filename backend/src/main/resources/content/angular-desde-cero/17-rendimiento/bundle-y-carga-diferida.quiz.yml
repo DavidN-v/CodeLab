@@ -1,0 +1,25 @@
+questions:
+  - type: choice
+    prompt: ¿Qué significa que un archivo aparezca en «Lazy chunk files» en la salida de `ng build`?
+    options:
+      - Que solo se descarga cuando hace falta (al visitar su ruta o disparar su `@defer`)
+      - Que es código sin usar que se podría borrar
+      - Que no se ha minificado
+    answer: 0
+    explanation: 'Los chunks diferidos se generan para rutas con `loadComponent`/`loadChildren` y para bloques `@defer`. No se descargan al abrir la app, sino al necesitarse.'
+  - type: choice
+    prompt: ¿Qué ruta se descarga solo cuando el usuario navega a ella?
+    options:
+      - "`{ path: 'ayuda', loadComponent: () => import('./ayuda/ayuda').then((m) => m.Ayuda) }`"
+      - "`{ path: 'ayuda', component: Ayuda }`"
+      - "`{ path: 'ayuda', redirectTo: '' }`"
+    answer: 0
+    explanation: '`import()` con paréntesis es un import dinámico: el router lo llama al navegar y entonces se descarga el chunk. Con `component` la clase ya está importada arriba y viaja en el bundle inicial.'
+  - type: choice
+    prompt: El bundle inicial pesa 1,2 MB y el budget `initial` tiene `maximumError` de 1 MB. ¿Qué pasa al ejecutar `ng build`?
+    options:
+      - La construcción falla con un error de budget
+      - Solo aparece un aviso amarillo y se genera igualmente
+      - Angular divide el bundle solo para no pasar el límite
+    answer: 0
+    explanation: 'Pasar `maximumWarning` produce un aviso; pasar `maximumError` hace que el build termine con «Application bundle generation failed».'

@@ -1,0 +1,156 @@
+title: La oferta que no rebaja
+summary: Encuentra por qué un método «sobrescrito» nunca se ejecuta.
+difficulty: MEDIUM
+kind: fix
+statement: |
+  Una tienda tiene productos normales y productos en oferta. Un producto en oferta debería costar su precio menos el descuento (en porcentaje, con división entera).
+
+  La entrada tiene líneas `normal <nombre> <precio>` u `oferta <nombre> <precio> <descuento>`. El programa escribe `<nombre>: <precio final>` por cada producto y al final `Total: <suma>`.
+
+  **El problema:** los productos en oferta salen con su precio original, como si el descuento no existiera. El programa compila y no da ningún error. Encuentra el fallo y corrígelo.
+starter: |
+  import java.util.Scanner;
+
+  class Producto {
+      private final String nombre;
+      private final int precio;
+
+      Producto(String nombre, int precio) {
+          this.nombre = nombre;
+          this.precio = precio;
+      }
+
+      String getNombre() {
+          return nombre;
+      }
+
+      int getPrecio() {
+          return precio;
+      }
+
+      int precioFinal() {
+          return precio;
+      }
+  }
+
+  class ProductoEnOferta extends Producto {
+      private final int descuento;
+
+      ProductoEnOferta(String nombre, int precio, int descuento) {
+          super(nombre, precio);
+          this.descuento = descuento;
+      }
+
+      int preciofinal() {
+          return getPrecio() - getPrecio() * descuento / 100;
+      }
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int total = 0;
+          while (entrada.hasNext()) {
+              String tipo = entrada.next();
+              String nombre = entrada.next();
+              int precio = entrada.nextInt();
+              Producto p;
+              if (tipo.equals("oferta")) {
+                  p = new ProductoEnOferta(nombre, precio, entrada.nextInt());
+              } else {
+                  p = new Producto(nombre, precio);
+              }
+              System.out.println(p.getNombre() + ": " + p.precioFinal());
+              total += p.precioFinal();
+          }
+          System.out.println("Total: " + total);
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  class Producto {
+      private final String nombre;
+      private final int precio;
+
+      Producto(String nombre, int precio) {
+          this.nombre = nombre;
+          this.precio = precio;
+      }
+
+      String getNombre() {
+          return nombre;
+      }
+
+      int getPrecio() {
+          return precio;
+      }
+
+      int precioFinal() {
+          return precio;
+      }
+  }
+
+  class ProductoEnOferta extends Producto {
+      private final int descuento;
+
+      ProductoEnOferta(String nombre, int precio, int descuento) {
+          super(nombre, precio);
+          this.descuento = descuento;
+      }
+
+      @Override
+      int precioFinal() {
+          return getPrecio() - getPrecio() * descuento / 100;
+      }
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int total = 0;
+          while (entrada.hasNext()) {
+              String tipo = entrada.next();
+              String nombre = entrada.next();
+              int precio = entrada.nextInt();
+              Producto p;
+              if (tipo.equals("oferta")) {
+                  p = new ProductoEnOferta(nombre, precio, entrada.nextInt());
+              } else {
+                  p = new Producto(nombre, precio);
+              }
+              System.out.println(p.getNombre() + ": " + p.precioFinal());
+              total += p.precioFinal();
+          }
+          System.out.println("Total: " + total);
+      }
+  }
+hints:
+  - 'La idea: el `main` llama a `precioFinal()`. Si la oferta sale con el precio de siempre, es que se está ejecutando la versión de `Producto`, no la de `ProductoEnOferta`.'
+  - 'Qué usar: compara letra a letra el nombre del método en las dos clases. Poner `@Override` encima del método de la subclase hace que el compilador te diga si de verdad sobrescribe algo.'
+  - 'El plan: en `ProductoEnOferta`, añade `@Override` y renombra `preciofinal()` a `precioFinal()` (con la F mayúscula), igual que en `Producto`.'
+tests:
+  - input: |
+      normal Taza 6
+      oferta Libro 20 15
+    output: |
+      Taza: 6
+      Libro: 17
+      Total: 23
+    sample: true
+  - input: |
+      oferta Cascos 99 50
+      oferta Funda 10 0
+    output: |
+      Cascos: 50
+      Funda: 10
+      Total: 60
+  - input: |
+      normal Lapiz 1
+      oferta Mochila 45 20
+      normal Cuaderno 3
+    output: |
+      Lapiz: 1
+      Mochila: 36
+      Cuaderno: 3
+      Total: 40

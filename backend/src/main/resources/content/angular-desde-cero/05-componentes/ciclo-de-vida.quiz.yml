@@ -1,0 +1,38 @@
+questions:
+  - type: choice
+    prompt: Quieres dar el foco a un `<input>` de la plantilla nada más mostrarse el componente. ¿Dónde lo haces?
+    options:
+      - En el constructor
+      - Dentro de `afterNextRender`
+      - En `ngOnDestroy`
+    answer: 1
+    explanation: 'En el constructor la plantilla aún no está en el DOM, así que el `<input>` no existe. `afterNextRender` se ejecuta cuando ya está pintado.'
+  - type: choice
+    prompt: Un componente arranca un `setInterval` y nunca lo para. ¿Qué pasa cuando se oculta?
+    options:
+      - Angular para el temporizador automáticamente
+      - El navegador muestra un error
+      - El temporizador sigue funcionando en segundo plano (una fuga de memoria)
+    answer: 2
+    explanation: 'Angular no sabe nada de tus temporizadores. Hay que pararlos con `clearInterval`, por ejemplo en `inject(DestroyRef).onDestroy(...)`.'
+  - type: output
+    prompt: 'Un componente escribe un mensaje en cada gancho. Se muestra y luego se destruye. ¿Qué aparece en la consola?'
+    code: |
+      export class Hijo implements OnInit, OnDestroy {
+        constructor() {
+          inject(DestroyRef).onDestroy(() => console.log('C'));
+          console.log('A');
+        }
+        ngOnInit() {
+          console.log('B');
+        }
+        ngOnDestroy() {
+          console.log('D');
+        }
+      }
+    answer: |
+      A
+      B
+      D
+      C
+    explanation: 'En el constructor solo se escribe A (onDestroy registra una función para luego). Después llega ngOnInit (B). Al destruirse, primero `ngOnDestroy` (D) y después las funciones de `DestroyRef` (C).'

@@ -1,0 +1,25 @@
+questions:
+  - type: choice
+    prompt: ¿Qué es un doble de prueba?
+    options:
+      - Un objeto que se hace pasar por un servicio real durante una prueba
+      - Una prueba que se ejecuta dos veces para asegurarse
+      - Una copia exacta del servicio real con todas sus dependencias
+    answer: 0
+    explanation: 'El doble imita solo lo que el código probado necesita, con valores controlados, para que la prueba sea rápida y predecible.'
+  - type: choice
+    prompt: '¿Qué línea hace que `IconoCarrito` reciba el doble en lugar del `Carrito` real?'
+    options:
+      - '`providers: [{ provide: Carrito, useValue: carritoFalso }]` en `configureTestingModule`'
+      - '`TestBed.createComponent(carritoFalso)`'
+      - '`expect(carritoFalso).toBeTruthy()`'
+    answer: 0
+    explanation: 'El proveedor registra el doble con el token `Carrito` en el inyector de prueba; cuando el componente hace `inject(Carrito)`, recibe el doble.'
+  - type: choice
+    prompt: ¿Por qué no podrías sustituir el carrito si el componente hiciera `carrito = new Carrito()`?
+    options:
+      - Porque el componente crearía el carrito él mismo y el inyector no intervendría
+      - Porque `new` no funciona en TypeScript
+      - Porque Vitest no permite usar clases
+    answer: 0
+    explanation: 'Con `new`, el componente decide qué objeto usa y la prueba no puede meterse en medio. Con `inject()`, quien decide es el inyector, y en las pruebas lo configuras tú.'

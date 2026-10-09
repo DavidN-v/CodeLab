@@ -1,0 +1,26 @@
+questions:
+- type: choice
+  prompt: ¿Qué librería trae `@Component`, `signal` e `inject`?
+  options:
+  - '`@angular/common`'
+  - '`@angular/core`'
+  - '`@angular/platform-browser`'
+  - '`rxjs`'
+  answer: 1
+  explanation: '`@angular/core` es el corazón de Angular: componentes, signals, inyección de dependencias y ciclo de vida. `platform-browser` trae `bootstrapApplication`; `common`, los pipes y HttpClient.'
+- type: choice
+  prompt: '¿Qué diferencia hay entre `^22.2.0` y `~7.8.0` en `package.json`?'
+  options:
+  - '`^` acepta versiones minor nuevas y `~` solo patch'
+  - '`^` instala la versión exacta y `~` la más antigua'
+  - No hay ninguna diferencia
+  answer: 0
+  explanation: '`^22.2.0` admite 22.3, 22.4… pero no 23. `~7.8.0` admite solo 7.8.1, 7.8.2…, sin pasar a 7.9.'
+- type: choice
+  prompt: '`npm start` hace lo mismo que...'
+  options:
+  - '`ng serve`'
+  - '`ng build`'
+  - '`ng new`'
+  answer: 0
+  explanation: 'En `scripts`, `"start": "ng serve"`. Los scripts usan la CLI del proyecto (la de `node_modules`), así todo el equipo trabaja con la misma versión.'

@@ -1,0 +1,46 @@
+questions:
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      sealed interface Bebida permits Agua, Zumo {}
+
+      record Agua(int ml) implements Bebida {}
+
+      record Zumo(String fruta) implements Bebida {}
+
+      public class Main {
+          static String describir(Bebida b) {
+              return switch (b) {
+                  case Agua a when a.ml() > 1000 -> "garrafa";
+                  case Agua a -> "vaso de agua";
+                  case Zumo z -> "zumo de " + z.fruta();
+              };
+          }
+
+          public static void main(String[] args) {
+              System.out.println(describir(new Agua(250)));
+              System.out.println(describir(new Zumo("naranja")));
+              System.out.println(describir(new Agua(5000)));
+          }
+      }
+    answer: |
+      vaso de agua
+      zumo de naranja
+      garrafa
+    explanation: 'Los casos se prueban en orden. `Agua(250)` no cumple `ml() > 1000`, así que cae en `case Agua a`. El zumo extrae la fruta con `z.fruta()`. `Agua(5000)` sí cumple la condición del `when` y sale "garrafa".'
+  - type: choice
+    prompt: '¿Por qué un `switch` sobre una interfaz sellada no necesita `default`?'
+    options:
+      - Porque el compilador conoce la lista cerrada de subtipos y comprueba que los cubres todos
+      - Porque `default` está prohibido en los `switch` con patrones
+      - Porque si no coincide ningún caso, el `switch` devuelve `null`
+    answer: 0
+    explanation: '`permits` dice exactamente qué subtipos existen. Con esa lista, el compilador puede verificar que hay un caso para cada uno; si falta alguno, no compila. Por eso el `default` sobra.'
+  - type: choice
+    prompt: 'Tienes `sealed interface Pago permits Tarjeta, Efectivo {}` y añades `Bizum` a la lista `permits`, pero no lo añades a un `switch` sin `default` que procesa pagos. ¿Qué pasa?'
+    options:
+      - El código deja de compilar y señala el `switch` incompleto
+      - Compila, y los pagos con Bizum se ignoran en silencio
+      - Compila, y falla solo cuando llega un pago con Bizum
+    answer: 0
+    explanation: Esa es la gran ventaja de sellar la jerarquía. Olvidar un caso se convierte en un error de compilación que te dice dónde falta, en lugar de un fallo escondido que aparece más tarde.

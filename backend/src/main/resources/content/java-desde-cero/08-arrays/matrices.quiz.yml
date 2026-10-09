@@ -1,0 +1,32 @@
+questions:
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int[][] m = {
+                  {1, 2, 3},
+                  {4, 5, 6}
+              };
+              System.out.println(m[1][2] + " " + m.length + " " + m[0].length);
+          }
+      }
+    answer: |
+      6 2 3
+    explanation: '`m[1][2]` es la fila 1 (la segunda), columna 2 (la tercera): 6. `m.length` cuenta las filas (2) y `m[0].length` las columnas de la primera fila (3).'
+  - type: choice
+    prompt: '¿Qué crea `new int[3][4]`?'
+    options:
+      - 3 filas de 4 columnas
+      - 4 filas de 3 columnas
+      - Un array de 7 posiciones
+    answer: 0
+    explanation: 'El primer número son las filas y el segundo las columnas. En total hay 3 × 4 = 12 casillas, no 7.'
+  - type: choice
+    prompt: 'Para sumar la **columna** 1 de una matriz `m`, ¿qué expresión vas sumando?'
+    options:
+      - '`m[f][1]` variando `f`'
+      - '`m[1][c]` variando `c`'
+      - '`m[1][1]` varias veces'
+    answer: 0
+    explanation: 'Una columna fija el segundo índice y recorre todas las filas. `m[1][c]` variando `c` sumaría la **fila** 1.'

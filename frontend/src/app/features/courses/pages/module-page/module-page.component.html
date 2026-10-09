@@ -1,0 +1,138 @@
+@if (module.isLoading()) {
+  <section class="page"><p class="state" role="status">Cargando el módulo…</p></section>
+} @else if (module.error()) {
+  <section class="page">
+    <div class="state state--error" role="alert">
+      <p>No hemos podido cargar este módulo.</p>
+      <button type="button" class="button button--secondary" (click)="module.reload()">
+        Reintentar
+      </button>
+      <a class="button button--ghost" [routerLink]="['/languages', languageSlug()]"
+        >Volver al curso</a
+      >
+    </div>
+  </section>
+} @else if (module.value(); as detail) {
+  <section class="page" aria-labelledby="module-heading">
+    <header class="page__header">
+      <app-breadcrumbs
+        [crumbs]="[
+          { label: detail.course.title, link: ['/languages', languageSlug()] },
+          { label: 'Módulo ' + detail.position },
+        ]"
+      />
+      <h1 id="module-heading" class="page__title">{{ detail.title }}</h1>
+      <p class="page__lead">{{ detail.summary }}</p>
+      <p class="module__how">
+        Primero lee las lecciones en orden; después resuelve los ejercicios para afianzar lo
+        aprendido. Cuando acabes, pasa al módulo siguiente.
+      </p>
+      @if (nextStep(); as next) {
+        <div>
+          <a class="button button--primary" [routerLink]="next.link">
+            {{ started() ? 'Siguiente paso' : 'Empezar' }} → {{ next.label }}
+          </a>
+        </div>
+      }
+    </header>
+
+    <div class="module__path">
+      <section class="phase" aria-labelledby="lessons-heading">
+        <h2 id="lessons-heading" class="phase__title">
+          <span class="phase__number" aria-hidden="true">1</span> Aprende
+          <span class="phase__count"
+            >{{ lessonsRead() }}/{{ detail.lessons.length }} lecciones</span
+          >
+        </h2>
+        <ol class="rows">
+          @for (lesson of detail.lessons; track lesson.id) {
+            <li>
+              <a
+                class="row-link"
+                [routerLink]="['/learn', languageSlug(), detail.slug, lesson.slug]"
+              >
+                <span
+                  class="check"
+                  [class.check--done]="isCompleted(lesson.id)"
+                  [attr.aria-label]="isCompleted(lesson.id) ? 'Leída' : 'Sin leer'"
+                  >{{ isCompleted(lesson.id) ? '✓' : '' }}</span
+                >
+                <span class="item">
+                  <span class="item__title">{{ lesson.position }}. {{ lesson.title }}</span>
+                  <span class="item__summary">{{ lesson.summary }}</span>
+                </span>
+                <span class="item__meta">{{ lesson.estimatedMinutes }} min</span>
+              </a>
+            </li>
+          }
+        </ol>
+      </section>
+
+      <section class="phase" aria-labelledby="exercises-heading">
+        <h2 id="exercises-heading" class="phase__title">
+          <span class="phase__number" aria-hidden="true">2</span> Practica
+          <span class="phase__count"
+            >{{ exercisesSolved() }}/{{ detail.exercises.length }} ejercicios</span
+          >
+        </h2>
+        @if (detail.exercises.length === 0) {
+          <p class="state">Este módulo todavía no tiene ejercicios.</p>
+        } @else {
+          <ol class="rows">
+            @for (exercise of detail.exercises; track exercise.id) {
+              @let state = exerciseState(exercise.slug);
+              <li>
+                <a class="row-link" [routerLink]="['/practice', exercise.slug]">
+                  <span
+                    class="check"
+                    [class.check--done]="state === 'solved'"
+                    [class.check--partial]="state === 'attempted'"
+                    [attr.aria-label]="
+                      state === 'solved'
+                        ? 'Resuelto'
+                        : state === 'attempted'
+                          ? 'Intentado'
+                          : 'Sin intentar'
+                    "
+                    >{{ state === 'solved' ? '✓' : state === 'attempted' ? '•' : '' }}</span
+                  >
+                  <span class="item">
+                    <span class="item__title">{{ exercise.title }}</span>
+                    <span class="item__summary"
+                      >{{ kindIcons[exercise.kind] }} {{ kindLabels[exercise.kind] }} ·
+                      {{ exercise.summary }}</span
+                    >
+                  </span>
+                  <span class="tag" [class]="difficultyTags[exercise.difficulty]">
+                    {{ difficultyLabels[exercise.difficulty] }}
+                  </span>
+                </a>
+              </li>
+            }
+          </ol>
+        }
+      </section>
+    </div>
+
+    <nav class="module__nav" aria-label="Módulos">
+      @if (detail.previous; as previous) {
+        <a
+          class="button button--ghost"
+          [routerLink]="['/languages', languageSlug(), 'modules', previous.slug]"
+        >
+          ← {{ previous.position }}. {{ previous.title }}
+        </a>
+      } @else {
+        <span></span>
+      }
+      @if (detail.next; as next) {
+        <a
+          class="button button--secondary"
+          [routerLink]="['/languages', languageSlug(), 'modules', next.slug]"
+        >
+          {{ next.position }}. {{ next.title }} →
+        </a>
+      }
+    </nav>
+  </section>
+}

@@ -1,0 +1,56 @@
+title: Predice el aviso proyectado
+summary: Reparte el contenido del padre entre los huecos ng-content del hijo.
+difficulty: MEDIUM
+kind: predict
+statement: |
+  El padre `Registro` usa dos veces el componente `Aviso`. Escribe el texto que se ve en la página, **una línea por cada elemento con texto** (`b`, `h4` y `p`), en el orden en que aparecen en pantalla.
+starter: |
+  // src/app/aviso/aviso.ts
+  import { Component } from '@angular/core';
+
+  @Component({
+    selector: 'app-aviso',
+    template: `
+      <div class="aviso">
+        <ng-content select="[icono]" />
+        <ng-content select="h4" />
+        <ng-content />
+      </div>
+      <p>Fin del aviso</p>
+    `,
+  })
+  export class Aviso {}
+
+  // src/app/registro/registro.ts
+  import { Component } from '@angular/core';
+  import { Aviso } from '../aviso/aviso';
+
+  @Component({
+    selector: 'app-registro',
+    imports: [Aviso],
+    template: `
+      <app-aviso>
+        <p>Revisa tu correo.</p>
+        <h4>Cuenta creada</h4>
+        <b icono>✔</b>
+        <p>Gracias por registrarte.</p>
+      </app-aviso>
+      <app-aviso>
+        <h4>Sin icono</h4>
+      </app-aviso>
+    `,
+  })
+  export class Registro {}
+hints:
+  - 'La idea: el orden final lo decide la plantilla del hijo, no el orden en que el padre escribe las cosas.'
+  - 'Qué usar: cada elemento va al primer hueco cuyo `select` encaja (`[icono]` = tiene el atributo `icono`; `h4` = es un `<h4>`). Lo que no encaja va al hueco sin `select`, en su orden original. El `<p>Fin del aviso</p>` es del hijo y sale siempre.'
+  - 'El plan: primer aviso → icono, h4, los dos párrafos en su orden, «Fin del aviso». Segundo aviso → solo hay un h4, y después «Fin del aviso».'
+tests:
+  - output: |
+      ✔
+      Cuenta creada
+      Revisa tu correo.
+      Gracias por registrarte.
+      Fin del aviso
+      Sin icono
+      Fin del aviso

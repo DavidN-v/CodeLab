@@ -1,0 +1,75 @@
+title: Recuento de votos
+summary: Ordena las líneas que cuentan votos con un Map.
+difficulty: EASY
+kind: parsons
+statement: |
+  En una votación de clase, cada palabra de la entrada es el nombre de una persona votada. Ordena las líneas para que el programa cuente los votos de cada nombre y los escriba en orden alfabético con el formato `<nombre>: <votos>`.
+
+  Por ejemplo, con la entrada `Luis Ana Luis` escribe:
+
+  ```
+  Ana: 1
+  Luis: 2
+  ```
+
+  Cuidado: sobra una línea.
+starter: |
+  import java.util.Map;
+  import java.util.Scanner;
+  import java.util.TreeMap;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+  {{lines}}
+      }
+  }
+lines:
+  - '        Map<String, Integer> votos = new TreeMap<>();'
+  - '        while (entrada.hasNext()) {'
+  - '            String nombre = entrada.next();'
+  - '            votos.merge(nombre, 1, Integer::sum);'
+  - '        }'
+  - '        for (Map.Entry<String, Integer> voto : votos.entrySet()) {'
+  - '            System.out.println(voto.getKey() + ": " + voto.getValue());'
+  - '        }'
+distractors:
+  - '            votos.put(nombre, 1);'
+solution: |
+  import java.util.Map;
+  import java.util.Scanner;
+  import java.util.TreeMap;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          Map<String, Integer> votos = new TreeMap<>();
+          while (entrada.hasNext()) {
+              String nombre = entrada.next();
+              votos.merge(nombre, 1, Integer::sum);
+          }
+          for (Map.Entry<String, Integer> voto : votos.entrySet()) {
+              System.out.println(voto.getKey() + ": " + voto.getValue());
+          }
+      }
+  }
+hints:
+  - 'La idea: primero creas el mapa vacío, después lees todos los votos sumando uno a cada nombre y, al final, recorres el mapa para escribir el resultado.'
+  - 'Qué usar: un `TreeMap` (ordena las claves alfabéticamente), `merge(nombre, 1, Integer::sum)` para sumar un voto y `entrySet()` para recorrer pares clave-valor.'
+  - 'El plan: declaración del mapa → `while` que lee un nombre y hace `merge` → cierra el `while` → `for` sobre `votos.entrySet()` que imprime → cierra el `for`. La línea con `put(nombre, 1)` sobra: dejaría cada nombre siempre con 1 voto.'
+tests:
+  - input: "Luis Ana Luis\n"
+    output: |
+      Ana: 1
+      Luis: 2
+    sample: true
+  - input: |
+      Marta Pablo Marta
+      Zoe Marta Pablo
+    output: |
+      Marta: 3
+      Pablo: 2
+      Zoe: 1
+  - input: "Sol\n"
+    output: |
+      Sol: 1

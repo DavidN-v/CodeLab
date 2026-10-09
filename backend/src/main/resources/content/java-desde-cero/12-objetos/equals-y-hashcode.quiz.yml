@@ -1,0 +1,46 @@
+questions:
+  - type: output
+    prompt: 'La clase `Punto` de este programa **no** sobrescribe `equals`. ¿Qué imprime?'
+    code: |
+      class Punto {
+          int x, y;
+
+          Punto(int x, int y) {
+              this.x = x;
+              this.y = y;
+          }
+      }
+
+      public class Main {
+          public static void main(String[] args) {
+              Punto a = new Punto(1, 1);
+              Punto b = new Punto(1, 1);
+              Punto c = b;
+              System.out.println(a == b);
+              System.out.println(b == c);
+              System.out.println(a.equals(b));
+          }
+      }
+    answer: |
+      false
+      true
+      false
+    explanation: '`a` y `b` son dos objetos distintos, aunque tengan las mismas coordenadas: `==` da `false`. `c` señala el mismo objeto que `b`: `true`. Sin sobrescribir, `equals` hace lo mismo que `==`, así que también da `false`.'
+  - type: choice
+    prompt: Has sobrescrito `equals` en tu clase. ¿Qué más debes sobrescribir siempre?
+    options:
+      - '`hashCode`, usando los mismos campos'
+      - '`toString`'
+      - 'Nada más'
+      - 'El constructor'
+    answer: 0
+    explanation: 'La regla es: si dos objetos son iguales según `equals`, deben tener el mismo `hashCode`. Si no, colecciones como `HashSet` pueden guardar repetidos o no encontrar elementos. `toString` es recomendable, pero no obligatorio.'
+  - type: choice
+    prompt: ¿Qué hace `@Override` encima de `public boolean equals(Object otro)`?
+    options:
+      - Pide al compilador que compruebe que de verdad sobrescribes un método heredado
+      - Hace que el método se ejecute más rápido
+      - Hace el método `static`
+      - Es obligatorio; sin él no compila
+    answer: 0
+    explanation: 'Si te equivocas en la firma, por ejemplo `equals(Punto otro)`, sin `@Override` crearías un método nuevo sin darte cuenta. Con `@Override`, el compilador te avisa del error.'

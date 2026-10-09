@@ -1,0 +1,51 @@
+title: El HTML que envía el servidor
+summary: Predice el texto que llega renderizado con signals, afterNextRender y dos tipos de @defer.
+difficulty: MEDIUM
+kind: predict
+statement: |
+  La ruta de `Ficha` usa `RenderMode.Server`. El visitante tiene guardado `oscuro` en `localStorage`.
+
+  Imagina que el navegador tiene **JavaScript desactivado**: solo ve el HTML que envía el servidor. Escribe el texto visible de la página, **una línea por elemento** (`h2`, `p`, `button`), en orden.
+
+  `Comentarios` es un componente cuya plantilla es `<button>Me gusta (0)</button>`.
+starter: |
+  import { Component, afterNextRender, signal } from '@angular/core';
+  import { Comentarios } from './comentarios';
+
+  @Component({
+    selector: 'app-ficha',
+    imports: [Comentarios],
+    template: `
+      <h2>Ficha del producto</h2>
+      <p>Tema: {{ tema() }}</p>
+
+      @defer (on viewport) {
+        <app-comentarios />
+      } @placeholder {
+        <p>Comentarios pendientes</p>
+      }
+
+      @defer (hydrate on viewport) {
+        <p>Valoración: 4,5</p>
+      }
+    `,
+  })
+  export class Ficha {
+    protected readonly tema = signal('claro');
+
+    constructor() {
+      afterNextRender(() => {
+        this.tema.set(localStorage.getItem('tema') ?? 'claro');
+      });
+    }
+  }
+hints:
+  - 'La idea: el servidor pinta el estado inicial de todo y no ejecuta nada que sea «solo del navegador».'
+  - 'Qué usar: `afterNextRender` no se ejecuta en el servidor. Un `@defer` normal envía su `@placeholder`; un `@defer (hydrate …)` envía su contenido.'
+  - 'El plan: escribe el h2; el tema con el valor inicial del signal; el placeholder del primer `@defer`; y el contenido del segundo.'
+tests:
+  - output: |
+      Ficha del producto
+      Tema: claro
+      Comentarios pendientes
+      Valoración: 4,5

@@ -1,0 +1,27 @@
+lessons:
+  - slug: tipos-de-estado
+    title: Tipos de estado
+    summary: Local, compartido, del servidor y de la URL - dónde vive cada dato y por qué.
+    minutes: 7
+  - slug: store-con-signals
+    title: Un store con signals
+    summary: Estado privado, selectores de solo lectura con computed y métodos en un servicio.
+    minutes: 9
+  - slug: inmutabilidad-y-estado-derivado
+    title: Inmutabilidad y estado derivado
+    summary: Por qué mutar no avisa a los signals, cómo reemplazar y calcular en lugar de duplicar.
+    minutes: 8
+  - slug: estado-en-la-url
+    title: Estado en la URL
+    summary: Query params como fuente de verdad con withComponentInputBinding y router.navigate.
+    minutes: 8
+  - slug: librerias-de-estado
+    title: Librerías de estado
+    summary: Panorama de NgRx SignalStore y NgRx Store, y cuándo merecen la pena.
+    minutes: 7
+exercises:
+  - ng-predice-store-carrito
+  - ng-completa-store-tareas
+  - ng-ordena-metodo-inmutable
+  - ng-completa-filtro-url
+  - ng-predice-mutar-signal

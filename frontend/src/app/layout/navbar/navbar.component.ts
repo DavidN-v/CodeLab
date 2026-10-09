@@ -1,7 +1,9 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 
 import { BRAND } from '../../core/config/brand.config';
+import { AuthService } from '../../core/services/auth.service';
+import { SettingsService } from '../../core/services/settings.service';
 import { NAV_LINKS } from './navbar-links';
 
 @Component({
@@ -12,7 +14,12 @@ import { NAV_LINKS } from './navbar-links';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NavbarComponent {
+  private readonly auth = inject(AuthService);
+  private readonly router = inject(Router);
+  protected readonly settings = inject(SettingsService);
+
   protected readonly brandName = BRAND.name;
+  protected readonly user = this.auth.user;
   protected readonly links = NAV_LINKS;
 
   /** Only meaningful on narrow screens, where the links collapse behind a toggle. */
@@ -24,5 +31,11 @@ export class NavbarComponent {
 
   protected closeMenu(): void {
     this.menuOpen.set(false);
+  }
+
+  protected logout(): void {
+    this.auth.logout();
+    this.closeMenu();
+    void this.router.navigateByUrl('/');
   }
 }

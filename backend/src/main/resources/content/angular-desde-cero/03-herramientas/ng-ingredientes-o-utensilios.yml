@@ -1,0 +1,56 @@
+title: Ingredientes y utensilios
+summary: Coloca cada grupo de paquetes en la sección correcta de package.json.
+difficulty: MEDIUM
+kind: fill
+statement: |
+  En este `package.json` faltan los nombres de dos secciones y un valor. Completa:
+
+  1. el nombre de la sección con los paquetes que **acaban dentro de la app** (el núcleo de Angular, el router y rxjs);
+  2. el nombre de la sección con las **herramientas** que solo se usan para fabricar y probar la app (el compilador de TypeScript, la CLI y Vitest);
+  3. el valor de `"private"` que evita publicar el proyecto por error en el registro de npm.
+
+  Escribe los nombres exactamente como los usa npm (sin las comillas, que ya están puestas).
+starter: |
+  {
+    "name": "tienda",
+    "version": "0.0.0",
+    "private": {{?}},
+    "{{?}}": {
+      "@angular/core": "^22.2.0",
+      "@angular/router": "^22.2.0",
+      "rxjs": "~7.8.0"
+    },
+    "{{?}}": {
+      "@angular/cli": "^22.2.1",
+      "typescript": "~6.0.2",
+      "vitest": "^5.0.0"
+    }
+  }
+answers:
+  - 'true'
+  - dependencies
+  - devDependencies
+solution: |
+  {
+    "name": "tienda",
+    "version": "0.0.0",
+    "private": true,
+    "dependencies": {
+      "@angular/core": "^22.2.0",
+      "@angular/router": "^22.2.0",
+      "rxjs": "~7.8.0"
+    },
+    "devDependencies": {
+      "@angular/cli": "^22.2.1",
+      "typescript": "~6.0.2",
+      "vitest": "^5.0.0"
+    }
+  }
+hints:
+  - 'La idea: los ingredientes van dentro de la tarta y los utensilios se quedan en la cocina. Hay una sección para cada cosa.'
+  - 'Qué usar: los dos nombres de sección de la lección sobre `package.json`; el segundo es el primero con el prefijo `dev` (de *development*, desarrollo). `"private"` es un sí/no.'
+  - 'El plan: primer hueco, el valor booleano que activa la protección; segundo, `dependencies`; tercero, `devDependencies` (en camelCase, con la D mayúscula).'
+tests:
+  - output: |
+      core, router y rxjs en dependencies; cli, typescript y vitest en devDependencies
+    sample: true

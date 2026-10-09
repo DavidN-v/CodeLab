@@ -1,0 +1,75 @@
+title: Un buscador que todos puedan usar
+summary: Une la etiqueta al campo, anuncia los resultados y devuelve el foco.
+difficulty: MEDIUM
+kind: fill
+statement: |
+  Este buscador funciona con ratón, pero no es accesible. Completa los tres huecos para que:
+
+  1. El texto «Buscar ciudad» quede **unido** al campo: el lector de pantalla lo lee al entrar en el campo y pulsar el texto pone el cursor en él.
+  2. El lector de pantalla **anuncie** el número de resultados cuando cambie, sin mover el foco (es un atributo `aria-…`; aquí escribes la parte que va después de `aria-`).
+  3. Al pulsar «Limpiar», el cursor **vuelva** al campo de búsqueda (el nombre del método del elemento del DOM).
+starter: |
+  // src/app/buscador/buscador.ts
+  import { Component, ElementRef, computed, signal, viewChild } from '@angular/core';
+
+  @Component({
+    selector: 'app-buscador',
+    template: `
+      <label {{?}}="busqueda">Buscar ciudad</label>
+      <input id="busqueda" #campo type="search" [value]="texto()" (input)="texto.set(campo.value)" />
+      <button type="button" (click)="limpiar()">Limpiar</button>
+      <p aria-{{?}}="polite">{{ resultados().length }} resultados</p>
+    `,
+  })
+  export class Buscador {
+    private readonly ciudades = ['Lima', 'Madrid', 'México', 'Bogotá'];
+    private readonly campo = viewChild.required<ElementRef<HTMLInputElement>>('campo');
+
+    protected readonly texto = signal('');
+    protected readonly resultados = computed(() =>
+      this.ciudades.filter((c) => c.toLowerCase().includes(this.texto().toLowerCase())),
+    );
+
+    protected limpiar() {
+      this.texto.set('');
+      this.campo().nativeElement.{{?}}();
+    }
+  }
+solution: |
+  // src/app/buscador/buscador.ts
+  import { Component, ElementRef, computed, signal, viewChild } from '@angular/core';
+
+  @Component({
+    selector: 'app-buscador',
+    template: `
+      <label for="busqueda">Buscar ciudad</label>
+      <input id="busqueda" #campo type="search" [value]="texto()" (input)="texto.set(campo.value)" />
+      <button type="button" (click)="limpiar()">Limpiar</button>
+      <p aria-live="polite">{{ resultados().length }} resultados</p>
+    `,
+  })
+  export class Buscador {
+    private readonly ciudades = ['Lima', 'Madrid', 'México', 'Bogotá'];
+    private readonly campo = viewChild.required<ElementRef<HTMLInputElement>>('campo');
+
+    protected readonly texto = signal('');
+    protected readonly resultados = computed(() =>
+      this.ciudades.filter((c) => c.toLowerCase().includes(this.texto().toLowerCase())),
+    );
+
+    protected limpiar() {
+      this.texto.set('');
+      this.campo().nativeElement.focus();
+    }
+  }
+answers:
+  - for
+  - live
+  - focus
+hints:
+  - 'La idea: tres rampas distintas. Una une un texto con su campo por el `id`, otra convierte un párrafo en una «zona viva» que el lector anuncia, y la última mueve el foco del teclado.'
+  - 'Qué usar: el atributo HTML de `<label>` que apunta al `id` de un campo; el atributo ARIA de las regiones que se anuncian solas (`aria-…="polite"`); y el método de cualquier elemento del DOM que le da el foco.'
+  - 'El plan: `<label for="busqueda">`, `<p aria-live="polite">` y `nativeElement.focus()`.'
+tests:
+  - output: 'El lector dice «Buscar ciudad», anuncia «4 resultados» al cambiar y, tras Limpiar, el cursor vuelve al campo.'
+    sample: true

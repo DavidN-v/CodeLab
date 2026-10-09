@@ -1,0 +1,25 @@
+questions:
+  - type: choice
+    prompt: Una prueba generada falla con `NG0201 No provider found for ActivatedRoute`. ¿Por qué, si la app funciona?
+    options:
+      - TestBed no lee `app.config.ts`; el componente usa `RouterLink` y la prueba debe añadir `provideRouter([])`
+      - Falta importar `ActivatedRoute` en el componente
+      - La ruta del componente está mal escrita en `app.routes.ts`
+    answer: 0
+    explanation: 'Cada prueba crea un entorno de Angular vacío. Lo que la app recibe en `app.config.ts`, la prueba debe declararlo en sus `providers`.'
+  - type: choice
+    prompt: ¿Qué comprueba `http.expectOne('tareas.json')`?
+    options:
+      - Que se ha hecho exactamente una petición a `tareas.json`, y la devuelve para poder responderla
+      - Que el archivo `public/tareas.json` existe
+      - Que la respuesta tiene un solo elemento
+    answer: 0
+    explanation: 'Con `provideHttpClientTesting` las peticiones no salen a la red. `expectOne` busca una única petición pendiente a esa URL (falla si hay cero o varias) y `flush` la responde.'
+  - type: choice
+    prompt: En la prueba «solo pide el JSON una vez», ¿qué pasaría si quitas el `??=` de `cargar()` y asignas siempre una promesa nueva?
+    options:
+      - '`expectOne` fallaría, porque habría dos peticiones a `tareas.json`'
+      - La prueba seguiría pasando
+      - Fallaría el build, pero no la prueba
+    answer: 0
+    explanation: 'Cada llamada a `cargar()` haría una petición nueva. Con dos peticiones pendientes, `expectOne` (que exige exactamente una) falla. La prueba protege ese comportamiento.'

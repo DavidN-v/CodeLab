@@ -1,0 +1,25 @@
+questions:
+  - type: choice
+    prompt: Al navegar por la app todo va bien, pero al recargar en `/perfil` el servidor responde 404. ¿Por qué?
+    options:
+      - El servidor busca un archivo `perfil` que no existe; debería devolver `index.html` para que el router resuelva la ruta
+      - El router de Angular no reconoce la ruta `/perfil`
+      - Falta compilar con `ng build -c development`
+    answer: 0
+    explanation: 'Al navegar dentro de la app, la URL cambia sin pedir nada al servidor. Al recargar, la petición llega al servidor, y solo con un fallback a `index.html` arranca Angular y el router pinta la ruta.'
+  - type: output
+    prompt: Compilas con `ng build --base-href /tienda/`. ¿Cómo queda la etiqueta `base` en `dist/mi-app/browser/index.html`?
+    code: |
+      <!-- src/index.html -->
+      <base href="/" />
+    answer: |
+      <base href="/tienda/">
+    explanation: 'La opción `--base-href` sustituye el valor de la etiqueta en el `index.html` compilado (el build lo escribe sin la barra de cierre). Así el navegador pide los archivos y el router calcula las rutas a partir de `/tienda/`.'
+  - type: choice
+    prompt: En el `Dockerfile` de dos etapas, ¿qué acaba dentro de la imagen final de nginx?
+    options:
+      - La configuración de nginx y el contenido de `dist/mi-app/browser`
+      - Todo el proyecto, incluidos `node_modules` y el código TypeScript
+      - Node.js y el comando `ng serve`
+    answer: 0
+    explanation: 'La primera etapa compila con Node; la segunda solo copia la carpeta compilada con `COPY --from=build`. Node, las dependencias y el código fuente no llegan a la imagen final.'

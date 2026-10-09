@@ -1,0 +1,25 @@
+questions:
+  - type: choice
+    prompt: Quieres que la etiqueta `<app-tarjeta>` tenga un borde y se comporte como bloque. ¿Qué selector usas en `tarjeta.css`?
+    options:
+      - '`:host`'
+      - '`app-tarjeta`'
+      - '`:root`'
+    answer: 0
+    explanation: 'La etiqueta anfitriona no está dentro de la plantilla, así que un selector de etiqueta encapsulado no la alcanza. `:host` es justo el selector que apunta al anfitrión desde los estilos del propio componente.'
+  - type: choice
+    prompt: 'En `styles.css` tienes `:root { --color-acento: teal; }`. En el CSS encapsulado de un componente escribes `color: var(--color-acento);`. ¿Qué color sale?'
+    options:
+      - Verde azulado (`teal`), porque las variables CSS se heredan y atraviesan la encapsulación
+      - El color por defecto, porque la encapsulación bloquea las variables
+      - Da un error de compilación
+    answer: 0
+    explanation: 'Las variables CSS viajan hacia abajo por el árbol de elementos como cualquier propiedad heredada. La encapsulación solo reescribe selectores; no impide leer variables definidas por un antepasado.'
+  - type: choice
+    prompt: '¿Cuándo se aplica la regla `:host(.importante) { border-color: crimson; }` del componente `Aviso`?'
+    options:
+      - Cuando se usa como `<app-aviso class="importante">`
+      - Cuando cualquier antepasado tiene la clase `importante`
+      - Cuando un elemento de la plantilla de `Aviso` tiene la clase `importante`
+    answer: 0
+    explanation: '`:host(.clase)` mira la propia etiqueta anfitriona. Para mirar a los antepasados existe `:host-context(.clase)`, y para elementos de la plantilla basta con `.importante`.'

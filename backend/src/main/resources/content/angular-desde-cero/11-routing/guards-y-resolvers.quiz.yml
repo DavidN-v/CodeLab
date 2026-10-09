@@ -1,0 +1,25 @@
+questions:
+  - type: choice
+    prompt: ¿Qué hace un `CanActivateFn` que devuelve `router.createUrlTree(['/login'])`?
+    options:
+      - Cancela la navegación original y lleva a `/login`
+      - Deja pasar a la ruta y además abre `/login` en otra pestaña
+      - Lanza un error porque solo puede devolver `true` o `false`
+    answer: 0
+    explanation: 'Devolver un `UrlTree` significa «no entres aquí, ve allí». Es mejor que `false`, que deja a la persona sin saber qué pasó.'
+  - type: choice
+    prompt: ¿Qué tipo de guard usarías para avisar de que hay cambios sin guardar al salir de un formulario?
+    options:
+      - '`CanDeactivateFn`'
+      - '`CanActivateFn`'
+      - '`ResolveFn`'
+    answer: 0
+    explanation: '`CanDeactivateFn` se ejecuta antes de **salir** de una ruta y recibe el componente, al que puede preguntar si tiene cambios.'
+  - type: choice
+    prompt: 'Con `resolve: { cliente: clienteResolver }` y `withComponentInputBinding()`, ¿cómo recibe el componente los datos?'
+    options:
+      - 'Con un `input()` llamado `cliente`'
+      - Con `inject(clienteResolver)`
+      - Llamando a `clienteResolver()` en `ngOnInit`
+    answer: 0
+    explanation: 'El router ejecuta el resolver, espera el resultado y lo copia en el `input` que se llama como la clave de `resolve`.'

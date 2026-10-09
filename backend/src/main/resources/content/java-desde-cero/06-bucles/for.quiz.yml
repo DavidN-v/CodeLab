@@ -1,0 +1,39 @@
+questions:
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int producto = 1;
+              for (int i = 1; i <= 4; i++) {
+                  producto *= i;
+              }
+              System.out.println(producto);
+          }
+      }
+    answer: |
+      24
+    explanation: 'El acumulador empieza en 1 (el neutro de la multiplicación) y se multiplica por 1, 2, 3 y 4: 1 × 2 × 3 × 4 = 24. Si empezara en 0, el resultado sería siempre 0.'
+  - type: choice
+    prompt: '¿Cuántas veces se repite `for (int i = 0; i < 10; i++)`?'
+    options:
+      - '10'
+      - '11'
+      - '9'
+      - '0'
+    answer: 0
+    explanation: '`i` toma los valores 0, 1, 2… hasta 9: son 10 valores. Cuando `i` llega a 10, `i < 10` es falso y el bucle para. Con `<=` serían 11.'
+  - type: choice
+    prompt: 'Quieres sumar los números del 1 al 5, pero tu programa imprime `5`. ¿Cuál es el error más probable?'
+    code: |
+      for (int i = 1; i <= 5; i++) {
+          int suma = 0;
+          suma += i;
+      }
+    options:
+      - '`int suma = 0;` está dentro del bucle y se reinicia en cada vuelta'
+      - 'La condición debería ser `i < 5`'
+      - 'Debería ser `suma = i;`'
+      - 'Falta un `break`'
+    answer: 0
+    explanation: 'Al declarar el acumulador dentro del bucle, vuelve a 0 en cada vuelta y solo guarda el último número. Hay que declararlo antes del `for` (y, además, así se podría usar después del bucle).'

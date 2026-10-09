@@ -1,0 +1,27 @@
+questions:
+  - type: choice
+    prompt: 'Con `lleno = false` en la clase, ¿cómo queda este botón?'
+    code: |
+      <button disabled="lleno">Apuntarme</button>
+    options:
+      - 'Desactivado: sin corchetes, el atributo `disabled` existe con el texto "lleno"'
+      - 'Activado: Angular evalúa `lleno` y vale `false`'
+      - 'Da un error de compilación porque falta `{{ }}`'
+    answer: 0
+    explanation: 'Sin corchetes Angular no evalúa nada: pone el texto `"lleno"` en el atributo. Y para el HTML basta con que `disabled` exista para desactivar el botón. Lo correcto es `[disabled]="lleno"`.'
+  - type: choice
+    prompt: ¿Qué hace `[class.activo]="seleccionado"`?
+    options:
+      - Añade la clase `activo` cuando `seleccionado` es verdadero y la quita cuando es falso
+      - Sustituye todas las clases del elemento por el valor de `seleccionado`
+      - Pone el texto de `seleccionado` dentro del elemento
+    answer: 0
+    explanation: 'El enlace de clase controla una sola clase: la pone o la quita según la expresión. Las demás clases del elemento se respetan.'
+  - type: choice
+    prompt: 'El compilador dice `Can''t bind to ''colspan'' since it isn''t a known property of ''td''`. ¿Cómo lo arreglas?'
+    options:
+      - 'Escribiendo `[attr.colspan]="columnas"`'
+      - 'Escribiendo `[colSpan]="{{ columnas }}"`'
+      - 'Quitando los corchetes y dejando `colspan="columnas"`'
+    answer: 0
+    explanation: '`colspan` es un atributo HTML sin propiedad con el mismo nombre. `[attr.colspan]` le dice a Angular que lo escriba como atributo. Sin corchetes pondrías el texto "columnas", y mezclar `[ ]` con `{{ }}` no está permitido.'

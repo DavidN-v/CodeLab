@@ -1,0 +1,19 @@
+lessons:
+  - slug: conectar
+    title: Conectar con una base de datos
+    summary: JDBC, el driver, la URL de conexión y tu primera consulta.
+    minutes: 7
+  - slug: prepared-statement
+    title: Consultas seguras con PreparedStatement
+    summary: Parámetros, inyección SQL y leer resultados.
+    minutes: 6
+  - slug: transacciones-y-dao
+    title: Transacciones y el patrón DAO
+    summary: Todo o nada, y separar el SQL del resto del programa.
+    minutes: 7
+exercises:
+  - consulta-con-huecos
+  - catalogo-de-peliculas
+  - busqueda-segura
+  - transferencias
+  - aprobados-en-la-base

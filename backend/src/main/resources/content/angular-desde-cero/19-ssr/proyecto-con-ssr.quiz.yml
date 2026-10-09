@@ -1,0 +1,25 @@
+questions:
+  - type: choice
+    prompt: ¿Qué archivo contiene el servidor web Express que recibe las peticiones?
+    options:
+      - '`src/server.ts`'
+      - '`src/main.server.ts`'
+      - '`src/app/app.config.server.ts`'
+    answer: 0
+    explanation: '`server.ts` crea la app de Express, sirve los archivos estáticos y pasa el resto a `AngularNodeAppEngine`. `main.server.ts` solo arranca Angular, y `app.config.server.ts` es su configuración.'
+  - type: choice
+    prompt: ¿Por qué `main.server.ts` exporta una función en vez de llamar directamente a `bootstrapApplication`?
+    options:
+      - Porque el servidor arranca la app una vez por cada petición, con el documento de esa petición
+      - Porque en el servidor no se puede llamar a `bootstrapApplication`
+      - Para que el navegador la importe más tarde
+    answer: 0
+    explanation: 'En el servidor cada visitante necesita su propio renderizado. El motor llama a la función exportada en cada petición y le pasa un `context` con el documento de esa petición.'
+  - type: choice
+    prompt: ¿Qué hace `mergeApplicationConfig(appConfig, serverConfig)`?
+    options:
+      - Suma la configuración del servidor a la del navegador
+      - Sustituye la configuración del navegador por la del servidor
+      - Combina las rutas en un solo archivo
+    answer: 0
+    explanation: En el servidor tienes todos tus providers de siempre (router, HTTP…) más los que añade `provideServerRendering`.

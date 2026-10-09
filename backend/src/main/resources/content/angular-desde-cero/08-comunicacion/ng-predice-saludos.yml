@@ -1,0 +1,47 @@
+title: Predice los saludos
+summary: Sigue inputs con valor por defecto, transform y con y sin corchetes.
+difficulty: EASY
+kind: predict
+statement: |
+  El componente `Bienvenida` usa tres veces el hijo `Saludo`. Escribe el texto que se ve en la página, **una línea por párrafo**, en orden.
+
+  Fíjate bien en qué atributos llevan corchetes y cuáles no.
+starter: |
+  // src/app/saludo/saludo.ts
+  import { Component, booleanAttribute, input } from '@angular/core';
+
+  @Component({
+    selector: 'app-saludo',
+    template: `<p>{{ saludo() }}, {{ nombre() }}{{ exclamar() ? '!' : '.' }}</p>`,
+  })
+  export class Saludo {
+    readonly nombre = input.required<string>();
+    readonly saludo = input('Hola');
+    readonly exclamar = input(false, { transform: booleanAttribute });
+  }
+
+  // src/app/bienvenida/bienvenida.ts
+  import { Component, signal } from '@angular/core';
+  import { Saludo } from '../saludo/saludo';
+
+  @Component({
+    selector: 'app-bienvenida',
+    imports: [Saludo],
+    template: `
+      <app-saludo nombre="Ada" />
+      <app-saludo [nombre]="invitado()" saludo="Buenas" exclamar />
+      <app-saludo nombre="invitado()" [saludo]="'Hey'" />
+    `,
+  })
+  export class Bienvenida {
+    protected readonly invitado = signal('Grace');
+  }
+hints:
+  - 'La idea: cada `<app-saludo>` pinta un párrafo con tres datos: el saludo, el nombre y un signo final.'
+  - 'Qué usar: sin corchetes se pasa el texto tal cual; con corchetes se evalúa la expresión. Si un input no se pasa, vale su valor por defecto. `booleanAttribute` convierte un atributo sin valor en `true`.'
+  - 'El plan: 1.º saludo por defecto, Ada, sin exclamar. 2.º Buenas, el valor del signal, exclamar = true. 3.º el saludo es la expresión `''Hey''`, y el nombre es el texto literal que hay entre comillas.'
+tests:
+  - output: |
+      Hola, Ada.
+      Buenas, Grace!
+      Hey, invitado().

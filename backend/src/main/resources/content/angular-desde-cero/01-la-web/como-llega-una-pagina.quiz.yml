@@ -1,0 +1,25 @@
+questions:
+  - type: choice
+    prompt: ¿Qué es lo primero que devuelve el servidor cuando el navegador pide una página?
+    options:
+      - Un archivo HTML
+      - La página ya pintada como una imagen
+      - Solo el archivo JavaScript
+    answer: 0
+    explanation: 'El servidor envía primero el HTML. Al leerlo, el navegador descubre qué más necesita (CSS, JavaScript, imágenes) y lo pide después. La página la pinta el navegador, no el servidor.'
+  - type: choice
+    prompt: En la URL `https://tienda.com/carrito`, ¿qué parte es la ruta?
+    options:
+      - '`tienda.com`'
+      - '`https`'
+      - '`/carrito`'
+    answer: 2
+    explanation: '`https` es el protocolo y `tienda.com` el dominio (el servidor). La ruta, `/carrito`, dice qué página concreta quieres de ese servidor.'
+  - type: choice
+    prompt: Mientras programas con Angular abres `localhost:4200`. ¿Dónde está el servidor?
+    options:
+      - En tu propio ordenador
+      - En los servidores de Google
+      - Dentro del navegador, que no necesita servidor
+    answer: 0
+    explanation: '`localhost` significa «este mismo ordenador» y 4200 es el puerto. Angular arranca un servidor de desarrollo en tu máquina para que pruebes tu aplicación.'

@@ -1,0 +1,66 @@
+title: Eco invertido
+summary: Lee dos líneas y escríbelas en orden inverso.
+difficulty: EASY
+statement: |
+  La entrada tiene exactamente dos líneas de texto. Escríbelas en el orden contrario: primero la segunda y después la primera.
+
+  **Ejemplo**
+
+  Entrada:
+
+  ```
+  primera
+  segunda
+  ```
+
+  Salida:
+
+  ```
+  segunda
+  primera
+  ```
+starter: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          String primera = entrada.nextLine();
+          String segunda = entrada.nextLine();
+          System.out.println(segunda);
+          System.out.println(primera);
+      }
+  }
+hints:
+  - 'La idea: no puedes escribir la segunda línea antes de haberla leído, así que primero lee las dos y luego escríbelas al revés.'
+  - 'Qué usar: `entrada.nextLine()` dos veces, guardando cada resultado en su propia variable `String`.'
+  - 'El plan: lee `primera` y `segunda`; después `println(segunda)` y por último `println(primera)`.'
+tests:
+  - input: |
+      primera
+      segunda
+    output: |
+      segunda
+      primera
+    sample: true
+  - input: |
+      Hola mundo
+      Adiós mundo
+    output: |
+      Adiós mundo
+      Hola mundo
+  - input: |
+      123
+      abc
+    output: |
+      abc
+      123

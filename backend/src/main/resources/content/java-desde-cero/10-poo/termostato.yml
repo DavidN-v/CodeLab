@@ -1,0 +1,85 @@
+title: Termostato
+summary: Un objeto que mantiene su estado siempre dentro de unos límites.
+difficulty: MEDIUM
+statement: |
+  Diseña una clase `Termostato` que guarde una temperatura objetivo entera. Reglas:
+
+  - Empieza en 20 grados.
+  - Nunca puede bajar de 10 ni subir de 30: si una operación intentara salirse, la temperatura queda en el límite.
+  - `subir(int grados)` y `bajar(int grados)` cambian la temperatura respetando los límites.
+  - `String estado()` devuelve `"<temperatura> °C (<modo>)"`, donde el modo es `frío` si es menor de 18, `calor` si es mayor de 24 y `confort` en otro caso.
+
+  La entrada son órdenes `subir <n>`, `bajar <n>` o `estado`, separadas por espacios o saltos de línea. Con `estado` imprime `termostato.estado()`.
+starter: |
+  import java.util.Scanner;
+
+  class Termostato {
+
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          Termostato termostato = new Termostato();
+          while (entrada.hasNext()) {
+              String orden = entrada.next();
+              // Lee la cantidad cuando la orden sea subir o bajar, y llama al método que toque.
+          }
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  class Termostato {
+      private static final int MINIMO = 10;
+      private static final int MAXIMO = 30;
+      private int temperatura = 20;
+
+      void subir(int grados) {
+          temperatura = Math.min(MAXIMO, temperatura + grados);
+      }
+
+      void bajar(int grados) {
+          temperatura = Math.max(MINIMO, temperatura - grados);
+      }
+
+      String estado() {
+          String modo = temperatura < 18 ? "frío" : temperatura > 24 ? "calor" : "confort";
+          return temperatura + " °C (" + modo + ")";
+      }
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          Termostato termostato = new Termostato();
+          while (entrada.hasNext()) {
+              String orden = entrada.next();
+              switch (orden) {
+                  case "subir" -> termostato.subir(entrada.nextInt());
+                  case "bajar" -> termostato.bajar(entrada.nextInt());
+                  case "estado" -> System.out.println(termostato.estado());
+                  default -> { }
+              }
+          }
+      }
+  }
+hints:
+  - 'La idea: la temperatura nunca se sale de 10..30; si una orden se pasa, se queda pegada al límite.'
+  - 'Qué usar: constantes `private static final int MINIMO = 10, MAXIMO = 30;`, `Math.min`/`Math.max` y un `switch` sobre la orden en el `main`.'
+  - 'El plan: `subir` hace `temperatura = Math.min(MAXIMO, temperatura + grados);` y `bajar` usa `Math.max(MINIMO, ...)`. `estado()` elige el modo con dos comparaciones (`< 18` frío, `> 24` calor) y devuelve `temperatura + " °C (" + modo + ")"`.'
+tests:
+  - input: "estado subir 3 estado subir 20 estado\n"
+    output: |
+      20 °C (confort)
+      23 °C (confort)
+      30 °C (calor)
+    sample: true
+  - input: "bajar 3 estado bajar 100 estado\n"
+    output: |
+      17 °C (frío)
+      10 °C (frío)
+  - input: "subir 4 estado subir 1 estado\n"
+    output: |
+      24 °C (confort)
+      25 °C (calor)

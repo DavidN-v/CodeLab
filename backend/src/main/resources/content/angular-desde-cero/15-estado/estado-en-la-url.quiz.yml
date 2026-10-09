@@ -1,0 +1,25 @@
+questions:
+  - type: choice
+    prompt: 'Con `withComponentInputBinding()`, ¿cómo recibe el componente de la ruta el valor de `?categoria=bebidas`?'
+    options:
+      - 'Como un input con el mismo nombre: `categoria = input<string>()`'
+      - 'Tiene que leer `window.location.search` a mano'
+      - 'Como un signal que el componente crea con `signal(''bebidas'')`'
+    answer: 0
+    explanation: 'Esa feature del router pasa los parámetros de ruta y los query params a los `input()` del componente que tengan el mismo nombre.'
+  - type: choice
+    prompt: "¿Qué hace `router.navigate([], { queryParams: { categoria: null }, queryParamsHandling: 'merge' })`?"
+    options:
+      - Se queda en la misma ruta, quita `categoria` de la URL y conserva los demás query params
+      - Navega a la página de inicio
+      - Borra todos los query params
+    answer: 0
+    explanation: 'El array vacío significa «esta misma ruta». Un valor `null` elimina ese parámetro y `merge` mantiene el resto (por ejemplo, `orden`).'
+  - type: choice
+    prompt: La URL es `/productos?pagina=2`. ¿Qué valor tiene `pagina()` si se declara `pagina = input<string>()`?
+    options:
+      - "El texto `'2'`"
+      - El número `2`
+      - '`undefined`, porque los números no viajan en la URL'
+    answer: 0
+    explanation: 'Todo lo que viene de la URL es texto. Para obtener un número hay que convertirlo, por ejemplo con `input(1, { transform: numberAttribute })`.'

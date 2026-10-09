@@ -1,0 +1,89 @@
+title: Catálogo de películas
+summary: Crea una tabla, inserta datos con PreparedStatement y consulta ordenando.
+difficulty: EASY
+statement: |
+  Cada línea de la entrada es una película: `<título>;<año>;<puntuación>` (puntuación entera de 1 a 10). El programa debe:
+
+  1. Crear en H2 en memoria (`jdbc:h2:mem:cine`) una tabla `peliculas (titulo VARCHAR(100), anio INT, puntuacion INT)`.
+  2. Insertar cada película con un `PreparedStatement`.
+  3. Con **una consulta SQL**, escribir las películas con puntuación de 7 o más, ordenadas por puntuación descendente y, a igualdad, por año ascendente: `<título> (<año>) - <puntuación>`.
+  4. Con otra consulta, escribir `Total: <número de películas>`.
+starter: |
+  import java.sql.Connection;
+  import java.sql.DriverManager;
+  import java.sql.PreparedStatement;
+  import java.sql.ResultSet;
+  import java.sql.SQLException;
+  import java.sql.Statement;
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) throws SQLException {
+          Scanner entrada = new Scanner(System.in);
+          try (Connection c = DriverManager.getConnection("jdbc:h2:mem:cine")) {
+
+          }
+      }
+  }
+solution: |
+  import java.sql.Connection;
+  import java.sql.DriverManager;
+  import java.sql.PreparedStatement;
+  import java.sql.ResultSet;
+  import java.sql.SQLException;
+  import java.sql.Statement;
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) throws SQLException {
+          Scanner entrada = new Scanner(System.in);
+          try (Connection c = DriverManager.getConnection("jdbc:h2:mem:cine")) {
+              try (Statement s = c.createStatement()) {
+                  s.execute("CREATE TABLE peliculas (titulo VARCHAR(100), anio INT, puntuacion INT)");
+              }
+              try (PreparedStatement insertar = c.prepareStatement("INSERT INTO peliculas VALUES (?, ?, ?)")) {
+                  while (entrada.hasNextLine()) {
+                      String[] partes = entrada.nextLine().split(";");
+                      insertar.setString(1, partes[0]);
+                      insertar.setInt(2, Integer.parseInt(partes[1].trim()));
+                      insertar.setInt(3, Integer.parseInt(partes[2].trim()));
+                      insertar.executeUpdate();
+                  }
+              }
+              try (Statement s = c.createStatement()) {
+                  try (ResultSet r = s.executeQuery(
+                          "SELECT titulo, anio, puntuacion FROM peliculas WHERE puntuacion >= 7 ORDER BY puntuacion DESC, anio")) {
+                      while (r.next()) {
+                          System.out.println(r.getString("titulo") + " (" + r.getInt("anio") + ") - " + r.getInt("puntuacion"));
+                      }
+                  }
+                  try (ResultSet r = s.executeQuery("SELECT COUNT(*) FROM peliculas")) {
+                      r.next();
+                      System.out.println("Total: " + r.getInt(1));
+                  }
+              }
+          }
+      }
+  }
+hints:
+  - 'La idea: primero guardas todas las películas en una tabla y después le pides a la base de datos que filtre, ordene y cuente por ti con SQL.'
+  - 'Qué usar: `statement.execute("CREATE TABLE ...")` para crear la tabla, un único `PreparedStatement` con `INSERT INTO peliculas VALUES (?, ?, ?)` reutilizado en cada línea, y un `SELECT` con `WHERE puntuacion >= 7 ORDER BY puntuacion DESC, anio`.'
+  - 'El plan: crea la tabla; por cada línea, `split(";")`, rellena los tres huecos con `setString`/`setInt` y llama a `executeUpdate()`. Después recorre el `SELECT` con `while (r.next())` imprimiendo cada película, y termina con `SELECT COUNT(*) FROM peliculas` para el total.'
+tests:
+  - input: |
+      Amélie;2001;8
+      Coco;2017;9
+      Avatar;2009;7
+      Mala;2010;3
+      Up;2009;9
+    output: |
+      Up (2009) - 9
+      Coco (2017) - 9
+      Amélie (2001) - 8
+      Avatar (2009) - 7
+      Total: 5
+    sample: true
+  - input: |
+      Ninguna buena;2020;2
+    output: |
+      Total: 1

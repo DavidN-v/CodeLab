@@ -1,10 +1,10 @@
 <section class="catalog" aria-labelledby="catalog-heading">
   <header class="catalog__header">
     <p class="catalog__eyebrow">Catálogo</p>
-    <h2 id="catalog-heading" class="catalog__heading">Lenguajes</h2>
+    <h2 id="catalog-heading" class="catalog__heading">Lenguajes y frameworks</h2>
     <p class="catalog__intro">
-      Empieza por el que ya está disponible. Los siguientes llegarán sobre la misma base: mismo
-      editor, mismo sistema de ejercicios, mismo seguimiento de progreso.
+      Empieza por un lenguaje y sigue con un framework. Todos comparten la misma base: lecciones
+      paso a paso, ejercicios con corrección automática y seguimiento de tu progreso.
     </p>
   </header>
 
@@ -22,13 +22,16 @@
     }
     @case ('ready') {
       @if (languages().length > 0) {
-        <ul class="catalog__list">
-          @for (language of languages(); track language.id) {
-            <li class="catalog__item">
-              <app-language-list-item [language]="language" />
-            </li>
-          }
-        </ul>
+        @for (group of groups(); track group.title) {
+          <h3 class="catalog__group">{{ group.title }}</h3>
+          <ul class="catalog__list">
+            @for (language of group.languages; track language.id) {
+              <li class="catalog__item">
+                <app-language-list-item [language]="language" />
+              </li>
+            }
+          </ul>
+        }
       } @else {
         <p class="catalog__message">Todavía no hay lenguajes publicados.</p>
       }

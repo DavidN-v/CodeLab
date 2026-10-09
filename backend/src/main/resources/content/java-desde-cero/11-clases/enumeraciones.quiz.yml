@@ -1,0 +1,55 @@
+questions:
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      enum Talla { S, M, L, XL }
+
+      public class Main {
+          public static void main(String[] args) {
+              Talla t = Talla.L;
+              System.out.println(t);
+              System.out.println(t.ordinal());
+              System.out.println(t == Talla.L);
+          }
+      }
+    answer: |
+      L
+      2
+      true
+    explanation: 'Un valor de enum se imprime con su nombre. `ordinal()` es su posición empezando en 0 (S=0, M=1, L=2). Cada valor es un objeto único, así que `==` funciona para compararlos.'
+  - type: choice
+    prompt: ¿Qué ventaja tiene `enum Estado { PENDIENTE, ENVIADO }` frente a guardar el estado en un `int` (1 = pendiente, 2 = enviado)?
+    options:
+      - El compilador impide usar un valor que no esté en la lista
+      - Ocupa menos memoria que un `int`
+      - Permite sumar estados entre sí
+      - Se puede cambiar la lista de valores mientras el programa se ejecuta
+    answer: 0
+    explanation: 'Con un `int` nada impide escribir un estado 7 que no significa nada. Con un enum solo existen los valores declarados, y el error aparece al compilar, no cuando ya es tarde.'
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      enum Moneda {
+          EURO(1.0), CENTIMO(0.01);
+
+          private final double valor;
+
+          Moneda(double valor) {
+              this.valor = valor;
+          }
+
+          double enEuros(int cantidad) {
+              return cantidad * valor;
+          }
+      }
+
+      public class Main {
+          public static void main(String[] args) {
+              System.out.println(Moneda.EURO.enEuros(3));
+              System.out.println(Moneda.CENTIMO.enEuros(50));
+          }
+      }
+    answer: |
+      3.0
+      0.5
+    explanation: 'Cada constante guarda su propio `valor`, que recibe del constructor. `EURO` vale 1.0, así que 3 euros son 3.0; `CENTIMO` vale 0.01, y 50 céntimos son 0.5.'

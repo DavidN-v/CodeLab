@@ -1,0 +1,25 @@
+questions:
+- type: choice
+  prompt: ¿Por qué en un archivo `.spec.ts` puedes usar `describe` e `it` sin importarlos?
+  options:
+  - Porque `describe` e `it` son parte de JavaScript
+  - Porque `@angular/core` los exporta automáticamente
+  - Porque `tsconfig.spec.json` añade los tipos globales `vitest/globals`
+  answer: 2
+  explanation: '`"types": ["vitest/globals"]` en `tsconfig.spec.json` hace que TypeScript conozca esas funciones globales de Vitest. `tsconfig.app.json` no las incluye, porque la app no las necesita.'
+- type: choice
+  prompt: '¿Qué significa que `tsconfig.app.json` tenga `"extends": "./tsconfig.json"`?'
+  options:
+  - Hereda las opciones comunes y solo cambia qué archivos compila
+  - Copia el archivo base y lo borra
+  - Obliga a compilar también las pruebas
+  answer: 0
+  explanation: El archivo raíz guarda las reglas comunes; los otros dos lo extienden y solo indican qué archivos incluyen o excluyen.
+- type: choice
+  prompt: Te sale `Parameter 'x' implicitly has an 'any' type`. ¿Qué es lo correcto?
+  options:
+  - Desactivar el modo estricto
+  - Escribir el tipo del parámetro
+  - Ignorar el error, porque solo es un aviso
+  answer: 1
+  explanation: El modo estricto avisa de fallos que, sin él, aparecerían en el navegador del usuario. La solución es dar un tipo al parámetro.

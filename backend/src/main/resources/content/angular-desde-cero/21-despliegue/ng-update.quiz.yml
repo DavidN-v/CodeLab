@@ -1,0 +1,25 @@
+questions:
+  - type: choice
+    prompt: ¿Qué hace `ng update @angular/core @angular/cli` que no hace `npm install @angular/core@latest`?
+    options:
+      - Ejecuta migraciones que modifican tu código para adaptarlo a la versión nueva
+      - Descarga los paquetes más rápido
+      - Publica la app actualizada
+    answer: 0
+    explanation: 'Los dos cambian versiones, pero solo `ng update` ejecuta los schematics de migración que vienen con cada versión y reescriben el código afectado.'
+  - type: choice
+    prompt: Tu proyecto está en Angular 19 y quieres llegar a la 22. ¿Cómo lo haces?
+    options:
+      - Tres actualizaciones seguidas, 19 → 20 → 21 → 22, compilando y probando entre cada una
+      - Una sola actualización directa a la 22
+      - Borrar `node_modules` e instalar la 22
+    answer: 0
+    explanation: 'Cada versión trae sus propias migraciones. Ir de una en una aplica todas en orden y hace más fácil saber qué cambio rompió algo.'
+  - type: choice
+    prompt: '`ng update` se niega a continuar con un aviso sobre cambios sin guardar en el repositorio. ¿Por qué?'
+    options:
+      - Para que puedas deshacer la actualización con Git si algo sale mal
+      - Porque necesita subir los cambios a GitHub
+      - Porque las migraciones solo leen archivos guardados en Git
+    answer: 0
+    explanation: 'Con el repositorio limpio, todos los cambios que ves después son de la actualización y puedes revisarlos o deshacerlos. `--allow-dirty` se salta la comprobación, pero no es recomendable.'

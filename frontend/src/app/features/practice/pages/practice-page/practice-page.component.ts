@@ -1,0 +1,199 @@
+import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
+import { rxResource } from '@angular/core/rxjs-interop';
+import { Router, RouterLink } from '@angular/router';
+import { switchMap } from 'rxjs';
+
+import { withoutErrorNotification } from '../../../../core/interceptors/http-error.interceptor';
+import {
+  Difficulty,
+  ExerciseKind,
+  ExerciseSummary,
+  ModuleRef,
+} from '../../../../core/models/course.model';
+import { AuthService } from '../../../../core/services/auth.service';
+import { CourseService } from '../../../../core/services/course.service';
+import { LanguageService } from '../../../../core/services/language.service';
+import { ProgressService } from '../../../../core/services/progress.service';
+import { ProgressBarComponent } from '../../../../shared/components/progress-bar/progress-bar.component';
+import {
+  DIFFICULTY_LABELS,
+  DIFFICULTY_TAGS,
+  KIND_ICONS,
+  KIND_LABELS,
+} from '../../../../shared/utils/labels';
+import { isRunnable } from '../../../../shared/utils/code-language';
+
+/** The course shown when the address does not choose one. */
+const DEFAULT_LANGUAGE = 'java';
+
+type StatusFilter = 'all' | 'pending' | 'solved';
+
+interface ModuleGroup {
+  module: ModuleRef;
+  exercises: ExerciseSummary[];
+}
+
+/** Every exercise of the course, grouped by module, with filters and the playground. */
+@Component({
+  selector: 'app-practice-page',
+  imports: [RouterLink, ProgressBarComponent],
+  templateUrl: './practice-page.component.html',
+  styleUrl: './practice-page.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class PracticePageComponent {
+  private readonly courses = inject(CourseService);
+  private readonly progressService = inject(ProgressService);
+  protected readonly auth = inject(AuthService);
+
+  protected readonly difficultyLabels = DIFFICULTY_LABELS;
+  protected readonly difficultyTags = DIFFICULTY_TAGS;
+  protected readonly difficulties: Difficulty[] = ['EASY', 'MEDIUM', 'HARD'];
+  protected readonly kindLabels = KIND_LABELS;
+  protected readonly kindIcons = KIND_ICONS;
+  protected readonly kinds: ExerciseKind[] = [
+    'PREDICT',
+    'FILL',
+    'PARSONS',
+    'CODE',
+    'FIX',
+    'PROJECT',
+  ];
+
+  private readonly router = inject(Router);
+  private readonly languageService = inject(LanguageService);
+
+  /** `?curso=angular` in the address: the language or framework whose exercises to show. */
+  readonly curso = input<string | undefined>();
+  protected readonly language = computed(() => this.curso() ?? DEFAULT_LANGUAGE);
+
+  /** Tabs: every language or framework with a course. */
+  protected readonly languages = rxResource({
+    stream: () => this.languageService.getLanguages(withoutErrorNotification()),
+  });
+  protected readonly tabs = computed(() =>
+    (this.languages.value() ?? []).filter((language) => language.active),
+  );
+  /** The playground and the visualizer run code: Java only. */
+  protected readonly runnable = computed(() => isRunnable(this.language()));
+
+  protected readonly catalog = rxResource({
+    params: () => this.language(),
+    stream: ({ params: language }) =>
+      this.courses
+        .getPrimaryCourse(language)
+        .pipe(switchMap((course) => this.courses.getExercises(course.id))),
+  });
+
+  private readonly courseId = rxResource({
+    params: () => this.language(),
+    stream: ({ params: language }) => this.courses.getPrimaryCourse(language),
+  });
+
+  protected readonly progress = rxResource({
+    params: () => (this.auth.isAuthenticated() ? this.courseId.value()?.id : undefined),
+    stream: ({ params: courseId }) =>
+      this.progressService.getCourseProgress(courseId, withoutErrorNotification()),
+  });
+
+  protected readonly query = signal('');
+  protected readonly difficulty = signal<Difficulty | 'ALL'>('ALL');
+  protected readonly status = signal<StatusFilter>('all');
+  protected readonly kind = signal<ExerciseKind | 'ALL'>('ALL');
+
+  private readonly solved = computed(
+    () => new Set(this.progress.value()?.solvedExerciseSlugs ?? []),
+  );
+  private readonly attempted = computed(
+    () => new Set(this.progress.value()?.attemptedExerciseSlugs ?? []),
+  );
+
+  protected readonly groups = computed<ModuleGroup[]>(() => {
+    const query = normalize(this.query());
+    const difficulty = this.difficulty();
+    const status = this.status();
+    const groups = new Map<number, ModuleGroup>();
+    for (const exercise of this.catalog.value() ?? []) {
+      const matchesQuery =
+        !query ||
+        normalize(exercise.title).includes(query) ||
+        normalize(exercise.summary).includes(query) ||
+        normalize(exercise.module.title).includes(query);
+      const matchesDifficulty =
+        (difficulty === 'ALL' || exercise.difficulty === difficulty) &&
+        (this.kind() === 'ALL' || exercise.kind === this.kind());
+      const isSolved = this.solved().has(exercise.slug);
+      const matchesStatus = status === 'all' || (status === 'solved' ? isSolved : !isSolved);
+      if (matchesQuery && matchesDifficulty && matchesStatus) {
+        const group = groups.get(exercise.module.id) ?? { module: exercise.module, exercises: [] };
+        group.exercises.push(exercise);
+        groups.set(exercise.module.id, group);
+      }
+    }
+    return [...groups.values()];
+  });
+
+  protected readonly totals = computed(() => {
+    const total = this.catalog.value()?.length ?? 0;
+    const solved = this.solved().size;
+    return { total, solved, percent: total === 0 ? 0 : (solved / total) * 100 };
+  });
+
+  /** True while a search or a filter narrows the list. */
+  private readonly filtering = computed(
+    () =>
+      this.query().trim() !== '' ||
+      this.difficulty() !== 'ALL' ||
+      this.kind() !== 'ALL' ||
+      this.status() !== 'all',
+  );
+
+  /** The first module that still has something to solve: where the learner is. */
+  private readonly currentModuleId = computed(
+    () =>
+      this.groups().find((group) => this.solvedIn(group) < group.exercises.length)?.module.id ??
+      null,
+  );
+
+  protected solvedIn(group: ModuleGroup): number {
+    return group.exercises.filter((exercise) => this.solved().has(exercise.slug)).length;
+  }
+
+  /** Filtered results show open; otherwise only the module the learner is on. */
+  protected isOpen(group: ModuleGroup): boolean {
+    return this.filtering() || group.module.id === this.currentModuleId();
+  }
+
+  protected exerciseState(slug: string): 'solved' | 'attempted' | 'new' {
+    if (this.solved().has(slug)) {
+      return 'solved';
+    }
+    return this.attempted().has(slug) ? 'attempted' : 'new';
+  }
+
+  protected chooseLanguage(slug: string): void {
+    void this.router.navigate([], {
+      queryParams: { curso: slug === DEFAULT_LANGUAGE ? null : slug },
+    });
+  }
+
+  protected onQuery(event: Event): void {
+    this.query.set((event.target as HTMLInputElement).value);
+  }
+
+  protected onDifficulty(event: Event): void {
+    this.difficulty.set((event.target as HTMLSelectElement).value as Difficulty | 'ALL');
+  }
+
+  protected onKind(event: Event): void {
+    this.kind.set((event.target as HTMLSelectElement).value as ExerciseKind | 'ALL');
+  }
+
+  protected onStatus(event: Event): void {
+    this.status.set((event.target as HTMLSelectElement).value as StatusFilter);
+  }
+}
+
+function normalize(text: string): string {
+  return text.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
+}

@@ -1,0 +1,218 @@
+title: Cazar mutantes
+summary: Escribe las pruebas que detecten tres versiones con fallos.
+difficulty: HARD
+statement: |
+  Esta vez el código ya es correcto: lo que tienes que escribir son las **pruebas**.
+
+  `Descuento.aplicar(precio, porcentaje)` recibe un precio en céntimos y un porcentaje de 0 a 100, y devuelve el precio con el descuento aplicado, **redondeando el descuento al céntimo más cercano** (las mitades hacia arriba). Si el porcentaje está fuera de 0..100 lanza `IllegalArgumentException`.
+
+  Además de la implementación correcta hay tres **mutantes**, versiones con un fallo sutil. El `main` ejecuta tus pruebas de `DescuentoTest` contra cada una. Tu objetivo es que la salida sea:
+
+  ```
+  Implementación correcta: todas las pruebas pasan
+  Mutante 1: detectado
+  Mutante 2: detectado
+  Mutante 3: detectado
+  ```
+
+  Es decir: tus pruebas deben pasar con la versión correcta y fallar con cada mutante. Así se mide la calidad de unas pruebas (es la idea del *mutation testing*). No modifiques las implementaciones ni el `main`: solo `DescuentoTest`.
+starter: |
+  import static org.junit.jupiter.api.Assertions.*;
+  import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+
+  import org.junit.jupiter.api.Test;
+  import org.junit.jupiter.params.ParameterizedTest;
+  import org.junit.jupiter.params.provider.CsvSource;
+  import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
+  import org.junit.platform.launcher.core.LauncherFactory;
+  import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
+
+  interface Descuento {
+      /** Precio en céntimos tras aplicar el porcentaje, redondeando al céntimo más cercano. */
+      int aplicar(int precio, int porcentaje);
+  }
+
+  class Correcto implements Descuento {
+      public int aplicar(int precio, int porcentaje) {
+          if (porcentaje < 0 || porcentaje > 100) {
+              throw new IllegalArgumentException("Porcentaje fuera de rango");
+          }
+          return precio - (precio * porcentaje + 50) / 100;
+      }
+  }
+
+  class SinValidar implements Descuento {
+      public int aplicar(int precio, int porcentaje) {
+          return precio - (precio * porcentaje + 50) / 100;
+      }
+  }
+
+  class Trunca implements Descuento {
+      public int aplicar(int precio, int porcentaje) {
+          if (porcentaje < 0 || porcentaje > 100) {
+              throw new IllegalArgumentException("Porcentaje fuera de rango");
+          }
+          return precio - precio * porcentaje / 100;
+      }
+  }
+
+  class IgnoraPequenos implements Descuento {
+      public int aplicar(int precio, int porcentaje) {
+          if (porcentaje < 0 || porcentaje > 100) {
+              throw new IllegalArgumentException("Porcentaje fuera de rango");
+          }
+          if (precio < 100) {
+              return precio;
+          }
+          return precio - (precio * porcentaje + 50) / 100;
+      }
+  }
+
+  /** Las pruebas usan siempre Tienda.descuento; el main cambia qué implementación hay detrás. */
+  class Tienda {
+      static Descuento descuento = new Correcto();
+  }
+
+  class DescuentoTest {
+      @Test
+      void diezPorCientoDeMil() {
+          assertEquals(900, Tienda.descuento.aplicar(1000, 10));
+      }
+
+      // Añade aquí más pruebas
+  }
+
+  public class Main {
+      static boolean pasanTodas() {
+          var peticion = LauncherDiscoveryRequestBuilder.request().selectors(selectClass(DescuentoTest.class)).build();
+          var resumen = new SummaryGeneratingListener();
+          LauncherFactory.create().execute(peticion, resumen);
+          var resultado = resumen.getSummary();
+          return resultado.getTestsFoundCount() > 0 && resultado.getTotalFailureCount() == 0;
+      }
+
+      public static void main(String[] args) {
+          Tienda.descuento = new Correcto();
+          System.out.println("Implementación correcta: " + (pasanTodas() ? "todas las pruebas pasan" : "alguna prueba falla"));
+          Descuento[] mutantes = {new SinValidar(), new Trunca(), new IgnoraPequenos()};
+          for (int i = 0; i < mutantes.length; i++) {
+              Tienda.descuento = mutantes[i];
+              System.out.println("Mutante " + (i + 1) + ": " + (pasanTodas() ? "sobrevive" : "detectado"));
+          }
+      }
+  }
+solution: |
+  import static org.junit.jupiter.api.Assertions.*;
+  import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+
+  import org.junit.jupiter.api.Test;
+  import org.junit.jupiter.params.ParameterizedTest;
+  import org.junit.jupiter.params.provider.CsvSource;
+  import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
+  import org.junit.platform.launcher.core.LauncherFactory;
+  import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
+
+  interface Descuento {
+      /** Precio en céntimos tras aplicar el porcentaje, redondeando al céntimo más cercano. */
+      int aplicar(int precio, int porcentaje);
+  }
+
+  class Correcto implements Descuento {
+      public int aplicar(int precio, int porcentaje) {
+          if (porcentaje < 0 || porcentaje > 100) {
+              throw new IllegalArgumentException("Porcentaje fuera de rango");
+          }
+          return precio - (precio * porcentaje + 50) / 100;
+      }
+  }
+
+  class SinValidar implements Descuento {
+      public int aplicar(int precio, int porcentaje) {
+          return precio - (precio * porcentaje + 50) / 100;
+      }
+  }
+
+  class Trunca implements Descuento {
+      public int aplicar(int precio, int porcentaje) {
+          if (porcentaje < 0 || porcentaje > 100) {
+              throw new IllegalArgumentException("Porcentaje fuera de rango");
+          }
+          return precio - precio * porcentaje / 100;
+      }
+  }
+
+  class IgnoraPequenos implements Descuento {
+      public int aplicar(int precio, int porcentaje) {
+          if (porcentaje < 0 || porcentaje > 100) {
+              throw new IllegalArgumentException("Porcentaje fuera de rango");
+          }
+          if (precio < 100) {
+              return precio;
+          }
+          return precio - (precio * porcentaje + 50) / 100;
+      }
+  }
+
+  /** Las pruebas usan siempre Tienda.descuento; el main cambia qué implementación hay detrás. */
+  class Tienda {
+      static Descuento descuento = new Correcto();
+  }
+
+  class DescuentoTest {
+      @Test
+      void diezPorCientoDeMil() {
+          assertEquals(900, Tienda.descuento.aplicar(1000, 10));
+      }
+
+      @Test
+      void rechazaPorcentajesMayoresQueCien() {
+          assertThrows(IllegalArgumentException.class, () -> Tienda.descuento.aplicar(1000, 150));
+      }
+
+      @Test
+      void rechazaPorcentajesNegativos() {
+          assertThrows(IllegalArgumentException.class, () -> Tienda.descuento.aplicar(1000, -5));
+      }
+
+      @Test
+      void redondeaAlCentimoMasCercano() {
+          // 15 % de 999 son 149,85 céntimos: se descuentan 150
+          assertEquals(849, Tienda.descuento.aplicar(999, 15));
+      }
+
+      @Test
+      void tambienDescuentaEnPreciosPequenos() {
+          assertEquals(45, Tienda.descuento.aplicar(50, 10));
+      }
+  }
+
+  public class Main {
+      static boolean pasanTodas() {
+          var peticion = LauncherDiscoveryRequestBuilder.request().selectors(selectClass(DescuentoTest.class)).build();
+          var resumen = new SummaryGeneratingListener();
+          LauncherFactory.create().execute(peticion, resumen);
+          var resultado = resumen.getSummary();
+          return resultado.getTestsFoundCount() > 0 && resultado.getTotalFailureCount() == 0;
+      }
+
+      public static void main(String[] args) {
+          Tienda.descuento = new Correcto();
+          System.out.println("Implementación correcta: " + (pasanTodas() ? "todas las pruebas pasan" : "alguna prueba falla"));
+          Descuento[] mutantes = {new SinValidar(), new Trunca(), new IgnoraPequenos()};
+          for (int i = 0; i < mutantes.length; i++) {
+              Tienda.descuento = mutantes[i];
+              System.out.println("Mutante " + (i + 1) + ": " + (pasanTodas() ? "sobrevive" : "detectado"));
+          }
+      }
+  }
+hints:
+  - 'La idea: tus pruebas deben pasar con la versión correcta y fallar con cada mutante. Lee cada mutante e imagina una entrada para la que dé un resultado distinto del correcto.'
+  - 'Qué usar: `assertThrows(IllegalArgumentException.class, () -> ...)` para el mutante que no valida, y `assertEquals(esperado, Tienda.descuento.aplicar(precio, porcentaje))` con casos elegidos a propósito para los otros dos.'
+  - 'El plan: una prueba con un porcentaje de 150 (delata a `SinValidar`); otra con el 15 % de 999, que da 849 al redondear y 850 al truncar (delata a `Trunca`); y otra con un precio menor que 100, como el 10 % de 50, que debe dar 45 (delata a `IgnoraPequenos`).'
+tests:
+  - output: |
+      Implementación correcta: todas las pruebas pasan
+      Mutante 1: detectado
+      Mutante 2: detectado
+      Mutante 3: detectado
+    sample: true

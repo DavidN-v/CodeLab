@@ -1,0 +1,93 @@
+title: Estadísticas de ventas
+summary: Streams numéricos, max con comparador y Optional.
+difficulty: MEDIUM
+statement: |
+  Cada línea es una venta: `<producto> <unidades> <precioUnitario>`. Con streams, calcula y escribe:
+
+  ```
+  Ventas: <número de líneas>
+  Unidades: <total de unidades>
+  Ingresos: <total de unidades × precio, con 2 decimales>
+  Más vendido: <producto con más unidades en una sola venta>
+  Ticket medio: <ingresos / número de ventas, con 2 decimales>
+  ```
+
+  Si hay empate en "más vendido", el que aparezca primero. Si no hay ventas, escribe solo `Sin ventas`.
+starter: |
+  import java.util.ArrayList;
+  import java.util.Comparator;
+  import java.util.List;
+  import java.util.Scanner;
+
+  record Venta(String producto, int unidades, double precio) {
+      double importe() {
+          return unidades * precio;
+      }
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          List<Venta> ventas = new ArrayList<>();
+          while (entrada.hasNext()) {
+              ventas.add(new Venta(entrada.next(), entrada.nextInt(), entrada.nextDouble()));
+          }
+
+      }
+  }
+solution: |
+  import java.util.ArrayList;
+  import java.util.Comparator;
+  import java.util.List;
+  import java.util.Scanner;
+
+  record Venta(String producto, int unidades, double precio) {
+      double importe() {
+          return unidades * precio;
+      }
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          List<Venta> ventas = new ArrayList<>();
+          while (entrada.hasNext()) {
+              ventas.add(new Venta(entrada.next(), entrada.nextInt(), entrada.nextDouble()));
+          }
+          if (ventas.isEmpty()) {
+              System.out.println("Sin ventas");
+              return;
+          }
+          int unidades = ventas.stream().mapToInt(Venta::unidades).sum();
+          double ingresos = ventas.stream().mapToDouble(Venta::importe).sum();
+          String masVendido = ventas.stream()
+              .reduce((mejor, otra) -> otra.unidades() > mejor.unidades() ? otra : mejor)
+              .map(Venta::producto)
+              .orElse("-");
+          System.out.println("Ventas: " + ventas.size());
+          System.out.println("Unidades: " + unidades);
+          System.out.printf("Ingresos: %.2f%n", ingresos);
+          System.out.println("Más vendido: " + masVendido);
+          System.out.printf("Ticket medio: %.2f%n", ingresos / ventas.size());
+      }
+  }
+hints:
+  - 'La idea: cada dato del informe es un resumen distinto de la misma lista de ventas: una cuenta, dos sumas, un máximo y una división.'
+  - 'Qué usar: `mapToInt(Venta::unidades).sum()`, `mapToDouble(Venta::importe).sum()` y, para el más vendido, un `reduce` que solo cambie de venta si la otra tiene estrictamente más unidades (así gana la primera en un empate).'
+  - 'El plan: si la lista está vacía, imprime `Sin ventas` y `return`; si no, calcula los totales, `reduce((mejor, otra) -> otra.unidades() > mejor.unidades() ? otra : mejor)` para el más vendido, e imprime con `printf("%.2f%n", ...)` los importes.'
+tests:
+  - input: |
+      café 3 1.50
+      té 1 1.20
+      zumo 5 2.80
+      café 5 1.50
+    output: |
+      Ventas: 4
+      Unidades: 14
+      Ingresos: 27.20
+      Más vendido: zumo
+      Ticket medio: 6.80
+    sample: true
+  - input: ""
+    output: |
+      Sin ventas

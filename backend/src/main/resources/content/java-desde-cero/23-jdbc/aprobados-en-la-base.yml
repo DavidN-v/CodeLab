@@ -1,0 +1,117 @@
+title: Aprobados en la base de datos
+summary: Arregla un programa JDBC que falla al insertar y lista menos filas de las que debe.
+difficulty: MEDIUM
+kind: fix
+statement: |
+  Cada línea de la entrada es `<nombre> <nota>`. El programa guarda los alumnos en una tabla de H2 y después escribe los aprobados (nota de 5 o más), de mayor a menor nota (a igualdad, por nombre), con el formato `<nombre>: <nota>`, y al final `Aprobados: <n>`.
+
+  Tiene dos problemas:
+
+  1. Al ejecutarlo termina con una `SQLException` que dice que un parámetro no tiene valor (*Parameter "#2" is not set*).
+  2. Cuando arreglas lo primero, solo aparece **un** aprobado aunque haya varios.
+
+  Encuentra y corrige los dos errores.
+starter: |
+  import java.sql.Connection;
+  import java.sql.DriverManager;
+  import java.sql.PreparedStatement;
+  import java.sql.ResultSet;
+  import java.sql.SQLException;
+  import java.sql.Statement;
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) throws SQLException {
+          Scanner entrada = new Scanner(System.in);
+          try (Connection c = DriverManager.getConnection("jdbc:h2:mem:clase")) {
+              try (Statement s = c.createStatement()) {
+                  s.execute("CREATE TABLE alumnos (nombre VARCHAR(30), nota INT)");
+              }
+              try (PreparedStatement insertar = c.prepareStatement("INSERT INTO alumnos VALUES (?, ?)")) {
+                  while (entrada.hasNext()) {
+                      insertar.setString(1, entrada.next());
+                      insertar.setInt(1, entrada.nextInt());
+                      insertar.executeUpdate();
+                  }
+              }
+              String sql = "SELECT nombre, nota FROM alumnos WHERE nota >= ? ORDER BY nota DESC, nombre";
+              try (PreparedStatement consulta = c.prepareStatement(sql)) {
+                  consulta.setInt(1, 5);
+                  try (ResultSet r = consulta.executeQuery()) {
+                      int aprobados = 0;
+                      if (r.next()) {
+                          System.out.println(r.getString("nombre") + ": " + r.getInt("nota"));
+                          aprobados++;
+                      }
+                      System.out.println("Aprobados: " + aprobados);
+                  }
+              }
+          }
+      }
+  }
+solution: |
+  import java.sql.Connection;
+  import java.sql.DriverManager;
+  import java.sql.PreparedStatement;
+  import java.sql.ResultSet;
+  import java.sql.SQLException;
+  import java.sql.Statement;
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) throws SQLException {
+          Scanner entrada = new Scanner(System.in);
+          try (Connection c = DriverManager.getConnection("jdbc:h2:mem:clase")) {
+              try (Statement s = c.createStatement()) {
+                  s.execute("CREATE TABLE alumnos (nombre VARCHAR(30), nota INT)");
+              }
+              try (PreparedStatement insertar = c.prepareStatement("INSERT INTO alumnos VALUES (?, ?)")) {
+                  while (entrada.hasNext()) {
+                      insertar.setString(1, entrada.next());
+                      insertar.setInt(2, entrada.nextInt());
+                      insertar.executeUpdate();
+                  }
+              }
+              String sql = "SELECT nombre, nota FROM alumnos WHERE nota >= ? ORDER BY nota DESC, nombre";
+              try (PreparedStatement consulta = c.prepareStatement(sql)) {
+                  consulta.setInt(1, 5);
+                  try (ResultSet r = consulta.executeQuery()) {
+                      int aprobados = 0;
+                      while (r.next()) {
+                          System.out.println(r.getString("nombre") + ": " + r.getInt("nota"));
+                          aprobados++;
+                      }
+                      System.out.println("Aprobados: " + aprobados);
+                  }
+              }
+          }
+      }
+  }
+hints:
+  - 'La idea: el primer error está al insertar (un hueco se queda sin rellenar) y el segundo al leer los resultados (solo se lee una fila).'
+  - 'Qué usar: los huecos `?` se numeran desde 1 en orden: el nombre es el 1 y la nota el 2. Para recorrer todas las filas de un `ResultSet` hace falta un bucle `while`, no un `if`.'
+  - 'El plan: cambia `insertar.setInt(1, ...)` por `insertar.setInt(2, ...)` y `if (r.next())` por `while (r.next())`.'
+tests:
+  - input: |
+      Ana 7
+      Luis 4
+      Eva 9
+      Juan 7
+    output: |
+      Eva: 9
+      Ana: 7
+      Juan: 7
+      Aprobados: 3
+    sample: true
+  - input: |
+      Leo 3
+      Mar 2
+    output: |
+      Aprobados: 0
+  - input: |
+      Sol 5
+      Rui 10
+    output: |
+      Rui: 10
+      Sol: 5
+      Aprobados: 2

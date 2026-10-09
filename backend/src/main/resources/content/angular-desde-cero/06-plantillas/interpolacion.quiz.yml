@@ -1,0 +1,25 @@
+questions:
+  - type: output
+    prompt: 'Con `nombre = ''Ada''` y `puntos = 40` en la clase, ¿qué texto se ve en la página?'
+    code: |
+      <p>{{ nombre }} tiene {{ puntos * 2 }} puntos</p>
+    answer: |
+      Ada tiene 80 puntos
+    explanation: 'Cada `{{ }}` se sustituye por el valor de su expresión: `nombre` da `Ada` y `puntos * 2` da `80`. El resto del texto se pinta tal cual.'
+  - type: choice
+    prompt: ¿Cuál de estas interpolaciones NO es válida?
+    options:
+      - '`{{ let total = 3 }}`'
+      - '`{{ precio * 2 }}`'
+      - '`{{ activo ? ''Sí'' : ''No'' }}`'
+      - '`{{ nombre() }}`'
+    answer: 0
+    explanation: 'Dentro de `{{ }}` solo caben expresiones que dan un valor. Declarar una variable con `let` es una instrucción, así que el compilador la rechaza. Las demás son una operación, un ternario y la lectura de un signal.'
+  - type: choice
+    prompt: ¿Quién convierte `{{ nombre }}` en algo que el navegador entiende?
+    options:
+      - El compilador de Angular, al ejecutar `ng serve` o `ng build`
+      - El navegador, que entiende `{{ }}` desde HTML5
+      - El archivo `index.html`, que reemplaza las llaves al cargar
+    answer: 0
+    explanation: 'El navegador no sabe qué es `{{ }}`. El compilador de Angular transforma la plantilla en instrucciones JavaScript que crean los elementos y actualizan sus textos.'

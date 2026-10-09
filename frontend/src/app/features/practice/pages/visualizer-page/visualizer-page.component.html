@@ -1,0 +1,92 @@
+<section class="workbench" aria-labelledby="visualizer-heading">
+  <header class="workbench__header">
+    <div>
+      <p class="page__eyebrow"><a routerLink="/practice">Práctica</a> / Visualizador</p>
+      <h1 id="visualizer-heading" class="workbench__title">Visualizador paso a paso</h1>
+      <p class="visualizer__lead">
+        Mira tu programa ejecutarse línea a línea: qué línea va, cómo cambia cada variable y qué hay
+        en memoria.
+      </p>
+    </div>
+    <div class="workbench__actions">
+      @if (result()?.status === 'TRACED') {
+        <button type="button" class="button button--secondary" (click)="edit()">
+          ✎ Editar el código
+        </button>
+      } @else {
+        <button type="button" class="button button--ghost" (click)="reset()">Ejemplo</button>
+        <button
+          type="button"
+          class="button button--primary"
+          [disabled]="tracing()"
+          (click)="visualize()"
+        >
+          {{
+            tracing()
+              ? 'Preparando los pasos…'
+              : auth.isAuthenticated()
+                ? 'Visualizar ▸'
+                : 'Entrar para visualizar'
+          }}
+        </button>
+      }
+    </div>
+  </header>
+
+  @if (result(); as traced) {
+    @if (traced.status === 'TRACED' && traced.trace) {
+      <app-trace-viewer [code]="tracedCode()" [trace]="traced.trace" />
+    }
+  }
+
+  @if (result()?.status !== 'TRACED') {
+    @if (result(); as traced) {
+      <div class="panel visualizer__problem" role="alert">
+        @if (traced.status === 'COMPILATION_ERROR') {
+          <p class="visualizer__problem-title">
+            El programa no compila, así que no se puede ejecutar.
+          </p>
+          <pre class="visualizer__compile">{{ traced.compileOutput }}</pre>
+          <app-friendly-errors [compileOutput]="traced.compileOutput" />
+        } @else {
+          <p class="visualizer__problem-title">
+            No se ha podido visualizar: el programa tarda demasiado o produce demasiados datos.
+            Prueba con menos vueltas de bucle o con menos entrada.
+          </p>
+        }
+      </div>
+    }
+    <div class="workbench__grid">
+      <div class="panel panel--editor">
+        <div class="panel__bar">
+          <span class="panel__label">Main.java</span
+          ><span class="panel__hint">Ctrl + Enter para visualizar</span>
+        </div>
+        <app-code-editor class="panel__fill" [(value)]="code" (run)="visualize()" />
+      </div>
+      <div class="workbench__side">
+        <div class="panel">
+          <div class="panel__bar">
+            <label class="panel__label" for="visualizer-stdin">Entrada (stdin)</label>
+          </div>
+          <textarea
+            id="visualizer-stdin"
+            class="panel__input"
+            spellcheck="false"
+            placeholder="Lo que leerá tu Scanner, una línea por cada dato"
+            [value]="stdin()"
+            (input)="onStdin($event)"
+          ></textarea>
+        </div>
+        <div class="panel visualizer__tips">
+          <p class="panel__label">Consejos</p>
+          <ul>
+            <li>Funciona mejor con programas cortos: se muestran hasta 400 pasos.</li>
+            <li>Usa las flechas ← → del teclado para moverte entre pasos.</li>
+            <li>Pasa el ratón sobre una flecha → para ver a qué objeto apunta.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  }
+</section>

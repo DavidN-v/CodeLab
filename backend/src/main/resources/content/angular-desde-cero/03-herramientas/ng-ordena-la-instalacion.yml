@@ -1,0 +1,45 @@
+title: De cero a localhost:4200
+summary: Ordena las órdenes de terminal para instalar la CLI, crear un proyecto y arrancarlo.
+difficulty: MEDIUM
+kind: parsons
+statement: |
+  Tienes un ordenador con Node recién instalado y una terminal nueva abierta. Ordena las órdenes para:
+
+  1. comprobar que Node está instalado;
+  2. instalar la Angular CLI **para todo el ordenador**;
+  3. comprobar la versión de la CLI;
+  4. crear un proyecto llamado `tienda`;
+  5. entrar en la carpeta del proyecto (`cd` significa *change directory*, cambiar de carpeta);
+  6. arrancar el servidor de desarrollo.
+
+  Cuidado: algunas órdenes sobran.
+starter: |
+  # En una terminal nueva:
+  {{lines}}
+lines:
+  - node --version
+  - npm install -g @angular/cli
+  - ng version
+  - ng new tienda
+  - cd tienda
+  - ng serve
+distractors:
+  - npm install @angular/cli
+  - cd mi-app
+solution: |
+  # En una terminal nueva:
+  node --version
+  npm install -g @angular/cli
+  ng version
+  ng new tienda
+  cd tienda
+  ng serve
+hints:
+  - 'La idea: cada paso necesita el anterior. No puedes usar `ng` sin instalarlo, ni arrancar un proyecto que no existe o en el que no estás.'
+  - 'Qué usar: `node --version` y `ng version` comprueban; `npm install` con la opción global instala; `ng new` crea; `cd` entra en una carpeta; `ng serve` arranca.'
+  - 'El plan: comprueba Node → instala la CLI con -g → comprueba ng → crea tienda → entra en tienda → sirve.'
+tests:
+  - output: |
+      Application bundle generation complete.
+      Local: http://localhost:4200/
+    sample: true

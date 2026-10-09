@@ -1,0 +1,50 @@
+title: Lista de alumnos con @for
+summary: Completa un @for con track, variables implícitas y @empty.
+difficulty: HARD
+kind: fill
+statement: |
+  La plantilla `clase.html` pinta la lista de alumnos de una clase. Cada alumno es un objeto `{ dni, nombre }` y **el DNI es único**.
+
+  Completa los huecos para que:
+
+  - Se repita un `<li>` por alumno, identificando a cada uno por su `dni`.
+  - La posición se guarde en la variable `pos` y se muestre empezando en 1.
+  - Las filas en posición **par** (0, 2, 4…) lleven la clase `par`. Usa la variable implícita que ya dice si la posición es par.
+  - Si no hay alumnos, se vea «Aún no hay alumnos».
+starter: |
+  <!-- src/app/clase/clase.html -->
+  <ul>
+    {{?}} (alumno of alumnos(); {{?}} alumno.dni; let pos = {{?}}) {
+      <li [class.par]="{{?}}">{{ pos + 1 }}. {{ alumno.nombre }}</li>
+    } {{?}} {
+      <li>Aún no hay alumnos</li>
+    }
+  </ul>
+  <p>Hay {{ alumnos().length }} alumnos</p>
+answers:
+  - '@for'
+  - track
+  - $index
+  - $even
+  - '@empty'
+solution: |
+  <!-- src/app/clase/clase.html -->
+  <ul>
+    @for (alumno of alumnos(); track alumno.dni; let pos = $index) {
+      <li [class.par]="$even">{{ pos + 1 }}. {{ alumno.nombre }}</li>
+    } @empty {
+      <li>Aún no hay alumnos</li>
+    }
+  </ul>
+  <p>Hay {{ alumnos().length }} alumnos</p>
+hints:
+  - 'La idea: es un bucle de plantilla con su forma de identificar elementos, una variable de posición renombrada, una variable de «¿es par?» y un bloque para la lista vacía.'
+  - 'Qué usar: el bucle empieza por `@`; la palabra que identifica elementos es obligatoria; las variables implícitas empiezan por `$` (`$index`, `$first`, `$last`, `$even`, `$odd`, `$count`).'
+  - 'El plan: `@for` → `track` → `$index` → `$even` → `@empty`.'
+tests:
+  - output: |
+      1. Ana
+      2. Luis
+      3. Marta
+      Hay 3 alumnos
+    sample: true

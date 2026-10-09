@@ -1,0 +1,56 @@
+title: Potencia entera
+summary: Implementa tu propio método de potencia con un bucle.
+difficulty: EASY
+statement: |
+  Escribe un método `static long potencia(long base, int exponente)` que calcule `base` elevado a `exponente` (con `exponente >= 0`) usando un bucle, sin `Math.pow`. Recuerda que cualquier número elevado a 0 vale 1.
+
+  La entrada son dos enteros: base y exponente. Imprime el resultado.
+starter: |
+  import java.util.Scanner;
+
+  public class Main {
+      // Escribe aquí el método potencia
+
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          long base = entrada.nextLong();
+          int exponente = entrada.nextInt();
+          // System.out.println(potencia(base, exponente));
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  public class Main {
+      static long potencia(long base, int exponente) {
+          long resultado = 1;
+          for (int i = 0; i < exponente; i++) {
+              resultado *= base;
+          }
+          return resultado;
+      }
+
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          long base = entrada.nextLong();
+          int exponente = entrada.nextInt();
+          System.out.println(potencia(base, exponente));
+      }
+  }
+hints:
+  - 'La idea: elevar a un exponente es multiplicar la base por sí misma tantas veces como diga el exponente; 2^3 es 2 * 2 * 2.'
+  - 'Qué usar: un acumulador `long resultado = 1` (el 1 no cambia una multiplicación) y un bucle `for` que dé `exponente` vueltas.'
+  - 'El plan: declara `static long potencia(long base, int exponente)` → `resultado = 1` → en cada vuelta `resultado *= base;` → `return resultado;` y descomenta la línea de `main`.'
+tests:
+  - input: "2 10\n"
+    output: "1024\n"
+    sample: true
+  - input: "5 0\n"
+    output: "1\n"
+    sample: true
+  - input: "-3 3\n"
+    output: "-27\n"
+  - input: "10 18\n"
+    output: "1000000000000000000\n"
+  - input: "7 1\n"
+    output: "7\n"

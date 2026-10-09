@@ -1,0 +1,48 @@
+title: Los atajos del proyecto
+summary: Completa la sección scripts con las órdenes de la Angular CLI.
+difficulty: EASY
+kind: fill
+statement: |
+  Queremos que estos atajos funcionen como en un proyecto recién creado con `ng new`:
+
+  - `npm start` arranca el **servidor de desarrollo** en `localhost:4200`;
+  - `npm run build` **compila** la app para publicarla en `dist/`;
+  - `npm test` ejecuta las **pruebas**.
+
+  Completa cada hueco con la orden de `ng` que corresponde (una sola palabra).
+starter: |
+  {
+    "name": "tienda",
+    "version": "0.0.0",
+    "scripts": {
+      "ng": "ng",
+      "start": "ng {{?}}",
+      "build": "ng {{?}}",
+      "test": "ng {{?}}"
+    },
+    "private": true
+  }
+answers:
+  - serve
+  - build
+  - test
+solution: |
+  {
+    "name": "tienda",
+    "version": "0.0.0",
+    "scripts": {
+      "ng": "ng",
+      "start": "ng serve",
+      "build": "ng build",
+      "test": "ng test"
+    },
+    "private": true
+  }
+hints:
+  - 'La idea: cada script es un nombre corto para una orden de la Angular CLI. Solo falta el nombre de la orden de `ng`.'
+  - 'Qué usar: la tabla de órdenes de la lección de la Angular CLI. Una sirve (arranca el servidor), otra construye y otra prueba.'
+  - 'El plan: arrancar el servidor es `ng serve`; compilar es `ng build`; las pruebas son `ng test`.'
+tests:
+  - output: |
+      npm start → ng serve · npm run build → ng build · npm test → ng test
+    sample: true

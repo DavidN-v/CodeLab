@@ -1,0 +1,100 @@
+title: Cambio en monedas
+summary: Reparte una cantidad en monedas de 2 €, 1 €, 50, 20, 10, 5, 2 y 1 céntimos.
+difficulty: HARD
+statement: |
+  Lee una cantidad en **céntimos** (entero) y calcula cuántas monedas de cada tipo hacen falta para pagarla usando el menor número de monedas posible. Las monedas son de 200, 100, 50, 20, 10, 5, 2 y 1 céntimos.
+
+  Escribe una línea por moneda, de la mayor a la menor, **incluso si son 0**:
+
+  ```
+  200: <n>
+  100: <n>
+  50: <n>
+  20: <n>
+  10: <n>
+  5: <n>
+  2: <n>
+  1: <n>
+  ```
+
+  **Ejemplo:** `388` → una de 200, una de 100, una de 50, una de 20, una de 10, una de 5, una de 2 y una de 1.
+starter: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int resto = entrada.nextInt();
+
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int resto = entrada.nextInt();
+          System.out.println("200: " + resto / 200);
+          resto %= 200;
+          System.out.println("100: " + resto / 100);
+          resto %= 100;
+          System.out.println("50: " + resto / 50);
+          resto %= 50;
+          System.out.println("20: " + resto / 20);
+          resto %= 20;
+          System.out.println("10: " + resto / 10);
+          resto %= 10;
+          System.out.println("5: " + resto / 5);
+          resto %= 5;
+          System.out.println("2: " + resto / 2);
+          resto %= 2;
+          System.out.println("1: " + resto);
+      }
+  }
+hints:
+  - 'La idea: haz lo que haría un cajero. Empieza por la moneda más grande, da todas las que quepan y sigue con lo que falta por pagar usando la siguiente moneda.'
+  - 'Qué usar: `resto / 200` dice cuántas monedas de 200 caben, y `resto %= 200` deja en `resto` lo que falta por pagar. Repite lo mismo con cada moneda.'
+  - 'El plan: para cada moneda de mayor a menor (200, 100, 50, 20, 10, 5, 2): imprime "moneda: " + resto / moneda; después resto %= moneda. Al final imprime "1: " + resto.'
+tests:
+  - input: "388\n"
+    output: |
+      200: 1
+      100: 1
+      50: 1
+      20: 1
+      10: 1
+      5: 1
+      2: 1
+      1: 1
+    sample: true
+  - input: "1000\n"
+    output: |
+      200: 5
+      100: 0
+      50: 0
+      20: 0
+      10: 0
+      5: 0
+      2: 0
+      1: 0
+  - input: "94\n"
+    output: |
+      200: 0
+      100: 0
+      50: 1
+      20: 2
+      10: 0
+      5: 0
+      2: 2
+      1: 0
+  - input: "0\n"
+    output: |
+      200: 0
+      100: 0
+      50: 0
+      20: 0
+      10: 0
+      5: 0
+      2: 0
+      1: 0

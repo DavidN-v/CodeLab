@@ -1,0 +1,25 @@
+questions:
+  - type: choice
+    prompt: En una SPA, ¿qué pide normalmente el navegador al servidor cuando pasas de una sección a otra?
+    options:
+      - Una página HTML completa nueva
+      - Solo los datos que necesita, por ejemplo en JSON
+      - 'Nada nunca: la SPA no vuelve a hablar con el servidor'
+    answer: 1
+    explanation: 'La aplicación ya está cargada; JavaScript pinta la nueva pantalla y solo pide los datos que faltan. Sí habla con el servidor, pero para datos, no para páginas.'
+  - type: choice
+    prompt: ¿Qué es `<app-root>` en el `index.html` de Angular?
+    options:
+      - Una etiqueta estándar de HTML para aplicaciones
+      - Un comentario que el navegador ignora
+      - El hueco donde Angular pinta toda la aplicación
+    answer: 2
+    explanation: 'No es HTML estándar: es el selector del componente principal. Angular busca ese elemento y dibuja dentro toda la app.'
+  - type: choice
+    prompt: ¿Para cuál de estos proyectos encaja mejor una SPA?
+    options:
+      - Un panel de gestión con filtros, formularios y tablas que cambian sin parar
+      - Un blog de recetas que casi nunca cambia
+      - Un folleto de una sola pantalla sin interacción
+    answer: 0
+    explanation: 'Las SPA brillan cuando hay mucha interacción y cambios de pantalla sin recargar. Para contenido de lectura, una web clásica suele bastar.'

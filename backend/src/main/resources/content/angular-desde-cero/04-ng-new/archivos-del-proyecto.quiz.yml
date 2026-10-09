@@ -1,0 +1,26 @@
+questions:
+- type: choice
+  prompt: ¿Dónde escribes casi todo el código de tu aplicación?
+  options:
+  - En `node_modules/`
+  - En `angular.json`
+  - En `dist/`
+  - En `src/`, sobre todo en `src/app/`
+  answer: 3
+  explanation: '`src/` es tu código fuente. `node_modules/` son librerías descargadas, `dist/` es el resultado del build y `angular.json` es configuración de la CLI.'
+- type: choice
+  prompt: ¿Para qué sirve la carpeta `public/`?
+  options:
+  - Guarda archivos que se copian tal cual al resultado final, como `favicon.ico`
+  - Contiene el código que pueden ver todos los usuarios, a diferencia de `src/`
+  - Es donde `ng build` deja la aplicación lista para publicar
+  answer: 0
+  explanation: Todo lo que pongas en `public/` (imágenes, iconos, fuentes) se copia sin cambios. El resultado del build va a `dist/`, y en realidad todo el código del navegador lo puede ver cualquiera.
+- type: choice
+  prompt: ¿Por qué `.gitignore` excluye `node_modules/` y `dist/`?
+  options:
+  - Porque contienen contraseñas
+  - Porque Git no puede guardar archivos JavaScript
+  - Porque se pueden regenerar con `npm install` y `ng build`, y ocupan mucho
+  answer: 2
+  explanation: '`node_modules` se reconstruye con `npm install` (gracias a `package-lock.json`) y `dist` con `ng build`. Subirlos solo haría el repositorio enorme y lento.'

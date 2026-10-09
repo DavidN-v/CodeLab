@@ -1,0 +1,93 @@
+title: Clientes por ciudad
+summary: groupingBy con un mapa ordenado y colectores aguas abajo.
+difficulty: HARD
+statement: |
+  Cada línea es un cliente: `<nombre>,<ciudad>,<gasto>` (gasto entero). Usando `Collectors.groupingBy`, escribe para cada ciudad, en orden alfabético:
+
+  ```
+  <ciudad>: <número de clientes> clientes, <gasto total> €, mejor: <cliente que más gasta>
+  ```
+
+  y a continuación, en otra línea, los nombres de los clientes de esa ciudad ordenados alfabéticamente, con sangría de dos espacios y separados por `, `.
+
+  Si dos clientes de una ciudad empatan en gasto, el "mejor" es el que va antes alfabéticamente.
+starter: |
+  import java.util.ArrayList;
+  import java.util.Comparator;
+  import java.util.List;
+  import java.util.Map;
+  import java.util.Scanner;
+  import java.util.TreeMap;
+  import java.util.stream.Collectors;
+
+  record Cliente(String nombre, String ciudad, int gasto) {}
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          List<Cliente> clientes = new ArrayList<>();
+          while (entrada.hasNextLine()) {
+              String[] partes = entrada.nextLine().split(",");
+              clientes.add(new Cliente(partes[0], partes[1], Integer.parseInt(partes[2].trim())));
+          }
+
+      }
+  }
+solution: |
+  import java.util.ArrayList;
+  import java.util.Comparator;
+  import java.util.List;
+  import java.util.Map;
+  import java.util.Scanner;
+  import java.util.TreeMap;
+  import java.util.stream.Collectors;
+
+  record Cliente(String nombre, String ciudad, int gasto) {}
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          List<Cliente> clientes = new ArrayList<>();
+          while (entrada.hasNextLine()) {
+              String[] partes = entrada.nextLine().split(",");
+              clientes.add(new Cliente(partes[0], partes[1], Integer.parseInt(partes[2].trim())));
+          }
+          Map<String, List<Cliente>> porCiudad = clientes.stream()
+              .collect(Collectors.groupingBy(Cliente::ciudad, TreeMap::new, Collectors.toList()));
+          porCiudad.forEach((ciudad, grupo) -> {
+              int total = grupo.stream().mapToInt(Cliente::gasto).sum();
+              Cliente mejor = grupo.stream()
+                  .sorted(Comparator.comparingInt(Cliente::gasto).reversed().thenComparing(Cliente::nombre))
+                  .findFirst()
+                  .orElseThrow();
+              String nombres = grupo.stream().map(Cliente::nombre).sorted().collect(Collectors.joining(", "));
+              System.out.println(ciudad + ": " + grupo.size() + " clientes, " + total + " €, mejor: " + mejor.nombre());
+              System.out.println("  " + nombres);
+          });
+      }
+  }
+hints:
+  - 'La idea: haz un montón de clientes por ciudad, con las ciudades en orden alfabético, y para cada montón calcula cuántos son, cuánto suman y quién gasta más.'
+  - 'Qué usar: `Collectors.groupingBy(Cliente::ciudad, TreeMap::new, Collectors.toList())` para el mapa ordenado; dentro de cada grupo, `mapToInt(...).sum()`, `Comparator.comparingInt(Cliente::gasto).reversed().thenComparing(Cliente::nombre)` y `Collectors.joining(", ")`.'
+  - 'El plan: recorre el mapa con `porCiudad.forEach((ciudad, grupo) -> { ... })`; el mejor es `grupo.stream().sorted(comparador).findFirst().orElseThrow()`; imprime la línea resumen y después `"  "` más los nombres ordenados unidos con `", "`.'
+tests:
+  - input: |
+      Ada,Madrid,120
+      Alan,Bogotá,80
+      Grace,Madrid,300
+      Linus,Bogotá,80
+      Barbara,Lima,50
+    output: |
+      Bogotá: 2 clientes, 160 €, mejor: Alan
+        Alan, Linus
+      Lima: 1 clientes, 50 €, mejor: Barbara
+        Barbara
+      Madrid: 2 clientes, 420 €, mejor: Grace
+        Ada, Grace
+    sample: true
+  - input: |
+      Zoe,Quito,10
+      Ana,Quito,10
+    output: |
+      Quito: 2 clientes, 20 €, mejor: Ana
+        Ana, Zoe

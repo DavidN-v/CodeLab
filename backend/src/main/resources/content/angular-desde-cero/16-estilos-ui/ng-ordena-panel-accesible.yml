@@ -1,0 +1,63 @@
+title: Un panel desplegable accesible y animado
+summary: Ordena la plantilla de un botón que abre un panel con ARIA y animaciones.
+difficulty: HARD
+kind: parsons
+statement: |
+  Ordena las líneas de la plantilla de `Detalles`. Debe quedar así:
+
+  - Primero, un **botón** que alterna la señal `abierto`, informa al lector de pantalla de si el panel está expandido (con el valor real de la señal) e indica qué panel controla.
+  - Debajo, solo cuando `abierto()` es verdadero, un `div` con `id="detalles"` que **entra** con la clase `desplegar` y **sale** con la clase `plegar`.
+
+  Cuidado: dos líneas sobran.
+starter: |
+  // src/app/detalles/detalles.ts
+  import { Component, signal } from '@angular/core';
+
+  @Component({
+    selector: 'app-detalles',
+    template: `
+  {{lines}}
+    `,
+  })
+  export class Detalles {
+    protected readonly abierto = signal(false);
+  }
+solution: |
+  // src/app/detalles/detalles.ts
+  import { Component, signal } from '@angular/core';
+
+  @Component({
+    selector: 'app-detalles',
+    template: `
+      <button type="button" (click)="abierto.set(!abierto())" [attr.aria-expanded]="abierto()" aria-controls="detalles">
+        Ver detalles
+      </button>
+      @if (abierto()) {
+        <div id="detalles" animate.enter="desplegar" animate.leave="plegar">
+          Envío gratis a partir de 30 €.
+        </div>
+      }
+    `,
+  })
+  export class Detalles {
+    protected readonly abierto = signal(false);
+  }
+lines:
+  - '    <button type="button" (click)="abierto.set(!abierto())" [attr.aria-expanded]="abierto()" aria-controls="detalles">'
+  - '      Ver detalles'
+  - '    </button>'
+  - '    @if (abierto()) {'
+  - '      <div id="detalles" animate.enter="desplegar" animate.leave="plegar">'
+  - '        Envío gratis a partir de 30 €.'
+  - '      </div>'
+  - '    }'
+distractors:
+  - '    <button type="button" (click)="abierto.set(!abierto())" aria-expanded="abierto()" aria-controls="detalles">'
+  - '      <div id="detalles" animate.enter="plegar" animate.leave="desplegar">'
+hints:
+  - 'La idea: el botón va arriba y se cierra antes de que empiece el bloque condicional; el panel vive dentro del `@if`.'
+  - 'Qué usar: `[attr.aria-expanded]` con corchetes para que el atributo tenga el valor de la señal (sin corchetes valdría el texto «abierto()»). En el `div`, la clase de entrada es la que despliega.'
+  - 'El plan: botón (apertura, texto, cierre); `@if (abierto()) {`; `div` con `animate.enter="desplegar"`, su texto y su cierre; y la llave final.'
+tests:
+  - output: 'Un botón «Ver detalles» con aria-expanded; al pulsarlo, el panel se despliega animado, y al volver a pulsarlo se pliega.'
+    sample: true

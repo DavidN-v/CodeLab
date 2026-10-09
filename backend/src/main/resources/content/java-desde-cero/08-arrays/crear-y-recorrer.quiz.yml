@@ -1,0 +1,32 @@
+questions:
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int[] a = {10, 20, 30};
+              int[] b = a;
+              b[0] = 99;
+              System.out.println(a[0] + " " + a.length);
+          }
+      }
+    answer: |
+      99 3
+    explanation: '`int[] b = a;` no copia el array: copia la flecha. `a` y `b` apuntan al mismo array, así que cambiar `b[0]` también cambia lo que ves con `a[0]`. El tamaño sigue siendo 3.'
+  - type: choice
+    prompt: 'Tienes `int[] datos = new int[5];`. ¿Cuál es la última posición válida?'
+    options:
+      - '`datos[4]`'
+      - '`datos[5]`'
+      - '`datos[6]`'
+    answer: 0
+    explanation: 'Las posiciones empiezan en 0, así que un array de 5 tiene las posiciones 0, 1, 2, 3 y 4. `datos[5]` lanza `ArrayIndexOutOfBoundsException`.'
+  - type: choice
+    prompt: '¿Qué valor tiene `numeros[2]` justo después de `int[] numeros = new int[3];`?'
+    options:
+      - '0'
+      - '`null`'
+      - Un valor cualquiera que hubiera en la memoria
+      - No compila hasta que le des un valor
+    answer: 0
+    explanation: 'Java rellena los arrays nuevos con el «cero» del tipo: `0` para `int`, `0.0` para `double`, `false` para `boolean` y `null` para objetos como `String`.'

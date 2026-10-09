@@ -1,0 +1,32 @@
+title: ¿Qué versión se instala?
+summary: Aplica las reglas de ^ y ~ para saber qué versión elige npm.
+difficulty: HARD
+kind: predict
+statement: |
+  En el registro de npm existen estas versiones del paquete `colores`:
+
+  ```text
+  1.4.0   1.4.7   1.5.2   2.0.0
+  ```
+
+  Tres proyectos distintos, sin `package-lock.json`, piden `colores` así en su `package.json`. Al hacer `npm install`, npm elige **la versión más alta que cumple** lo pedido.
+
+  Escribe la versión que se instala en cada proyecto, **una línea por proyecto** y en el mismo orden (solo los números, por ejemplo `1.4.0`).
+starter: |
+  // Proyecto A: package.json
+  "dependencies": { "colores": "^1.4.0" }
+
+  // Proyecto B: package.json
+  "dependencies": { "colores": "~1.4.0" }
+
+  // Proyecto C: package.json
+  "dependencies": { "colores": "1.4.0" }
+hints:
+  - 'La idea: cada símbolo marca hasta dónde se puede subir. Para cada proyecto, tacha las versiones que no cumplen y quédate con la más alta de las que quedan.'
+  - 'Qué usar: `^` permite cambiar la menor y el parche pero no la mayor; `~` solo el parche; sin símbolo, la versión exacta.'
+  - 'El plan: A acepta cualquier 1.x.x desde 1.4.0 (la 2.0.0 no); B acepta solo 1.4.x; C acepta solo 1.4.0.'
+tests:
+  - output: |
+      1.5.2
+      1.4.7
+      1.4.0

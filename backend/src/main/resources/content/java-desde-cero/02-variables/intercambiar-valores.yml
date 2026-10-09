@@ -1,0 +1,73 @@
+title: Intercambiar valores
+summary: Lee dos números y cámbialos de variable usando una tercera.
+difficulty: EASY
+statement: |
+  Lee dos números enteros `a` y `b` (en ese orden). Intercambia sus valores, de modo que `a` termine con el valor de `b` y viceversa, y escribe:
+
+  ```
+  a = <valor de a>
+  b = <valor de b>
+  ```
+
+  **Ejemplo:** con la entrada `3 8` la salida es:
+
+  ```
+  a = 8
+  b = 3
+  ```
+
+  No vale imprimirlos al revés sin más: intercambia de verdad los valores. La forma clásica es usar una variable auxiliar.
+starter: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int a = entrada.nextInt();
+          int b = entrada.nextInt();
+
+          // Intercambia a y b aquí
+
+          System.out.println("a = " + a);
+          System.out.println("b = " + b);
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int a = entrada.nextInt();
+          int b = entrada.nextInt();
+
+          int auxiliar = a;
+          a = b;
+          b = auxiliar;
+
+          System.out.println("a = " + a);
+          System.out.println("b = " + b);
+      }
+  }
+hints:
+  - 'La idea: si haces `a = b;` directamente, el valor original de `a` se pierde para siempre. Necesitas guardarlo antes en algún sitio.'
+  - 'Qué usar: una tercera variable `int auxiliar` que haga de "mano libre", como cuando cambias dos vasos de sitio.'
+  - 'El plan: `auxiliar = a;` luego `a = b;` y por último `b = auxiliar;`.'
+tests:
+  - input: "3 8\n"
+    output: |
+      a = 8
+      b = 3
+    sample: true
+  - input: "-5 12\n"
+    output: |
+      a = 12
+      b = -5
+  - input: "7 7\n"
+    output: |
+      a = 7
+      b = 7
+  - input: "0 1000000\n"
+    output: |
+      a = 1000000
+      b = 0

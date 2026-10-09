@@ -1,0 +1,26 @@
+questions:
+- type: choice
+  prompt: ¿Qué hace `ng new mi-app --defaults`?
+  options:
+  - Crea el proyecto pero no instala las librerías
+  - Muestra qué archivos crearía sin escribir nada
+  - Actualiza un proyecto existente a la versión por defecto de Angular
+  - Crea el proyecto sin hacer preguntas, con CSS, sin SSR y sin archivos de IA
+  answer: 3
+  explanation: '`--defaults` responde a las preguntas con su valor por defecto. Para no instalar las librerías se usa `--skip-install`, y para el ensayo sin escribir, `--dry-run`.'
+- type: choice
+  prompt: Al crear tu primer proyecto te pregunta si quieres SSR (Server-Side Rendering). ¿Qué es lo razonable al empezar?
+  options:
+  - Responder que no; se puede añadir más tarde con `ng add @angular/ssr`
+  - Responder que sí, porque sin SSR la app no funciona en el navegador
+  - Da igual, porque esa respuesta no cambia ningún archivo
+  answer: 0
+  explanation: Sin SSR la app funciona perfectamente en el navegador. SSR añade un servidor Node.js y archivos extra; es útil para SEO y primera carga, y se puede añadir después con `ng add @angular/ssr`.
+- type: choice
+  prompt: ¿Qué hace la opción `--dry-run`?
+  options:
+  - Muestra qué archivos crearía, sin escribir nada
+  - Crea el proyecto sin instalar librerías
+  - Crea el proyecto sin repositorio Git
+  answer: 0
+  explanation: Es un ensayo. Para saltarte la instalación se usa `--skip-install`, y para saltarte Git, `--skip-git`.

@@ -1,0 +1,50 @@
+title: ¿Año bisiesto?
+summary: Combina condiciones con && y || en una sola expresión.
+difficulty: MEDIUM
+statement: |
+  Un año es bisiesto si es divisible entre 4, **excepto** si es divisible entre 100, **salvo** que también sea divisible entre 400.
+
+  Lee un año y escribe `true` si es bisiesto o `false` si no, usando una sola expresión booleana (todavía sin `if`).
+
+  **Ejemplos:** `2024` → `true`, `1900` → `false`, `2000` → `true`.
+starter: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int anio = entrada.nextInt();
+          boolean bisiesto = false; // cámbialo por la expresión correcta
+          System.out.println(bisiesto);
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int anio = entrada.nextInt();
+          boolean bisiesto = (anio % 4 == 0 && anio % 100 != 0) || anio % 400 == 0;
+          System.out.println(bisiesto);
+      }
+  }
+hints:
+  - 'La idea: traduce la regla a preguntas de sí o no. «Divisible entre 4» significa que al dividir entre 4 no sobra nada.'
+  - 'Qué usar: el resto `%` comparado con 0 (`anio % 4 == 0`), `!=` para «no divisible», y `&&` y `||` para combinar. Los paréntesis dejan claro qué va junto.'
+  - 'El plan: bisiesto = (divisible entre 4 Y NO divisible entre 100) O divisible entre 400. Cada «divisible entre X» es una comparación del resto con 0.'
+tests:
+  - input: "2024\n"
+    output: "true\n"
+    sample: true
+  - input: "1900\n"
+    output: "false\n"
+    sample: true
+  - input: "2000\n"
+    output: "true\n"
+  - input: "2023\n"
+    output: "false\n"
+  - input: "2400\n"
+    output: "true\n"
+  - input: "2100\n"
+    output: "false\n"

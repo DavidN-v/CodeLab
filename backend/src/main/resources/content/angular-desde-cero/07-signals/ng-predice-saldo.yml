@@ -1,0 +1,30 @@
+title: Predice el saldo
+summary: Sigue un signal a través de set y update y escribe lo que sale en la consola.
+difficulty: EASY
+kind: predict
+statement: |
+  Lee este código **sin ejecutarlo** y escribe lo que aparece en la consola, una línea por cada `console.log`.
+
+  Ojo: `console.log(a, b)` escribe los dos valores en la misma línea, separados por un espacio.
+starter: |
+  import { signal } from '@angular/core';
+
+  const saldo = signal(100);
+  console.log(saldo());
+
+  saldo.set(saldo() - 30);
+  saldo.update((s) => s * 2);
+  console.log(saldo());
+
+  const antes = saldo();
+  saldo.set(0);
+  console.log(antes, saldo());
+hints:
+  - 'La idea: un signal guarda un valor; `saldo()` lo lee en ese momento, `set` lo sustituye y `update` lo calcula a partir del anterior.'
+  - 'Qué usar: una tabla con el valor de `saldo` tras cada línea. `antes` es un número normal: guarda una copia del valor, no el signal.'
+  - 'El plan: 100 → se imprime; 100 - 30 = 70; 70 × 2 = 140 → se imprime; antes = 140; saldo = 0 → se imprimen los dos.'
+tests:
+  - output: |
+      100
+      140
+      140 0

@@ -1,0 +1,56 @@
+title: Usa un componente dentro de otro
+summary: Completa los tres pasos para que App muestre el componente Aviso.
+difficulty: MEDIUM
+kind: fill
+statement: |
+  Ya existe este componente:
+
+  ```typescript
+  // src/app/aviso/aviso.ts
+  @Component({
+    selector: 'app-aviso',
+    template: `<p>¡Atención!</p>`,
+  })
+  export class Aviso {}
+  ```
+
+  Completa `app.ts` para que `App` lo muestre debajo del título. Hacen falta los tres pasos: el `import` de TypeScript, la lista del decorador que permite usarlo en la plantilla y su etiqueta.
+starter: |
+  import { Component } from '@angular/core';
+  import { {{?}} } from './aviso/aviso';
+
+  @Component({
+    selector: 'app-root',
+    {{?}}: [Aviso],
+    template: `
+      <h1>Mi app</h1>
+      <{{?}} />
+    `,
+  })
+  export class App {}
+solution: |
+  import { Component } from '@angular/core';
+  import { Aviso } from './aviso/aviso';
+
+  @Component({
+    selector: 'app-root',
+    imports: [Aviso],
+    template: `
+      <h1>Mi app</h1>
+      <app-aviso />
+    `,
+  })
+  export class App {}
+answers:
+  - Aviso
+  - imports
+  - app-aviso
+hints:
+  - 'La idea: el compilador tiene que conocer la clase (import de TypeScript), saber que esta plantilla puede usarla (lista del decorador) y encontrar dónde pintarla (etiqueta).'
+  - 'Qué usar: se importa el nombre de la **clase**; el campo del decorador se llama igual que la palabra clave de TypeScript para importar, en plural; la etiqueta es el `selector` de Aviso.'
+  - 'El plan: hueco 1 = `Aviso`; hueco 2 = `imports`; hueco 3 = el selector exacto, `app-aviso`. Si olvidas el hueco 2, el build da el error NG8001.'
+tests:
+  - output: |
+      Mi app
+      ¡Atención!
+    sample: true

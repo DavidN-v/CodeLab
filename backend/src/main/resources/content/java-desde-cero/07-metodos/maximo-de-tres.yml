@@ -1,0 +1,63 @@
+title: Máximo de tres
+summary: Escribe un método que devuelva el mayor de tres números.
+difficulty: EASY
+statement: |
+  Completa el método `maximo(int a, int b, int c)` para que **devuelva** el mayor de los tres números, sin usar `Math.max`. El `main` ya lee los datos e imprime el resultado.
+
+  **Ejemplo:** `4 9 2` → `9`.
+starter: |
+  import java.util.Scanner;
+
+  public class Main {
+      static int maximo(int a, int b, int c) {
+          // Devuelve el mayor de los tres
+          return 0;
+      }
+
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int a = entrada.nextInt();
+          int b = entrada.nextInt();
+          int c = entrada.nextInt();
+          System.out.println(maximo(a, b, c));
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  public class Main {
+      static int maximo(int a, int b, int c) {
+          int mayor = a;
+          if (b > mayor) {
+              mayor = b;
+          }
+          if (c > mayor) {
+              mayor = c;
+          }
+          return mayor;
+      }
+
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int a = entrada.nextInt();
+          int b = entrada.nextInt();
+          int c = entrada.nextInt();
+          System.out.println(maximo(a, b, c));
+      }
+  }
+hints:
+  - 'La idea: como cuando buscas al más alto de tres amigos, supones que el primero es el más alto y lo comparas con los otros dos.'
+  - 'Qué usar: una variable `mayor` que empieza valiendo `a`, dos `if` y un `return` al final del método.'
+  - 'El plan: `int mayor = a;` → si `b > mayor`, `mayor = b;` → si `c > mayor`, `mayor = c;` → `return mayor;`'
+tests:
+  - input: "4 9 2\n"
+    output: "9\n"
+    sample: true
+  - input: "10 3 7\n"
+    output: "10\n"
+  - input: "1 2 3\n"
+    output: "3\n"
+  - input: "-5 -1 -9\n"
+    output: "-1\n"
+  - input: "6 6 6\n"
+    output: "6\n"

@@ -1,0 +1,37 @@
+questions:
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      public class Main {
+          static int prueba() {
+              try {
+                  return 1;
+              } finally {
+                  System.out.println("finally");
+              }
+          }
+
+          public static void main(String[] args) {
+              System.out.println(prueba());
+          }
+      }
+    answer: |
+      finally
+      1
+    explanation: '`finally` se ejecuta siempre, incluso cuando el `try` hace `return`. Se ejecuta justo antes de que el método devuelva el 1, por eso "finally" sale primero.'
+  - type: choice
+    prompt: ¿Cómo se lanza una excepción indicando que un argumento no es válido?
+    options:
+      - throw new IllegalArgumentException("Edad negativa");
+      - throws new IllegalArgumentException("Edad negativa");
+      - throw IllegalArgumentException("Edad negativa");
+    answer: 0
+    explanation: Se usa `throw` (sin «s») seguido de un objeto excepción, que se crea con `new`. `throws` va en la firma del método.
+  - type: choice
+    prompt: Quieres crear `SaldoInsuficienteException` y que no sea obligatorio capturarla. ¿De qué clase debe heredar?
+    options:
+      - RuntimeException
+      - Exception
+      - Error
+    answer: 0
+    explanation: Las que heredan de `RuntimeException` son unchecked. Si heredara directamente de `Exception` sería checked, y `Error` se reserva para problemas graves de la JVM.

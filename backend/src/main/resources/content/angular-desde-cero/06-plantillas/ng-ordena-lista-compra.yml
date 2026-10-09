@@ -1,0 +1,54 @@
+title: Ordena la lista de la compra
+summary: Ordena las líneas de una plantilla con @if, @else, @for, track y @empty.
+difficulty: MEDIUM
+kind: parsons
+statement: |
+  La plantilla `compra.html` debe comportarse así:
+
+  - Mientras `cargando()` es verdadero, solo se ve el párrafo «Cargando…».
+  - Cuando termina, se ve una lista `<ul>` con un `<li>` por producto (su `nombre`), identificando cada producto por su `id`.
+  - Si no hay productos, la lista muestra un único `<li>` con «Lista vacía».
+
+  La clase ya tiene `cargando = signal(false)` y `productos = signal<Producto[]>(...)` con objetos `{ id, nombre }`.
+
+  Ordena las líneas. Cuidado: alguna línea sobra.
+starter: |
+  <!-- src/app/compra/compra.html -->
+  {{lines}}
+  }
+solution: |
+  <!-- src/app/compra/compra.html -->
+  @if (cargando()) {
+    <p>Cargando…</p>
+  } @else {
+    <ul>
+      @for (p of productos(); track p.id) {
+        <li>{{ p.nombre }}</li>
+      } @empty {
+        <li>Lista vacía</li>
+      }
+    </ul>
+  }
+lines:
+  - '@if (cargando()) {'
+  - '  <p>Cargando…</p>'
+  - '} @else {'
+  - '  <ul>'
+  - '    @for (p of productos(); track p.id) {'
+  - '      <li>{{ p.nombre }}</li>'
+  - '    } @empty {'
+  - '      <li>Lista vacía</li>'
+  - '    }'
+  - '  </ul>'
+distractors:
+  - '    @for (p of productos()) {'
+  - '      <li *ngFor="let p of productos()">{{ p.nombre }}</li>'
+hints:
+  - 'La idea: hay dos situaciones (cargando o no) y, dentro de la segunda, una lista que se repite o un mensaje si está vacía.'
+  - 'Qué usar: `@if { } @else { }` por fuera; dentro del `@else`, un `<ul>` que contiene el `@for` con su `track` y su `@empty`.'
+  - 'El plan: @if → párrafo → } @else { → <ul> → @for con track → <li> del producto → } @empty { → <li> vacío → } que cierra el @for → </ul>. La llave final ya está en el esqueleto.'
+tests:
+  - output: |
+      Leche
+      Huevos
+    sample: true

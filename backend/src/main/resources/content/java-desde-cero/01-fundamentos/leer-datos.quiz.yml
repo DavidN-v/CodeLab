@@ -1,0 +1,37 @@
+questions:
+  - type: choice
+    prompt: ¿Qué línea necesitas al principio del archivo para usar `Scanner`?
+    options:
+      - '`import java.util.Scanner;`'
+      - '`include Scanner;`'
+      - No hace falta nada, `Scanner` siempre está disponible
+    answer: 0
+    explanation: '`Scanner` vive en el paquete `java.util`. El `import` le dice al compilador dónde encontrarlo; sin él verías `cannot find symbol`.'
+  - type: output
+    prompt: ¿Qué imprime este programa si la entrada es `4 6`?
+    code: |
+      import java.util.Scanner;
+
+      public class Main {
+          public static void main(String[] args) {
+              Scanner entrada = new Scanner(System.in);
+              int a = entrada.nextInt();
+              int b = entrada.nextInt();
+              System.out.println(a * b);
+          }
+      }
+    input: "4 6\n"
+    answer: |
+      24
+    explanation: 'Cada `nextInt()` lee un número entero: `a` vale 4 y `b` vale 6. El espacio entre ellos se salta solo. 4 por 6 son 24.'
+  - type: choice
+    prompt: 'La entrada es `30` en una línea y `Ada` en la siguiente. ¿Qué guarda `nombre`?'
+    code: |
+      int edad = entrada.nextInt();
+      String nombre = entrada.nextLine();
+    options:
+      - Un texto vacío
+      - '`Ada`'
+      - '`30`'
+    answer: 0
+    explanation: '`nextInt()` lee el 30 pero deja el salto de línea. `nextLine()` lee hasta ese salto y devuelve lo que hay antes: nada. Para leer `Ada` hay que llamar antes a `nextLine()` una vez más.'

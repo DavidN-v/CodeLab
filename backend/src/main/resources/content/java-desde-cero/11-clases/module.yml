@@ -1,0 +1,24 @@
+lessons:
+  - slug: constructores
+    title: Constructores y this
+    summary: Crear objetos completos y válidos desde el primer momento.
+    minutes: 7
+  - slug: modificadores-de-acceso
+    title: Modificadores de acceso
+    summary: public, private, protected y el acceso de paquete; getters y setters.
+    minutes: 6
+  - slug: static-y-final
+    title: static y final en las clases
+    summary: Lo que pertenece a la clase frente a lo que pertenece a cada objeto.
+    minutes: 7
+  - slug: enumeraciones
+    title: Enumeraciones
+    summary: Tipos con un conjunto cerrado de valores, con datos y comportamiento.
+    minutes: 7
+exercises:
+  - ordenar-clase-libro
+  - rectangulo
+  - fraccion
+  - numerador-de-tickets
+  - semaforo
+  - arreglar-constructor-producto

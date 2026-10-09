@@ -1,0 +1,31 @@
+title: Hola, mundo
+summary: Tu primer programa que escribe en la consola.
+difficulty: EASY
+statement: |
+  Escribe un programa que imprima exactamente:
+
+  ```
+  Hola, mundo!
+  ```
+
+  Fíjate en la coma, el espacio y el signo de exclamación: el corrector compara la salida carácter a carácter.
+starter: |
+  public class Main {
+      public static void main(String[] args) {
+          // Escribe tu código aquí
+      }
+  }
+solution: |
+  public class Main {
+      public static void main(String[] args) {
+          System.out.println("Hola, mundo!");
+      }
+  }
+hints:
+  - 'La idea: el programa solo tiene que escribir una línea de texto en la consola, exactamente igual que en el enunciado.'
+  - 'Qué usar: `System.out.println(...)` escribe un texto y salta de línea. El texto va entre comillas dobles.'
+  - 'El plan: dentro de `main`, escribe `System.out.println("...");` con el texto exacto entre las comillas. No olvides el `;` del final.'
+tests:
+  - output: |
+      Hola, mundo!
+    sample: true

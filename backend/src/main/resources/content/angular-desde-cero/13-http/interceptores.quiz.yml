@@ -1,0 +1,38 @@
+questions:
+  - type: choice
+    prompt: ¿Cómo añade un interceptor una cabecera a la petición?
+    options:
+      - 'Crea una copia con `req.clone({ setHeaders: { ... } })` y la pasa a `next`'
+      - 'Modifica directamente `req.headers` y llama a `next(req)`'
+      - 'Escribe la cabecera en `localStorage` y el navegador la añade'
+    answer: 0
+    explanation: 'Las peticiones de `HttpClient` son inmutables. Para cambiarlas se clonan con el cambio y se pasa la copia al siguiente interceptor.'
+  - type: output
+    prompt: 'Cada interceptor escribe al pasar a la ida y al recibir la respuesta. Con `withInterceptors([a, b])`, ¿qué aparece en la consola en una petición que va bien?'
+    code: |
+      const a: HttpInterceptorFn = (req, next) => {
+        console.log('a ida');
+        return next(req).pipe(
+          tap((e) => { if (e.type === HttpEventType.Response) console.log('a vuelta'); }),
+        );
+      };
+      const b: HttpInterceptorFn = (req, next) => {
+        console.log('b ida');
+        return next(req).pipe(
+          tap((e) => { if (e.type === HttpEventType.Response) console.log('b vuelta'); }),
+        );
+      };
+    answer: |
+      a ida
+      b ida
+      b vuelta
+      a vuelta
+    explanation: 'A la ida se recorren en el orden del array. La respuesta vuelve por el mismo camino al revés: primero la ve `b`, el más cercano al servidor, y después `a`.'
+  - type: choice
+    prompt: ¿Qué pasa si un interceptor nunca llama a `next(req)` ni devuelve otro observable con una respuesta?
+    options:
+      - La petición nunca llega al servidor y quien se suscribió se queda esperando
+      - Angular salta ese interceptor automáticamente
+      - La petición se envía sin cabeceras
+    answer: 0
+    explanation: '`next(req)` es lo que pasa la petición al siguiente eslabón. Si no se llama, la cadena se corta ahí.'

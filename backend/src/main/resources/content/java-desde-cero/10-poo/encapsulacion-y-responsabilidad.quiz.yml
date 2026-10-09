@@ -1,0 +1,51 @@
+questions:
+  - type: choice
+    prompt: El campo `saldo` de la clase `Cuenta` es `private`. ¿Qué pasa si en `main` escribes `cuenta.saldo = -1000;`?
+    options:
+      - No compila, porque solo se puede acceder a `saldo` desde dentro de `Cuenta`
+      - Compila, pero el saldo no cambia
+      - Compila y el saldo pasa a -1000
+      - Lanza un error solo si el número es negativo
+    answer: 0
+    explanation: '`private` hace el campo invisible fuera de su clase, y el compilador lo rechaza. Para cambiar el saldo hay que pasar por métodos como `ingresar` o `retirar`, que validan.'
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      class Hucha {
+          private int total = 0;
+
+          boolean meter(int monedas) {
+              if (monedas <= 0) {
+                  return false;
+              }
+              total += monedas;
+              return true;
+          }
+
+          int getTotal() {
+              return total;
+          }
+      }
+
+      public class Main {
+          public static void main(String[] args) {
+              Hucha h = new Hucha();
+              System.out.println(h.meter(5));
+              System.out.println(h.meter(-3));
+              h.meter(2);
+              System.out.println(h.getTotal());
+          }
+      }
+    answer: |
+      true
+      false
+      7
+    explanation: 'Meter 5 es válido (`true`). Meter -3 lo rechaza la validación (`false`) y no cambia el total. Después entran 2 más: 5 + 2 = 7.'
+  - type: choice
+    prompt: Según la pauta «dile, no preguntes», ¿cuál es la mejor forma de cobrar un precio a una cuenta?
+    options:
+      - '`cuenta.retirar(precio);`'
+      - '`if (cuenta.getSaldo() >= precio) { cuenta.setSaldo(cuenta.getSaldo() - precio); }`'
+      - '`cuenta.saldo -= precio;`'
+    answer: 0
+    explanation: 'Pedirle a la cuenta que retire deja la regla («no más de lo que hay») dentro de `Cuenta`, en un único sitio. Las otras formas deciden desde fuera, y la última ni siquiera compila si `saldo` es `private`.'

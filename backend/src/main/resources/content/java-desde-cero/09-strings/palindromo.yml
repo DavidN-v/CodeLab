@@ -1,0 +1,50 @@
+title: ¿Es un palíndromo?
+summary: Compara un texto con su inverso ignorando espacios y mayúsculas.
+difficulty: MEDIUM
+statement: |
+  Un palíndromo se lee igual de izquierda a derecha que de derecha a izquierda. Lee una línea y escribe `sí` si es un palíndromo o `no` si no lo es.
+
+  Ignora los espacios y la diferencia entre mayúsculas y minúsculas (no hace falta tratar acentos ni signos).
+
+  **Ejemplos:** `Anita lava la tina` → `sí`; `Java` → `no`.
+starter: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          String texto = entrada.nextLine();
+
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          String texto = entrada.nextLine();
+          String limpio = texto.replace(" ", "").toLowerCase();
+          String invertido = new StringBuilder(limpio).reverse().toString();
+          System.out.println(limpio.equals(invertido) ? "sí" : "no");
+      }
+  }
+hints:
+  - 'La idea: un palíndromo es un texto que, dado la vuelta, queda igual. Antes de comparar, limpia lo que no importa: los espacios y las mayúsculas.'
+  - 'Qué usar: `replace(" ", "")` y `toLowerCase()` para limpiar, `new StringBuilder(texto).reverse().toString()` para invertir y `equals` para comparar.'
+  - 'El plan: `limpio = texto.replace(" ", "").toLowerCase();` → `invertido = new StringBuilder(limpio).reverse().toString();` → si `limpio.equals(invertido)`, escribe `sí`; si no, `no`.'
+tests:
+  - input: "Anita lava la tina\n"
+    output: "sí\n"
+    sample: true
+  - input: "Java\n"
+    output: "no\n"
+    sample: true
+  - input: "radar\n"
+    output: "sí\n"
+  - input: "a\n"
+    output: "sí\n"
+  - input: "Se van sus naves\n"
+    output: "sí\n"
+  - input: "ab\n"
+    output: "no\n"

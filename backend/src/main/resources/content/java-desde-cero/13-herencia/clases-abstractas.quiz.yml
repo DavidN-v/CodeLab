@@ -1,0 +1,52 @@
+questions:
+  - type: choice
+    prompt: '`Figura` es una clase abstracta. ¿Qué pasa con `Figura f = new Figura("x");`?'
+    options:
+      - No compila, porque una clase abstracta no se puede instanciar con `new`
+      - Compila, pero falla al ejecutar
+      - Funciona y crea una figura sin área
+    answer: 0
+    explanation: Una clase abstracta representa una idea general, así que Java no te deja crear objetos de ella directamente. Solo puedes crear objetos de sus subclases concretas, como `new Circulo(1)`.
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      abstract class Bebida {
+          abstract String nombre();
+
+          String servir() {
+              return "Aquí tienes: " + nombre();
+          }
+      }
+
+      class Cafe extends Bebida {
+          @Override
+          String nombre() {
+              return "café";
+          }
+      }
+
+      class Te extends Bebida {
+          @Override
+          String nombre() {
+              return "té";
+          }
+      }
+
+      public class Main {
+          public static void main(String[] args) {
+              System.out.println(new Te().servir());
+              System.out.println(new Cafe().servir());
+          }
+      }
+    answer: |
+      Aquí tienes: té
+      Aquí tienes: café
+    explanation: '`servir()` es un método plantilla: está escrito una vez en `Bebida` y llama al método abstracto `nombre()`, que cada subclase rellena a su manera. El orden de la salida sigue el orden del `main`: primero el té.'
+  - type: choice
+    prompt: Una subclase de una clase abstracta no implementa uno de sus métodos abstractos. ¿Qué ocurre?
+    options:
+      - No compila, salvo que la subclase también se declare `abstract`
+      - Compila, y el método devuelve `null` al llamarlo
+      - Compila, y se usa un cuerpo vacío por defecto
+    answer: 0
+    explanation: Un método abstracto es una obligación. Una clase concreta (no abstracta) tiene que dar cuerpo a todos los métodos abstractos que hereda; si no, el compilador lo rechaza.

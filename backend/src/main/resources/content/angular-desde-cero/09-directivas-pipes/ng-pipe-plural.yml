@@ -1,0 +1,59 @@
+title: El pipe plural
+summary: Ordena las líneas de un pipe propio con un parámetro.
+difficulty: MEDIUM
+kind: parsons
+statement: |
+  Queremos un pipe que escriba una cantidad con su palabra en singular o plural:
+
+  ```html
+  <p>{{ 1 | plural: 'gato' }}</p>
+  <p>{{ 3 | plural: 'gato' }}</p>
+  ```
+
+  debe mostrar `1 gato` y `3 gatos`.
+
+  Ordena las líneas para completar el pipe. Cuidado: alguna línea sobra.
+starter: |
+  // src/app/plural-pipe.ts
+  import { Pipe, PipeTransform } from '@angular/core';
+
+  {{lines}}
+      return `${cantidad} ${palabra}s`;
+    }
+  }
+solution: |
+  // src/app/plural-pipe.ts
+  import { Pipe, PipeTransform } from '@angular/core';
+
+  @Pipe({
+    name: 'plural',
+  })
+  export class PluralPipe implements PipeTransform {
+    transform(cantidad: number, palabra: string): string {
+      if (cantidad === 1) {
+        return `1 ${palabra}`;
+      }
+      return `${cantidad} ${palabra}s`;
+    }
+  }
+lines:
+  - '@Pipe({'
+  - "  name: 'plural',"
+  - '})'
+  - 'export class PluralPipe implements PipeTransform {'
+  - '  transform(cantidad: number, palabra: string): string {'
+  - '    if (cantidad === 1) {'
+  - '      return `1 ${palabra}`;'
+  - '    }'
+distractors:
+  - '  transform(cantidad: number): string {'
+  - "  name: 'PluralPipe',"
+hints:
+  - 'La idea: primero va el decorador con el nombre que se usa en la plantilla, después la clase y dentro el método `transform`, que decide entre singular y plural.'
+  - 'Qué usar: `@Pipe({ name: … })` con el nombre que aparece tras el `|`; `transform` recibe primero el valor (la cantidad) y después cada parámetro escrito tras `:` (la palabra).'
+  - 'El plan: decorador con `name: ''plural''` → clase `PluralPipe` → `transform(cantidad, palabra)` → `if` para el caso 1 que devuelve el singular; el plural ya está al final del esqueleto.'
+tests:
+  - output: |
+      1 gato
+      3 gatos
+    sample: true

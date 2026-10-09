@@ -1,0 +1,97 @@
+title: Semáforo
+summary: Un enum con datos y un método que devuelve el siguiente estado.
+difficulty: MEDIUM
+statement: |
+  Modela un semáforo con un `enum Luz` de valores `VERDE`, `AMBAR` y `ROJO`. Cada luz tiene una duración en segundos (verde 30, ámbar 5, rojo 25) y un método `Luz siguiente()` que devuelve la luz que viene después (verde → ámbar → rojo → verde).
+
+  La entrada es una luz inicial y un número de segundos `t`. Simula el semáforo desde el **inicio** de esa luz y escribe:
+
+  ```
+  Ciclo: <duración total de un ciclo completo> s
+  Tras <t> s: <luz encendida en ese instante>
+  Cambios: <número de cambios de luz ocurridos>
+  ```
+
+  Un cambio ocurre exactamente cuando se agota la duración de una luz: con `VERDE` y `t = 30` ya está en `AMBAR` tras 1 cambio.
+starter: |
+  import java.util.Scanner;
+
+  enum Luz {
+      VERDE, AMBAR, ROJO
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          Luz luz = Luz.valueOf(entrada.next());
+          int t = entrada.nextInt();
+
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  enum Luz {
+      VERDE(30), AMBAR(5), ROJO(25);
+
+      private final int duracion;
+
+      Luz(int duracion) {
+          this.duracion = duracion;
+      }
+
+      int duracion() {
+          return duracion;
+      }
+
+      Luz siguiente() {
+          return switch (this) {
+              case VERDE -> AMBAR;
+              case AMBAR -> ROJO;
+              case ROJO -> VERDE;
+          };
+      }
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          Luz luz = Luz.valueOf(entrada.next());
+          int t = entrada.nextInt();
+          int ciclo = 0;
+          for (Luz l : Luz.values()) {
+              ciclo += l.duracion();
+          }
+          int restante = t;
+          int cambios = 0;
+          while (restante >= luz.duracion()) {
+              restante -= luz.duracion();
+              luz = luz.siguiente();
+              cambios++;
+          }
+          System.out.println("Ciclo: " + ciclo + " s");
+          System.out.println("Tras " + t + " s: " + luz);
+          System.out.println("Cambios: " + cambios);
+      }
+  }
+hints:
+  - 'La idea: cada luz sabe cuánto dura y cuál va después; el `main` solo va restando tiempo y avanzando de luz.'
+  - 'Qué usar: un enum con datos (`VERDE(30), AMBAR(5), ROJO(25);` más un campo, un constructor y `duracion()`), y un `switch (this)` dentro de `siguiente()`.'
+  - 'El plan: suma las duraciones de `Luz.values()` para el ciclo. Después, `while (restante >= luz.duracion())`: resta la duración, `luz = luz.siguiente();` y suma un cambio.'
+tests:
+  - input: "VERDE 30\n"
+    output: |
+      Ciclo: 60 s
+      Tras 30 s: AMBAR
+      Cambios: 1
+    sample: true
+  - input: "ROJO 0\n"
+    output: |
+      Ciclo: 60 s
+      Tras 0 s: ROJO
+      Cambios: 0
+  - input: "AMBAR 100\n"
+    output: |
+      Ciclo: 60 s
+      Tras 100 s: VERDE
+      Cambios: 5

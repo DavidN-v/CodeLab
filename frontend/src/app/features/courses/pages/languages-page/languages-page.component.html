@@ -1,0 +1,52 @@
+<section class="page" aria-labelledby="languages-heading">
+  <header class="page__header">
+    <p class="page__eyebrow">Catálogo</p>
+    <h1 id="languages-heading" class="page__title">Cursos</h1>
+    <p class="page__lead">
+      Cada lenguaje es un curso completo: lecciones con ejemplos que puedes ejecutar, ejercicios con
+      corrección automática y un recorrido de módulos de principiante a proyecto final.
+    </p>
+  </header>
+
+  @if (languages.isLoading()) {
+    <p class="state" role="status">Cargando lenguajes…</p>
+  } @else if (languages.error()) {
+    <div class="state state--error" role="alert">
+      <p>No hemos podido cargar el catálogo.</p>
+      <button type="button" class="button button--secondary" (click)="languages.reload()">
+        Reintentar
+      </button>
+    </div>
+  } @else {
+    @for (group of groups(); track group.title) {
+      <h2 class="languages__group">{{ group.title }}</h2>
+      <ul class="languages">
+        @for (language of group.languages; track language.id) {
+          <li class="language" [class.language--upcoming]="!language.active">
+            <div class="language__head">
+              <h3 class="language__name">{{ language.name }}</h3>
+              @if (language.version) {
+                <span class="language__version">{{ language.version }}</span>
+              }
+              <span class="tag" [class.tag--accent]="language.active">
+                {{ language.active ? 'Disponible' : 'Próximamente' }}
+              </span>
+            </div>
+            <p class="language__tagline">{{ language.tagline }}</p>
+            @if (language.description) {
+              <p class="language__description">{{ language.description }}</p>
+            }
+            @if (language.active) {
+              <a
+                class="button button--primary language__action"
+                [routerLink]="['/languages', language.slug]"
+              >
+                Ver el curso de {{ language.name }}
+              </a>
+            }
+          </li>
+        }
+      </ul>
+    }
+  }
+</section>

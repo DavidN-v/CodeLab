@@ -1,0 +1,66 @@
+title: Limpiar y enfocar con viewChild
+summary: Consulta un input de la plantilla para vaciarlo y ponerle el foco.
+difficulty: HARD
+kind: fill
+statement: |
+  Al pulsar **Limpiar**, la caja del correo debe quedarse vacía y con el cursor dentro, listo para escribir. Eso son acciones sobre el elemento real del DOM, así que la clase necesita consultarlo.
+
+  Completa los huecos:
+
+  - Importa la función de consulta adecuada.
+  - Marca el input con una variable de plantilla llamada `correo`.
+  - Declara la consulta como **obligatoria** (el input siempre existe).
+  - Obtén el elemento real del DOM a partir del `ElementRef`.
+starter: |
+  // src/app/correo/correo.ts
+  import { Component, ElementRef, {{?}} } from '@angular/core';
+
+  @Component({
+    selector: 'app-correo',
+    template: `
+      <input {{?}} placeholder="Tu correo" />
+      <button (click)="limpiar()">Limpiar</button>
+    `,
+  })
+  export class Correo {
+    private readonly correo = viewChild.{{?}}<ElementRef<HTMLInputElement>>('correo');
+
+    protected limpiar(): void {
+      const input = this.correo().{{?}};
+      input.value = '';
+      input.focus();
+    }
+  }
+answers:
+  - viewChild
+  - '#correo'
+  - required
+  - nativeElement
+solution: |
+  // src/app/correo/correo.ts
+  import { Component, ElementRef, viewChild } from '@angular/core';
+
+  @Component({
+    selector: 'app-correo',
+    template: `
+      <input #correo placeholder="Tu correo" />
+      <button (click)="limpiar()">Limpiar</button>
+    `,
+  })
+  export class Correo {
+    private readonly correo = viewChild.required<ElementRef<HTMLInputElement>>('correo');
+
+    protected limpiar(): void {
+      const input = this.correo().nativeElement;
+      input.value = '';
+      input.focus();
+    }
+  }
+hints:
+  - 'La idea: la clase busca en su propia plantilla un elemento marcado con un nombre, recibe un signal con un envoltorio y saca de él el `<input>` de verdad.'
+  - 'Qué usar: `viewChild` de `@angular/core`; las variables de plantilla se declaran con `#`; la variante que garantiza que existe es `.required`; el elemento real de un `ElementRef` está en una propiedad que empieza por `native`.'
+  - 'El plan: importa `viewChild` → `#correo` en el input → `viewChild.required` → `this.correo().nativeElement`.'
+tests:
+  - output: |
+      La caja queda vacía y con el cursor dentro.
+    sample: true

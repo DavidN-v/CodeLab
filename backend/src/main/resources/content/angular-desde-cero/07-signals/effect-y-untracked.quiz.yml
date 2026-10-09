@@ -1,0 +1,25 @@
+questions:
+  - type: choice
+    prompt: Necesitas mostrar el nombre completo a partir de `nombre` y `apellido`. ¿Qué usas?
+    options:
+      - "`computed(() => this.nombre() + ' ' + this.apellido())`"
+      - 'Un `effect` que haga `nombreCompleto.set(...)` cada vez que cambien'
+      - 'Un `setInterval` que lo recalcule cada segundo'
+    answer: 0
+    explanation: 'Es un valor que sale de otros: eso es un `computed`. Un efecto que copia valores en otro signal funciona peor y es más difícil de seguir.'
+  - type: choice
+    prompt: '¿Cuál es un buen uso de `effect`?'
+    options:
+      - Guardar un signal en `localStorage` cada vez que cambia
+      - Calcular el precio con IVA
+      - Filtrar una lista para mostrarla
+    answer: 0
+    explanation: 'Guardar en `localStorage` es un efecto secundario: hablar con algo de fuera de Angular. Calcular y filtrar son valores derivados: `computed`.'
+  - type: choice
+    prompt: 'Dentro de un efecto lees `untracked(this.usuario)`. ¿Qué pasa cuando `usuario` cambia?'
+    options:
+      - Nada; el efecto no depende de `usuario`
+      - El efecto se ejecuta otra vez
+      - Angular lanza un error
+    answer: 0
+    explanation: '`untracked` lee el valor sin apuntarlo como dependencia. El efecto solo se repite cuando cambian los signals que lee de forma normal.'

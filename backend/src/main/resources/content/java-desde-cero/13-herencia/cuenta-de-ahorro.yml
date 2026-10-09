@@ -1,0 +1,171 @@
+title: Cuenta de ahorro
+summary: Especializa una regla heredada sin romperla.
+difficulty: HARD
+statement: |
+  La clase `Cuenta` permite ingresar y retirar (sin quedar en negativo). Crea una subclase `CuentaAhorro` que:
+
+  - Tenga un interés anual en porcentaje recibido en el constructor.
+  - Añada `void aplicarInteres()`, que suma al saldo `saldo * interes / 100` (redondeado hacia abajo, es entero).
+  - **Limite** cada retirada a un máximo de 500: sobrescribe `retirar` para que rechace (devuelva `false`) las retiradas mayores de 500 y, si no, delegue en la versión de `Cuenta` con `super`.
+
+  La entrada empieza con `normal` o `ahorro <interés>` y sigue con órdenes `ingresar <n>`, `retirar <n>` o `interes` (este último solo para cuentas de ahorro). Para cada `ingresar`/`retirar` escribe `ok` o `rechazada`; al final, `Saldo: <saldo>`.
+starter: |
+  import java.util.Scanner;
+
+  class Cuenta {
+      protected int saldo = 0;
+
+      boolean ingresar(int cantidad) {
+          if (cantidad <= 0) {
+              return false;
+          }
+          saldo += cantidad;
+          return true;
+      }
+
+      boolean retirar(int cantidad) {
+          if (cantidad <= 0 || cantidad > saldo) {
+              return false;
+          }
+          saldo -= cantidad;
+          return true;
+      }
+
+      int getSaldo() {
+          return saldo;
+      }
+  }
+
+  // Crea aquí CuentaAhorro
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          String tipo = entrada.next();
+          Cuenta cuenta;
+          if (tipo.equals("ahorro")) {
+              int interes = entrada.nextInt();
+              cuenta = new Cuenta(); // cámbialo por new CuentaAhorro(interes)
+          } else {
+              cuenta = new Cuenta();
+          }
+          while (entrada.hasNext()) {
+              String orden = entrada.next();
+              switch (orden) {
+                  case "ingresar" -> System.out.println(cuenta.ingresar(entrada.nextInt()) ? "ok" : "rechazada");
+                  case "retirar" -> System.out.println(cuenta.retirar(entrada.nextInt()) ? "ok" : "rechazada");
+                  // case "interes" -> ((CuentaAhorro) cuenta).aplicarInteres();
+                  default -> { }
+              }
+          }
+          System.out.println("Saldo: " + cuenta.getSaldo());
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  class Cuenta {
+      protected int saldo = 0;
+
+      boolean ingresar(int cantidad) {
+          if (cantidad <= 0) {
+              return false;
+          }
+          saldo += cantidad;
+          return true;
+      }
+
+      boolean retirar(int cantidad) {
+          if (cantidad <= 0 || cantidad > saldo) {
+              return false;
+          }
+          saldo -= cantidad;
+          return true;
+      }
+
+      int getSaldo() {
+          return saldo;
+      }
+  }
+
+  class CuentaAhorro extends Cuenta {
+      private static final int RETIRADA_MAXIMA = 500;
+      private final int interes;
+
+      CuentaAhorro(int interes) {
+          this.interes = interes;
+      }
+
+      void aplicarInteres() {
+          saldo += saldo * interes / 100;
+      }
+
+      @Override
+      boolean retirar(int cantidad) {
+          if (cantidad > RETIRADA_MAXIMA) {
+              return false;
+          }
+          return super.retirar(cantidad);
+      }
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          String tipo = entrada.next();
+          Cuenta cuenta;
+          if (tipo.equals("ahorro")) {
+              int interes = entrada.nextInt();
+              cuenta = new CuentaAhorro(interes);
+          } else {
+              cuenta = new Cuenta();
+          }
+          while (entrada.hasNext()) {
+              String orden = entrada.next();
+              switch (orden) {
+                  case "ingresar" -> System.out.println(cuenta.ingresar(entrada.nextInt()) ? "ok" : "rechazada");
+                  case "retirar" -> System.out.println(cuenta.retirar(entrada.nextInt()) ? "ok" : "rechazada");
+                  case "interes" -> ((CuentaAhorro) cuenta).aplicarInteres();
+                  default -> { }
+              }
+          }
+          System.out.println("Saldo: " + cuenta.getSaldo());
+      }
+  }
+hints:
+  - 'La idea: una cuenta de ahorro funciona como una cuenta normal, con dos cambios: puede ganar intereses y no deja sacar más de 500 de golpe.'
+  - 'Qué usar: `class CuentaAhorro extends Cuenta`, el campo `saldo` (es `protected`, así que puedes modificarlo), `@Override` en `retirar` y `super.retirar(cantidad)` para reutilizar las reglas del padre.'
+  - 'El plan: en `retirar`, si `cantidad > 500` devuelve `false`; si no, `return super.retirar(cantidad);`. En `aplicarInteres`, `saldo += saldo * interes / 100;`. En el `main`, crea `new CuentaAhorro(interes)` y activa el caso `"interes"`.'
+tests:
+  - input: |
+      ahorro 10
+      ingresar 1000
+      retirar 600
+      retirar 400
+      interes
+    output: |
+      ok
+      rechazada
+      ok
+      Saldo: 660
+    sample: true
+  - input: |
+      normal
+      ingresar 1000
+      retirar 600
+    output: |
+      ok
+      ok
+      Saldo: 400
+    sample: true
+  - input: |
+      ahorro 3
+      ingresar 999
+      interes
+      retirar 2000
+      retirar 0
+    output: |
+      ok
+      rechazada
+      rechazada
+      Saldo: 1028

@@ -1,0 +1,50 @@
+title: La tabla de rutas
+summary: Completa una tabla de rutas con parámetro, redirección y página 404.
+difficulty: EASY
+kind: fill
+statement: |
+  Completa la tabla de rutas para que:
+
+  1. `/libros/7` muestre `DetalleLibro`, que lee el número con un `input()` llamado **`id`**;
+  2. `/inicio` **redirija** a la portada (`''`);
+  3. cualquier otra dirección muestre `NoEncontrada` (escribe el **comodín**).
+starter: |
+  // src/app/app.routes.ts
+  import { Routes } from '@angular/router';
+  import { Portada } from './portada/portada';
+  import { DetalleLibro } from './detalle-libro/detalle-libro';
+  import { NoEncontrada } from './no-encontrada/no-encontrada';
+
+  export const routes: Routes = [
+    { path: '', component: Portada },
+    { path: 'libros/{{?}}', component: DetalleLibro },
+    { path: 'inicio', {{?}}: '' },
+    { path: '{{?}}', component: NoEncontrada },
+  ];
+answers:
+  - ':id'
+  - redirectTo
+  - '**'
+solution: |
+  // src/app/app.routes.ts
+  import { Routes } from '@angular/router';
+  import { Portada } from './portada/portada';
+  import { DetalleLibro } from './detalle-libro/detalle-libro';
+  import { NoEncontrada } from './no-encontrada/no-encontrada';
+
+  export const routes: Routes = [
+    { path: '', component: Portada },
+    { path: 'libros/:id', component: DetalleLibro },
+    { path: 'inicio', redirectTo: '' },
+    { path: '**', component: NoEncontrada },
+  ];
+hints:
+  - 'La idea: necesitas un segmento variable con nombre, una ruta que mande a otra dirección y una ruta que atrape todo lo demás.'
+  - 'Qué usar: un parámetro se escribe con dos puntos delante de su nombre; la redirección usa la propiedad `redirectTo`; el comodín son dos asteriscos.'
+  - 'El plan: `libros/:id`, `redirectTo: ''''` y `path: ''**''` al final de la tabla.'
+tests:
+  - output: |
+      /libros/7 → DetalleLibro con id() = '7'
+      /inicio → redirige a /
+      /xyz → NoEncontrada
+    sample: true

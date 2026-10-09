@@ -1,0 +1,25 @@
+questions:
+  - type: choice
+    prompt: "¿Por qué la ruta `{ path: '', redirectTo: 'tareas', pathMatch: 'full' }` lleva `pathMatch: 'full'`?"
+    options:
+      - Para que solo redirija cuando la URL está vacía del todo, y no en cualquier URL
+      - Para que la redirección sea más rápida
+      - Porque `redirectTo` no funciona sin él en rutas con componente
+    answer: 0
+    explanation: 'Toda URL «empieza» por la ruta vacía. Con `pathMatch: ''full''` la regla solo encaja cuando no hay nada más en la URL.'
+  - type: choice
+    prompt: "¿Qué hace `[routerLinkActiveOptions]=\"{ exact: true }\"` en el enlace «Lista»?"
+    options:
+      - Que solo se marque como activo en `/tareas` exacto, no en `/tareas/nueva`
+      - Que el enlace navegue sin recargar la página
+      - Que el enlace abra la ruta en una pestaña nueva
+    answer: 0
+    explanation: 'Sin `exact`, `routerLinkActive` marca el enlace en cualquier URL que empiece por `/tareas`, así que «Lista» y «Nueva tarea» aparecerían activos a la vez.'
+  - type: choice
+    prompt: "Si pones `{ path: '**', component: NoEncontrada }` como PRIMERA ruta de la lista, ¿qué pasa?"
+    options:
+      - Todas las URLs muestran la página 404, porque `'**'` encaja con todo y se usa la primera que encaja
+      - Nada, el router ordena las rutas solo
+      - El build falla
+    answer: 0
+    explanation: 'El router recorre las rutas en orden y se queda con la primera que encaja. El comodín debe ir el último.'

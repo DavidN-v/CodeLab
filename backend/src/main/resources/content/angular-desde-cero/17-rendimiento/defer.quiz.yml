@@ -1,0 +1,25 @@
+questions:
+  - type: choice
+    prompt: Escribes `@defer { <app-mapa /> }` sin ningún disparador. ¿Cuándo se carga el mapa?
+    options:
+      - Cuando el navegador queda desocupado (`on idle`)
+      - Nunca, hace falta un disparador
+      - Al hacer clic en la página
+    answer: 0
+    explanation: 'Sin disparador, `@defer` usa `on idle`: Angular espera a que el navegador termine el trabajo urgente y entonces descarga y muestra el contenido.'
+  - type: choice
+    prompt: '¿Qué hace `@loading (after 100ms; minimum 1s)`?'
+    options:
+      - Si la descarga tarda más de 100 ms, muestra el bloque de carga y lo mantiene al menos 1 segundo
+      - Espera 100 ms antes de empezar a descargar y corta la descarga al segundo
+      - Repite la descarga cada 100 ms durante 1 segundo
+    answer: 0
+    explanation: '`after` evita mostrar el aviso de carga en descargas rápidas, y `minimum` evita que aparezca y desaparezca en un parpadeo.'
+  - type: choice
+    prompt: Usas `<app-grafico />` dentro de un `@defer` y también fuera de él, en la misma plantilla. ¿Qué ocurre con su código?
+    options:
+      - Va al archivo principal, porque el compilador no puede separarlo
+      - Se descarga dos veces
+      - Va a un chunk aparte igualmente
+    answer: 0
+    explanation: 'Para separar el código, el componente solo puede usarse dentro de bloques `@defer`. Si se usa fuera, hace falta desde el principio y el compilador lo deja en el bundle inicial.'

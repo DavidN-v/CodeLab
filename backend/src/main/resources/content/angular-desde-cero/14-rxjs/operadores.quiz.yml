@@ -1,0 +1,31 @@
+questions:
+  - type: output
+    prompt: ¿Qué aparece en la consola?
+    code: |
+      of(1, 2, 3, 4)
+        .pipe(
+          map((n) => n * 10),
+          filter((n) => n > 15),
+        )
+        .subscribe((n) => console.log(n));
+    answer: |
+      20
+      30
+      40
+    explanation: 'Primero `map` multiplica: 10, 20, 30, 40. Después `filter` deja pasar los mayores que 15. El orden de los operadores importa.'
+  - type: choice
+    prompt: La persona escribe «hola» deprisa (una tecla cada 50 ms) y para. ¿Cuántos valores deja pasar `debounceTime(300)`?
+    options:
+      - Uno, «hola», 300 ms después de la última tecla
+      - Cuatro, uno por tecla, cada uno con 300 ms de retraso
+      - Ninguno, porque las teclas van demasiado rápido
+    answer: 0
+    explanation: '`debounceTime` reinicia su espera con cada valor nuevo. Solo emite cuando pasan 300 ms sin novedades, y entonces da el último valor.'
+  - type: choice
+    prompt: Quieres pedir el perfil y los pedidos del usuario a la vez y pintar la página cuando lleguen los dos. ¿Qué operador usas?
+    options:
+      - '`forkJoin`'
+      - '`debounceTime`'
+      - '`distinctUntilChanged`'
+    answer: 0
+    explanation: '`forkJoin` se suscribe a todos a la vez y emite una sola vez, cuando todos han terminado, con el último valor de cada uno. Perfecto para varias peticiones HTTP.'

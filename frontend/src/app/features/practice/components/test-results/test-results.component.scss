@@ -1,0 +1,110 @@
+@use 'mixins' as *;
+
+:host {
+  display: block;
+}
+
+.results {
+  font-size: var(--text-sm);
+}
+
+.results__verdict {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  border-left: 3px solid var(--color-danger);
+  background-color: var(--color-danger-soft);
+
+  &--ok {
+    border-left-color: var(--color-success);
+    background-color: var(--color-success-soft);
+  }
+}
+
+.results__status {
+  font-size: var(--text-base);
+  font-weight: 600;
+}
+
+.results__count {
+  color: var(--color-text-muted);
+}
+
+.results__compile,
+.test pre {
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  overflow-x: auto;
+  border-radius: var(--radius-sm);
+  background-color: var(--color-console-bg);
+  font-size: var(--text-xs);
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+.results__compile {
+  margin: var(--space-3) var(--space-4) 0;
+  color: var(--color-danger);
+}
+
+.results__tests {
+  margin: 0;
+  padding: var(--space-3) var(--space-4);
+}
+
+.test + .test {
+  margin-top: var(--space-2);
+}
+
+.test__head {
+  color: var(--color-danger);
+}
+
+.test--passed .test__head {
+  color: var(--color-success);
+}
+
+.test__mark {
+  display: inline-block;
+  width: 1.25rem;
+}
+
+.test__detail {
+  display: grid;
+  gap: var(--space-2);
+  margin: var(--space-2) 0 var(--space-3) var(--space-5);
+
+  @include from('sm') {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.test__stderr {
+  grid-column: 1 / -1;
+
+  pre {
+    color: var(--color-danger);
+  }
+}
+
+.test__caption {
+  @include mono-label;
+  margin-bottom: var(--space-1);
+  color: var(--color-text-subtle);
+  font-size: 0.6875rem;
+}
+
+.results__feedback {
+  margin: var(--space-3) var(--space-4) 0;
+  padding: var(--space-2) var(--space-3);
+  border-left: 3px solid var(--color-warning);
+  background-color: color-mix(in srgb, var(--color-warning) 10%, transparent);
+  font-size: var(--text-sm);
+}
+
+.test__detail app-output-diff,
+.test__detail .test__stderr {
+  grid-column: 1 / -1;
+}

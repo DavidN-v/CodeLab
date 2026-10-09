@@ -1,0 +1,74 @@
+title: Aprobados ordenados
+summary: filter, sorted y map en una sola tubería.
+difficulty: EASY
+statement: |
+  Cada línea de la entrada es `<nombre> <nota>` (nota decimal). Usando **un stream**, escribe en una sola línea los nombres de los aprobados (nota ≥ 5), ordenados de mayor a menor nota y, a igual nota, por nombre alfabético, separados por `, `. Si no hay aprobados, escribe `Ninguno`.
+
+  Debajo, escribe `Media de aprobados: <media>` con dos decimales (o `Media de aprobados: -` si no hay).
+starter: |
+  import java.util.ArrayList;
+  import java.util.Comparator;
+  import java.util.List;
+  import java.util.Scanner;
+  import java.util.stream.Collectors;
+
+  record Alumno(String nombre, double nota) {}
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          List<Alumno> alumnos = new ArrayList<>();
+          while (entrada.hasNext()) {
+              alumnos.add(new Alumno(entrada.next(), entrada.nextDouble()));
+          }
+
+      }
+  }
+solution: |
+  import java.util.ArrayList;
+  import java.util.Comparator;
+  import java.util.List;
+  import java.util.Scanner;
+  import java.util.stream.Collectors;
+
+  record Alumno(String nombre, double nota) {}
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          List<Alumno> alumnos = new ArrayList<>();
+          while (entrada.hasNext()) {
+              alumnos.add(new Alumno(entrada.next(), entrada.nextDouble()));
+          }
+          List<Alumno> aprobados = alumnos.stream()
+              .filter(a -> a.nota() >= 5)
+              .sorted(Comparator.comparing(Alumno::nota).reversed().thenComparing(Alumno::nombre))
+              .toList();
+          System.out.println(aprobados.isEmpty() ? "Ninguno"
+                  : aprobados.stream().map(Alumno::nombre).collect(Collectors.joining(", ")));
+          System.out.println(aprobados.isEmpty() ? "Media de aprobados: -"
+                  : String.format("Media de aprobados: %.2f",
+                          aprobados.stream().mapToDouble(Alumno::nota).average().orElse(0)));
+      }
+  }
+hints:
+  - 'La idea: una sola tubería que se queda con los aprobados, los ordena y saca sus nombres; la media se calcula sobre esos mismos aprobados.'
+  - 'Qué usar: `filter(a -> a.nota() >= 5)`, `sorted(...)` con `Comparator.comparing(Alumno::nota).reversed().thenComparing(Alumno::nombre)`, `Collectors.joining(", ")` y `mapToDouble(Alumno::nota).average()`.'
+  - 'El plan: guarda los aprobados ordenados en una lista con `toList()`; si está vacía, imprime `Ninguno` y `Media de aprobados: -`; si no, une sus nombres con `joining` y formatea la media con `String.format("%.2f", ...)`.'
+tests:
+  - input: |
+      Ada 9.5
+      Alan 4.9
+      Grace 7
+      Linus 7
+      Barbara 5
+    output: |
+      Ada, Grace, Linus, Barbara
+      Media de aprobados: 7.13
+    sample: true
+  - input: |
+      Uno 2
+      Dos 3.5
+    output: |
+      Ninguno
+      Media de aprobados: -

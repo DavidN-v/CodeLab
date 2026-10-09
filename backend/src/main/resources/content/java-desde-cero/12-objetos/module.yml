@@ -1,0 +1,20 @@
+lessons:
+  - slug: referencias
+    title: Referencias y null
+    summary: Qué guarda realmente una variable de tipo objeto.
+    minutes: 7
+  - slug: equals-y-hashcode
+    title: Igualdad entre objetos
+    summary: == frente a equals, y por qué equals y hashCode van juntos.
+    minutes: 7
+  - slug: tostring-y-records
+    title: toString y los records
+    summary: Representar objetos como texto y crear clases de datos en una línea.
+    minutes: 7
+exercises:
+  - predecir-alias
+  - mismo-punto
+  - libro-record
+  - intercambio-de-referencias
+  - arreglar-cartas-iguales
+  - agenda-de-contactos

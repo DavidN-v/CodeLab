@@ -1,0 +1,72 @@
+title: Arregla el saldo
+summary: Un programa que compila pero calcula mal el saldo de una cuenta.
+difficulty: EASY
+kind: fix
+statement: |
+  Este programa lee tres números: el **saldo** inicial de una cuenta, un **ingreso** y un **gasto**. Debería mostrar el saldo inicial y el saldo final.
+
+  Compila y se ejecuta sin errores, pero el resultado es incorrecto. Con la entrada `100 50 30` imprime:
+
+  ```
+  Saldo inicial: 100
+  Saldo final: 20
+  ```
+
+  y debería imprimir:
+
+  ```
+  Saldo inicial: 100
+  Saldo final: 120
+  ```
+
+  Parece que el dinero que había al principio se ha esfumado. Encuentra el fallo y corrígelo.
+starter: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int saldo = entrada.nextInt();
+          int ingreso = entrada.nextInt();
+          int gasto = entrada.nextInt();
+          System.out.println("Saldo inicial: " + saldo);
+          saldo = ingreso - gasto;
+          System.out.println("Saldo final: " + saldo);
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int saldo = entrada.nextInt();
+          int ingreso = entrada.nextInt();
+          int gasto = entrada.nextInt();
+          System.out.println("Saldo inicial: " + saldo);
+          saldo = saldo + ingreso - gasto;
+          System.out.println("Saldo final: " + saldo);
+      }
+  }
+hints:
+  - 'La idea: el saldo final debería partir del saldo que ya había, no empezar de cero.'
+  - 'Qué usar: al reasignar con `=`, el valor anterior de `saldo` se pierde, salvo que lo uses en la parte derecha de la expresión.'
+  - 'El plan: revisa la línea `saldo = ingreso - gasto;`. Debería ser `saldo = saldo + ingreso - gasto;`.'
+tests:
+  - input: "100 50 30\n"
+    output: |
+      Saldo inicial: 100
+      Saldo final: 120
+    sample: true
+  - input: "500 0 200\n"
+    output: |
+      Saldo inicial: 500
+      Saldo final: 300
+  - input: "-20 100 30\n"
+    output: |
+      Saldo inicial: -20
+      Saldo final: 50
+  - input: "75 25 0\n"
+    output: |
+      Saldo inicial: 75
+      Saldo final: 100

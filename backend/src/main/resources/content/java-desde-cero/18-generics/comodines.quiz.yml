@@ -1,0 +1,38 @@
+questions:
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      import java.util.ArrayList;
+      import java.util.List;
+
+      public class Main {
+          static void anadirCeros(List<? super Integer> destino) {
+              destino.add(0);
+              destino.add(0);
+          }
+
+          public static void main(String[] args) {
+              List<Number> numeros = new ArrayList<>(List.of(1.5));
+              anadirCeros(numeros);
+              System.out.println(numeros + " " + numeros.size());
+          }
+      }
+    answer: |
+      [1.5, 0, 0] 3
+    explanation: '`List<Number>` encaja con `List<? super Integer>` porque `Number` es un supertipo de `Integer`, así que el método puede añadir enteros. La lista ya tenía 1.5 y acaba con tres elementos.'
+  - type: choice
+    prompt: Un método solo **lee** números de una lista para sumarlos. ¿Qué parámetro le viene mejor?
+    options:
+      - List<? extends Number>
+      - List<? super Number>
+      - List<Number>
+    answer: 0
+    explanation: 'La lista produce los valores que lees: PECS dice «Producer Extends». Así acepta `List<Integer>`, `List<Double>`... Con `List<Number>` no podrías pasarle una `List<Integer>`.'
+  - type: choice
+    prompt: ¿Por qué no compila `List<Number> numeros = new ArrayList<Integer>();`?
+    options:
+      - Porque si compilara, podrías añadir un `Double` a una lista que solo debe tener `Integer`
+      - Porque `Integer` no es un subtipo de `Number`
+      - Porque `ArrayList` no puede guardar números
+    answer: 0
+    explanation: '`Integer` sí es un subtipo de `Number`, pero `List<Integer>` no lo es de `List<Number>`. Si lo fuera, `numeros.add(3.14)` metería un decimal en una lista de enteros.'

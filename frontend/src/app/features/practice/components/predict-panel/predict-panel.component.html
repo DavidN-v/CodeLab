@@ -1,0 +1,30 @@
+<div class="predict">
+  <ol class="predict__code" aria-label="Programa">
+    @for (line of lines(); track $index) {
+      <li>
+        <span class="predict__number" aria-hidden="true">{{ $index + 1 }}</span
+        ><code class="hljs" [innerHTML]="line || ' '"></code>
+      </li>
+    }
+  </ol>
+  @if (stdin()) {
+    <div class="predict__stdin">
+      <p class="predict__label">El programa lee esta entrada</p>
+      <pre>{{ stdin() }}</pre>
+    </div>
+  }
+  <label class="predict__label" for="predict-answer">{{
+    isJava()
+      ? '¿Qué imprime? Escribe la salida exacta, una línea por cada println'
+      : 'Tu respuesta: escribe exactamente lo que pide el enunciado'
+  }}</label>
+  <textarea
+    id="predict-answer"
+    class="predict__answer"
+    spellcheck="false"
+    rows="5"
+    placeholder="Sigue el código línea a línea, como si fueras el ordenador…"
+    [value]="answer()"
+    (input)="onInput($event)"
+  ></textarea>
+</div>

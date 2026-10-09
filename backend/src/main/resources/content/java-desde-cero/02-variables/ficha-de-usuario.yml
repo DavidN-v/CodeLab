@@ -1,0 +1,87 @@
+title: Ficha de usuario
+summary: Combina texto y números leídos en una ficha con formato.
+difficulty: MEDIUM
+statement: |
+  La entrada tiene tres líneas: un nombre completo, una ciudad y un año de nacimiento. Considera que el año actual es **2026** (guárdalo en una constante) y escribe:
+
+  ```
+  Nombre: <nombre>
+  Ciudad: <ciudad>
+  Edad aproximada: <2026 - año> años
+  ```
+
+  **Ejemplo**
+
+  Entrada:
+
+  ```
+  Ada Lovelace
+  Londres
+  1990
+  ```
+
+  Salida:
+
+  ```
+  Nombre: Ada Lovelace
+  Ciudad: Londres
+  Edad aproximada: 36 años
+  ```
+starter: |
+  import java.util.Scanner;
+
+  public class Main {
+      static final int ANIO_ACTUAL = 2026;
+
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  public class Main {
+      static final int ANIO_ACTUAL = 2026;
+
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          String nombre = entrada.nextLine();
+          String ciudad = entrada.nextLine();
+          int anioNacimiento = entrada.nextInt();
+          int edad = ANIO_ACTUAL - anioNacimiento;
+          System.out.println("Nombre: " + nombre);
+          System.out.println("Ciudad: " + ciudad);
+          System.out.println("Edad aproximada: " + edad + " años");
+      }
+  }
+hints:
+  - 'La idea: lee los tres datos, calcula la edad restando y escribe la ficha en tres líneas.'
+  - 'Qué usar: `nextLine()` para el nombre y la ciudad (pueden tener espacios) y `nextInt()` para el año. La constante `ANIO_ACTUAL` ya está declarada.'
+  - 'El plan: `nombre = entrada.nextLine();`, `ciudad = entrada.nextLine();`, `anio = entrada.nextInt();`, `edad = ANIO_ACTUAL - anio;` y luego los tres `println`.'
+tests:
+  - input: |
+      Ada Lovelace
+      Londres
+      1990
+    output: |
+      Nombre: Ada Lovelace
+      Ciudad: Londres
+      Edad aproximada: 36 años
+    sample: true
+  - input: |
+      Grace Hopper
+      Nueva York
+      2000
+    output: |
+      Nombre: Grace Hopper
+      Ciudad: Nueva York
+      Edad aproximada: 26 años
+  - input: |
+      Alan
+      Manchester
+      2026
+    output: |
+      Nombre: Alan
+      Ciudad: Manchester
+      Edad aproximada: 0 años

@@ -1,0 +1,25 @@
+questions:
+  - type: choice
+    prompt: ¿Qué debería ir en un servicio y no en un componente?
+    options:
+      - El cálculo del total del carrito, que usan varias pantallas
+      - El color de un botón
+      - El texto que muestra el título de una página
+    answer: 0
+    explanation: 'Las reglas de negocio y los datos compartidos van en servicios. El componente se ocupa de mostrar y de reaccionar a la persona usuaria.'
+  - type: choice
+    prompt: 'Dos componentes hacen `inject(Carrito)` y `Carrito` está marcado con `@Service()`. ¿Qué reciben?'
+    options:
+      - La misma instancia del carrito
+      - Una copia distinta cada uno
+      - El primero el carrito y el segundo `null`
+    answer: 0
+    explanation: '`@Service()` registra el servicio en el inyector raíz, que crea una sola instancia (un singleton) y se la da a todo el que la pide.'
+  - type: choice
+    prompt: ¿Qué archivo y qué clase crea `ng generate service pedidos` en Angular 22?
+    options:
+      - '`pedidos.ts` con la clase `Pedidos` y `@Service()`'
+      - '`pedidos.service.ts` con la clase `PedidosService` y `@Injectable()`'
+      - '`pedidos.component.ts` con la clase `PedidosComponent`'
+    answer: 0
+    explanation: 'Desde Angular 20 la CLI no añade sufijos a servicios ni componentes, y en la v22 usa el nuevo decorador `@Service()`. El formato con sufijo `.service.ts` lo verás en proyectos antiguos.'

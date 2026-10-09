@@ -1,0 +1,27 @@
+questions:
+  - type: output
+    prompt: 'Con el `RecortarPipe` de la lección (`transform(texto, maximo = 10, final = ''...'')`), ¿qué se ve?'
+    code: |
+      <p>{{ 'Angular' | recortar: 3 : '~' }}</p>
+    answer: |
+      Ang~
+    explanation: 'El primer parámetro, `3`, llega como `maximo` y el segundo, `''~''`, como `final`. `Angular` tiene 7 letras, así que se corta a `Ang` y se añade `~`.'
+  - type: choice
+    prompt: ¿Cuándo vuelve Angular a llamar al `transform` de un pipe puro?
+    options:
+      - Cuando cambia el valor de entrada o alguno de sus parámetros
+      - En cada revisión de la pantalla
+      - Solo la primera vez que se pinta el componente
+    answer: 0
+    explanation: 'Un pipe puro se comporta como una función matemática: con la misma entrada da la misma salida, así que Angular reutiliza el resultado mientras nada cambie.'
+  - type: choice
+    prompt: '¿Qué nombre escribes en la plantilla para usar este pipe?'
+    code: |
+      @Pipe({ name: 'moneda' })
+      export class FormatoPrecioPipe implements PipeTransform { ... }
+    options:
+      - '`moneda`'
+      - '`FormatoPrecioPipe`'
+      - '`formatoPrecio`'
+    answer: 0
+    explanation: 'En la plantilla se usa el `name` del decorador: `{{ precio | moneda }}`. El nombre de la clase es lo que pones en `imports`.'

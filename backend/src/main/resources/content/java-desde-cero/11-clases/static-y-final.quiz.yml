@@ -1,0 +1,44 @@
+questions:
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      class Galleta {
+          static int hechas = 0;
+          int mordiscos = 0;
+
+          Galleta() {
+              hechas++;
+          }
+      }
+
+      public class Main {
+          public static void main(String[] args) {
+              Galleta a = new Galleta();
+              Galleta b = new Galleta();
+              a.mordiscos++;
+              a.mordiscos++;
+              b.mordiscos++;
+              System.out.println(Galleta.hechas + " " + a.mordiscos + " " + b.mordiscos);
+          }
+      }
+    answer: |
+      2 2 1
+    explanation: '`hechas` es `static`: hay una sola para toda la clase y cuenta las dos galletas. `mordiscos` es de cada galleta: `a` lleva 2 y `b` lleva 1.'
+  - type: choice
+    prompt: ¿Por qué un método `static` no puede usar directamente un campo de instancia como `valor`?
+    options:
+      - Porque no pertenece a ningún objeto, así que no sabe de qué objeto leer `valor`
+      - Porque los métodos `static` solo pueden usar variables `final`
+      - Porque los campos de instancia siempre son `private`
+      - Sí puede; solo da un aviso
+    answer: 0
+    explanation: 'Un método `static` se llama sobre la clase (`Clase.metodo()`), no sobre un objeto, y por eso no tiene `this`. Cada objeto tiene su propio `valor`: ¿cuál usaría?'
+  - type: choice
+    prompt: ¿Qué es `static final double IVA = 0.21;`?
+    options:
+      - Una constante de clase, una sola copia que no cambia
+      - Un campo que cada objeto puede cambiar una vez
+      - Una variable local de `main`
+      - Un método que devuelve 0.21
+    answer: 0
+    explanation: '`static` hace que haya una sola copia, compartida; `final` impide cambiarla. Juntos forman una constante, que por convención se escribe en MAYÚSCULAS.'

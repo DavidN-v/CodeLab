@@ -6,8 +6,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.forja.api.config.JwtConfig;
 import com.forja.api.config.SecurityConfig;
 import com.forja.api.dto.LanguageResponse;
+import com.forja.api.entity.LanguageCategory;
 import com.forja.api.exception.ResourceNotFoundException;
 import com.forja.api.security.ApiErrorWriter;
 import com.forja.api.security.RestAccessDeniedHandler;
@@ -24,12 +26,12 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(controllers = LanguageController.class,
 		excludeAutoConfiguration = UserDetailsServiceAutoConfiguration.class)
-@Import({ SecurityConfig.class, RestAuthenticationEntryPoint.class, RestAccessDeniedHandler.class,
+@Import({ SecurityConfig.class, JwtConfig.class, RestAuthenticationEntryPoint.class, RestAccessDeniedHandler.class,
 		ApiErrorWriter.class })
 class LanguageControllerTest {
 
 	private static final LanguageResponse JAVA = new LanguageResponse(1L, "java", "Java", "21", "java",
-			"Aprende Java.", null, true);
+			"Aprende Java.", null, true, LanguageCategory.LANGUAGE, true);
 
 	@Autowired
 	private MockMvc mockMvc;

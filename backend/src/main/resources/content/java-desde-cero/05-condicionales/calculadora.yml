@@ -1,0 +1,70 @@
+title: Calculadora
+summary: Usa switch para elegir la operación.
+difficulty: MEDIUM
+statement: |
+  La entrada es una operación con el formato `<a> <operador> <b>`, donde `a` y `b` son enteros y el operador es uno de `+`, `-`, `*`, `/` o `%`.
+
+  Escribe el resultado. Casos especiales:
+
+  - Si el operador es `/` o `%` y `b` es 0, escribe `Error: división entre cero`.
+  - Si el operador no es ninguno de los cinco, escribe `Error: operador desconocido`.
+
+  La división es entera.
+
+  **Ejemplo:** `7 * 6` → `42`.
+starter: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int a = entrada.nextInt();
+          String operador = entrada.next();
+          int b = entrada.nextInt();
+
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int a = entrada.nextInt();
+          String operador = entrada.next();
+          int b = entrada.nextInt();
+          if ((operador.equals("/") || operador.equals("%")) && b == 0) {
+              System.out.println("Error: división entre cero");
+              return;
+          }
+          switch (operador) {
+              case "+" -> System.out.println(a + b);
+              case "-" -> System.out.println(a - b);
+              case "*" -> System.out.println(a * b);
+              case "/" -> System.out.println(a / b);
+              case "%" -> System.out.println(a % b);
+              default -> System.out.println("Error: operador desconocido");
+          }
+      }
+  }
+hints:
+  - 'La idea: según el símbolo que llegue, haces una cuenta u otra. Antes de dividir, asegúrate de que no divides entre cero.'
+  - 'Qué usar: un `switch` sobre el `String` del operador (`case "+" -> ...`), con `default` para los operadores desconocidos. `return;` termina `main` en el acto.'
+  - 'El plan: si el operador es "/" o "%" y b == 0, imprime el error y haz return. Después, un switch con un case por operador que imprima la cuenta, y default para el error de operador desconocido.'
+tests:
+  - input: "7 * 6\n"
+    output: "42\n"
+    sample: true
+  - input: "9 / 0\n"
+    output: "Error: división entre cero\n"
+    sample: true
+  - input: "17 % 5\n"
+    output: "2\n"
+  - input: "-3 + 10\n"
+    output: "7\n"
+  - input: "20 / 6\n"
+    output: "3\n"
+  - input: "5 ^ 2\n"
+    output: "Error: operador desconocido\n"
+  - input: "4 - 9\n"
+    output: "-5\n"

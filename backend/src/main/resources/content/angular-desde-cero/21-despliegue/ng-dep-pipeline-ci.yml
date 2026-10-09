@@ -1,0 +1,71 @@
+title: Un pipeline de integración continua
+summary: Ordena los pasos de un workflow de GitHub Actions que instala, revisa, prueba y compila.
+difficulty: HARD
+kind: parsons
+statement: |
+  Quieres que GitHub compruebe cada `push` a `main` y cada *pull request*. El workflow debe, en una máquina Ubuntu limpia y en este orden lógico:
+
+  1. descargar el código y preparar Node.js 22 (con caché de npm);
+  2. instalar las dependencias **exactas** del lock;
+  3. pasar el linter;
+  4. ejecutar las pruebas **una sola vez** (sin quedarse vigilando);
+  5. compilar en producción.
+
+  Ordena los pasos dentro de `steps`. Cuidado: hay líneas que sobran.
+starter: |
+  # .github/workflows/ci.yml
+  name: CI
+
+  on:
+    push:
+      branches: [main]
+    pull_request:
+
+  jobs:
+    build:
+      runs-on: ubuntu-latest
+      steps:
+  {{lines}}
+solution: |
+  # .github/workflows/ci.yml
+  name: CI
+
+  on:
+    push:
+      branches: [main]
+    pull_request:
+
+  jobs:
+    build:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v4
+        - uses: actions/setup-node@v4
+          with:
+            node-version: 22
+            cache: npm
+        - run: npm ci
+        - run: npx ng lint
+        - run: npx ng test --watch=false
+        - run: npx ng build
+lines:
+  - '      - uses: actions/checkout@v4'
+  - '      - uses: actions/setup-node@v4'
+  - '        with:'
+  - '          node-version: 22'
+  - '          cache: npm'
+  - '      - run: npm ci'
+  - '      - run: npx ng lint'
+  - '      - run: npx ng test --watch=false'
+  - '      - run: npx ng build'
+distractors:
+  - '      - run: npx ng test'
+  - '      - run: npx ng serve'
+hints:
+  - 'La idea: no se puede instalar sin código ni Node, ni probar sin dependencias. Y lo más barato (el linter) va antes que lo más caro (pruebas y build), para fallar pronto.'
+  - 'Qué usar: `checkout` y `setup-node` (con su bloque `with:` justo debajo); `npm ci`; y los comandos de la CLI. Las pruebas necesitan `--watch=false`; `ng serve` nunca termina.'
+  - 'El plan: checkout → setup-node → with → node-version → cache → npm ci → ng lint → ng test --watch=false → ng build.'
+tests:
+  - output: |
+      ✓ checkout · ✓ setup-node · ✓ npm ci · ✓ ng lint · ✓ ng test · ✓ ng build
+    sample: true

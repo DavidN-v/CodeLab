@@ -1,0 +1,118 @@
+title: Contar primos por tramos
+summary: Un cálculo pesado repartido entre varias tareas que devuelven su resultado.
+difficulty: HARD
+statement: |
+  La entrada es `n t`. Cuenta los números primos entre 1 y `n` repartiendo el trabajo en `t` tareas: la tarea `i` (desde 1) revisa los números del intervalo `((i-1)·n/t, i·n/t]` (división entera).
+
+  Usa un `ExecutorService` e `invokeAll` (o `submit`). Ninguna tarea debe modificar datos compartidos: cada una **devuelve** su cuenta.
+
+  Escribe `Tarea <i> [<desde>-<hasta>]: <primos>` para cada tarea en orden, y después `Total: <primos>`.
+starter: |
+  import java.util.ArrayList;
+  import java.util.List;
+  import java.util.Scanner;
+  import java.util.concurrent.Callable;
+  import java.util.concurrent.ExecutorService;
+  import java.util.concurrent.Executors;
+  import java.util.concurrent.Future;
+
+  public class Main {
+      static boolean esPrimo(int n) {
+          if (n < 2) {
+              return false;
+          }
+          for (int d = 2; (long) d * d <= n; d++) {
+              if (n % d == 0) {
+                  return false;
+              }
+          }
+          return true;
+      }
+
+      public static void main(String[] args) throws Exception {
+          Scanner entrada = new Scanner(System.in);
+          int n = entrada.nextInt();
+          int t = entrada.nextInt();
+
+      }
+  }
+solution: |
+  import java.util.ArrayList;
+  import java.util.List;
+  import java.util.Scanner;
+  import java.util.concurrent.Callable;
+  import java.util.concurrent.ExecutorService;
+  import java.util.concurrent.Executors;
+  import java.util.concurrent.Future;
+
+  public class Main {
+      static boolean esPrimo(int n) {
+          if (n < 2) {
+              return false;
+          }
+          for (int d = 2; (long) d * d <= n; d++) {
+              if (n % d == 0) {
+                  return false;
+              }
+          }
+          return true;
+      }
+
+      public static void main(String[] args) throws Exception {
+          Scanner entrada = new Scanner(System.in);
+          int n = entrada.nextInt();
+          int t = entrada.nextInt();
+          List<Callable<Integer>> tareas = new ArrayList<>();
+          int[][] intervalos = new int[t][2];
+          for (int i = 1; i <= t; i++) {
+              int desde = (int) ((long) (i - 1) * n / t) + 1;
+              int hasta = (int) ((long) i * n / t);
+              intervalos[i - 1] = new int[] {desde, hasta};
+              tareas.add(() -> {
+                  int cuenta = 0;
+                  for (int x = desde; x <= hasta; x++) {
+                      if (esPrimo(x)) {
+                          cuenta++;
+                      }
+                  }
+                  return cuenta;
+              });
+          }
+          try (ExecutorService ejecutor = Executors.newFixedThreadPool(Math.min(t, 4))) {
+              List<Future<Integer>> resultados = ejecutor.invokeAll(tareas);
+              int total = 0;
+              for (int i = 0; i < t; i++) {
+                  int cuenta = resultados.get(i).get();
+                  System.out.println("Tarea " + (i + 1) + " [" + intervalos[i][0] + "-" + intervalos[i][1] + "]: " + cuenta);
+                  total += cuenta;
+              }
+              System.out.println("Total: " + total);
+          }
+      }
+  }
+hints:
+  - 'La idea: reparte los números de 1 a `n` en `t` intervalos, cuenta los primos de cada intervalo en una tarea que **devuelve** su cuenta, y suma las cuentas al final.'
+  - 'Qué usar: una `List<Callable<Integer>>` con una tarea por intervalo y `ejecutor.invokeAll(tareas)`, que devuelve los `Future` en el mismo orden. Calcula los límites con `long` para que `i * n` no se desborde.'
+  - 'El plan: para cada `i` de 1 a `t`, guarda en variables nuevas `desde = (i-1)·n/t + 1` y `hasta = i·n/t` (así la lambda puede usarlas) y añade una tarea que cuente con `esPrimo`. Después recorre los resultados con `get()`, imprime `Tarea i [desde-hasta]: cuenta` y acumula el total.'
+tests:
+  - input: "100 4\n"
+    output: |
+      Tarea 1 [1-25]: 9
+      Tarea 2 [26-50]: 6
+      Tarea 3 [51-75]: 6
+      Tarea 4 [76-100]: 4
+      Total: 25
+    sample: true
+  - input: "10 3\n"
+    output: |
+      Tarea 1 [1-3]: 2
+      Tarea 2 [4-6]: 1
+      Tarea 3 [7-10]: 1
+      Total: 4
+  - input: "1000000 4\n"
+    output: |
+      Tarea 1 [1-250000]: 22044
+      Tarea 2 [250001-500000]: 19494
+      Tarea 3 [500001-750000]: 18700
+      Tarea 4 [750001-1000000]: 18260
+      Total: 78498

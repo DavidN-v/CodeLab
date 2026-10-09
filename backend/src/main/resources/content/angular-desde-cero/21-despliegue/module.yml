@@ -1,0 +1,28 @@
+lessons:
+  - slug: ng-build-a-fondo
+    title: ng build a fondo
+    summary: Configuraciones, optimización, hashes, source maps, budgets y la carpeta dist.
+    minutes: 9
+  - slug: entornos
+    title: Entornos de desarrollo y producción
+    summary: ng generate environments y fileReplacements para cambiar la configuración según el build.
+    minutes: 7
+  - slug: servir-una-spa
+    title: Servir una SPA
+    summary: Fallback a index.html, base href, nginx y Docker.
+    minutes: 9
+  - slug: hosting-y-ci
+    title: Hosting estático e integración continua
+    summary: Publicar en un hosting, ng deploy y un pipeline de CI con GitHub Actions.
+    minutes: 8
+  - slug: ng-update
+    title: Actualizar Angular con ng update
+    summary: Versiones, migraciones automáticas y una rutina segura para actualizar.
+    minutes: 6
+exercises:
+  - ng-dep-que-entorno
+  - ng-dep-file-replacements
+  - ng-dep-nginx-fallback
+  - ng-dep-dockerfile
+  - ng-dep-tres-builds
+  - ng-dep-pipeline-ci

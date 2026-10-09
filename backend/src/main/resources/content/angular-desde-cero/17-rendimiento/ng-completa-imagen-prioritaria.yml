@@ -1,0 +1,48 @@
+title: La foto de portada, primero
+summary: Usa NgOptimizedImage para cargar con prioridad la imagen principal.
+difficulty: EASY
+kind: fill
+statement: |
+  La portada de la tienda muestra una foto grande nada más entrar (es el elemento LCP). Completa los huecos para usar la directiva de imágenes optimizadas de Angular:
+
+  1. El nombre de la directiva que se importa de `@angular/common` (dos huecos: en el `import` y en `imports`).
+  2. El atributo que sustituye a `src` para activar la directiva.
+  3. El atributo, sin valor, que marca la imagen como la más importante de la página.
+starter: |
+  // src/app/portada/portada.ts
+  import { {{?}} } from '@angular/common';
+  import { Component } from '@angular/core';
+
+  @Component({
+    selector: 'app-portada',
+    imports: [{{?}}],
+    template: `
+      <img {{?}}="tienda.jpg" width="1200" height="500" {{?}} alt="Escaparate de la tienda" />
+    `,
+  })
+  export class Portada {}
+solution: |
+  // src/app/portada/portada.ts
+  import { NgOptimizedImage } from '@angular/common';
+  import { Component } from '@angular/core';
+
+  @Component({
+    selector: 'app-portada',
+    imports: [NgOptimizedImage],
+    template: `
+      <img ngSrc="tienda.jpg" width="1200" height="500" priority alt="Escaparate de la tienda" />
+    `,
+  })
+  export class Portada {}
+answers:
+  - NgOptimizedImage
+  - NgOptimizedImage
+  - ngSrc
+  - priority
+hints:
+  - 'La idea: Angular trae una directiva para imágenes. Hay que importarla, activarla con un atributo especial en lugar de `src` y marcar esta imagen como prioritaria.'
+  - 'Qué usar: la directiva de `@angular/common` cuyo nombre empieza por `Ng` y habla de imagen optimizada; el atributo es `src` con un prefijo; y la marca de prioridad es una palabra inglesa.'
+  - 'El plan: `NgOptimizedImage` en los dos primeros huecos, `ngSrc` en el tercero y `priority` en el cuarto.'
+tests:
+  - output: 'La imagen se pide enseguida con loading="eager" y fetchpriority="high".'
+    sample: true

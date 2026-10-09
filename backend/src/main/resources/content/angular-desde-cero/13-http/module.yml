@@ -1,0 +1,27 @@
+lessons:
+  - slug: api-rest-y-json
+    title: APIs REST y JSON
+    summary: Cómo habla tu app con un servidor - peticiones, verbos, JSON y códigos de estado.
+    minutes: 7
+  - slug: httpclient
+    title: HttpClient
+    summary: provideHttpClient, un servicio con get, post, put y delete tipados, y qué cambia en Angular 22.
+    minutes: 8
+  - slug: observables-frios-y-errores
+    title: Observables fríos, carga y errores
+    summary: Nada viaja hasta subscribe; estados de carga y error con signals y catchError.
+    minutes: 9
+  - slug: interceptores
+    title: Interceptores funcionales
+    summary: Añadir el token, tratar errores y medir tiempos en todas las peticiones.
+    minutes: 8
+  - slug: resources
+    title: resource, rxResource y httpResource
+    summary: Datos asíncronos como signals, estables en Angular 22, y cuándo usarlos.
+    minutes: 9
+exercises:
+  - ng-predice-observable-frio
+  - ng-completa-servicio-http
+  - ng-ordena-interceptor-token
+  - ng-completa-httpresource
+  - ng-predice-orden-interceptores

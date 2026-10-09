@@ -1,0 +1,41 @@
+title: ¿De qué color sale cada párrafo?
+summary: Predice qué estilos llegan a cada párrafo con estilos globales y encapsulados.
+difficulty: EASY
+kind: predict
+statement: |
+  Lee los cinco archivos de este proyecto. `App` usa `Tarjeta` en su plantilla y las dos usan la encapsulación por defecto.
+
+  ¿De qué color se ve cada párrafo en el navegador? Escribe **una línea por párrafo**, en el orden en que aparecen en la página, con el formato `Texto: color`. Usa solo estas palabras para el color: `azul`, `gris`, `rojo` o `verde`.
+
+  Ejemplo de formato (no es la respuesta):
+
+  ```text
+  Cero: verde
+  ```
+starter: |
+  /* src/styles.css */
+  p { color: blue; }
+
+  /* src/app/app.css */
+  .destacado { color: red; }
+
+  <!-- src/app/app.html -->
+  <p>Uno</p>
+  <app-tarjeta />
+  <p class="destacado">Tres</p>
+
+  /* src/app/tarjeta/tarjeta.css */
+  p { color: gray; }
+  .destacado { color: green; }
+
+  <!-- src/app/tarjeta/tarjeta.html -->
+  <p>Dos</p>
+hints:
+  - 'La idea: decide para cada párrafo qué reglas le llegan. Las globales llegan a todos; las de un componente, solo a los elementos de su propia plantilla.'
+  - 'Qué usar: la encapsulación `Emulated`. `tarjeta.css` se convierte en reglas como `p[_ngcontent-…]` que solo encajan en `<p>Dos</p>`. Si dos reglas llegan a un párrafo, gana la más específica (un selector con atributo o clase gana a uno de solo etiqueta).'
+  - 'El plan: «Uno» solo recibe la regla global. «Dos» recibe la global y la de Tarjeta, que es más específica. «Tres» está en la plantilla de App: la `.destacado` de Tarjeta no le llega, pero la de App sí.'
+tests:
+  - output: |
+      Uno: azul
+      Dos: gris
+      Tres: rojo

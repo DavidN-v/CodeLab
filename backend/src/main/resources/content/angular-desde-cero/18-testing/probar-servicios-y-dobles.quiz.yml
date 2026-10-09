@@ -1,0 +1,36 @@
+questions:
+  - type: choice
+    prompt: ¿Cómo obtienes una instancia del servicio `Carrito` dentro de una prueba?
+    options:
+      - '`TestBed.inject(Carrito)`'
+      - '`new TestBed(Carrito)`'
+      - '`fixture.inject(Carrito)`'
+    answer: 0
+    explanation: '`TestBed.inject` pide el servicio al inyector de la prueba, como hace `inject()` dentro de un componente, y crea también sus dependencias.'
+  - type: choice
+    prompt: '¿Qué hace `providers: [{ provide: Carrito, useValue: carritoFalso }]` en `configureTestingModule`?'
+    options:
+      - Cuando algo pide `Carrito`, el inyector entrega `carritoFalso` en su lugar
+      - Crea un `Carrito` real y copia en él los valores de `carritoFalso`
+      - Añade `carritoFalso` como un segundo carrito, además del real
+    answer: 0
+    explanation: 'Es una receta de inyección: el token `Carrito` se resuelve con el valor indicado. El componente hace `inject(Carrito)` y recibe el doble sin enterarse.'
+  - type: output
+    prompt: 'Cada `it` recibe un `TestBed` limpio. ¿Qué valor comprueba el `expect` de la segunda prueba para que pase? Escribe solo el número.'
+    code: |
+      describe('Carrito', () => {
+        it('primera', () => {
+          const carrito = TestBed.inject(Carrito);
+          carrito.anadir({ nombre: 'Libro', precio: 20 });
+          carrito.anadir({ nombre: 'Taza', precio: 8 });
+        });
+
+        it('segunda', () => {
+          const carrito = TestBed.inject(Carrito);
+          carrito.anadir({ nombre: 'Lápiz', precio: 2 });
+          expect(carrito.total()).toBe(/* ? */);
+        });
+      });
+    answer: |
+      2
+    explanation: '`TestBed` se reinicia entre pruebas, así que la segunda recibe un `Carrito` nuevo y vacío. Lo añadido en la primera no cuenta: el total es solo el del lápiz.'

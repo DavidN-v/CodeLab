@@ -1,0 +1,37 @@
+<p class="path__summary">{{ doneCount() }} de {{ nodes().length }} módulos completados</p>
+<ol class="path">
+  @for (node of nodes(); track node.module.id; let index = $index) {
+    <li class="path__stop path__stop--{{ node.state }}" [class.path__stop--right]="index % 2 === 1">
+      <a
+        class="path__link"
+        [routerLink]="['/languages', languageSlug(), 'modules', node.module.slug]"
+        [attr.aria-current]="node.state === 'current' ? 'step' : null"
+      >
+        <span class="path__node" [style.--progress.%]="node.percent" aria-hidden="true">
+          <span class="path__number">{{ node.state === 'done' ? '✓' : node.module.position }}</span>
+        </span>
+        <span class="path__text">
+          @if (node.state === 'current') {
+            <span class="path__here">{{ node.percent > 0 ? 'Sigue aquí' : 'Empieza aquí' }}</span>
+          }
+          <span class="path__title">{{ node.module.title }}</span>
+          <span class="path__meta">
+            @if (node.progress; as progress) {
+              {{ progress.completedLessons }}/{{ progress.totalLessons }} lecciones ·
+              {{ progress.solvedExercises }}/{{ progress.totalExercises }} ejercicios
+            } @else {
+              {{ node.module.lessonCount }} lecciones · {{ node.module.exerciseCount }} ejercicios ·
+              {{ node.module.estimatedMinutes }} min
+            }
+          </span>
+        </span>
+      </a>
+    </li>
+  }
+  <li class="path__stop path__stop--goal" [class.path__stop--right]="nodes().length % 2 === 1">
+    <span class="path__link">
+      <span class="path__node" aria-hidden="true"><span class="path__number">🏁</span></span>
+      <span class="path__text"><span class="path__title">¡Meta! Ya programas en Java</span></span>
+    </span>
+  </li>
+</ol>

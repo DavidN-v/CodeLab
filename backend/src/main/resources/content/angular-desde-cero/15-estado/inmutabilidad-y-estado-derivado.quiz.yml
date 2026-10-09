@@ -1,0 +1,25 @@
+questions:
+  - type: choice
+    prompt: ¿Por qué `lista.update((l) => { l.push(x); return l; })` no avisa a los `computed` que dependen de `lista`?
+    options:
+      - Porque devuelve el mismo array y el signal compara con `Object.is`, que ve la misma referencia
+      - Porque `push` está prohibido en TypeScript
+      - Porque `update` solo funciona con números
+    answer: 0
+    explanation: 'El signal comprueba si el valor nuevo es el mismo objeto que el viejo. Como es la misma caja (aunque con más cosas dentro), decide que nada cambió.'
+  - type: choice
+    prompt: ¿Cuál marca como hecha la tarea con `id` 3 de forma inmutable?
+    options:
+      - '`tareas.update((ts) => ts.map((t) => (t.id === 3 ? { ...t, hecha: true } : t)))`'
+      - '`tareas.update((ts) => { ts.find((t) => t.id === 3)!.hecha = true; return ts; })`'
+      - '`tareas().find((t) => t.id === 3)!.hecha = true`'
+    answer: 0
+    explanation: '`map` crea un array nuevo y `{ ...t, hecha: true }` un objeto nuevo para la tarea cambiada. Las otras dos opciones modifican el objeto existente.'
+  - type: choice
+    prompt: Tienes `tareas` en un signal. ¿Cómo obtienes el número de tareas pendientes?
+    options:
+      - '`pendientes = computed(() => this.tareas().filter((t) => !t.hecha).length)`'
+      - 'Un segundo signal `pendientes` que actualizas en cada método'
+      - 'Un `effect` que copia el número en una variable normal'
+    answer: 0
+    explanation: 'Es estado derivado: se calcula a partir de `tareas`. `computed` se recalcula solo cuando hace falta y no puede quedarse desincronizado.'

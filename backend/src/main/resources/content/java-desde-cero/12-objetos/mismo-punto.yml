@@ -1,0 +1,91 @@
+title: Puntos únicos
+summary: Implementa equals y hashCode para contar elementos distintos.
+difficulty: MEDIUM
+statement: |
+  Completa la clase `Punto` sobrescribiendo `equals` y `hashCode` para que dos puntos con las mismas coordenadas sean iguales.
+
+  El `main` lee `n` y después `n` pares de coordenadas, los mete en un `HashSet` (que descarta los repetidos usando `equals` y `hashCode`) e imprime cuántos puntos distintos hay. Sin tus métodos, cada punto cuenta como distinto.
+starter: |
+  import java.util.HashSet;
+  import java.util.Objects;
+  import java.util.Scanner;
+  import java.util.Set;
+
+  class Punto {
+      private final int x;
+      private final int y;
+
+      Punto(int x, int y) {
+          this.x = x;
+          this.y = y;
+      }
+
+      // Sobrescribe equals y hashCode
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int n = entrada.nextInt();
+          Set<Punto> puntos = new HashSet<>();
+          for (int i = 0; i < n; i++) {
+              puntos.add(new Punto(entrada.nextInt(), entrada.nextInt()));
+          }
+          System.out.println(puntos.size());
+      }
+  }
+solution: |
+  import java.util.HashSet;
+  import java.util.Objects;
+  import java.util.Scanner;
+  import java.util.Set;
+
+  class Punto {
+      private final int x;
+      private final int y;
+
+      Punto(int x, int y) {
+          this.x = x;
+          this.y = y;
+      }
+
+      @Override
+      public boolean equals(Object otro) {
+          if (this == otro) {
+              return true;
+          }
+          if (!(otro instanceof Punto p)) {
+              return false;
+          }
+          return x == p.x && y == p.y;
+      }
+
+      @Override
+      public int hashCode() {
+          return Objects.hash(x, y);
+      }
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int n = entrada.nextInt();
+          Set<Punto> puntos = new HashSet<>();
+          for (int i = 0; i < n; i++) {
+              puntos.add(new Punto(entrada.nextInt(), entrada.nextInt()));
+          }
+          System.out.println(puntos.size());
+      }
+  }
+hints:
+  - 'La idea: el `HashSet` descarta repetidos preguntando a cada punto si es igual a otro; tienes que enseñar a `Punto` a responder según sus coordenadas.'
+  - 'Qué usar: `@Override public boolean equals(Object otro)` con `instanceof Punto p`, y `@Override public int hashCode()` con `Objects.hash(x, y)`.'
+  - 'El plan: en `equals`, si `this == otro` devuelve `true`; si `!(otro instanceof Punto p)` devuelve `false`; si no, `return x == p.x && y == p.y;`.'
+tests:
+  - input: "4\n1 2\n3 4\n1 2\n2 1\n"
+    output: "3\n"
+    sample: true
+  - input: "3\n0 0\n0 0\n0 0\n"
+    output: "1\n"
+  - input: "2\n5 -5\n-5 5\n"
+    output: "2\n"

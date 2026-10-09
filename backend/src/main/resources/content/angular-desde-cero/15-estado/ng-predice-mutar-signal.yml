@@ -1,0 +1,39 @@
+title: La lista que miente
+summary: Predice qué se ve tras mutar un array dentro de un signal.
+difficulty: HARD
+kind: predict
+statement: |
+  Este componente añade «leche» a la lista con `push` dentro de `update`. La página se carga y la persona pulsa **una vez** el botón «Añadir».
+
+  ¿Qué se ve en la página después del clic? Escribe el texto de los dos párrafos, **una línea por párrafo**.
+starter: |
+  // src/app/compra/compra.ts
+  import { Component, computed, signal } from '@angular/core';
+
+  @Component({
+    selector: 'app-compra',
+    template: `
+      <p>Elementos: {{ cuantos() }}</p>
+      <p>Lista: {{ lista().join(', ') }}</p>
+      <button (click)="anadir()">Añadir</button>
+    `,
+  })
+  export class Compra {
+    protected readonly lista = signal(['pan']);
+    protected readonly cuantos = computed(() => this.lista().length);
+
+    protected anadir() {
+      this.lista.update((l) => {
+        l.push('leche');
+        return l;
+      });
+    }
+  }
+hints:
+  - 'La idea: hay dos cosas distintas en juego: si el signal avisa de un cambio y si la plantilla se vuelve a pintar.'
+  - 'Qué usar: un signal compara con `Object.is`; `update` devuelve el mismo array, así que no avisa y el `computed` conserva su valor guardado. Pero el clic sí hace que Angular repinte el componente, y `lista().join(...)` lee el array tal como está ahora.'
+  - 'El plan: el contador se queda como estaba al cargar; la lista muestra el contenido real del array, que sí cambió por dentro.'
+tests:
+  - output: |
+      Elementos: 1
+      Lista: pan, leche

@@ -1,0 +1,70 @@
+title: El mayor de tres
+summary: Corrige las comparaciones que eligen el mayor de tres números.
+difficulty: MEDIUM
+kind: fix
+statement: |
+  Este programa lee tres números enteros y debería escribir el mayor:
+
+  ```
+  El mayor es <n>
+  ```
+
+  Con `3 5 4` funciona (`El mayor es 5`), pero con `5 3 9` escribe `El mayor es 5`, ¡y el mayor es 9!
+
+  Encuentra el error en las condiciones y corrígelo. Debe funcionar también cuando hay números repetidos, como `7 7 2`.
+starter: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int a = entrada.nextInt();
+          int b = entrada.nextInt();
+          int c = entrada.nextInt();
+          int mayor;
+          if (a > b) {
+              mayor = a;
+          } else if (b > c) {
+              mayor = b;
+          } else {
+              mayor = c;
+          }
+          System.out.println("El mayor es " + mayor);
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int a = entrada.nextInt();
+          int b = entrada.nextInt();
+          int c = entrada.nextInt();
+          int mayor;
+          if (a >= b && a >= c) {
+              mayor = a;
+          } else if (b >= c) {
+              mayor = b;
+          } else {
+              mayor = c;
+          }
+          System.out.println("El mayor es " + mayor);
+      }
+  }
+hints:
+  - 'La idea: sigue el programa con `5 3 9`. ¿Basta con que `a` gane a `b` para ser el mayor de los tres?'
+  - 'Qué usar: `&&` para exigir dos comparaciones a la vez, y `>=` para que los empates también cuenten.'
+  - 'El plan: `a` es el mayor solo si es mayor o igual que `b` Y mayor o igual que `c`. Si no lo es, el mayor está entre `b` y `c`, y la segunda condición ya los compara.'
+tests:
+  - input: "5 3 9\n"
+    output: "El mayor es 9\n"
+    sample: true
+  - input: "3 5 4\n"
+    output: "El mayor es 5\n"
+  - input: "7 7 2\n"
+    output: "El mayor es 7\n"
+  - input: "8 2 10\n"
+    output: "El mayor es 10\n"
+  - input: "-4 -9 -1\n"
+    output: "El mayor es -1\n"

@@ -1,0 +1,40 @@
+questions:
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      public class Main {
+          static void linea() {
+              System.out.println("--");
+          }
+
+          public static void main(String[] args) {
+              System.out.println("A");
+              linea();
+              System.out.println("B");
+              linea();
+          }
+      }
+    answer: |
+      A
+      --
+      B
+      --
+    explanation: 'Cada vez que `main` llama a `linea()`, Java salta al método, imprime `--` y vuelve justo después de la llamada. Por eso las líneas se intercalan: A, --, B, --.'
+  - type: choice
+    prompt: ¿Qué indica la palabra `void` en `static void saludar()`?
+    options:
+      - Que el método no devuelve ningún valor
+      - Que el método no recibe parámetros
+      - Que el método está vacío y no hace nada
+      - Que el método solo se puede llamar una vez
+    answer: 0
+    explanation: '`void` significa «no devuelve nada». Los parámetros van entre los paréntesis, y un método `void` puede hacer muchas cosas (imprimir, por ejemplo); simplemente no entrega un resultado con `return`.'
+  - type: choice
+    prompt: 'Tienes `static int cuadrado(int n) { return n * n; }`. ¿Qué vale `cuadrado(3) + cuadrado(4)`?'
+    options:
+      - '25'
+      - '49'
+      - '7'
+      - No compila, no se pueden sumar llamadas
+    answer: 0
+    explanation: 'Una llamada que devuelve un valor es una expresión: `cuadrado(3)` vale 9 y `cuadrado(4)` vale 16, así que la suma es 25. 49 sería `cuadrado(3 + 4)`.'

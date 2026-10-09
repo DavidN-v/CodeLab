@@ -1,0 +1,36 @@
+questions:
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      import java.util.function.Function;
+
+      public class Main {
+          public static void main(String[] args) {
+              Function<Integer, Integer> triple = n -> n * 3;
+              Function<Integer, Integer> menosDos = n -> n - 2;
+              System.out.println(triple.andThen(menosDos).apply(4));
+              System.out.println(triple.compose(menosDos).apply(4));
+          }
+      }
+    answer: |
+      10
+      6
+    explanation: '`andThen` aplica primero `triple` y después `menosDos`: 4 * 3 = 12, 12 - 2 = 10. `compose` lo hace al revés: primero `menosDos` (4 - 2 = 2) y después `triple` (2 * 3 = 6).'
+  - type: choice
+    prompt: Necesitas una función que reciba un `String` y responda `true` o `false`. ¿Qué interfaz usas?
+    options:
+      - '`Predicate<String>`'
+      - '`Consumer<String>`'
+      - '`Supplier<String>`'
+      - '`Function<Boolean, String>`'
+    answer: 0
+    explanation: '`Predicate<T>` recibe un `T` y devuelve un `boolean` con `test`. `Consumer` no devuelve nada, `Supplier` no recibe nada, y `Function<Boolean, String>` iría al revés: recibiría un booleano y devolvería un texto.'
+  - type: choice
+    prompt: 'Tienes `Supplier<String> saludo = () -> "hola";`. ¿Cómo obtienes el texto?'
+    options:
+      - '`saludo.get()`'
+      - '`saludo.apply()`'
+      - '`saludo.test()`'
+      - '`saludo()`'
+    answer: 0
+    explanation: Cada interfaz tiene su método. El de `Supplier` es `get`. Una lambda guardada en una variable no se llama como un método normal (`saludo()`), sino a través del método de su interfaz.

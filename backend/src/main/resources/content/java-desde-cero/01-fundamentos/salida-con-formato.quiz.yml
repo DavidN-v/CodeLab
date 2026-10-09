@@ -1,0 +1,28 @@
+questions:
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              System.out.printf("%s tiene %d gatos%n", "Luis", 3);
+          }
+      }
+    answer: |
+      Luis tiene 3 gatos
+    explanation: 'Los valores se colocan en los huecos en orden: `"Luis"` en `%s` (texto) y `3` en `%d` (entero). `%n` añade el salto de línea.'
+  - type: choice
+    prompt: ¿Qué muestra `System.out.printf("%.2f%n", 2.678);`?
+    options:
+      - '`2.68`'
+      - '`2.67`'
+      - '`2.678`'
+    answer: 0
+    explanation: '`%.2f` muestra dos decimales y redondea: 2.678 está más cerca de 2.68 que de 2.67. No corta, redondea.'
+  - type: choice
+    prompt: 'Escribes `System.out.printf("Hola");` y después `System.out.printf("Adiós");`. ¿Qué sale?'
+    options:
+      - '`HolaAdiós`, en una sola línea'
+      - '`Hola` y `Adiós` en dos líneas'
+      - Un error de compilación
+    answer: 0
+    explanation: '`printf` no añade el salto de línea por su cuenta. Para que `Adiós` vaya debajo hay que poner `%n` al final del primero.'

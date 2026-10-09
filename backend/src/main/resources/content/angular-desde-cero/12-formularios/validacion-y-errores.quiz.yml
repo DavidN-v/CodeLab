@@ -1,0 +1,30 @@
+questions:
+  - type: choice
+    prompt: 'La persona entra en un campo y sale sin escribir nada. ¿Cómo queda el campo?'
+    options:
+      - '`touched` es `true` y `dirty` es `false`'
+      - '`touched` es `false` y `dirty` es `true`'
+      - 'Los dos son `true`'
+    answer: 0
+    explanation: '`touched` se activa al salir del campo (blur). `dirty` solo se activa cuando el valor cambia, y aquí no cambió.'
+  - type: choice
+    prompt: ¿Qué debe devolver este validador cuando el valor es correcto?
+    code: |
+      export function sinEspacios(control: AbstractControl): ValidationErrors | null {
+        const valor = String(control.value ?? '');
+        return valor.includes(' ') ? { sinEspacios: true } : ???;
+      }
+    options:
+      - '`null`'
+      - '`{ sinEspacios: false }`'
+      - '`true`'
+    answer: 0
+    explanation: 'Un validador devuelve `null` cuando no hay error. Cualquier objeto, aunque diga `false`, se entiende como un error con ese nombre.'
+  - type: choice
+    prompt: Quieres comprobar que «clave» y «repetir clave» coinciden. ¿Dónde pones el validador?
+    options:
+      - 'En el `FormGroup` que contiene los dos campos, con `{ validators: clavesIguales }`'
+      - En el campo «clave»
+      - En el `<button type="submit">`
+    answer: 0
+    explanation: 'Un validador de un campo solo ve su propio valor. Para comparar dos campos hace falta un validador de grupo, que recibe el grupo entero y puede leer los dos.'

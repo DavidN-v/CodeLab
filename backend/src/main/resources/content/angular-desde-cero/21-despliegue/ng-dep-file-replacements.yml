@@ -1,0 +1,43 @@
+title: Cambia el entorno en desarrollo
+summary: Completa la configuración de angular.json que sustituye el archivo de entorno.
+difficulty: EASY
+kind: fill
+statement: |
+  Este es el fragmento de `angular.json` que `ng generate environments` añade a la configuración `development` del build. Alguien ha borrado tres nombres.
+
+  Complétalo para que, al compilar en `development`, el archivo `environment.ts` se **sustituya** por `environment.development.ts`. Escribe solo los nombres de las propiedades (las comillas ya están).
+starter: |
+  "development": {
+    "optimization": false,
+    "extractLicenses": false,
+    "sourceMap": true,
+    "{{?}}": [
+      {
+        "{{?}}": "src/environments/environment.ts",
+        "{{?}}": "src/environments/environment.development.ts"
+      }
+    ]
+  }
+solution: |
+  "development": {
+    "optimization": false,
+    "extractLicenses": false,
+    "sourceMap": true,
+    "fileReplacements": [
+      {
+        "replace": "src/environments/environment.ts",
+        "with": "src/environments/environment.development.ts"
+      }
+    ]
+  }
+answers:
+  - fileReplacements
+  - replace
+  - with
+hints:
+  - 'La idea: es una lista de «reemplazos de archivo»; cada reemplazo dice qué archivo se cambia y por cuál.'
+  - 'Qué usar: los nombres en inglés que usa Angular: la lista se llama «file replacements» (en camelCase) y cada objeto tiene «reemplazar» y «con».'
+  - 'El plan: `"fileReplacements"`, y dentro `"replace"` para el archivo original y `"with"` para el de desarrollo.'
+tests:
+  - output: "ng serve → la app usa environment.development.ts"
+    sample: true

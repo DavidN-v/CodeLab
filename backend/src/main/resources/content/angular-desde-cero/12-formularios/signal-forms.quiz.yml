@@ -1,0 +1,30 @@
+questions:
+  - type: choice
+    prompt: ¿Cuál es el estado de Signal Forms (`@angular/forms/signals`) en Angular 22, según sus tipos?
+    options:
+      - 'Estable: sus funciones llevan `@publicApi 22.0`; solo las piezas de WebMCP son `@experimental`'
+      - 'Experimental entero: no se puede usar en producción'
+      - 'Obsoleto: se recomienda volver a los formularios de plantilla'
+    answer: 0
+    explanation: 'En `signals.d.ts` de Angular 22, `form`, `FormField`, `required`, `submit`… son `@publicApi 22.0`. Solo `provideExperimentalWebMcpForms` y la opción `experimentalWebMcpTool` siguen marcadas como experimentales.'
+  - type: choice
+    prompt: 'Con `perfil = form(modelo)`, ¿cómo lees si el campo `edad` tiene errores?'
+    options:
+      - '`perfil.edad().invalid()`'
+      - '`perfil.edad.invalid()`'
+      - '`perfil.controls.edad.invalid`'
+    answer: 0
+    explanation: 'Un campo se **llama** para obtener su estado (`perfil.edad()`), y cada parte del estado es un signal (`invalid()`). `controls` y las propiedades sin paréntesis son de los formularios reactivos.'
+  - type: output
+    prompt: 'La persona escribe «Ada» en la caja. ¿Qué muestra el párrafo?'
+    code: |
+      // clase
+      modelo = signal({ nombre: '' });
+      perfil = form(this.modelo);
+
+      <!-- plantilla -->
+      <input [formField]="perfil.nombre" />
+      <p>{{ modelo().nombre }}</p>
+    answer: |
+      Ada
+    explanation: 'El formulario no guarda una copia: `[formField]` escribe directamente en el signal `modelo`, que es la única fuente de verdad. Por eso `modelo().nombre` ya vale «Ada».'

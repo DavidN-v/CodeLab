@@ -1,0 +1,42 @@
+questions:
+  - type: choice
+    prompt: Si la clase es el molde de galletas, ¿qué son los objetos?
+    options:
+      - Las galletas que haces con el molde
+      - La receta de la masa
+      - El horno
+      - Otro molde más pequeño
+    answer: 0
+    explanation: 'Con una sola clase (el molde) creas tantos objetos (galletas) como quieras con `new`. Todos tienen la misma forma, pero cada uno guarda sus propios valores.'
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      class Gato {
+          String nombre;
+          int vidas = 7;
+      }
+
+      public class Main {
+          public static void main(String[] args) {
+              Gato a = new Gato();
+              Gato b = new Gato();
+              a.nombre = "Misi";
+              b.nombre = "Tom";
+              a.vidas = a.vidas - 1;
+              System.out.println(a.nombre + " " + a.vidas);
+              System.out.println(b.nombre + " " + b.vidas);
+          }
+      }
+    answer: |
+      Misi 6
+      Tom 7
+    explanation: Cada gato tiene sus propios campos. Restar una vida a `a` no toca las vidas de `b`, que sigue con las 7 con las que empezó.
+  - type: choice
+    prompt: ¿Qué vale el campo `nombre` (de tipo `String`) de un objeto recién creado si no le has dado valor?
+    options:
+      - '`null`'
+      - '`""` (texto vacío)'
+      - 'Nada: el programa no compila'
+      - '`0`'
+    answer: 0
+    explanation: 'Los campos toman un valor por defecto: `0` los números, `false` los `boolean` y `null` los objetos, como `String`. A diferencia de las variables locales, Java no te obliga a inicializarlos.'

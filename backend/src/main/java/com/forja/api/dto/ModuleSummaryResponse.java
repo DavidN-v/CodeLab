@@ -9,5 +9,8 @@ public record ModuleSummaryResponse(
 		@Schema(example = "Condicionales") String title,
 		String summary,
 		@Schema(description = "1-based position inside the course.", example = "5") int position,
-		@Schema(description = "False while the module is announced but its content is not available yet.") boolean published) {
+		@Schema(description = "False while the module is announced but its content is not available yet.") boolean published,
+		@Schema(example = "3") int lessonCount,
+		@Schema(example = "3") int exerciseCount,
+		@Schema(description = "Reading time of all its lessons.", example = "35") int estimatedMinutes) {
 }

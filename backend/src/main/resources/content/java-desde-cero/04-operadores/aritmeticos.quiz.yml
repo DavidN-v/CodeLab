@@ -1,0 +1,34 @@
+questions:
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int a = 23;
+              int b = 4;
+              System.out.println(a / b);
+              System.out.println(a % b);
+          }
+      }
+    answer: |
+      5
+      3
+    explanation: 'Entre enteros, `/` descarta los decimales: 4 cabe 5 veces en 23 (4 × 5 = 20). Lo que sobra, 23 - 20 = 3, es el resto que da `%`.'
+  - type: choice
+    prompt: ¿Qué expresión comprueba si `n` es par?
+    options:
+      - '`n % 2 == 0`'
+      - '`n / 2 == 0`'
+      - '`n % 2 == 1`'
+      - '`n * 2 == 0`'
+    answer: 0
+    explanation: 'Un número es par cuando al dividirlo entre 2 no sobra nada, es decir, el resto (`%`) es 0. `n / 2 == 0` solo es cierto para 0 y 1, y `n % 2 == 1` falla con los impares negativos (su resto es -1).'
+  - type: choice
+    prompt: 'Después de `int x = 5; int a = x++;`, ¿cuánto valen `a` y `x`?'
+    options:
+      - '`a` vale 5 y `x` vale 6'
+      - '`a` vale 6 y `x` vale 6'
+      - '`a` vale 5 y `x` vale 5'
+      - '`a` vale 6 y `x` vale 5'
+    answer: 0
+    explanation: 'Con la forma postfija (`x++`), primero se usa el valor actual de `x` (5, que se guarda en `a`) y después `x` sube a 6. Con `++x` sería al revés: los dos valdrían 6.'

@@ -1,0 +1,31 @@
+questions:
+  - type: choice
+    prompt: ¿Qué directiva conecta un `<input>` con un campo de un `FormGroup`?
+    options:
+      - '`formControlName="email"`'
+      - '`[(ngModel)]="email"`'
+      - '`name="email"`'
+    answer: 0
+    explanation: '`formControlName` busca el control con ese nombre dentro del `[formGroup]` más cercano. `ngModel` es de los formularios de plantilla y `name` solo es un atributo de HTML.'
+  - type: choice
+    prompt: ¿Qué tipo tiene `datos` en este código?
+    code: |
+      const form = inject(NonNullableFormBuilder).group({
+        titulo: [''],
+        paginas: [100],
+      });
+      const datos = form.getRawValue();
+    options:
+      - '`{ titulo: string; paginas: number }`'
+      - '`any`'
+      - '`{ titulo: string | null; paginas: number | null }`'
+    answer: 0
+    explanation: 'Los formularios reactivos son tipados y `NonNullableFormBuilder` quita el `null` de los tipos, porque al reiniciar cada campo vuelve a su valor inicial.'
+  - type: choice
+    prompt: ¿Para qué sirve `this.form.markAllAsTouched()` antes de salir de `enviar()` cuando el formulario no es válido?
+    options:
+      - Para que se muestren los mensajes de error de todos los campos, aunque la persona no haya pasado por ellos
+      - Para borrar todos los valores escritos
+      - Para enviar el formulario aunque tenga errores
+    answer: 0
+    explanation: 'Lo normal es mostrar un error solo cuando el campo está «tocado». Si la persona pulsa «Enviar» sin rellenar nada, `markAllAsTouched()` hace que todos los errores aparezcan de golpe.'

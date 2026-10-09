@@ -1,0 +1,42 @@
+title: Sigue las llamadas
+summary: Predice la salida de un programa con métodos que se llaman entre sí.
+difficulty: EASY
+kind: predict
+statement: |
+  Lee el programa con calma y escribe **exactamente** lo que imprime.
+
+  Pista para leerlo: empieza por `main` y, cada vez que veas una llamada, salta al método, calcula lo que devuelve y vuelve al punto donde estabas.
+starter: |
+  public class Main {
+      static int doble(int n) {
+          return n * 2;
+      }
+
+      static int sumarUno(int n) {
+          return n + 1;
+      }
+
+      static void mostrar(String etiqueta, int valor) {
+          System.out.println(etiqueta + ": " + valor);
+      }
+
+      public static void main(String[] args) {
+          int x = 3;
+          mostrar("A", doble(x));
+          mostrar("B", sumarUno(doble(x)));
+          mostrar("C", doble(sumarUno(x)));
+          doble(x);
+          mostrar("D", x);
+      }
+  }
+hints:
+  - 'La idea: una llamada que devuelve un valor se «sustituye» por ese valor. Resuelve primero las llamadas de dentro de los paréntesis.'
+  - 'Qué usar: papel y lápiz. Apunta cuánto vale `x` y qué devuelve cada llamada antes de pasar a la siguiente línea.'
+  - 'El plan: `doble(3)` es 6; `sumarUno(doble(3))` es `sumarUno(6)`; `doble(sumarUno(3))` es `doble(4)`. Y ojo con la línea `doble(x);` suelta: su resultado no se guarda, así que `x` no cambia.'
+tests:
+  - output: |
+      A: 6
+      B: 7
+      C: 8
+      D: 3
+    sample: true

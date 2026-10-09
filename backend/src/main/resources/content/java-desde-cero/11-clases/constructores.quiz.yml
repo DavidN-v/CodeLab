@@ -1,0 +1,65 @@
+questions:
+  - type: choice
+    prompt: ¿Cuál de estas líneas declara correctamente un constructor de la clase `Alumno`?
+    options:
+      - '`Alumno(String nombre) { this.nombre = nombre; }`'
+      - '`void Alumno(String nombre) { this.nombre = nombre; }`'
+      - '`Alumno crear(String nombre) { this.nombre = nombre; }`'
+      - '`alumno(String nombre) { this.nombre = nombre; }`'
+    answer: 0
+    explanation: 'El constructor se llama exactamente igual que la clase (con mayúscula incluida) y no tiene tipo de retorno, ni siquiera `void`. Con `void` delante, Java lo trata como un método normal que nunca se ejecuta con `new`.'
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      class Mascota {
+          private String nombre;
+          private String especie;
+
+          Mascota(String nombre, String especie) {
+              nombre = nombre;
+              this.especie = especie;
+          }
+
+          String ficha() {
+              return nombre + " es un " + especie;
+          }
+      }
+
+      public class Main {
+          public static void main(String[] args) {
+              Mascota m = new Mascota("Coco", "loro");
+              System.out.println(m.ficha());
+          }
+      }
+    answer: |
+      null es un loro
+    explanation: 'En `nombre = nombre;` los dos `nombre` son el parámetro: se asigna a sí mismo y el campo se queda con su valor por defecto, `null`. Con `especie` sí se usó `this.`, así que el campo recibe `"loro"`.'
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      class Caja {
+          private final int ancho;
+          private final int alto;
+
+          Caja(int ancho, int alto) {
+              this.ancho = ancho;
+              this.alto = alto;
+          }
+
+          Caja(int lado) {
+              this(lado, lado * 2);
+          }
+
+          int area() {
+              return ancho * alto;
+          }
+      }
+
+      public class Main {
+          public static void main(String[] args) {
+              System.out.println(new Caja(3).area());
+          }
+      }
+    answer: |
+      18
+    explanation: '`new Caja(3)` llama al constructor de un lado, que con `this(lado, lado * 2)` delega en el otro: ancho 3 y alto 6. El área es 3 · 6 = 18.'

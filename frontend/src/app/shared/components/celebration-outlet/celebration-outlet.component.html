@@ -1,0 +1,19 @@
+<canvas #canvas class="confetti" aria-hidden="true"></canvas>
+@if (celebrations.message(); as message) {
+  <div
+    class="celebration"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="celebration-title"
+    (click)="celebrations.dismiss()"
+  >
+    <div class="celebration__card" (click)="$event.stopPropagation()">
+      <p class="celebration__icon" aria-hidden="true">{{ message.icon }}</p>
+      <h2 id="celebration-title" class="celebration__title">{{ message.title }}</h2>
+      <p class="celebration__message">{{ message.message }}</p>
+      <button type="button" class="button button--primary" (click)="celebrations.dismiss()">
+        ¡Seguimos!
+      </button>
+    </div>
+  </div>
+}

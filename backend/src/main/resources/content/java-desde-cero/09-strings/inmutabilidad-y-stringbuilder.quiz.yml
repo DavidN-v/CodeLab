@@ -1,0 +1,36 @@
+questions:
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              String nombre = "ada";
+              nombre.toUpperCase();
+              String otro = nombre.replace("a", "o");
+              System.out.println(nombre + " " + otro);
+          }
+      }
+    answer: |
+      ada odo
+    explanation: 'Los String son inmutables. `nombre.toUpperCase()` crea "ADA" pero no se guarda en ningún sitio, así que `nombre` sigue siendo "ada". `replace` crea otro String nuevo, "odo", que sí se guarda en `otro`.'
+  - type: choice
+    prompt: Tienes que construir un texto juntando 10 000 números dentro de un bucle. ¿Qué usas?
+    options:
+      - Un `StringBuilder` con `append`
+      - Un `String` con `+=`
+      - Un `String` y el método `concat`
+    answer: 0
+    explanation: 'Con un String, cada `+=` (o `concat`) crea un texto nuevo y copia todo lo anterior: muy lento con muchas vueltas. `StringBuilder` va añadiendo sobre el mismo objeto.'
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              StringBuilder sb = new StringBuilder("sol");
+              sb.append("es").insert(0, "-");
+              System.out.println(sb.reverse());
+          }
+      }
+    answer: |
+      selos-
+    explanation: '`StringBuilder` sí cambia. Tras `append` vale "soles"; `insert(0, "-")` lo deja en "-soles"; `reverse` le da la vuelta: "selos-".'

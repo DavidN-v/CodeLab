@@ -1,0 +1,129 @@
+@if (course.isLoading()) {
+  <section class="page"><p class="state" role="status">Cargando el curso…</p></section>
+} @else if (course.error()) {
+  <section class="page">
+    <div class="state state--error" role="alert">
+      <p>No hemos podido cargar este curso.</p>
+      <button type="button" class="button button--secondary" (click)="course.reload()">
+        Reintentar
+      </button>
+      <a class="button button--ghost" routerLink="/languages">Ver lenguajes</a>
+    </div>
+  </section>
+} @else if (course.value(); as detail) {
+  <section class="page" aria-labelledby="course-heading">
+    <header class="page__header">
+      <app-breadcrumbs
+        [crumbs]="[
+          { label: 'Cursos', link: '/languages' },
+          { label: 'Curso de ' + detail.language.name + ' ' + detail.language.version },
+        ]"
+      />
+      <h1 id="course-heading" class="page__title">{{ detail.title }}</h1>
+      <p class="page__lead">{{ detail.summary }}</p>
+      @if (detail.description) {
+        <p class="course__description">{{ detail.description }}</p>
+      }
+      <ul class="course__stats" aria-label="Contenido del curso">
+        <li>
+          <strong>{{ totals().modules }}</strong> módulos
+        </li>
+        <li>
+          <strong>{{ totals().lessons }}</strong> lecciones
+        </li>
+        <li>
+          <strong>{{ totals().exercises }}</strong> ejercicios
+        </li>
+        <li>
+          ~<strong>{{ totals().hours }}</strong> h de estudio
+        </li>
+      </ul>
+    </header>
+
+    <div class="course__resume">
+      @if (progress.value(); as courseProgress) {
+        <div class="course__progress">
+          <p class="section-title">Tu progreso · {{ courseProgress.percent }} %</p>
+          <app-progress-bar [percent]="courseProgress.percent" label="Progreso del curso" />
+          <p class="course__progress-detail">
+            {{ courseProgress.completedLessons }} de {{ courseProgress.totalLessons }} lecciones ·
+            {{ courseProgress.solvedExercises }} de {{ courseProgress.totalExercises }} ejercicios
+          </p>
+        </div>
+        @if (courseProgress.nextStep; as next) {
+          <a class="button button--primary" [routerLink]="stepLink(detail.language.slug, next)">
+            {{ courseProgress.percent === 0 ? 'Empezar' : 'Siguiente paso' }} →
+            {{ stepLabel(next) }}
+          </a>
+        } @else {
+          <p class="tag tag--done">🏁 Curso terminado</p>
+        }
+      } @else {
+        @if (firstModule(); as first) {
+          <a
+            class="button button--primary"
+            [routerLink]="['/languages', detail.language.slug, 'modules', first.slug]"
+          >
+            Empezar por {{ first.title }}
+          </a>
+        }
+        @if (!auth.isAuthenticated()) {
+          <p class="course__hint">
+            <a routerLink="/register">Crea una cuenta</a> para guardar tu progreso, ejecutar código
+            y resolver ejercicios.
+          </p>
+        }
+      }
+    </div>
+
+    <div class="course__outline-bar">
+      <h2 class="section-title course__outline-title">Tu camino</h2>
+      <div class="course__views" role="group" aria-label="Cómo ver el temario">
+        <button
+          type="button"
+          class="button button--small"
+          [class.button--secondary]="view() === 'path'"
+          [class.button--ghost]="view() !== 'path'"
+          [attr.aria-pressed]="view() === 'path'"
+          (click)="showAs('path')"
+        >
+          Camino
+        </button>
+        <button
+          type="button"
+          class="button button--small"
+          [class.button--secondary]="view() === 'list'"
+          [class.button--ghost]="view() !== 'list'"
+          [attr.aria-pressed]="view() === 'list'"
+          (click)="showAs('list')"
+        >
+          Lista
+        </button>
+        <a
+          class="button button--ghost button--small"
+          [routerLink]="['/languages', detail.language.slug, 'glossary']"
+          >📖 Glosario</a
+        >
+      </div>
+    </div>
+    @if (view() === 'path') {
+      <app-module-path
+        [modules]="detail.modules"
+        [languageSlug]="detail.language.slug"
+        [progress]="progress.value()?.modules ?? null"
+      />
+    } @else {
+      <ol class="rows">
+        @for (module of detail.modules; track module.id) {
+          <li>
+            <app-module-row
+              [module]="module"
+              [languageSlug]="detail.language.slug"
+              [progress]="moduleProgress(module.id)"
+            />
+          </li>
+        }
+      </ol>
+    }
+  </section>
+}

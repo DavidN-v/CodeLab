@@ -1,0 +1,53 @@
+title: Área y perímetro
+summary: Calcula el área y el perímetro de un rectángulo.
+difficulty: EASY
+statement: |
+  Lee el ancho y el alto de un rectángulo (dos enteros) y escribe su área y su perímetro con este formato:
+
+  ```
+  Área: <área>
+  Perímetro: <perímetro>
+  ```
+
+  Recuerda: el área es `ancho × alto` y el perímetro `2 × (ancho + alto)`.
+starter: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int ancho = entrada.nextInt();
+          int alto = entrada.nextInt();
+          int area = ancho * alto;
+          int perimetro = 2 * (ancho + alto);
+          System.out.println("Área: " + area);
+          System.out.println("Perímetro: " + perimetro);
+      }
+  }
+hints:
+  - 'La idea: lee los dos lados, calcula las dos fórmulas y escribe cada resultado en su línea.'
+  - 'Qué usar: `entrada.nextInt()` para leer cada número y variables `int` con nombres claros (`ancho`, `alto`, `area`, `perimetro`). Ojo: `2 * ancho + alto` no es lo mismo que `2 * (ancho + alto)`.'
+  - 'El plan: `area = ancho * alto;` y `perimetro = 2 * (ancho + alto);`. Después `println("Área: " + area)` y `println("Perímetro: " + perimetro)`.'
+tests:
+  - input: "4 3\n"
+    output: |
+      Área: 12
+      Perímetro: 14
+    sample: true
+  - input: "10 10\n"
+    output: |
+      Área: 100
+      Perímetro: 40
+  - input: "1 7\n"
+    output: |
+      Área: 7
+      Perímetro: 16

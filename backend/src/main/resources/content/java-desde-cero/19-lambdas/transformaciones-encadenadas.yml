@@ -1,0 +1,82 @@
+title: Tubería de transformaciones
+summary: Compón funciones con andThen a partir de una lista de órdenes.
+difficulty: MEDIUM
+statement: |
+  La primera línea de la entrada es una lista de transformaciones separadas por espacios; las siguientes, textos a transformar. Las transformaciones posibles son:
+
+  | Nombre | Efecto |
+  | --- | --- |
+  | `mayus` | pasa a mayúsculas |
+  | `minus` | pasa a minúsculas |
+  | `recortar` | quita espacios de los extremos |
+  | `invertir` | invierte el texto |
+  | `duplicar` | repite el texto dos veces |
+
+  Construye **una única** `Function<String, String>` encadenando las transformaciones en orden con `andThen`, y aplícala a cada texto. Escribe cada resultado entre corchetes.
+starter: |
+  import java.util.Scanner;
+  import java.util.function.Function;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          String[] pasos = entrada.nextLine().trim().split("\\s+");
+          Function<String, String> tuberia = Function.identity();
+          // Encadena aquí cada paso con tuberia = tuberia.andThen(...)
+
+          while (entrada.hasNextLine()) {
+              System.out.println("[" + tuberia.apply(entrada.nextLine()) + "]");
+          }
+      }
+  }
+solution: |
+  import java.util.Scanner;
+  import java.util.function.Function;
+
+  public class Main {
+      static Function<String, String> paso(String nombre) {
+          return switch (nombre) {
+              case "mayus" -> String::toUpperCase;
+              case "minus" -> String::toLowerCase;
+              case "recortar" -> String::strip;
+              case "invertir" -> s -> new StringBuilder(s).reverse().toString();
+              case "duplicar" -> s -> s + s;
+              default -> throw new IllegalArgumentException("Paso desconocido: " + nombre);
+          };
+      }
+
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          String[] pasos = entrada.nextLine().trim().split("\\s+");
+          Function<String, String> tuberia = Function.identity();
+          for (String nombre : pasos) {
+              tuberia = tuberia.andThen(paso(nombre));
+          }
+          while (entrada.hasNextLine()) {
+              System.out.println("[" + tuberia.apply(entrada.nextLine()) + "]");
+          }
+      }
+  }
+hints:
+  - 'La idea: montas una cadena de máquinas, una por cada palabra de la primera línea, y pasas cada texto por la cadena completa.'
+  - 'Qué usar: `Function.identity()` como punto de partida (no cambia nada) y `tuberia = tuberia.andThen(otraFuncion)` para añadir un paso al final.'
+  - 'El plan: escribe `static Function<String, String> paso(String nombre)` con un `switch` que devuelva, por ejemplo, `String::toUpperCase` para `"mayus"` o `s -> s + s` para `"duplicar"`; luego recorre `pasos` encadenando `paso(nombre)`.'
+tests:
+  - input: |
+      recortar mayus invertir
+        hola mundo
+      Java
+    output: |
+      [ODNUM ALOH]
+      [AVAJ]
+    sample: true
+  - input: |
+      minus duplicar
+      AbC
+    output: |
+      [abcabc]
+  - input: |
+      invertir invertir
+      igual
+    output: |
+      [igual]

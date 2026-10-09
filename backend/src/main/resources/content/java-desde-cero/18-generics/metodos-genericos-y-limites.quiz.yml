@@ -1,0 +1,36 @@
+questions:
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      import java.util.List;
+
+      public class Main {
+          static <T> T primero(List<T> lista) {
+              return lista.get(0);
+          }
+
+          public static void main(String[] args) {
+              String palabra = primero(List.of("sol", "luna"));
+              Integer numero = primero(List.of(7, 3));
+              System.out.println(palabra.length() + numero);
+          }
+      }
+    answer: |
+      10
+    explanation: 'En la primera llamada `T` es `String` y devuelve "sol"; en la segunda, `T` es `Integer` y devuelve 7. `palabra.length()` vale 3, y `3 + 7` es 10: los dos son números, así que se suman.'
+  - type: choice
+    prompt: ¿Para qué sirve el límite en `static <T extends Comparable<T>> T maximo(List<T> lista)`?
+    options:
+      - Para poder llamar a `compareTo` sobre elementos de tipo `T`
+      - Para que `T` solo pueda ser `Integer`
+      - Para que el método herede de `Comparable`
+    answer: 0
+    explanation: Sin límite, de `T` solo sabes que es un objeto. Con `extends Comparable<T>` garantizas que cualquier `T` sabe compararse, y puedes usar `compareTo`. Sirve para `Integer`, `String` y cualquier tipo comparable.
+  - type: choice
+    prompt: ¿Dónde se declara el `<T>` de un método genérico?
+    options:
+      - Antes del tipo de retorno, como en `static <T> T ultimo(List<T> lista)`
+      - Después del nombre del método, como en `static T ultimo<T>(List<T> lista)`
+      - No hace falta declararlo; Java lo deduce siempre
+    answer: 0
+    explanation: El parámetro de tipo se declara entre los modificadores y el tipo de retorno. Lo que Java sí deduce es qué tipo concreto es `T` en cada llamada, a partir de los argumentos.

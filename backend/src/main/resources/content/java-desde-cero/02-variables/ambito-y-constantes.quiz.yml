@@ -1,0 +1,38 @@
+questions:
+  - type: choice
+    prompt: ¿Hasta dónde existe una variable declarada dentro de unas llaves `{ }`?
+    options:
+      - Desde su declaración hasta la llave `}` que cierra ese bloque
+      - Hasta el final del programa
+      - Solo en la línea donde se declara
+    answer: 0
+    explanation: 'Ese tramo es su ámbito. Al cerrar el bloque la variable desaparece, y usarla fuera da `cannot find symbol`.'
+  - type: choice
+    prompt: ¿Qué pasa al compilar esto?
+    code: |
+      final int MAXIMO = 10;
+      MAXIMO = 20;
+    options:
+      - No compila, porque una variable `final` no se puede reasignar
+      - Compila y `MAXIMO` pasa a valer 20
+      - Compila, pero `MAXIMO` sigue valiendo 10
+    answer: 0
+    explanation: '`final` convierte la variable en una constante: el compilador rechaza cualquier intento de cambiarla, con el error `cannot assign a value to final variable`.'
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      public class Main {
+          static final int BONUS = 5;
+
+          public static void main(String[] args) {
+              int puntos = 10;
+              {
+                  int extra = BONUS * 2;
+                  puntos = puntos + extra;
+              }
+              System.out.println(puntos);
+          }
+      }
+    answer: |
+      20
+    explanation: '`extra` vale 5 * 2 = 10 y solo existe dentro del bloque, pero `puntos` se declaró fuera, así que su cambio se mantiene: 10 + 10 = 20.'

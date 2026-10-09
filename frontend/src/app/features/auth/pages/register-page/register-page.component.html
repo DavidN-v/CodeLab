@@ -1,0 +1,65 @@
+<app-auth-card
+  heading="Crear cuenta"
+  lead="Guarda tu progreso, ejecuta código y resuelve ejercicios con corrección automática."
+>
+  <form class="auth-form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <div class="field">
+      <label class="field__label" for="register-name">Nombre</label>
+      <input
+        id="register-name"
+        class="input"
+        autocomplete="nickname"
+        formControlName="displayName"
+        [attr.aria-invalid]="form.controls.displayName.touched && form.controls.displayName.invalid"
+      />
+      @if (form.controls.displayName.touched && form.controls.displayName.invalid) {
+        <p class="field__error">Dinos cómo quieres que te llamemos (hasta 60 caracteres).</p>
+      }
+    </div>
+
+    <div class="field">
+      <label class="field__label" for="register-email">Correo electrónico</label>
+      <input
+        id="register-email"
+        class="input"
+        type="email"
+        autocomplete="email"
+        formControlName="email"
+        [attr.aria-invalid]="form.controls.email.touched && form.controls.email.invalid"
+      />
+      @if (form.controls.email.touched && form.controls.email.invalid) {
+        <p class="field__error">Escribe un correo válido.</p>
+      }
+    </div>
+
+    <div class="field">
+      <label class="field__label" for="register-password">Contraseña</label>
+      <input
+        id="register-password"
+        class="input"
+        type="password"
+        autocomplete="new-password"
+        formControlName="password"
+        aria-describedby="register-password-hint"
+        [attr.aria-invalid]="form.controls.password.touched && form.controls.password.invalid"
+      />
+      <p id="register-password-hint" class="field__hint">Al menos 8 caracteres.</p>
+      @if (form.controls.password.touched && form.controls.password.invalid) {
+        <p class="field__error">La contraseña debe tener entre 8 y 72 caracteres.</p>
+      }
+    </div>
+
+    @if (error(); as message) {
+      <p class="state state--error" role="alert">{{ message }}</p>
+    }
+
+    <button type="submit" class="button button--primary" [disabled]="submitting()">
+      {{ submitting() ? 'Creando cuenta…' : 'Crear cuenta' }}
+    </button>
+
+    <p class="auth-form__switch">
+      ¿Ya tienes cuenta?
+      <a routerLink="/login" [queryParams]="{ returnUrl: returnUrl() }">Entra</a>
+    </p>
+  </form>
+</app-auth-card>

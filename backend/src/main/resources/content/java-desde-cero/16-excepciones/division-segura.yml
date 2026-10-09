@@ -1,0 +1,67 @@
+title: División segura
+summary: Captura errores de formato y de división sin que el programa se detenga.
+difficulty: EASY
+statement: |
+  Cada línea de la entrada contiene dos textos separados por un espacio. Para cada línea intenta convertirlos a enteros y dividir el primero entre el segundo (división entera):
+
+  - Si todo va bien, escribe el resultado.
+  - Si algún texto no es un número, escribe `Error: no es un número`.
+  - Si el divisor es 0, escribe `Error: división entre cero`.
+
+  El programa debe procesar **todas** las líneas aunque alguna falle.
+starter: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          while (entrada.hasNextLine()) {
+              String[] partes = entrada.nextLine().trim().split(" ");
+              int a = Integer.parseInt(partes[0]);
+              int b = Integer.parseInt(partes[1]);
+              System.out.println(a / b);
+          }
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          while (entrada.hasNextLine()) {
+              String[] partes = entrada.nextLine().trim().split(" ");
+              try {
+                  int a = Integer.parseInt(partes[0]);
+                  int b = Integer.parseInt(partes[1]);
+                  System.out.println(a / b);
+              } catch (NumberFormatException e) {
+                  System.out.println("Error: no es un número");
+              } catch (ArithmeticException e) {
+                  System.out.println("Error: división entre cero");
+              }
+          }
+      }
+  }
+hints:
+  - 'La idea: el código inicial ya funciona con datos correctos; solo falta que una línea mala no detenga el programa y que se escriba el mensaje de error adecuado.'
+  - 'Qué usar: un `try` con dos `catch`. `Integer.parseInt` lanza `NumberFormatException` y dividir entre 0 lanza `ArithmeticException`.'
+  - 'El plan: dentro del `while`, envuelve las dos conversiones y el `println` en un `try`; añade `catch (NumberFormatException e)` que escriba `Error: no es un número` y `catch (ArithmeticException e)` que escriba `Error: división entre cero`.'
+tests:
+  - input: |
+      10 2
+      siete 3
+      5 0
+      -9 2
+    output: |
+      5
+      Error: no es un número
+      Error: división entre cero
+      -4
+    sample: true
+  - input: |
+      100 x
+      0 7
+    output: |
+      Error: no es un número
+      0

@@ -1,0 +1,35 @@
+questions:
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      record Color(String nombre, int intensidad) {}
+
+      public class Main {
+          public static void main(String[] args) {
+              Color c = new Color("rojo", 80);
+              System.out.println(c);
+              System.out.println(c.nombre());
+          }
+      }
+    answer: |
+      Color[nombre=rojo, intensidad=80]
+      rojo
+    explanation: 'Un record genera un `toString` con el formato `Nombre[campo=valor, ...]`. Sus accesores se llaman como el componente, sin `get`: `c.nombre()`.'
+  - type: choice
+    prompt: ¿Qué hace Java al ejecutar `System.out.println(libro);` si `libro` es un objeto?
+    options:
+      - Llama a `libro.toString()` e imprime el texto que devuelve
+      - Imprime todos los campos del objeto automáticamente
+      - No compila; solo se pueden imprimir textos y números
+      - Imprime siempre `libro`
+    answer: 0
+    explanation: 'Al imprimir un objeto (o unirlo a un texto con `+`), Java usa su `toString()`. Si no lo has sobrescrito, sale algo como `Libro@6d06d69c`; por eso conviene escribir uno.'
+  - type: choice
+    prompt: ¿Para cuál de estos casos encaja mejor un record?
+    options:
+      - Una coordenada con latitud y longitud que no cambian
+      - Un carrito de la compra al que se añaden productos
+      - Una cuenta bancaria cuyo saldo sube y baja
+      - Un contador de clics
+    answer: 0
+    explanation: 'Un record es inmutable: perfecto para un grupo de valores fijos, como una coordenada. Un carrito, una cuenta o un contador cambian con el tiempo, así que son clases normales.'

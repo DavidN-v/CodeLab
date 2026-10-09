@@ -1,0 +1,59 @@
+title: ¿Es primo?
+summary: Busca divisores y sal del bucle en cuanto encuentres uno.
+difficulty: MEDIUM
+statement: |
+  Un número primo es un entero mayor que 1 que solo es divisible entre 1 y entre sí mismo.
+
+  Lee un entero `n` y escribe `primo` o `no primo`.
+
+  Para que tu solución sea rápida incluso con números grandes, basta con probar divisores hasta la raíz cuadrada de `n` (si `n` tuviera un divisor mayor, tendría también uno menor).
+starter: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          long n = entrada.nextLong();
+
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          long n = entrada.nextLong();
+          boolean primo = n > 1;
+          for (long d = 2; d * d <= n; d++) {
+              if (n % d == 0) {
+                  primo = false;
+                  break;
+              }
+          }
+          System.out.println(primo ? "primo" : "no primo");
+      }
+  }
+hints:
+  - 'La idea: un número es primo si ningún número entre 2 y su raíz cuadrada lo divide. En cuanto encuentres un divisor, ya sabes la respuesta.'
+  - 'Qué usar: una variable `boolean primo` que empieza en `n > 1`, un `for` con la condición `d * d <= n`, el resto `n % d == 0` para detectar divisores y `break` para salir.'
+  - 'El plan: primo = n > 1; for (d desde 2 mientras d * d <= n) → si n % d == 0, primo = false y break. Al final imprime primo o no primo según la variable.'
+tests:
+  - input: "7\n"
+    output: "primo\n"
+    sample: true
+  - input: "12\n"
+    output: "no primo\n"
+    sample: true
+  - input: "1\n"
+    output: "no primo\n"
+  - input: "2\n"
+    output: "primo\n"
+  - input: "97\n"
+    output: "primo\n"
+  - input: "1000000007\n"
+    output: "primo\n"
+  - input: "999999999989\n"
+    output: "primo\n"
+  - input: "-7\n"
+    output: "no primo\n"

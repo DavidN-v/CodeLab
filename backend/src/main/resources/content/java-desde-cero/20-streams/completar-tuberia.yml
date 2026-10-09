@@ -1,0 +1,73 @@
+title: Completa la tubería
+summary: Rellena los huecos de un stream con filter, map y toList.
+difficulty: EASY
+kind: fill
+statement: |
+  El programa lee una línea de números enteros y debe escribir **los cuadrados de los números pares**, ordenados de menor a mayor.
+
+  Por ejemplo, con `3 4 1 6 2` los pares son 4, 6 y 2; sus cuadrados, 16, 36 y 4; ordenados:
+
+  ```
+  [4, 16, 36]
+  ```
+
+  Completa los tres huecos de la tubería: quedarse con los pares, elevar al cuadrado y recoger en una lista.
+starter: |
+  import java.util.ArrayList;
+  import java.util.List;
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          List<Integer> numeros = new ArrayList<>();
+          while (entrada.hasNextInt()) {
+              numeros.add(entrada.nextInt());
+          }
+          List<Integer> resultado = numeros.stream()
+              .{{?}}(n -> n % 2 == 0)
+              .map(n -> {{?}})
+              .sorted()
+              .{{?}}();
+          System.out.println(resultado);
+      }
+  }
+answers:
+  - filter
+  - n * n
+  - toList
+solution: |
+  import java.util.ArrayList;
+  import java.util.List;
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          List<Integer> numeros = new ArrayList<>();
+          while (entrada.hasNextInt()) {
+              numeros.add(entrada.nextInt());
+          }
+          List<Integer> resultado = numeros.stream()
+              .filter(n -> n % 2 == 0)
+              .map(n -> n * n)
+              .sorted()
+              .toList();
+          System.out.println(resultado);
+      }
+  }
+hints:
+  - 'La idea: la cinta tiene tres estaciones por completar: una que deja pasar solo a algunos, otra que cambia cada número y la caja final.'
+  - 'Qué usar: la operación que se queda con los elementos que cumplen una condición, una expresión que multiplique `n` por sí mismo y la terminal que devuelve una lista.'
+  - 'El plan: el primer hueco es `filter`, el segundo `n * n` y el tercero `toList`.'
+tests:
+  - input: "3 4 1 6 2\n"
+    output: |
+      [4, 16, 36]
+    sample: true
+  - input: "1 3 5\n"
+    output: |
+      []
+  - input: "-2 10 0\n"
+    output: |
+      [0, 4, 100]

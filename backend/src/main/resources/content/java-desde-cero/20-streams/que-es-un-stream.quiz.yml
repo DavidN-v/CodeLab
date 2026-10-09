@@ -1,0 +1,39 @@
+questions:
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      import java.util.List;
+
+      public class Main {
+          public static void main(String[] args) {
+              List<String> frutas = List.of("pera", "kiwi", "manzana", "uva");
+              List<String> resultado = frutas.stream()
+                  .filter(f -> f.length() == 4)
+                  .map(String::toUpperCase)
+                  .toList();
+              System.out.println(resultado);
+              System.out.println(frutas);
+          }
+      }
+    answer: |
+      [PERA, KIWI]
+      [pera, kiwi, manzana, uva]
+    explanation: 'Solo `pera` y `kiwi` tienen 4 letras, y `map` las pasa a mayúsculas. La segunda línea demuestra que el stream **no modifica** la lista original: `frutas` sigue igual.'
+  - type: choice
+    prompt: '¿Qué hace `numeros.stream().filter(n -> n > 0).map(n -> n * 2);` (sin nada más)?'
+    options:
+      - Nada visible, porque falta una operación terminal
+      - Dobla los positivos dentro de la lista `numeros`
+      - Imprime los positivos doblados
+      - Lanza un error de compilación
+    answer: 0
+    explanation: 'Los streams son perezosos: las operaciones intermedias no se ejecutan hasta que llega una terminal como `toList()`, `count()` o `forEach(...)`. Además, un stream nunca cambia la lista de origen.'
+  - type: choice
+    prompt: ¿Cuál de estas es una operación **terminal**?
+    options:
+      - '`count()`'
+      - '`filter(...)`'
+      - '`map(...)`'
+      - '`sorted()`'
+    answer: 0
+    explanation: '`count()` produce un resultado (un número) y cierra el stream. `filter`, `map` y `sorted` son intermedias: devuelven otro stream para seguir encadenando.'

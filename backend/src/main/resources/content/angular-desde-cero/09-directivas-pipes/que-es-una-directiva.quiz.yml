@@ -1,0 +1,24 @@
+questions:
+  - type: choice
+    prompt: ¿Qué diferencia a un componente del resto de directivas?
+    options:
+      - Que tiene su propia plantilla
+      - Que no necesita selector
+      - Que solo puede usarse una vez por página
+    answer: 0
+    explanation: 'Un componente es una directiva con plantilla: pinta su propio HTML. Una directiva de atributo, en cambio, modifica un elemento que ya existe.'
+  - type: choice
+    prompt: 'Al compilar ves `Can''t bind to ''ngStyle'' since it isn''t a known property of ''div''`. ¿Qué falta?'
+    options:
+      - Añadir `NgStyle` a `imports` del componente (y su `import` de TypeScript)
+      - Escribir `ngStyle` sin corchetes
+      - Instalar una librería nueva con npm
+    answer: 0
+    explanation: 'Angular solo reconoce en la plantilla las directivas que el componente importa. `NgStyle` ya viene en `@angular/common`, que está instalado en todo proyecto.'
+  - type: output
+    prompt: 'Si `oferta()` vale `true` y `agotado()` vale `false`, ¿qué atributo `class` tiene el párrafo? Escribe solo el valor del atributo.'
+    code: |
+      <p [class.oferta]="oferta()" [class.agotado]="agotado()">Zapatillas</p>
+    answer: |
+      oferta
+    explanation: 'Cada `[class.x]` pone la clase `x` si la expresión es verdadera y la quita si es falsa. Solo `oferta()` es `true`.'

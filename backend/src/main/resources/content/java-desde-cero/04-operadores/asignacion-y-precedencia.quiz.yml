@@ -1,0 +1,38 @@
+questions:
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int puntos = 10;
+              puntos += 5;
+              puntos *= 2;
+              puntos -= 4;
+              System.out.println(puntos);
+          }
+      }
+    answer: |
+      26
+    explanation: 'Cada atajo usa el valor que hay en ese momento: 10 + 5 = 15, luego 15 × 2 = 30 y por último 30 - 4 = 26.'
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              System.out.println(4 + 6 / 2);
+              System.out.println((4 + 6) / 2);
+          }
+      }
+    answer: |
+      7
+      5
+    explanation: 'La división va antes que la suma: `6 / 2` es 3 y 4 + 3 = 7. Los paréntesis obligan a sumar primero: 10 / 2 = 5.'
+  - type: choice
+    prompt: 'Con `int temperatura = 25;`, ¿qué valor recibe `ropa` en `String ropa = temperatura > 20 ? "camiseta" : "abrigo";`?'
+    options:
+      - '"camiseta"'
+      - '"abrigo"'
+      - '`true`'
+      - 'No compila: hace falta un `if`'
+    answer: 0
+    explanation: 'El ternario evalúa la condición (`25 > 20` es `true`) y devuelve el valor que va tras `?`. Si fuera falsa, devolvería el que va tras `:`. No devuelve el `boolean`, sino uno de los dos valores.'

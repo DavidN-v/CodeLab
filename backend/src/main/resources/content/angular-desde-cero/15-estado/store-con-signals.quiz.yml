@@ -1,0 +1,26 @@
+questions:
+  - type: choice
+    prompt: ¿Para qué sirve `readonly todas = this.lineas.asReadonly()` en un store?
+    options:
+      - Para que los componentes puedan leer el estado pero no cambiarlo con `set` o `update`
+      - Para copiar el array y que el store no ocupe memoria
+      - Para que el signal no se repinte en la plantilla
+    answer: 0
+    explanation: '`asReadonly()` devuelve el mismo signal sin los métodos de escritura. Así el estado solo cambia a través de los métodos del store.'
+  - type: choice
+    prompt: El icono de la cabecera y la página del carrito inyectan `CarritoStore`. ¿Por qué ven los mismos datos?
+    options:
+      - Porque un servicio con `@Service()` tiene una sola instancia para toda la aplicación
+      - Porque Angular copia el estado de un componente a otro
+      - Porque los dos componentes están en el mismo archivo
+    answer: 0
+    explanation: 'El servicio se crea una sola vez en el inyector raíz y todos los que lo piden reciben esa misma instancia, con el mismo signal dentro.'
+  - type: output
+    prompt: 'El carrito está vacío. ¿Qué valen `unidades()` y `total()` después de este código? Escribe los dos números separados por un espacio.'
+    code: |
+      store.agregar({ id: 1, nombre: 'Café', precio: 3 });
+      store.agregar({ id: 1, nombre: 'Café', precio: 3 });
+      store.agregar({ id: 2, nombre: 'Té', precio: 2 });
+    answer: |
+      3 8
+    explanation: 'El café se añade dos veces, así que su línea tiene `cantidad: 2`; el té, 1. Unidades: 2 + 1 = 3. Total: 3 × 2 + 2 × 1 = 8.'

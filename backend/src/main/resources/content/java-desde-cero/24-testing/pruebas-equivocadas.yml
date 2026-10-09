@@ -1,0 +1,180 @@
+title: Pruebas equivocadas
+summary: El código está bien, pero dos pruebas fallan. Arregla las pruebas.
+difficulty: MEDIUM
+kind: fix
+statement: |
+  La clase `Carrito` funciona correctamente: suma precios con decimales, cuenta productos y rechaza precios negativos lanzando `IllegalArgumentException`.
+
+  Sin embargo, al ejecutar las pruebas de `CarritoTest` la salida es:
+
+  ```
+  2/4 pruebas superadas
+  FALLA rechazaPreciosNegativos()
+  FALLA sumaLosPrecios()
+  ```
+
+  Esta vez el error está en las **pruebas**, no en el código: a veces es la prueba la que se equivoca. Corrige `CarritoTest` (sin tocar `Carrito` ni el `main`) para que la salida sea `4/4 pruebas superadas`.
+starter: |
+  import static org.junit.jupiter.api.Assertions.assertEquals;
+  import static org.junit.jupiter.api.Assertions.assertThrows;
+  import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+
+  import org.junit.jupiter.api.BeforeEach;
+  import org.junit.jupiter.api.Test;
+  import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
+  import org.junit.platform.launcher.core.LauncherFactory;
+  import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
+
+  class Carrito {
+      private double total = 0;
+      private int cantidad = 0;
+
+      void anadir(double precio) {
+          if (precio < 0) {
+              throw new IllegalArgumentException("Precio negativo");
+          }
+          total += precio;
+          cantidad++;
+      }
+
+      double total() {
+          return total;
+      }
+
+      int cantidad() {
+          return cantidad;
+      }
+  }
+
+  class CarritoTest {
+      private Carrito carrito;
+
+      @BeforeEach
+      void crearCarrito() {
+          carrito = new Carrito();
+      }
+
+      @Test
+      void unCarritoVacioCuestaCero() {
+          assertEquals(0.0, carrito.total(), 0.0001);
+      }
+
+      @Test
+      void sumaLosPrecios() {
+          carrito.anadir(0.1);
+          carrito.anadir(0.2);
+          assertEquals(0.3, carrito.total());
+      }
+
+      @Test
+      void cuentaLosProductos() {
+          carrito.anadir(5);
+          carrito.anadir(7);
+          assertEquals(2, carrito.cantidad());
+      }
+
+      @Test
+      void rechazaPreciosNegativos() {
+          assertThrows(IllegalStateException.class, () -> carrito.anadir(-1));
+      }
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          var peticion = LauncherDiscoveryRequestBuilder.request().selectors(selectClass(CarritoTest.class)).build();
+          var resumen = new SummaryGeneratingListener();
+          LauncherFactory.create().execute(peticion, resumen);
+          var resultado = resumen.getSummary();
+          System.out.println(resultado.getTestsSucceededCount() + "/" + resultado.getTestsFoundCount() + " pruebas superadas");
+          resultado.getFailures().stream()
+              .map(fallo -> "FALLA " + fallo.getTestIdentifier().getDisplayName())
+              .sorted()
+              .forEach(System.out::println);
+      }
+  }
+solution: |
+  import static org.junit.jupiter.api.Assertions.assertEquals;
+  import static org.junit.jupiter.api.Assertions.assertThrows;
+  import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+
+  import org.junit.jupiter.api.BeforeEach;
+  import org.junit.jupiter.api.Test;
+  import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
+  import org.junit.platform.launcher.core.LauncherFactory;
+  import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
+
+  class Carrito {
+      private double total = 0;
+      private int cantidad = 0;
+
+      void anadir(double precio) {
+          if (precio < 0) {
+              throw new IllegalArgumentException("Precio negativo");
+          }
+          total += precio;
+          cantidad++;
+      }
+
+      double total() {
+          return total;
+      }
+
+      int cantidad() {
+          return cantidad;
+      }
+  }
+
+  class CarritoTest {
+      private Carrito carrito;
+
+      @BeforeEach
+      void crearCarrito() {
+          carrito = new Carrito();
+      }
+
+      @Test
+      void unCarritoVacioCuestaCero() {
+          assertEquals(0.0, carrito.total(), 0.0001);
+      }
+
+      @Test
+      void sumaLosPrecios() {
+          carrito.anadir(0.1);
+          carrito.anadir(0.2);
+          assertEquals(0.3, carrito.total(), 0.0001);
+      }
+
+      @Test
+      void cuentaLosProductos() {
+          carrito.anadir(5);
+          carrito.anadir(7);
+          assertEquals(2, carrito.cantidad());
+      }
+
+      @Test
+      void rechazaPreciosNegativos() {
+          assertThrows(IllegalArgumentException.class, () -> carrito.anadir(-1));
+      }
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          var peticion = LauncherDiscoveryRequestBuilder.request().selectors(selectClass(CarritoTest.class)).build();
+          var resumen = new SummaryGeneratingListener();
+          LauncherFactory.create().execute(peticion, resumen);
+          var resultado = resumen.getSummary();
+          System.out.println(resultado.getTestsSucceededCount() + "/" + resultado.getTestsFoundCount() + " pruebas superadas");
+          resultado.getFailures().stream()
+              .map(fallo -> "FALLA " + fallo.getTestIdentifier().getDisplayName())
+              .sorted()
+              .forEach(System.out::println);
+      }
+  }
+hints:
+  - 'La idea: ejecuta el programa y lee qué pruebas fallan. En cada una, pregúntate si lo que **espera** la prueba es realmente lo que el código debe hacer.'
+  - 'Qué usar: los `double` no son exactos (`0.1 + 0.2` da `0.30000000000000004`), así que se comparan con `assertEquals(esperado, real, tolerancia)`. Y `assertThrows` debe pedir exactamente el tipo de excepción que lanza el código.'
+  - 'El plan: en `sumaLosPrecios`, añade una tolerancia como tercer argumento: `assertEquals(0.3, carrito.total(), 0.0001)`. En `rechazaPreciosNegativos`, cambia `IllegalStateException.class` por `IllegalArgumentException.class`.'
+tests:
+  - output: |
+      4/4 pruebas superadas
+    sample: true

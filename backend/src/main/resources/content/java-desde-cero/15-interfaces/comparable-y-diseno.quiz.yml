@@ -1,0 +1,50 @@
+questions:
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      import java.util.Arrays;
+
+      class Caja implements Comparable<Caja> {
+          final int peso;
+
+          Caja(int peso) {
+              this.peso = peso;
+          }
+
+          @Override
+          public int compareTo(Caja otra) {
+              return Integer.compare(this.peso, otra.peso);
+          }
+
+          @Override
+          public String toString() {
+              return peso + "kg";
+          }
+      }
+
+      public class Main {
+          public static void main(String[] args) {
+              Caja[] cajas = {new Caja(7), new Caja(2), new Caja(5)};
+              Arrays.sort(cajas);
+              System.out.println(Arrays.toString(cajas));
+          }
+      }
+    answer: |
+      [2kg, 5kg, 7kg]
+    explanation: '`Integer.compare(this.peso, otra.peso)` es negativo cuando `this` pesa menos, así que la caja más ligera va antes: orden de menor a mayor. Para invertirlo habría que poner `otra.peso` primero.'
+  - type: choice
+    prompt: '`a.compareTo(b)` devuelve `-3`. ¿Qué significa?'
+    options:
+      - '`a` va antes que `b`'
+      - '`a` va después que `b`'
+      - '`a` y `b` están a 3 posiciones de distancia'
+    answer: 0
+    explanation: Solo importa el signo. Negativo significa que `this` (aquí `a`) va antes; cero, que son equivalentes; positivo, que va después. El número exacto no tiene ningún significado.
+  - type: choice
+    prompt: '¿Por qué es mejor que `Registro` reciba un `Almacen` (interfaz) en su constructor en lugar de un `AlmacenEnMemoria` (clase)?'
+    options:
+      - Porque así funciona con cualquier almacén (memoria, archivo, base de datos) sin cambiar `Registro`
+      - Porque las interfaces se ejecutan más rápido que las clases
+      - Porque una clase concreta no se puede pasar como parámetro
+    answer: 0
+    explanation: Depender de la interfaz deja a `Registro` desacoplado. Cualquier clase que implemente `Almacen` encaja, y puedes cambiar la pieza (por ejemplo, para hacer pruebas) sin tocar el código de `Registro`.

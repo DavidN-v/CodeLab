@@ -1,0 +1,34 @@
+questions:
+  - type: choice
+    prompt: ¿Por qué la ruta `'**'` debe ir al final de la tabla?
+    options:
+      - Porque coincide con cualquier dirección y el router usa la primera ruta que coincide
+      - Porque Angular da error si no es la última
+      - Porque las rutas se leen de abajo arriba
+    answer: 0
+    explanation: 'El router recorre la tabla en orden. Si el comodín estuviera antes, atraparía también las direcciones válidas.'
+  - type: choice
+    prompt: ¿Qué ventaja tiene `loadChildren` frente a importar los componentes del panel arriba del archivo?
+    options:
+      - Su código se descarga aparte y solo cuando alguien visita esas rutas
+      - Hace que las rutas hijas no necesiten `<router-outlet />`
+      - Permite usar parámetros en las rutas
+    answer: 0
+    explanation: 'Con `import()` dinámico, el compilador separa ese código en un trozo (chunk) que solo se descarga al navegar allí, así la carga inicial pesa menos.'
+  - type: output
+    prompt: '¿Qué dirección muestra la barra al abrir `/cuenta`? Escribe la ruta empezando por `/`.'
+    code: |
+      export const routes: Routes = [
+        {
+          path: 'cuenta',
+          component: Cuenta,
+          children: [
+            { path: '', redirectTo: 'perfil', pathMatch: 'full' },
+            { path: 'perfil', component: Perfil },
+            { path: 'pagos', component: Pagos },
+          ],
+        },
+      ];
+    answer: |
+      /cuenta/perfil
+    explanation: 'Dentro de `cuenta` no queda nada de la dirección (`''''`), así que la ruta hija vacía redirige a `perfil`, que se suma al padre.'

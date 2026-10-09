@@ -1,0 +1,298 @@
+@let current = step();
+<div
+  class="tv"
+  tabindex="0"
+  aria-label="Visualizador paso a paso. Usa las flechas para avanzar y retroceder."
+>
+  <div class="tv__controls">
+    <div class="tv__buttons">
+      <button
+        type="button"
+        class="button button--ghost button--small"
+        (click)="go(0)"
+        [disabled]="index() === 0"
+        aria-label="Primer paso"
+      >
+        ⏮
+      </button>
+      <button
+        type="button"
+        class="button button--secondary button--small"
+        (click)="go(index() - 1)"
+        [disabled]="index() === 0"
+      >
+        ◀ Atrás
+      </button>
+      <button type="button" class="button button--primary button--small" (click)="togglePlay()">
+        {{ playing() ? '⏸ Pausa' : '▶ Reproducir' }}
+      </button>
+      <button
+        type="button"
+        class="button button--secondary button--small"
+        (click)="go(index() + 1)"
+        [disabled]="isLast()"
+      >
+        Adelante ▶
+      </button>
+      <button
+        type="button"
+        class="button button--ghost button--small"
+        (click)="go(total() - 1)"
+        [disabled]="isLast()"
+        aria-label="Último paso"
+      >
+        ⏭
+      </button>
+    </div>
+    <label class="tv__slider">
+      <span class="tv__count">Paso {{ index() + 1 }} de {{ total() }}</span>
+      <input
+        type="range"
+        min="0"
+        [max]="total() - 1"
+        [value]="index()"
+        (input)="onSlider($event)"
+        aria-label="Paso"
+      />
+    </label>
+  </div>
+
+  @if (trace().stopped) {
+    <p class="tv__warning">
+      {{
+        trace().stopped === 'steps'
+          ? 'El programa da demasiados pasos: aquí se muestran los primeros. ¿Hay un bucle que no termina?'
+          : 'El programa tardaba demasiado y se detuvo. ¿Hay un bucle que no termina o espera más entrada?'
+      }}
+    </p>
+  }
+
+  <div class="tv__grid">
+    <section class="tv__panel tv__code" aria-label="Código">
+      <p class="tv__label">
+        Código
+        <span class="tv__legend"
+          ><span class="tv__legend-next">→ se ejecuta ahora</span
+          ><span class="tv__legend-prev">acaba de ejecutarse</span></span
+        >
+      </p>
+      <ol #codeList class="tv__lines">
+        @for (line of lines(); track $index) {
+          @let number = $index + 1;
+          <li
+            class="tv__line"
+            [class.tv__line--current]="current?.line === number"
+            [class.tv__line--previous]="previous()?.line === number && current?.line !== number"
+            [class.tv__line--error]="exception()?.line === number"
+            [attr.data-current]="current?.line === number ? '' : null"
+          >
+            <span class="tv__gutter" aria-hidden="true">{{
+              current?.line === number ? '→' : number
+            }}</span>
+            <code class="hljs" [innerHTML]="line || ' '"></code>
+          </li>
+        }
+      </ol>
+    </section>
+
+    <div class="tv__side">
+      <section class="tv__panel tv__explain" aria-live="polite">
+        <p class="tv__label">Qué pasa en este paso</p>
+        <ul class="tv__notes">
+          @for (note of notes(); track $index) {
+            <li>{{ note }}</li>
+          }
+        </ul>
+        @if (exception(); as error) {
+          <div class="tv__exception" role="alert">
+            <p class="tv__exception-title">⚠ {{ error.title }}</p>
+            <p>{{ error.explanation }}</p>
+            <p class="tv__exception-original">{{ error.original }} · línea {{ error.line }}</p>
+          </div>
+        } @else if (isLast() && total() > 0) {
+          <p class="tv__done">✓ El programa ha terminado.</p>
+        }
+      </section>
+
+      @if (current) {
+        <section class="tv__panel" aria-label="Variables">
+          <p class="tv__label">
+            Variables <span class="tv__hint">(la llamada actual, arriba)</span>
+          </p>
+          <div class="tv__frames">
+            @for (frame of current.frames; track $index) {
+              <div class="tv__frame" [class.tv__frame--active]="$first">
+                <p class="tv__frame-name">{{ frameName(frame) }}</p>
+                @if (frame.vars.length === 0) {
+                  <p class="tv__empty">Sin variables todavía.</p>
+                } @else {
+                  <table class="tv__vars">
+                    <tbody>
+                      @for (variable of frame.vars; track variable[0]) {
+                        <tr [class.tv__changed]="$first && changed().has(variable[0])">
+                          <th scope="row">{{ variable[0] }}</th>
+                          <td>
+                            <ng-container
+                              [ngTemplateOutlet]="valueTpl"
+                              [ngTemplateOutletContext]="{ $implicit: variable[1] }"
+                            />
+                          </td>
+                        </tr>
+                      }
+                    </tbody>
+                  </table>
+                }
+              </div>
+            }
+            @for (group of current.statics; track group.class) {
+              <div class="tv__frame tv__frame--static">
+                <p class="tv__frame-name">static {{ group.class }}</p>
+                <table class="tv__vars">
+                  <tbody>
+                    @for (variable of group.vars; track variable[0]) {
+                      <tr>
+                        <th scope="row">{{ variable[0] }}</th>
+                        <td>
+                          <ng-container
+                            [ngTemplateOutlet]="valueTpl"
+                            [ngTemplateOutletContext]="{ $implicit: variable[1] }"
+                          />
+                        </td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            }
+          </div>
+        </section>
+
+        @if (heap().length > 0) {
+          <section class="tv__panel" aria-label="Objetos en memoria">
+            <p class="tv__label">Objetos en memoria</p>
+            <div class="tv__heap">
+              @for (entry of heap(); track entry.id) {
+                @let object = entry.object;
+                <div class="tv__object" [class.tv__object--hovered]="hovered() === entry.id">
+                  <p class="tv__object-head">
+                    <span class="tv__ref-badge">{{ entry.number }}</span>
+                    {{ object.type }} <span class="tv__hint">{{ kindLabel(object) }}</span>
+                  </p>
+                  @switch (object.kind) {
+                    @case ('array') {
+                      <div class="tv__cells">
+                        @for (item of object.items; track $index) {
+                          <div class="tv__cell">
+                            <span class="tv__cell-index">{{ $index }}</span>
+                            <span class="tv__cell-value"
+                              ><ng-container
+                                [ngTemplateOutlet]="valueTpl"
+                                [ngTemplateOutletContext]="{ $implicit: item }"
+                            /></span>
+                          </div>
+                        }
+                        @if (object.length > object.items.length) {
+                          <div class="tv__cell tv__cell--more">…</div>
+                        }
+                      </div>
+                    }
+                    @case ('map') {
+                      <table class="tv__vars">
+                        <tbody>
+                          @for (entryPair of object.entries; track $index) {
+                            <tr>
+                              <th scope="row">
+                                <ng-container
+                                  [ngTemplateOutlet]="valueTpl"
+                                  [ngTemplateOutletContext]="{ $implicit: entryPair[0] }"
+                                />
+                              </th>
+                              <td>
+                                →
+                                <ng-container
+                                  [ngTemplateOutlet]="valueTpl"
+                                  [ngTemplateOutletContext]="{ $implicit: entryPair[1] }"
+                                />
+                              </td>
+                            </tr>
+                          } @empty {
+                            <tr>
+                              <td class="tv__empty">Vacío</td>
+                            </tr>
+                          }
+                        </tbody>
+                      </table>
+                    }
+                    @case ('text') {
+                      <p class="tv__text">"{{ object.text }}"</p>
+                    }
+                    @case ('opaque') {
+                      <p class="tv__empty">Un objeto de Java ({{ object.type }}).</p>
+                    }
+                    @default {
+                      <table class="tv__vars">
+                        <tbody>
+                          @for (row of rows(object); track $index) {
+                            <tr>
+                              <th scope="row">{{ row.label }}</th>
+                              <td>
+                                <ng-container
+                                  [ngTemplateOutlet]="valueTpl"
+                                  [ngTemplateOutletContext]="{ $implicit: row.value }"
+                                />
+                              </td>
+                            </tr>
+                          } @empty {
+                            <tr>
+                              <td class="tv__empty">Vacío</td>
+                            </tr>
+                          }
+                        </tbody>
+                      </table>
+                    }
+                  }
+                </div>
+              }
+            </div>
+          </section>
+        }
+      }
+
+      <section class="tv__panel tv__console" aria-label="Salida">
+        <p class="tv__label">Salida hasta este paso</p>
+        <pre>{{ output() || '(todavía no ha impreso nada)' }}</pre>
+      </section>
+    </div>
+  </div>
+</div>
+
+<ng-template #valueTpl let-value>
+  @switch (value.k) {
+    @case ('r') {
+      <button
+        type="button"
+        class="tv__ref"
+        (mouseenter)="hovered.set(value.id)"
+        (mouseleave)="hovered.set(null)"
+        (focus)="hovered.set(value.id)"
+        (blur)="hovered.set(null)"
+        [attr.aria-label]="'Apunta al objeto ' + numbers().get(value.id)"
+      >
+        → <span class="tv__ref-badge">{{ numbers().get(value.id) }}</span>
+      </button>
+    }
+    @case ('null') {
+      <span class="tv__null">null</span>
+    }
+    @case ('s') {
+      <span class="tv__string">{{ format(value) }}</span>
+    }
+    @case ('p') {
+      <span class="tv__primitive">{{ format(value) }}</span
+      ><span class="tv__type">{{ value.t }}</span>
+    }
+    @default {
+      <span class="tv__primitive">{{ format(value) }}</span>
+    }
+  }
+</ng-template>

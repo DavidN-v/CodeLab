@@ -1,0 +1,25 @@
+questions:
+  - type: choice
+    prompt: ¿Para qué sirve `beforeEach` en un archivo de pruebas?
+    options:
+      - Ejecuta su código antes de cada `it`, para que cada prueba empiece con un entorno limpio
+      - Ejecuta su código una sola vez antes de todo el archivo
+      - Marca qué prueba se ejecuta primero
+    answer: 0
+    explanation: 'Así cada prueba es independiente: no hereda cambios de la anterior. Para algo que se ejecute una sola vez existe `beforeAll`.'
+  - type: choice
+    prompt: 'Una prueba pulsa un botón y comprueba el texto enseguida, sin `await fixture.whenStable()`. Falla mostrando el valor antiguo. ¿Por qué?'
+    options:
+      - Angular programa la detección de cambios y aún no ha actualizado el DOM cuando la prueba mira
+      - El clic no funciona en jsdom
+      - '`expect` solo funciona dentro de `beforeEach`'
+    answer: 0
+    explanation: 'En una app zoneless el repintado se programa para justo después. `await fixture.whenStable()` espera a que Angular termine y la pantalla esté al día.'
+  - type: choice
+    prompt: ¿Qué diferencia hay entre `fixture.componentInstance` y `fixture.nativeElement`?
+    options:
+      - '`componentInstance` es el objeto de la clase del componente; `nativeElement` es su elemento HTML con lo que se ha pintado'
+      - Son lo mismo con dos nombres
+      - '`nativeElement` solo existe en pruebas E2E'
+    answer: 0
+    explanation: 'Con `componentInstance` lees o llamas a lo que hay en la clase; con `nativeElement` buscas en el DOM (`querySelector`) lo que ve el usuario.'

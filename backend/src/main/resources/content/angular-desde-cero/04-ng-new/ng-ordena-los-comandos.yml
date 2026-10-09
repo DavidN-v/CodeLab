@@ -1,0 +1,40 @@
+title: De cero a dist en la terminal
+summary: Ordena los comandos para instalar la CLI, crear un proyecto, generar un componente y compilarlo.
+difficulty: MEDIUM
+kind: parsons
+statement: |
+  Tienes Node.js recién instalado y quieres, en este orden lógico:
+
+  1. Instalar la Angular CLI de forma global.
+  2. Crear el proyecto `tienda` **sin preguntas** y **con las librerías instaladas**.
+  3. Entrar en su carpeta.
+  4. Generar un componente `carrito`.
+  5. Hacer el **build de producción**, que debe incluir ya el componente nuevo.
+
+  Ordena los comandos. Cuidado: hay líneas que **sobran**.
+starter: |
+  # En la terminal, uno detrás de otro:
+  {{lines}}
+solution: |
+  # En la terminal, uno detrás de otro:
+  npm install -g @angular/cli
+  ng new tienda --defaults
+  cd tienda
+  ng generate component carrito
+  ng build
+lines:
+  - 'npm install -g @angular/cli'
+  - 'ng new tienda --defaults'
+  - 'cd tienda'
+  - 'ng generate component carrito'
+  - 'ng build'
+distractors:
+  - 'ng new tienda --skip-install'
+  - 'ng build --configuration development'
+hints:
+  - 'La idea: no puedes usar `ng` sin instalarlo, ni `ng generate` fuera de un proyecto, y el build tiene que ir después de crear lo que debe contener.'
+  - 'Qué usar: `npm install -g` instala la CLI; `--defaults` evita las preguntas; `ng generate` y `ng build` solo funcionan dentro de la carpeta del proyecto. `--skip-install` no instalaría las librerías y `-c development` no es el build de producción.'
+  - 'El plan: instalar la CLI → `ng new tienda --defaults` → `cd tienda` → generar `carrito` → `ng build` (que usa production por defecto).'
+tests:
+  - output: "Application bundle generation complete."
+    sample: true

@@ -1,0 +1,32 @@
+lessons:
+  - slug: por-que-typescript
+    title: ¿Por qué TypeScript?
+    summary: JavaScript con tipos, los tipos básicos, la inferencia y el compilador que los borra.
+    minutes: 7
+  - slug: objetos-arrays-e-interfaces
+    title: Arrays, objetos e interfaces
+    summary: Listas, objetos con forma, uniones y cómo tratar los datos que faltan con ?. y ??.
+    minutes: 9
+  - slug: funciones-y-genericos
+    title: Funciones, flechas y genéricos
+    summary: Funciones con tipos, funciones flecha, callbacks con map y filter, y el <T> de los genéricos.
+    minutes: 9
+  - slug: clases-y-decoradores
+    title: Clases y decoradores
+    summary: Moldes con propiedades y métodos, private/protected/readonly, y qué hace un @Component.
+    minutes: 9
+  - slug: modulos-y-async
+    title: Imports y exports
+    summary: Cada archivo como módulo cerrado y de dónde sale cada import.
+    minutes: 5
+  - slug: async-y-promesas
+    title: Promesas, async y await
+    summary: Cómo esperar datos que tardan en llegar sin congelar la página.
+    minutes: 6
+exercises:
+  - ng-pon-los-tipos
+  - ng-predice-los-valores-por-defecto
+  - ng-interfaz-producto
+  - ng-predice-filtra-y-transforma
+  - ng-completa-la-hucha
+  - ng-ordena-la-carga

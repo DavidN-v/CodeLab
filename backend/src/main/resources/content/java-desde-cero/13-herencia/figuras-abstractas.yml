@@ -1,0 +1,147 @@
+title: Figuras geométricas
+summary: Una clase abstracta con un método plantilla.
+difficulty: MEDIUM
+statement: |
+  Completa la jerarquía:
+
+  - `abstract class Figura` con un método abstracto `double area()`, otro `double perimetro()` y un método concreto `String resumen()` que devuelva `"<nombre>: área <área>, perímetro <perímetro>"` con dos decimales. El nombre lo recibe por su constructor.
+  - `Circulo(double radio)`, `Rectangulo(double ancho, double alto)` y `Triangulo(double a, double b, double c)` (área con la fórmula de Herón: `s = (a+b+c)/2`, área = √(s(s−a)(s−b)(s−c))).
+
+  La entrada tiene líneas como `circulo 1`, `rectangulo 2 3` o `triangulo 3 4 5`. Imprime el resumen de cada figura.
+starter: |
+  import java.util.Scanner;
+
+  abstract class Figura {
+
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          while (entrada.hasNext()) {
+              String tipo = entrada.next();
+              // Lee los números según el tipo, crea la figura e imprime figura.resumen()
+          }
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  abstract class Figura {
+      private final String nombre;
+
+      Figura(String nombre) {
+          this.nombre = nombre;
+      }
+
+      abstract double area();
+
+      abstract double perimetro();
+
+      String resumen() {
+          return String.format("%s: área %.2f, perímetro %.2f", nombre, area(), perimetro());
+      }
+  }
+
+  class Circulo extends Figura {
+      private final double radio;
+
+      Circulo(double radio) {
+          super("Círculo");
+          this.radio = radio;
+      }
+
+      @Override
+      double area() {
+          return Math.PI * radio * radio;
+      }
+
+      @Override
+      double perimetro() {
+          return 2 * Math.PI * radio;
+      }
+  }
+
+  class Rectangulo extends Figura {
+      private final double ancho;
+      private final double alto;
+
+      Rectangulo(double ancho, double alto) {
+          super("Rectángulo");
+          this.ancho = ancho;
+          this.alto = alto;
+      }
+
+      @Override
+      double area() {
+          return ancho * alto;
+      }
+
+      @Override
+      double perimetro() {
+          return 2 * (ancho + alto);
+      }
+  }
+
+  class Triangulo extends Figura {
+      private final double a;
+      private final double b;
+      private final double c;
+
+      Triangulo(double a, double b, double c) {
+          super("Triángulo");
+          this.a = a;
+          this.b = b;
+          this.c = c;
+      }
+
+      @Override
+      double area() {
+          double s = (a + b + c) / 2;
+          return Math.sqrt(s * (s - a) * (s - b) * (s - c));
+      }
+
+      @Override
+      double perimetro() {
+          return a + b + c;
+      }
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          while (entrada.hasNext()) {
+              String tipo = entrada.next();
+              Figura figura = switch (tipo) {
+                  case "circulo" -> new Circulo(entrada.nextDouble());
+                  case "rectangulo" -> new Rectangulo(entrada.nextDouble(), entrada.nextDouble());
+                  default -> new Triangulo(entrada.nextDouble(), entrada.nextDouble(), entrada.nextDouble());
+              };
+              System.out.println(figura.resumen());
+          }
+      }
+  }
+hints:
+  - 'La idea: todas las figuras se resumen igual; solo cambia cómo se calculan el área y el perímetro. Lo común va en `Figura` y lo que cambia, en cada subclase.'
+  - 'Qué usar: `abstract double area();` y `abstract double perimetro();` en `Figura`, un `resumen()` normal con `String.format("%s: área %.2f, perímetro %.2f", ...)`, y tres subclases con `extends Figura` y `@Override`.'
+  - 'El plan: cada subclase llama a `super("Círculo")` (o su nombre) y guarda sus medidas. En el `main`, según `tipo` lee 1, 2 o 3 números con `nextDouble()`, crea la figura y escribe `figura.resumen()`.'
+tests:
+  - input: |
+      circulo 1
+      rectangulo 2 3
+      triangulo 3 4 5
+    output: |
+      Círculo: área 3.14, perímetro 6.28
+      Rectángulo: área 6.00, perímetro 10.00
+      Triángulo: área 6.00, perímetro 12.00
+    sample: true
+  - input: |
+      circulo 2.5
+    output: |
+      Círculo: área 19.63, perímetro 15.71
+  - input: |
+      triangulo 2 2 2
+      rectangulo 0.5 4
+    output: |
+      Triángulo: área 1.73, perímetro 6.00
+      Rectángulo: área 2.00, perímetro 9.00

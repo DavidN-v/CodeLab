@@ -1,0 +1,106 @@
+title: Máximo y mínimo genéricos
+summary: Un método genérico con límite Comparable que sirve para cualquier tipo.
+difficulty: MEDIUM
+statement: |
+  Escribe dos métodos genéricos:
+
+  - `static <T extends Comparable<T>> T maximo(List<T> lista)`
+  - `static <T extends Comparable<T>> T minimo(List<T> lista)`
+
+  Ambos deben lanzar `IllegalArgumentException` si la lista está vacía.
+
+  La entrada tiene dos líneas: una con números enteros y otra con palabras (cualquiera de las dos puede estar vacía). Para cada línea escribe `máx=<máximo> mín=<mínimo>`, o `vacía` si no hay elementos. Las palabras se comparan con su orden natural (`compareTo` de `String`).
+starter: |
+  import java.util.ArrayList;
+  import java.util.List;
+  import java.util.Scanner;
+
+  public class Main {
+
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          String lineaNumeros = entrada.hasNextLine() ? entrada.nextLine().strip() : "";
+          String lineaPalabras = entrada.hasNextLine() ? entrada.nextLine().strip() : "";
+          List<Integer> numeros = new ArrayList<>();
+          for (String parte : lineaNumeros.isEmpty() ? new String[0] : lineaNumeros.split("\\s+")) {
+              numeros.add(Integer.parseInt(parte));
+          }
+          List<String> palabras = lineaPalabras.isEmpty() ? List.of() : List.of(lineaPalabras.split("\\s+"));
+
+      }
+  }
+solution: |
+  import java.util.ArrayList;
+  import java.util.List;
+  import java.util.Scanner;
+
+  public class Main {
+      static <T extends Comparable<T>> T maximo(List<T> lista) {
+          if (lista.isEmpty()) {
+              throw new IllegalArgumentException("Lista vacía");
+          }
+          T mayor = lista.get(0);
+          for (T elemento : lista) {
+              if (elemento.compareTo(mayor) > 0) {
+                  mayor = elemento;
+              }
+          }
+          return mayor;
+      }
+
+      static <T extends Comparable<T>> T minimo(List<T> lista) {
+          if (lista.isEmpty()) {
+              throw new IllegalArgumentException("Lista vacía");
+          }
+          T menor = lista.get(0);
+          for (T elemento : lista) {
+              if (elemento.compareTo(menor) < 0) {
+                  menor = elemento;
+              }
+          }
+          return menor;
+      }
+
+      static <T extends Comparable<T>> String resumen(List<T> lista) {
+          try {
+              return "máx=" + maximo(lista) + " mín=" + minimo(lista);
+          } catch (IllegalArgumentException e) {
+              return "vacía";
+          }
+      }
+
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          String lineaNumeros = entrada.hasNextLine() ? entrada.nextLine().strip() : "";
+          String lineaPalabras = entrada.hasNextLine() ? entrada.nextLine().strip() : "";
+          List<Integer> numeros = new ArrayList<>();
+          for (String parte : lineaNumeros.isEmpty() ? new String[0] : lineaNumeros.split("\\s+")) {
+              numeros.add(Integer.parseInt(parte));
+          }
+          List<String> palabras = lineaPalabras.isEmpty() ? List.of() : List.of(lineaPalabras.split("\\s+"));
+          System.out.println(resumen(numeros));
+          System.out.println(resumen(palabras));
+      }
+  }
+hints:
+  - 'La idea: buscar el mayor y el menor funciona igual con números que con palabras; solo hace falta que los elementos se puedan comparar entre sí.'
+  - 'Qué usar: métodos genéricos con el límite `<T extends Comparable<T>>`, que te deja llamar a `elemento.compareTo(otro)`, y `throw new IllegalArgumentException(...)` para la lista vacía.'
+  - 'El plan: en `maximo`, si la lista está vacía lanza la excepción; si no, empieza con `lista.get(0)` y recorre la lista quedándote con el elemento cuando `compareTo(mayor) > 0`. `minimo` es igual con `< 0`. Un tercer método genérico `resumen` puede llamar a los dos dentro de un `try` y devolver `"vacía"` en el `catch`.'
+tests:
+  - input: |
+      4 -2 17 9
+      pera uva manzana
+    output: |
+      máx=17 mín=-2
+      máx=uva mín=manzana
+    sample: true
+  - input: |
+      5
+
+    output: |
+      máx=5 mín=5
+      vacía
+  - input: "\nZorro abeja Ballena\n"
+    output: |
+      vacía
+      máx=abeja mín=Ballena

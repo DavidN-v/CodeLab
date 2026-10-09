@@ -1,0 +1,71 @@
+title: Palabras únicas
+summary: Usa distintos Set para eliminar repetidos con y sin orden.
+difficulty: EASY
+statement: |
+  Lee un texto (puede ocupar varias líneas) y considera como palabras las secuencias separadas por espacios, pasadas a minúsculas. Escribe:
+
+  ```
+  Total: <número de palabras>
+  Distintas: <número de palabras distintas>
+  En orden de aparición: <palabras distintas, en el orden en que aparecen por primera vez, separadas por espacios>
+  Alfabéticamente: <palabras distintas ordenadas, separadas por espacios>
+  ```
+starter: |
+  import java.util.LinkedHashSet;
+  import java.util.Scanner;
+  import java.util.Set;
+  import java.util.TreeSet;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int total = 0;
+          while (entrada.hasNext()) {
+              String palabra = entrada.next().toLowerCase();
+              total++;
+          }
+      }
+  }
+solution: |
+  import java.util.LinkedHashSet;
+  import java.util.Scanner;
+  import java.util.Set;
+  import java.util.TreeSet;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int total = 0;
+          Set<String> enOrden = new LinkedHashSet<>();
+          while (entrada.hasNext()) {
+              String palabra = entrada.next().toLowerCase();
+              total++;
+              enOrden.add(palabra);
+          }
+          Set<String> ordenadas = new TreeSet<>(enOrden);
+          System.out.println("Total: " + total);
+          System.out.println("Distintas: " + enOrden.size());
+          System.out.println("En orden de aparición: " + String.join(" ", enOrden));
+          System.out.println("Alfabéticamente: " + String.join(" ", ordenadas));
+      }
+  }
+hints:
+  - 'La idea: necesitas las palabras sin repetir de dos maneras: en el orden en que aparecen y en orden alfabético. Además, cuenta todas las palabras leídas.'
+  - 'Qué usar: un `LinkedHashSet` (sin repetidos, conserva el orden de inserción), un `TreeSet` (sin repetidos y ordenado) y `String.join(" ", conjunto)` para unirlas con espacios.'
+  - 'El plan: dentro del bucle, `total++` y `enOrden.add(palabra)`. Al terminar, `Set<String> ordenadas = new TreeSet<>(enOrden);` y escribe las cuatro líneas; `enOrden.size()` es el número de distintas.'
+tests:
+  - input: |
+      El perro y el gato
+      y EL loro
+    output: |
+      Total: 8
+      Distintas: 5
+      En orden de aparición: el perro y gato loro
+      Alfabéticamente: el gato loro perro y
+    sample: true
+  - input: "hola hola hola\n"
+    output: |
+      Total: 3
+      Distintas: 1
+      En orden de aparición: hola
+      Alfabéticamente: hola

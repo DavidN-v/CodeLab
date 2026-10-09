@@ -1,0 +1,83 @@
+title: Validar edades
+summary: Lanza tus propias excepciones y captúralas en el lugar adecuado.
+difficulty: MEDIUM
+statement: |
+  Escribe un método `static int parsearEdad(String texto)` que:
+
+  - Convierta el texto a entero (tras quitar espacios de los extremos). Si no es un número, lance `IllegalArgumentException` con el mensaje `"<texto> no es un número"`.
+  - Si la edad es menor que 0 o mayor que 130, lance `IllegalArgumentException` con el mensaje `"<edad> está fuera de rango"`.
+
+  Para cada línea de la entrada, escribe `Edad válida: <edad>` o `Inválida: <mensaje>`. Al final escribe `Media: <media>` de las válidas con un decimal, o `Media: -` si no hay ninguna.
+starter: |
+  import java.util.Scanner;
+
+  public class Main {
+      static int parsearEdad(String texto) {
+          return 0;
+      }
+
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  public class Main {
+      static int parsearEdad(String texto) {
+          String limpio = texto.strip();
+          int edad;
+          try {
+              edad = Integer.parseInt(limpio);
+          } catch (NumberFormatException e) {
+              throw new IllegalArgumentException(limpio + " no es un número", e);
+          }
+          if (edad < 0 || edad > 130) {
+              throw new IllegalArgumentException(edad + " está fuera de rango");
+          }
+          return edad;
+      }
+
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int suma = 0;
+          int validas = 0;
+          while (entrada.hasNextLine()) {
+              String linea = entrada.nextLine();
+              try {
+                  int edad = parsearEdad(linea);
+                  System.out.println("Edad válida: " + edad);
+                  suma += edad;
+                  validas++;
+              } catch (IllegalArgumentException e) {
+                  System.out.println("Inválida: " + e.getMessage());
+              }
+          }
+          System.out.println(validas == 0 ? "Media: -" : String.format("Media: %.1f", (double) suma / validas));
+      }
+  }
+hints:
+  - 'La idea: `parsearEdad` decide si una edad es válida y, si no lo es, avisa lanzando una excepción con un mensaje claro; el `main` solo escucha esos avisos.'
+  - 'Qué usar: `try`/`catch` para transformar la `NumberFormatException` en `throw new IllegalArgumentException(...)`, y un único `catch (IllegalArgumentException e)` en el `main`, con `e.getMessage()`.'
+  - 'El plan: en `parsearEdad`, `strip()`, luego `try { edad = Integer.parseInt(limpio); } catch (NumberFormatException e) { throw ... }`, y después `if (edad < 0 || edad > 130) throw ...`. En el `main`, por cada línea suma las válidas y cuéntalas; al final, `String.format("Media: %.1f", ...)` o `Media: -`.'
+tests:
+  - input: |
+      30
+      abc
+      200
+       45
+    output: |
+      Edad válida: 30
+      Inválida: abc no es un número
+      Inválida: 200 está fuera de rango
+      Edad válida: 45
+      Media: 37.5
+    sample: true
+  - input: |
+      -1
+      x
+    output: |
+      Inválida: -1 está fuera de rango
+      Inválida: x no es un número
+      Media: -

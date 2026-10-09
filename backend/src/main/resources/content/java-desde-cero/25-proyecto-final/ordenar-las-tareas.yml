@@ -1,0 +1,96 @@
+title: Ordena las tareas
+summary: Coloca en orden las líneas que leen tareas, las ordenan por prioridad y las listan.
+difficulty: EASY
+kind: parsons
+statement: |
+  Un calentamiento antes del gestor completo. Cada línea de la entrada es una tarea con el formato `<título>;<prioridad>` (la prioridad es `alta`, `media` o `baja`).
+
+  El programa debe leer todas las tareas, ordenarlas por prioridad (alta primero; a igual prioridad, en el orden en que llegaron) y escribir cada una como `[<PRIORIDAD>] <título>`. Al final escribe `Total: <número de tareas>`.
+
+  El `enum` y el `record` ya están escritos. Ordena las líneas del `main`. Cuidado: hay líneas que sobran.
+starter: |
+  import java.util.ArrayList;
+  import java.util.Comparator;
+  import java.util.List;
+  import java.util.Scanner;
+
+  enum Prioridad { ALTA, MEDIA, BAJA }
+
+  record Tarea(String titulo, Prioridad prioridad) {}
+
+  public class Main {
+      public static void main(String[] args) {
+  {{lines}}
+      }
+  }
+lines:
+  - '        Scanner entrada = new Scanner(System.in);'
+  - '        List<Tarea> tareas = new ArrayList<>();'
+  - '        while (entrada.hasNextLine()) {'
+  - '            String[] partes = entrada.nextLine().split(";");'
+  - '            tareas.add(new Tarea(partes[0], Prioridad.valueOf(partes[1].toUpperCase())));'
+  - '        }'
+  - '        tareas.sort(Comparator.comparing(Tarea::prioridad));'
+  - '        for (Tarea t : tareas) {'
+  - '            System.out.println("[" + t.prioridad() + "] " + t.titulo());'
+  - '        }'
+  - '        System.out.println("Total: " + tareas.size());'
+distractors:
+  - '        System.out.println("Total: " + tareas.length);'
+  - '        tareas.add(new Tarea(partes[0], Prioridad.ALTA));'
+solution: |
+  import java.util.ArrayList;
+  import java.util.Comparator;
+  import java.util.List;
+  import java.util.Scanner;
+
+  enum Prioridad { ALTA, MEDIA, BAJA }
+
+  record Tarea(String titulo, Prioridad prioridad) {}
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          List<Tarea> tareas = new ArrayList<>();
+          while (entrada.hasNextLine()) {
+              String[] partes = entrada.nextLine().split(";");
+              tareas.add(new Tarea(partes[0], Prioridad.valueOf(partes[1].toUpperCase())));
+          }
+          tareas.sort(Comparator.comparing(Tarea::prioridad));
+          for (Tarea t : tareas) {
+              System.out.println("[" + t.prioridad() + "] " + t.titulo());
+          }
+          System.out.println("Total: " + tareas.size());
+      }
+  }
+hints:
+  - 'La idea: el programa tiene tres fases, como el gestor de tareas: leer los datos, ordenarlos y mostrarlos. Coloca primero lo que se prepara (el `Scanner` y la lista vacía).'
+  - 'Qué usar: un `while (entrada.hasNextLine())` para leer cada tarea, `tareas.sort(Comparator.comparing(Tarea::prioridad))` para ordenar (los enums se ordenan por su posición: ALTA, MEDIA, BAJA) y un `for` para escribir. Una lista mide su tamaño con `size()`, no con `length`.'
+  - 'El plan: crea el `Scanner` y la lista; dentro del `while`, primero parte la línea con `split(";")` y después añade la tarea; cierra el `while`; ordena; recorre con el `for` imprimiendo cada tarea; y termina con el total.'
+tests:
+  - input: |
+      Comprar café;baja
+      Entregar proyecto;alta
+      Llamar a Ana;media
+    output: |
+      [ALTA] Entregar proyecto
+      [MEDIA] Llamar a Ana
+      [BAJA] Comprar café
+      Total: 3
+    sample: true
+  - input: |
+      Regar plantas;media
+      Pagar luz;alta
+      Leer;media
+      Revisar correo;alta
+    output: |
+      [ALTA] Pagar luz
+      [ALTA] Revisar correo
+      [MEDIA] Regar plantas
+      [MEDIA] Leer
+      Total: 4
+  - input: |
+      Descansar;baja
+    output: |
+      [BAJA] Descansar
+      Total: 1

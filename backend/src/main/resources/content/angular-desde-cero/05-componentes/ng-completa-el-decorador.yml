@@ -1,0 +1,41 @@
+title: Completa el decorador
+summary: Rellena el import y los campos de @Component de un componente con archivos aparte.
+difficulty: EASY
+kind: fill
+statement: |
+  El componente `Saludo` tiene su plantilla en `saludo.html` y sus estilos en `saludo.css`, y se usa con la etiqueta `<app-saludo />`. Rellena los huecos:
+
+  1. Importa el decorador desde `@angular/core`.
+  2. Escribe el campo que define el **nombre de la etiqueta**.
+  3. Escribe el campo que apunta a **un único archivo** de estilos.
+
+  Cuando está bien, `<app-saludo />` muestra la plantilla de `saludo.html`.
+starter: |
+  import { {{?}} } from '@angular/core';
+
+  @Component({
+    {{?}}: 'app-saludo',
+    templateUrl: './saludo.html',
+    {{?}}: './saludo.css',
+  })
+  export class Saludo {}
+solution: |
+  import { Component } from '@angular/core';
+
+  @Component({
+    selector: 'app-saludo',
+    templateUrl: './saludo.html',
+    styleUrl: './saludo.css',
+  })
+  export class Saludo {}
+answers:
+  - Component
+  - selector
+  - styleUrl
+hints:
+  - 'La idea: el import trae lo que se usa con `@` en la línea siguiente; los dos campos que faltan son el nombre de la etiqueta y el archivo de CSS.'
+  - 'Qué usar: el campo de la plantilla se llama `templateUrl`; el de los estilos sigue el mismo patrón, en singular porque es un solo archivo. El de la etiqueta es el que también usa CSS para elegir elementos.'
+  - 'El plan: hueco 1 = el nombre del decorador sin `@`; hueco 2 = `selector`; hueco 3 = `style` + `Url`.'
+tests:
+  - output: "¡Hola desde Saludo!"
+    sample: true

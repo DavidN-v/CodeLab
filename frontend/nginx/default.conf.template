@@ -17,6 +17,10 @@ server {
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
+        # Grading every test case and asking the AI tutor can take well over
+        # nginx's default 60 s; the backend bounds both on its own.
+        proxy_read_timeout 150s;
+        proxy_send_timeout 150s;
     }
 
     # `expires` is used instead of add_header for caching: an add_header inside a

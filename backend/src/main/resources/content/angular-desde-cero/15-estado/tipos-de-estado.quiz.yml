@@ -1,0 +1,25 @@
+questions:
+  - type: choice
+    prompt: Un desplegable de ayuda que solo usa un componente puede estar abierto o cerrado. ¿Dónde guardas ese estado?
+    options:
+      - En un `signal` dentro del propio componente
+      - En un servicio global, por si acaso
+      - En la URL
+    answer: 0
+    explanation: 'Es estado local: a nadie más le importa. Subirlo a un servicio solo añade complejidad y riesgos. Empieza local y súbelo solo cuando otro componente lo necesite.'
+  - type: choice
+    prompt: Quieres que la página de resultados de búsqueda se pueda compartir por enlace con el texto buscado. ¿Dónde vive ese texto?
+    options:
+      - 'En la URL, como query param: `/buscar?q=angular`'
+      - En un signal del componente
+      - En un store compartido
+    answer: 0
+    explanation: 'Solo la URL sobrevive a recargar la página y viaja en un enlace. Además, así funciona el botón «atrás» del navegador.'
+  - type: choice
+    prompt: Guardas `tareas` en un signal y, aparte, `numeroDeTareas` en otro signal que actualizas a mano. ¿Cuál es el problema?
+    options:
+      - Es estado duplicado; tarde o temprano uno cambiará y el otro no. Mejor `computed`
+      - Ninguno, es la forma recomendada
+      - Los signals no pueden guardar números
+    answer: 0
+    explanation: 'El número de tareas se puede calcular a partir de la lista. Con `computed(() => this.tareas().length)` hay una sola fuente de verdad.'

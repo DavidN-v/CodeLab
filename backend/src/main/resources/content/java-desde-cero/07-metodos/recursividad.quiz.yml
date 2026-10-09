@@ -1,0 +1,35 @@
+questions:
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      public class Main {
+          static int suma(int n) {
+              if (n == 0) {
+                  return 0;
+              }
+              return n + suma(n - 1);
+          }
+
+          public static void main(String[] args) {
+              System.out.println(suma(4));
+          }
+      }
+    answer: |
+      10
+    explanation: '`suma(4)` = 4 + `suma(3)` = 4 + 3 + `suma(2)` = … = 4 + 3 + 2 + 1 + 0 = 10. El caso base `n == 0` devuelve 0 y detiene la cadena de llamadas.'
+  - type: choice
+    prompt: ¿Qué pasa si un método recursivo no tiene caso base?
+    options:
+      - Se llama sin fin hasta que la pila se llena y salta `StackOverflowError`
+      - Java detecta el problema y no deja compilar el programa
+      - Devuelve 0 automáticamente al cabo de un rato
+    answer: 0
+    explanation: 'El compilador no lo detecta. Cada llamada ocupa un hueco en la pila de llamadas; sin nada que la detenga, la pila se agota y el programa falla con `StackOverflowError`.'
+  - type: choice
+    prompt: ¿Cuál de estos casos recursivos llega seguro al caso base `n <= 1` si empiezas con `n = 5`?
+    options:
+      - '`return n * f(n - 1);`'
+      - '`return n * f(n + 1);`'
+      - '`return n * f(n);`'
+    answer: 0
+    explanation: 'Cada llamada debe acercarse al caso base. Con `n - 1` se pasa por 4, 3, 2, 1 y para. Con `n + 1` se aleja y con `n` no avanza: ambos acaban en `StackOverflowError`.'

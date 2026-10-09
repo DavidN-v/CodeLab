@@ -1,0 +1,38 @@
+questions:
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      import java.util.List;
+      import java.util.Map;
+      import java.util.TreeMap;
+      import java.util.stream.Collectors;
+
+      public class Main {
+          public static void main(String[] args) {
+              List<String> palabras = List.of("ola", "sol", "mar", "oso", "luz");
+              Map<Character, Long> porInicial = palabras.stream()
+                  .collect(Collectors.groupingBy(p -> p.charAt(0), TreeMap::new, Collectors.counting()));
+              System.out.println(porInicial);
+          }
+      }
+    answer: |
+      {l=1, m=1, o=2, s=1}
+    explanation: '`groupingBy` hace un montón por cada primera letra y `counting()` cuenta cuántas palabras hay en cada uno. `TreeMap::new` ordena las claves alfabéticamente: `l`, `m`, `o` y `s`.'
+  - type: choice
+    prompt: '¿Qué imprime `System.out.println(List.of(1, 2, 3, 4).stream().reduce(0, (a, b) -> a + b));`?'
+    options:
+      - '10'
+      - '0'
+      - '24'
+      - '[1, 2, 3, 4]'
+    answer: 0
+    explanation: '`reduce` empieza en 0 y va sumando cada elemento: 0+1+2+3+4 = 10. Daría 24 si la operación fuese multiplicar con valor inicial 1, y 0 si multiplicaras empezando en 0.'
+  - type: choice
+    prompt: '¿Qué collector une varios textos en uno solo separado por comas?'
+    options:
+      - '`Collectors.joining(", ")`'
+      - '`Collectors.toList()`'
+      - '`Collectors.counting()`'
+      - '`Collectors.toSet()`'
+    answer: 0
+    explanation: '`joining` concatena los textos poniendo el separador entre ellos. `toList` y `toSet` devuelven colecciones, no un texto, y `counting` solo cuenta.'

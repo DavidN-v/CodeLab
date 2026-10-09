@@ -1,0 +1,49 @@
+title: Una tarjeta que solo presenta
+summary: Completa un componente de presentación con input.required y output.
+difficulty: EASY
+kind: fill
+statement: |
+  `TarjetaProducto` es un componente de presentación: recibe el producto desde fuera (es **obligatorio**) y, al pulsar el botón, **avisa** a su padre emitiendo el producto. No inyecta ningún servicio.
+
+  Completa los huecos.
+starter: |
+  import { Component, input, output } from '@angular/core';
+  import { Producto } from '../data/producto';
+
+  @Component({
+    selector: 'app-tarjeta-producto',
+    template: `
+      <h3>{{ producto().nombre }}</h3>
+      <button (click)="anadir.{{?}}(producto())">Añadir al carrito</button>
+    `,
+  })
+  export class TarjetaProducto {
+    readonly producto = input.{{?}}<Producto>();
+    readonly anadir = {{?}}<Producto>();
+  }
+solution: |
+  import { Component, input, output } from '@angular/core';
+  import { Producto } from '../data/producto';
+
+  @Component({
+    selector: 'app-tarjeta-producto',
+    template: `
+      <h3>{{ producto().nombre }}</h3>
+      <button (click)="anadir.emit(producto())">Añadir al carrito</button>
+    `,
+  })
+  export class TarjetaProducto {
+    readonly producto = input.required<Producto>();
+    readonly anadir = output<Producto>();
+  }
+answers:
+  - emit
+  - required
+  - output
+hints:
+  - 'La idea: los datos entran por un input y los avisos salen por un output. El componente no decide qué pasa con el carrito.'
+  - 'Qué usar: `input.required<T>()` para un input obligatorio, `output<T>()` para declarar el aviso y su método `emit(valor)` para lanzarlo.'
+  - 'El plan: en la plantilla, `anadir.emit(producto())`; en la clase, `input.required<Producto>()` y `output<Producto>()`.'
+tests:
+  - output: "Taza de cerámica [Añadir al carrito] → el padre recibe el producto en (anadir)"
+    sample: true

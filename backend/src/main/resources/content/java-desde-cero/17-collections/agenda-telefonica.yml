@@ -1,0 +1,106 @@
+title: Agenda telefónica
+summary: Un Map ordenado con altas, bajas, búsquedas y listados.
+difficulty: MEDIUM
+statement: |
+  Implementa una agenda con un `TreeMap<String, String>` de nombre a teléfono. Órdenes, una por línea:
+
+  - `alta <nombre> <telefono>`: añade o actualiza. Escribe `Añadido` o `Actualizado`.
+  - `baja <nombre>`: escribe `Eliminado` o `No existe`.
+  - `buscar <nombre>`: escribe el teléfono o `No existe`.
+  - `prefijo <texto>`: escribe, en orden alfabético, los contactos cuyo nombre empieza por ese texto con el formato `<nombre>: <teléfono>`, o `Sin resultados`.
+  - `listar`: escribe todos los contactos en orden alfabético con el mismo formato, o `Agenda vacía`.
+
+  Los nombres son una sola palabra y se comparan tal cual (distinguiendo mayúsculas).
+starter: |
+  import java.util.Map;
+  import java.util.Scanner;
+  import java.util.TreeMap;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          Map<String, String> agenda = new TreeMap<>();
+          while (entrada.hasNext()) {
+              String orden = entrada.next();
+
+          }
+      }
+  }
+solution: |
+  import java.util.Map;
+  import java.util.Scanner;
+  import java.util.TreeMap;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          Map<String, String> agenda = new TreeMap<>();
+          while (entrada.hasNext()) {
+              String orden = entrada.next();
+              switch (orden) {
+                  case "alta" -> {
+                      String nombre = entrada.next();
+                      String telefono = entrada.next();
+                      System.out.println(agenda.put(nombre, telefono) == null ? "Añadido" : "Actualizado");
+                  }
+                  case "baja" -> System.out.println(agenda.remove(entrada.next()) == null ? "No existe" : "Eliminado");
+                  case "buscar" -> System.out.println(agenda.getOrDefault(entrada.next(), "No existe"));
+                  case "prefijo" -> {
+                      String prefijo = entrada.next();
+                      boolean alguno = false;
+                      for (Map.Entry<String, String> contacto : agenda.entrySet()) {
+                          if (contacto.getKey().startsWith(prefijo)) {
+                              System.out.println(contacto.getKey() + ": " + contacto.getValue());
+                              alguno = true;
+                          }
+                      }
+                      if (!alguno) {
+                          System.out.println("Sin resultados");
+                      }
+                  }
+                  case "listar" -> {
+                      if (agenda.isEmpty()) {
+                          System.out.println("Agenda vacía");
+                      }
+                      agenda.forEach((nombre, telefono) -> System.out.println(nombre + ": " + telefono));
+                  }
+                  default -> { }
+              }
+          }
+      }
+  }
+hints:
+  - 'La idea: la agenda es un diccionario de nombre a teléfono; cada orden consulta o cambia ese diccionario.'
+  - 'Qué usar: un `TreeMap`, que ya recorre los nombres en orden alfabético. `put` devuelve el valor anterior (o `null` si la clave era nueva) y `remove` devuelve el valor eliminado (o `null`); `getOrDefault` sirve para `buscar` y `startsWith` para `prefijo`.'
+  - 'El plan: un `switch` sobre la orden. En `alta`, `agenda.put(nombre, telefono) == null ? "Añadido" : "Actualizado"`. En `prefijo`, recorre `entrySet()` y usa una variable `boolean alguno` para escribir `Sin resultados` al final si no salió ninguno. En `listar`, comprueba `isEmpty()` antes de recorrer.'
+tests:
+  - input: |
+      alta Ada 600111222
+      alta Alan 600333444
+      alta Grace 611000000
+      alta Ada 699999999
+      buscar Ada
+      prefijo Al
+      baja Linus
+      baja Grace
+      listar
+    output: |
+      Añadido
+      Añadido
+      Añadido
+      Actualizado
+      699999999
+      Alan: 600333444
+      No existe
+      Eliminado
+      Ada: 699999999
+      Alan: 600333444
+    sample: true
+  - input: |
+      listar
+      buscar Nadie
+      prefijo Z
+    output: |
+      Agenda vacía
+      No existe
+      Sin resultados

@@ -1,0 +1,40 @@
+@if (enabled() === true) {
+  <section class="tutor" aria-label="Tutor">
+    @if (heading()) {
+      <h2 class="tutor__heading">{{ heading() }}</h2>
+    }
+    <div class="tutor__ask">
+      @if (withQuestion()) {
+        <input
+          class="tutor__question"
+          type="text"
+          maxlength="500"
+          placeholder="¿Qué no te ha quedado claro? (opcional)"
+          [value]="question()"
+          (input)="onQuestion($event)"
+          (keydown.enter)="request()"
+        />
+      }
+      <button
+        type="button"
+        class="button button--secondary button--small"
+        [disabled]="loading()"
+        (click)="request()"
+      >
+        <span aria-hidden="true">✦</span> {{ loading() ? 'El tutor está pensando…' : label() }}
+      </button>
+    </div>
+    @if (hint() && !answer()) {
+      <p class="tutor__hint">{{ hint() }}</p>
+    }
+    @if (error(); as message) {
+      <p class="tutor__error" role="alert">⚠ {{ message }}</p>
+    }
+    @if (answer(); as text) {
+      <div class="tutor__answer" aria-live="polite">
+        <p class="tutor__by">✦ Tutor</p>
+        <app-markdown [content]="text" />
+      </div>
+    }
+  </section>
+}

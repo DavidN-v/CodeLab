@@ -1,0 +1,30 @@
+title: ¿Cuándo sale la petición?
+summary: Predice el orden de la consola con observables fríos de HttpClient.
+difficulty: EASY
+kind: predict
+statement: |
+  Este método prepara dos peticiones y se suscribe a una de ellas. El servidor responde a `GET /api/tareas` con **2 tareas**.
+
+  ¿Qué aparece en la consola? Escribe **una línea por mensaje**, en orden.
+starter: |
+  // fragmento de un componente con: private readonly http = inject(HttpClient);
+  probar() {
+    console.log('Inicio');
+    const crear$ = this.http
+      .post<Tarea>('/api/tareas', { titulo: 'Pan' })
+      .pipe(tap(() => console.log('Creada')));
+    const tareas$ = this.http.get<Tarea[]>('/api/tareas');
+    console.log('Preparadas');
+    tareas$.subscribe((t) => console.log('Tareas: ' + t.length));
+    console.log('Fin');
+  }
+hints:
+  - 'La idea: un observable de `HttpClient` es una receta; solo se cocina cuando alguien se suscribe. Y la respuesta del servidor tarda.'
+  - 'Qué usar: busca qué observables tienen `subscribe` y cuáles no. Recuerda que JavaScript no espera a la red: el código que va después de `subscribe` se ejecuta antes que la respuesta.'
+  - 'El plan: los `console.log` directos salen en orden; el de `crear$` nunca sale porque nadie se suscribe; el de `tareas$` sale el último, cuando llega la respuesta.'
+tests:
+  - output: |
+      Inicio
+      Preparadas
+      Fin
+      Tareas: 2

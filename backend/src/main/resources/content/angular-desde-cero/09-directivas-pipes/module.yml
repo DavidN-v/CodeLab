@@ -1,0 +1,28 @@
+lessons:
+  - slug: que-es-una-directiva
+    title: ¿Qué es una directiva?
+    summary: Componentes, directivas de atributo y estructurales; NgClass y NgStyle frente a [class] y [style].
+    minutes: 7
+  - slug: directivas-propias
+    title: Crear tu propia directiva
+    summary: ng generate directive, la propiedad host, entradas con alias y ElementRef con cuidado.
+    minutes: 9
+  - slug: composicion-de-directivas
+    title: Componer directivas con hostDirectives
+    summary: Directivas de serie en un componente y cómo exponer sus entradas.
+    minutes: 7
+  - slug: pipes-incluidos
+    title: Los pipes de Angular
+    summary: Transformar valores para mostrarlos con date, currency, number, percent, json, keyvalue y LOCALE_ID.
+    minutes: 9
+  - slug: pipes-propios
+    title: Crear tus propios pipes
+    summary: ng generate pipe, transform con parámetros y pipes puros frente a impuros.
+    minutes: 8
+exercises:
+  - ng-predice-pipes-pedido
+  - ng-clase-tarea-hecha
+  - ng-directiva-subrayar
+  - ng-pipe-plural
+  - ng-tarjeta-host-directives
+  - ng-predice-pipe-estrellas

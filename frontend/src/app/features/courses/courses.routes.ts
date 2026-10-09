@@ -1,21 +1,31 @@
 import { Routes } from '@angular/router';
 
-import { placeholderRoute } from '../../shared/components/page-placeholder/placeholder-route';
-
 /** Mounted at /languages. */
 export const COURSES_ROUTES: Routes = [
-  placeholderRoute({
+  {
     path: '',
-    heading: 'Lenguajes',
-    description:
-      'El catálogo completo de lenguajes y tecnologías, con el curso y el recorrido de módulos de cada uno.',
-    phase: 2,
-  }),
-  placeholderRoute({
+    title: 'Cursos',
+    loadComponent: () =>
+      import('./pages/languages-page/languages-page.component').then(
+        (m) => m.LanguagesPageComponent,
+      ),
+  },
+  {
     path: ':languageSlug',
-    heading: 'Curso',
-    description:
-      'La portada del lenguaje: tu progreso, el módulo actual, la próxima lección y el índice completo de módulos.',
-    phase: 2,
-  }),
+    title: 'Curso',
+    loadComponent: () =>
+      import('./pages/course-page/course-page.component').then((m) => m.CoursePageComponent),
+  },
+  {
+    path: ':languageSlug/glossary',
+    title: 'Glosario',
+    loadComponent: () =>
+      import('./pages/glossary-page/glossary-page.component').then((m) => m.GlossaryPageComponent),
+  },
+  {
+    path: ':languageSlug/modules/:moduleSlug',
+    title: 'Módulo',
+    loadComponent: () =>
+      import('./pages/module-page/module-page.component').then((m) => m.ModulePageComponent),
+  },
 ];

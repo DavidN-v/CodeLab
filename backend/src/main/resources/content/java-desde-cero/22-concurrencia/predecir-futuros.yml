@@ -1,0 +1,36 @@
+title: ¿Qué devuelven los futuros?
+summary: Predice la salida de un programa con un ejecutor, Future y CompletableFuture.
+difficulty: EASY
+kind: predict
+statement: |
+  Lee el programa con calma y escribe **exactamente** lo que imprime.
+
+  Aunque hay varias tareas en paralelo, la salida es siempre la misma: fíjate en **cuándo** se llama a `get()` y a `join()`, porque es ahí donde `main` espera cada resultado.
+starter: |
+  import java.util.concurrent.CompletableFuture;
+  import java.util.concurrent.ExecutorService;
+  import java.util.concurrent.Executors;
+  import java.util.concurrent.Future;
+
+  public class Main {
+      public static void main(String[] args) throws Exception {
+          try (ExecutorService ejecutor = Executors.newFixedThreadPool(2)) {
+              Future<String> saludo = ejecutor.submit(() -> "hola".toUpperCase());
+              Future<Integer> letras = ejecutor.submit(() -> "concurrencia".length());
+              System.out.println(letras.get());
+              System.out.println(saludo.get());
+          }
+          CompletableFuture<Integer> doble = CompletableFuture.supplyAsync(() -> 21)
+              .thenApply(n -> n * 2);
+          System.out.println("Resultado: " + doble.join());
+      }
+  }
+hints:
+  - 'La idea: el orden de la salida lo marcan los `println` de `main`, no el orden en que terminan las tareas.'
+  - 'Qué usar: `get()` y `join()` esperan a que su tarea acabe y devuelven el valor. Calcula cada valor por separado.'
+  - 'El plan: primero se imprime `letras` (cuántas letras tiene «concurrencia»), después `saludo` en mayúsculas y por último 21 multiplicado por 2.'
+tests:
+  - output: |
+      12
+      HOLA
+      Resultado: 42

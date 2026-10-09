@@ -7,18 +7,22 @@ export interface LearningStep {
 export const LEARNING_STEPS: readonly LearningStep[] = [
   {
     label: 'Aprende',
-    description: 'Cada concepto explica qué es, por qué existe y cuándo se usa, con ejemplos reales.',
+    description:
+      'Lecciones cortas, con comparaciones de la vida diaria, diagramas y un quiz al final para comprobar que lo has entendido.',
   },
   {
     label: 'Practica',
-    description: 'Modifica los ejemplos y resuelve ejercicios en un editor de verdad, no en un formulario.',
+    description:
+      'Ejecuta y cambia los ejemplos dentro de la lección. Ordena líneas, completa huecos, adivina la salida o escribe el programa entero.',
   },
   {
     label: 'Ejecuta',
-    description: 'Tu código se compila y corre en un entorno aislado. Ves la salida y los errores tal cual.',
+    description:
+      'Mira tu programa ejecutarse paso a paso. Los errores aparecen explicados en español, y el tutor te da pistas sin darte la solución.',
   },
   {
     label: 'Domina',
-    description: 'Supera el desafío y la evaluación del módulo para desbloquear el siguiente.',
+    description:
+      'Gana experiencia, cumple tu meta diaria, mantén la racha y repasa lo aprendido justo cuando empieza a olvidarse.',
   },
 ];

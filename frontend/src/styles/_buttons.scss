@@ -41,3 +41,26 @@
     background-color: var(--color-surface);
   }
 }
+
+.button--ghost {
+  background-color: transparent;
+  color: var(--color-text-muted);
+
+  &:hover {
+    background-color: var(--color-surface);
+    color: var(--color-text);
+  }
+}
+
+.button--small {
+  min-height: 2rem;
+  padding: 0 var(--space-3);
+  font-size: var(--text-xs);
+}
+
+.button:disabled,
+.button[aria-disabled='true'] {
+  opacity: 0.55;
+  cursor: not-allowed;
+  pointer-events: none;
+}

@@ -1,0 +1,75 @@
+title: Enlaza el producto agotado
+summary: Completa los enlaces de propiedad, clase y estilo de una tarjeta de producto.
+difficulty: EASY
+kind: fill
+statement: |
+  La tarjeta de un producto tiene que reaccionar a los datos de su clase:
+
+  - La imagen muestra el archivo que hay en la propiedad `foto`.
+  - El título lleva la clase CSS `tachado` cuando `agotado` es verdadero.
+  - La barra dorada mide `valoracion * 20` **por ciento** de ancho.
+  - El botón **Comprar** está desactivado cuando `agotado` es verdadero.
+
+  Completa los huecos con **enlaces de propiedad** (corchetes). Con los datos de la clase, el título sale tachado, la barra mide 80 % y el botón no se puede pulsar.
+starter: |
+  // src/app/producto/producto.ts
+  import { Component } from '@angular/core';
+
+  @Component({
+    selector: 'app-producto',
+    template: `
+      <img {{?}}="foto" alt="Foto del producto" />
+      <h2 [class.{{?}}]="agotado">{{ nombre }}</h2>
+      <div class="barra" [style.width.{{?}}]="valoracion * 20"></div>
+      <button {{?}}="agotado">Comprar</button>
+    `,
+    styles: `
+      .tachado { text-decoration: line-through; }
+      .barra { height: 6px; background: gold; }
+    `,
+  })
+  export class Producto {
+    protected readonly nombre = 'Taza azul';
+    protected readonly foto = 'taza.png';
+    protected readonly agotado = true;
+    protected readonly valoracion = 4;
+  }
+answers:
+  - '[src]'
+  - tachado
+  - '%'
+  - '[disabled]'
+solution: |
+  // src/app/producto/producto.ts
+  import { Component } from '@angular/core';
+
+  @Component({
+    selector: 'app-producto',
+    template: `
+      <img [src]="foto" alt="Foto del producto" />
+      <h2 [class.tachado]="agotado">{{ nombre }}</h2>
+      <div class="barra" [style.width.%]="valoracion * 20"></div>
+      <button [disabled]="agotado">Comprar</button>
+    `,
+    styles: `
+      .tachado { text-decoration: line-through; }
+      .barra { height: 6px; background: gold; }
+    `,
+  })
+  export class Producto {
+    protected readonly nombre = 'Taza azul';
+    protected readonly foto = 'taza.png';
+    protected readonly agotado = true;
+    protected readonly valoracion = 4;
+  }
+hints:
+  - 'La idea: cada hueco conecta un «mando» del elemento (su imagen, una clase, su ancho, si está desactivado) con un dato de la clase.'
+  - 'Qué usar: `[propiedad]` para `src` y `disabled`; en `[class.nombre]` el nombre es la clase CSS; en `[style.width.unidad]` la unidad va al final.'
+  - 'El plan: imagen → `[src]`; clase → el nombre que aparece en `styles`; unidad de porcentaje → `%`; botón → `[disabled]`.'
+tests:
+  - output: |
+      <img alt="Foto del producto" src="taza.png">
+      <h2 class="tachado">Taza azul</h2>
+      <div class="barra" style="width: 80%;"></div>
+      <button disabled="">Comprar</button>
+    sample: true

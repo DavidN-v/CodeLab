@@ -1,0 +1,33 @@
+questions:
+  - type: choice
+    prompt: ¿Qué tipo usarías para guardar el precio de un café, como `1.80`?
+    options:
+      - '`double`'
+      - '`int`'
+      - '`char`'
+      - '`boolean`'
+    answer: 0
+    explanation: 'Un número con decimales necesita un tipo decimal, y el habitual es `double`. `int` solo guarda enteros, `char` un carácter y `boolean` solo `true` o `false`.'
+  - type: choice
+    prompt: ¿Cuál de estas líneas NO compila?
+    options:
+      - '`char letra = "J";`'
+      - '`char letra = ''J'';`'
+      - '`long grande = 9000000000L;`'
+      - '`boolean activo = false;`'
+    answer: 0
+    explanation: '`"J"` con comillas dobles es un `String`, no un `char`. Un `char` se escribe con comillas simples: `''J''`. Las otras dos líneas son correctas (la `L` marca el número como `long`).'
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              char letra = 'A';
+              System.out.println((int) letra);
+              System.out.println((char) (letra + 1));
+          }
+      }
+    answer: |
+      65
+      B
+    explanation: 'Un `char` es en el fondo un número: el código de `''A''` es 65. Si le sumas 1 obtienes 66, que convertido de nuevo a `char` es `''B''`.'

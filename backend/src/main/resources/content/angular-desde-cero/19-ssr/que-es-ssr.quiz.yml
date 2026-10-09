@@ -1,0 +1,25 @@
+questions:
+  - type: choice
+    prompt: ¿Qué recibe el navegador en la primera respuesta cuando una ruta usa SSR?
+    options:
+      - El HTML completo de la página, ya generado por Angular en el servidor
+      - Un `index.html` con un `<app-root>` vacío y el JavaScript que lo rellena
+      - Solo el archivo `main.js`, sin HTML
+    answer: 0
+    explanation: 'Con SSR el servidor ejecuta Angular, genera el HTML y lo envía relleno. El `<app-root>` vacío es lo que llega con CSR, el renderizado en el cliente de siempre.'
+  - type: choice
+    prompt: Tienes una página «Quiénes somos» que es igual para todos los visitantes y casi nunca cambia. ¿Qué forma de renderizarla encaja mejor?
+    options:
+      - SSG (prerender) durante `ng build`
+      - SSR en cada petición
+      - CSR, para no necesitar servidor
+    answer: 0
+    explanation: 'Si el HTML es igual para todos, se puede generar una sola vez al compilar y servir como archivo estático: es lo más rápido y no hace trabajar al servidor. CSR la dejaría vacía para los buscadores.'
+  - type: choice
+    prompt: ¿Cuál es un coste real de usar SSR?
+    options:
+      - Tu código también se ejecuta en un servidor Node, donde no existen `window` ni `localStorage`
+      - El navegador ya no descarga JavaScript
+      - Los botones dejan de funcionar
+    answer: 0
+    explanation: 'El JavaScript se sigue descargando (lo necesita la hidratación) y los botones funcionan después de hidratar. Lo que cambia es que tu código corre en dos sitios y debe funcionar también en el servidor.'

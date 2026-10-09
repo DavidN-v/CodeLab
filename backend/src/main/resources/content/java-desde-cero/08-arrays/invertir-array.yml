@@ -1,0 +1,51 @@
+title: Invertir una lista
+summary: Lee n números y escríbelos en orden inverso.
+difficulty: EASY
+statement: |
+  La entrada empieza con un entero `n` seguido de `n` enteros. Escríbelos en orden inverso, separados por un espacio, en una sola línea.
+
+  **Ejemplo:** `5  1 2 3 4 5` → `5 4 3 2 1`.
+starter: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int n = entrada.nextInt();
+          int[] numeros = new int[n];
+
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int n = entrada.nextInt();
+          int[] numeros = new int[n];
+          for (int i = 0; i < n; i++) {
+              numeros[i] = entrada.nextInt();
+          }
+          StringBuilder salida = new StringBuilder();
+          for (int i = n - 1; i >= 0; i--) {
+              salida.append(numeros[i]);
+              if (i > 0) {
+                  salida.append(' ');
+              }
+          }
+          System.out.println(salida);
+      }
+  }
+hints:
+  - 'La idea: primero guardas todos los números en las taquillas del array y después los vas sacando empezando por la última.'
+  - 'Qué usar: un bucle `for` para llenar el array y otro `for` que cuente hacia atrás, de `n - 1` hasta `0` con `i--`.'
+  - 'El plan: llena `numeros[i]` con `entrada.nextInt()` → recorre `for (int i = n - 1; i >= 0; i--)` → escribe `numeros[i]` y añade un espacio solo si `i > 0`, para no dejar uno sobrante al final.'
+tests:
+  - input: "5\n1 2 3 4 5\n"
+    output: "5 4 3 2 1\n"
+    sample: true
+  - input: "1\n42\n"
+    output: "42\n"
+  - input: "4\n-1 0 7 7\n"
+    output: "7 7 0 -1\n"

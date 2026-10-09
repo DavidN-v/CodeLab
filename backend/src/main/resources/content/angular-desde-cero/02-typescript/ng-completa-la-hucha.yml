@@ -1,0 +1,78 @@
+title: La hucha
+summary: Completa una clase con propiedad privada, constructor y métodos, y crea un objeto.
+difficulty: MEDIUM
+kind: fill
+statement: |
+  Una hucha tiene dueña y un total de dinero. Nadie de fuera debe poder cambiar el total directamente (ni siquiera una clase que herede de `Hucha`): solo se puede meter dinero con `meter`.
+
+  Completa los huecos:
+
+  1. la palabra que declara una clase;
+  2. la palabra que hace que `total` solo se pueda usar dentro de esta clase;
+  3. el nombre del método especial que se ejecuta al crear el objeto;
+  4. la palabra que significa «este objeto»;
+  5. la palabra que crea un objeto a partir de la clase.
+
+  La consola debe mostrar:
+
+  ```text
+  Ada tiene 15 €
+  ```
+starter: |
+  {{?}} Hucha {
+    readonly duena: string;
+    {{?}} total = 0;
+
+    {{?}}(duena: string) {
+      this.duena = duena;
+    }
+
+    meter(cantidad: number): void {
+      {{?}}.total = this.total + cantidad;
+    }
+
+    verTotal(): number {
+      return this.total;
+    }
+  }
+
+  const hucha = {{?}} Hucha('Ada');
+  hucha.meter(5);
+  hucha.meter(10);
+  console.log(`${hucha.duena} tiene ${hucha.verTotal()} €`);
+answers:
+  - class
+  - private
+  - constructor
+  - this
+  - new
+solution: |
+  class Hucha {
+    readonly duena: string;
+    private total = 0;
+
+    constructor(duena: string) {
+      this.duena = duena;
+    }
+
+    meter(cantidad: number): void {
+      this.total = this.total + cantidad;
+    }
+
+    verTotal(): number {
+      return this.total;
+    }
+  }
+
+  const hucha = new Hucha('Ada');
+  hucha.meter(5);
+  hucha.meter(10);
+  console.log(`${hucha.duena} tiene ${hucha.verTotal()} €`);
+hints:
+  - 'La idea: es el mismo esqueleto que la clase `Cuenta` de la lección. Falta la palabra que abre la clase, la que protege el total, el método de arranque, la referencia al propio objeto y la que fabrica uno.'
+  - 'Qué usar: `class`, un modificador de acceso (de los tres, el más cerrado), `constructor`, `this` y `new`.'
+  - 'El plan: `protected` dejaría usar `total` a las clases hijas, así que el segundo hueco es `private`. El resto, en orden: class, constructor, this, new.'
+tests:
+  - output: |
+      Ada tiene 15 €
+    sample: true

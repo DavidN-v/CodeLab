@@ -1,0 +1,25 @@
+questions:
+- type: choice
+  prompt: ¿Qué contiene el `<body>` de `index.html` que envía el servidor?
+  options:
+  - Toda la página ya dibujada
+  - Solo la etiqueta vacía `<app-root></app-root>`
+  - Un formulario de acceso
+  answer: 1
+  explanation: El navegador recibe un HTML casi vacío y es Angular quien, una vez arrancado, pinta el contenido dentro de `<app-root>`.
+- type: choice
+  prompt: ¿Qué hay en `appConfig.providers`?
+  options:
+  - Las piezas globales que la app tendrá disponibles, como el router o la escucha de errores
+  - La lista de componentes que se pintan en la página
+  - Las librerías que npm debe descargar
+  answer: 0
+  explanation: 'Los providers preparan servicios y funciones para toda la app mediante la inyección de dependencias: `provideRouter(routes)` activa el router y `provideBrowserGlobalErrorListeners()` captura errores no gestionados.'
+- type: choice
+  prompt: ¿Qué hace `bootstrapApplication(App, appConfig)`?
+  options:
+  - Arranca la aplicación con `App` como raíz y `appConfig` como configuración
+  - Compila el proyecto para producción
+  - Instala las librerías de `package.json`
+  answer: 0
+  explanation: '*Bootstrap* significa arrancar. La función crea el inyector con los providers, crea `App` y la pinta en su elemento.'

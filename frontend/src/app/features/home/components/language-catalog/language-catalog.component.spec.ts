@@ -6,7 +6,18 @@ import { LoadState } from '../../../../core/models/load-state.model';
 import { LanguageCatalogComponent } from './language-catalog.component';
 
 function language(slug: string, active: boolean): Language {
-  return { id: slug.length, slug, name: slug, version: null, icon: null, tagline: '', description: null, active };
+  return {
+    id: slug.length,
+    slug,
+    name: slug,
+    version: null,
+    icon: null,
+    tagline: '',
+    description: null,
+    active,
+    category: 'LANGUAGE',
+    runnable: true,
+  };
 }
 
 describe('LanguageCatalogComponent', () => {

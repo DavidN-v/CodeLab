@@ -1,0 +1,46 @@
+title: Valoraciones con estrellas
+summary: Predice la salida de un pipe propio con parámetros, keyvalue y uppercase.
+difficulty: HARD
+kind: predict
+statement: |
+  Lee el pipe y el componente **sin ejecutarlos** y escribe el texto que se ve en la página, **una línea por cada `<p>`**, en el orden en que aparecen.
+
+  Recuerda: `Math.round` redondea al entero más cercano y, si el decimal es exactamente `.5`, hacia arriba.
+starter: |
+  // src/app/valoraciones.ts
+  import { Component, Pipe, PipeTransform } from '@angular/core';
+  import { KeyValuePipe, UpperCasePipe } from '@angular/common';
+
+  @Pipe({
+    name: 'estrellas',
+  })
+  export class EstrellasPipe implements PipeTransform {
+    transform(nota: number, maximo = 5, simbolo = '*'): string {
+      const llenas = Math.round(nota);
+      return simbolo.repeat(llenas) + '-'.repeat(maximo - llenas);
+    }
+  }
+
+  @Component({
+    selector: 'app-valoraciones',
+    imports: [EstrellasPipe, KeyValuePipe, UpperCasePipe],
+    template: `
+      @for (par of notas | keyvalue; track par.key) {
+        <p>{{ par.key | uppercase }} {{ par.value | estrellas }}</p>
+      }
+      <p>{{ 2.5 | estrellas: 3 : '#' }}</p>
+    `,
+  })
+  export class Valoraciones {
+    protected readonly notas = { teclado: 4.4, raton: 3.6, cable: 1 };
+  }
+hints:
+  - 'La idea: hay dos cosas que descifrar: en qué orden salen los productos y qué devuelve el pipe para cada nota.'
+  - 'Qué usar: `keyvalue` ordena por clave alfabéticamente. Sin parámetros, `estrellas` usa `maximo = 5` y `simbolo = ''*''`; con `: 3 : ''#''` los cambia.'
+  - 'El plan: el orden es cable, raton, teclado. Redondea cada nota (1, 4, 4), escribe tantos símbolos como el redondeo y rellena con guiones hasta el máximo. La última línea: 2.5 se redondea a 3 con máximo 3.'
+tests:
+  - output: |
+      CABLE *----
+      RATON ****-
+      TECLADO ****-
+      ###

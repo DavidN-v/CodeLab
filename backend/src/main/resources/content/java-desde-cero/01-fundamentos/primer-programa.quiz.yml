@@ -1,0 +1,34 @@
+questions:
+  - type: choice
+    prompt: ¿Qué es lo primero que ejecuta la JVM al arrancar tu programa?
+    options:
+      - El método `main`
+      - La primera línea del archivo, sea cual sea
+      - La clase que tenga el nombre más corto
+    answer: 0
+    explanation: '`main` es el punto de entrada: la JVM siempre empieza por ahí. Por eso su primera línea tiene que ser exactamente `public static void main(String[] args)`.'
+  - type: choice
+    prompt: ¿Qué le pasa a esta línea?
+    code: |
+      system.out.println("Hola");
+    options:
+      - '`system` debe escribirse `System`, con mayúscula'
+      - Le falta el punto y coma
+      - El texto debería ir entre comillas simples
+    answer: 0
+    explanation: 'Java distingue mayúsculas de minúsculas: `System` y `system` son nombres distintos. El punto y coma sí está, y los textos van entre comillas dobles.'
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              System.out.println("Tres");
+              System.out.println("Dos");
+              System.out.println("Uno");
+          }
+      }
+    answer: |
+      Tres
+      Dos
+      Uno
+    explanation: 'Las instrucciones de `main` se ejecutan en orden, de arriba abajo, y cada `println` escribe una línea nueva.'

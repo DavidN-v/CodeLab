@@ -1,0 +1,28 @@
+questions:
+  - type: choice
+    prompt: Un programa imprime dos líneas y después muestra `ArithmeticException`. ¿Qué ha pasado?
+    options:
+      - Compiló bien, empezó a ejecutarse y falló en una operación (por ejemplo, dividir entre cero)
+      - No llegó a compilar
+      - Se ejecutó entero y luego avisó del error
+    answer: 0
+    explanation: 'Una excepción ocurre mientras el programa corre. Todo lo anterior se ejecuta (por eso salen las dos líneas) y en el punto del error el programa se detiene.'
+  - type: output
+    prompt: ¿Qué imprime este programa? (No hay ningún error.)
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              System.out.println("Suma: " + 2 + 2);
+          }
+      }
+    answer: |
+      Suma: 22
+    explanation: 'No hay excepción, pero es un error lógico: `"Suma: " + 2` es ya un texto y el segundo 2 se pega detrás. Para sumar habría que escribir `(2 + 2)`.'
+  - type: choice
+    prompt: 'En `at Main.main(Main.java:6)`, ¿qué indica el `6`?'
+    options:
+      - La línea donde ocurrió el error
+      - El número de errores
+      - Cuántas líneas se llegaron a imprimir
+    answer: 0
+    explanation: 'Las líneas `at ...` son la traza: dicen dónde saltó la excepción. `Main.java:6` es el archivo y la línea, igual que en los errores de compilación.'

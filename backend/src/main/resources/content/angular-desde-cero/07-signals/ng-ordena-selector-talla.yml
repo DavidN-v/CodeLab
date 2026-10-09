@@ -1,0 +1,71 @@
+title: Ordena el selector de talla
+summary: Ordena la clase de un componente que usa signal y linkedSignal.
+difficulty: MEDIUM
+kind: parsons
+statement: |
+  Un selector de talla muestra un botón por talla. La talla elegida empieza siendo la primera de la lista y la persona puede cambiarla. Si la tienda cambia la lista de tallas, la elegida vuelve a ser la primera de la lista nueva.
+
+  Ordena las líneas de la clase en este orden: primero los dos signals (la lista y la talla elegida), después el método `elegir` y por último `soloGrandes`. Cuidado: alguna línea sobra.
+
+  Si eliges **M** y luego pulsas **Ver tallas grandes**, se ve lo que indica el resultado esperado.
+starter: |
+  // src/app/selector-talla/selector-talla.ts
+  import { Component, linkedSignal, signal } from '@angular/core';
+
+  @Component({
+    selector: 'app-selector-talla',
+    template: `
+      @for (t of tallas(); track t) {
+        <button (click)="elegir(t)">{{ t }}</button>
+      }
+      <p>Talla elegida: {{ talla() }}</p>
+      <button (click)="soloGrandes()">Ver tallas grandes</button>
+    `,
+  })
+  export class SelectorTalla {
+  {{lines}}
+    }
+  }
+solution: |
+  // src/app/selector-talla/selector-talla.ts
+  import { Component, linkedSignal, signal } from '@angular/core';
+
+  @Component({
+    selector: 'app-selector-talla',
+    template: `
+      @for (t of tallas(); track t) {
+        <button (click)="elegir(t)">{{ t }}</button>
+      }
+      <p>Talla elegida: {{ talla() }}</p>
+      <button (click)="soloGrandes()">Ver tallas grandes</button>
+    `,
+  })
+  export class SelectorTalla {
+    protected readonly tallas = signal(['S', 'M', 'L']);
+    protected readonly talla = linkedSignal(() => this.tallas()[0]);
+    protected elegir(t: string): void {
+      this.talla.set(t);
+    }
+    protected soloGrandes(): void {
+      this.tallas.set(['XL', 'XXL']);
+    }
+  }
+lines:
+  - "  protected readonly tallas = signal(['S', 'M', 'L']);"
+  - '  protected readonly talla = linkedSignal(() => this.tallas()[0]);'
+  - '  protected elegir(t: string): void {'
+  - '    this.talla.set(t);'
+  - '  }'
+  - '  protected soloGrandes(): void {'
+  - "    this.tallas.set(['XL', 'XXL']);"
+distractors:
+  - '  protected readonly talla = computed(() => this.tallas()[0]);'
+  - '    this.talla = t;'
+hints:
+  - 'La idea: la talla elegida depende de la lista (se reinicia cuando cambia) pero también se puede escribir.'
+  - 'Qué usar: `signal` para la lista; `linkedSignal` para la talla (un `computed` no tiene `set`). Para cambiar un signal, `set`, nunca `=`.'
+  - 'El plan: lista → talla (que lee la lista, así que va después) → `elegir` con su `set` y su llave → `soloGrandes` con su `set`. La última llave ya está en el esqueleto.'
+tests:
+  - output: |
+      Talla elegida: XL
+    sample: true

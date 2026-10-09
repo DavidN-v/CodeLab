@@ -1,0 +1,19 @@
+lessons:
+  - slug: que-es-un-stream
+    title: ¿Qué es un stream?
+    summary: Procesar colecciones describiendo qué quieres, no cómo recorrerlas.
+    minutes: 6
+  - slug: operaciones-intermedias
+    title: filter, map, sorted y compañía
+    summary: Las operaciones que transforman el flujo.
+    minutes: 7
+  - slug: recolectar-resultados
+    title: Recolectar resultados
+    summary: collect, groupingBy, reduce y los streams numéricos.
+    minutes: 7
+exercises:
+  - completar-tuberia
+  - aprobados-ordenados
+  - estadisticas-de-ventas
+  - agrupar-por-ciudad
+  - palabras-distintas-ordenadas

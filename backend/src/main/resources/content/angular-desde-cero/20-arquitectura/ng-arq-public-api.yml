@@ -1,0 +1,49 @@
+title: La puerta de entrada de una librería
+summary: Exporta un componente en public-api.ts e impórtalo desde la app por el nombre de la librería.
+difficulty: MEDIUM
+kind: fill
+statement: |
+  En el workspace has creado la librería `ui-kit` con `ng generate library ui-kit`. Dentro has escrito un componente `Boton` en `projects/ui-kit/src/lib/boton.ts`.
+
+  Completa los huecos para que la librería **exporte** el botón y para que la app lo **importe por el nombre de la librería** (gracias al alias que `ng generate library` añadió en `tsconfig.json`), no con una ruta relativa.
+starter: |
+  // projects/ui-kit/src/public-api.ts
+  export * from './lib/ui-kit';
+  {{?}} * from '{{?}}';
+
+  // src/app/app.ts
+  import { Component } from '@angular/core';
+  import { Boton } from '{{?}}';
+
+  @Component({
+    selector: 'app-root',
+    imports: [Boton],
+    template: `<lib-boton>Comprar</lib-boton>`,
+  })
+  export class App {}
+solution: |
+  // projects/ui-kit/src/public-api.ts
+  export * from './lib/ui-kit';
+  export * from './lib/boton';
+
+  // src/app/app.ts
+  import { Component } from '@angular/core';
+  import { Boton } from 'ui-kit';
+
+  @Component({
+    selector: 'app-root',
+    imports: [Boton],
+    template: `<lib-boton>Comprar</lib-boton>`,
+  })
+  export class App {}
+answers:
+  - export
+  - ./lib/boton
+  - ui-kit
+hints:
+  - 'La idea: fuera de la librería solo se ve lo que `public-api.ts` reexporta, y la app importa la librería como si viniera de npm.'
+  - 'Qué usar: la misma forma que la línea de arriba (`export * from ''./lib/…''`) y, en la app, el nombre del alias de `tsconfig.json`.'
+  - 'El plan: `export * from ''./lib/boton'';` en `public-api.ts` e `import { Boton } from ''ui-kit'';` en la app.'
+tests:
+  - output: "[Comprar] (el botón de ui-kit, compilado con ng build ui-kit)"
+    sample: true

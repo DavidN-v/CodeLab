@@ -1,0 +1,52 @@
+title: De Celsius a Fahrenheit
+summary: Convierte una temperatura y muéstrala con un decimal.
+difficulty: EASY
+statement: |
+  Lee una temperatura en grados Celsius (puede tener decimales) y escribe su equivalente en Fahrenheit **con un decimal**, con este formato:
+
+  ```
+  <celsius> °C = <fahrenheit> °F
+  ```
+
+  donde ambos valores se muestran con un decimal. La fórmula es `F = C × 9 / 5 + 32`.
+
+  **Ejemplo:** con la entrada `25` la salida es `25.0 °C = 77.0 °F`.
+starter: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+
+      }
+  }
+solution: |
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          double celsius = entrada.nextDouble();
+          double fahrenheit = celsius * 9 / 5 + 32;
+          System.out.printf("%.1f °C = %.1f °F%n", celsius, fahrenheit);
+      }
+  }
+hints:
+  - 'La idea: lee la temperatura, aplica la fórmula y muestra los dos valores con un decimal.'
+  - 'Qué usar: `nextDouble()` para leer (admite decimales) y `printf` con `%.1f` para mostrar un decimal. `%n` añade el salto de línea.'
+  - 'El plan: `fahrenheit = celsius * 9 / 5 + 32;` y después `printf("%.1f °C = %.1f °F%n", celsius, fahrenheit)`.'
+tests:
+  - input: "25\n"
+    output: |
+      25.0 °C = 77.0 °F
+    sample: true
+  - input: "-40\n"
+    output: |
+      -40.0 °C = -40.0 °F
+    sample: true
+  - input: "36.6\n"
+    output: |
+      36.6 °C = 97.9 °F
+  - input: "0\n"
+    output: |
+      0.0 °C = 32.0 °F

@@ -1,0 +1,37 @@
+questions:
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int bateria = 15;
+              if (bateria < 20) {
+                  System.out.println("Batería baja");
+              } else {
+                  System.out.println("Batería bien");
+              }
+              System.out.println("Listo");
+          }
+      }
+    answer: |
+      Batería baja
+      Listo
+    explanation: '`15 < 20` es `true`, así que se ejecuta el bloque del `if` y se salta el `else`. La última línea está fuera del `if/else`, por eso se imprime siempre.'
+  - type: choice
+    prompt: 'En un `if (...) { ... } else { ... }`, ¿cuántas de las dos ramas se ejecutan?'
+    options:
+      - Exactamente una
+      - Las dos, primero el `if` y luego el `else`
+      - Ninguna si la condición es falsa
+      - Depende de la sangría
+    answer: 0
+    explanation: 'Si la condición es `true` se ejecuta el bloque del `if`; si es `false`, el del `else`. Nunca las dos y nunca ninguna. La sangría no cambia nada: lo deciden las llaves.'
+  - type: choice
+    prompt: 'Tienes `boolean llueve = true;`. ¿Cuál es la forma más clara de preguntar si **no** llueve?'
+    options:
+      - '`if (!llueve)`'
+      - '`if (llueve == true)`'
+      - '`if (llueve = false)`'
+      - '`if (not llueve)`'
+    answer: 0
+    explanation: 'Un `boolean` ya es una condición y `!` la invierte. `llueve == true` pregunta justo lo contrario, `llueve = false` asigna en vez de comparar, y `not` no existe en Java.'

@@ -1,0 +1,25 @@
+questions:
+- type: choice
+  prompt: ¿Qué configuración usa `ng build` si no le dices ninguna?
+  options:
+  - '`development`, porque es la más rápida'
+  - '`production`, porque es la `defaultConfiguration` del target `build`'
+  - Ninguna; hay que escribir siempre `--configuration`
+  answer: 1
+  explanation: 'En `angular.json`, el target `build` tiene `"defaultConfiguration": "production"`. El target `serve`, en cambio, usa `development` por defecto.'
+- type: choice
+  prompt: 'En `angular.json`, ¿qué indica `"browser": "src/main.ts"`?'
+  options:
+  - El punto de entrada desde el que el empaquetador sigue todos los imports
+  - El navegador en el que se abrirá la app
+  - El archivo HTML que se envía al navegador
+  answer: 0
+  explanation: El build empieza en `main.ts` y recorre cada `import` para reunir todo el código de la app. El HTML es `src/index.html`.
+- type: choice
+  prompt: '¿Qué hace el target `serve` con el target `build`?'
+  options:
+  - Lo reutiliza mediante `buildTarget` y sirve el resultado
+  - Lo ignora y compila por su cuenta con otro programa
+  - Lo ejecuta solo cuando se escribe `ng build`
+  answer: 0
+  explanation: '`buildTarget` se lee `proyecto:target:configuración`. Por eso `ng serve` compila igual que `ng build`, pero con la configuración `development` por defecto.'

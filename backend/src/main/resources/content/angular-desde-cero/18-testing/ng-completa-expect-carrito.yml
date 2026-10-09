@@ -1,0 +1,51 @@
+title: Tu primera prueba de un servicio
+summary: Completa describe, la inyección del servicio y la comprobación final.
+difficulty: EASY
+kind: fill
+statement: |
+  El servicio `Carrito` tiene un método `anadir(producto)` y un `computed` llamado `cantidad` con el número de productos. Completa la prueba:
+
+  1. La función de Vitest que **agrupa** pruebas bajo un nombre.
+  2. El método de `TestBed` que **entrega** una instancia del servicio.
+  3. El *matcher* que comprueba que un número es **exactamente** igual a otro.
+starter: |
+  // src/app/carrito.spec.ts
+  import { TestBed } from '@angular/core/testing';
+  import { Carrito } from './carrito';
+
+  {{?}}('Carrito', () => {
+    it('cuenta los productos que añades', () => {
+      const carrito = TestBed.{{?}}(Carrito);
+
+      carrito.anadir({ nombre: 'Libro', precio: 20 });
+      carrito.anadir({ nombre: 'Taza', precio: 8 });
+
+      expect(carrito.cantidad()).{{?}}(2);
+    });
+  });
+solution: |
+  // src/app/carrito.spec.ts
+  import { TestBed } from '@angular/core/testing';
+  import { Carrito } from './carrito';
+
+  describe('Carrito', () => {
+    it('cuenta los productos que añades', () => {
+      const carrito = TestBed.inject(Carrito);
+
+      carrito.anadir({ nombre: 'Libro', precio: 20 });
+      carrito.anadir({ nombre: 'Taza', precio: 8 });
+
+      expect(carrito.cantidad()).toBe(2);
+    });
+  });
+answers:
+  - describe
+  - inject
+  - toBe
+hints:
+  - 'La idea: una prueba tiene un grupo con nombre, una forma de conseguir el servicio y una comprobación al final.'
+  - 'Qué usar: la función global que va por fuera de los `it`; el método de `TestBed` que se llama igual que la función con la que los componentes piden servicios; el *matcher* de igualdad exacta (no `toEqual`, que es para objetos).'
+  - 'El plan: `describe`, `inject` y `toBe`.'
+tests:
+  - output: ' ✓ Carrito > cuenta los productos que añades'
+    sample: true

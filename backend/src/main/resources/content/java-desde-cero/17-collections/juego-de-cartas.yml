@@ -1,0 +1,235 @@
+title: Juego de cartas
+summary: Reparte una baraja entre jugadores con listas y cuenta los puntos con un Map.
+difficulty: HARD
+kind: project
+statement: |
+  Vas a programar un juego de cartas sencillo y sin azar: la baraja ya viene en un orden fijo, así que siempre sale lo mismo. Usarás una `List` para la mano de cada jugador y un `Map` para saber cuánto vale cada carta.
+
+  ## La entrada
+
+  - La primera línea es el número de jugadores (entre 2 y 6).
+  - La segunda línea son las cartas de la baraja, separadas por espacios, de la de arriba a la de abajo. Por ejemplo: `7C KD AS 10H`.
+
+  Cada carta es un **valor** seguido de un **palo**:
+
+  - Valores: `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `J`, `Q`, `K` y `A`.
+  - Palos: `C` (tréboles), `D` (diamantes), `H` (corazones) y `S` (picas).
+
+  Así, `10H` es el diez de corazones y `AS` el as de picas.
+
+  ## Paso 1: el valor de cada carta
+
+  Crea un `Map<String, Integer>` que asocie cada valor con sus puntos:
+
+  | Valor | Puntos |
+  | --- | --- |
+  | `2` a `10` | su número |
+  | `J`, `Q`, `K` | 10 |
+  | `A` | 11 |
+
+  ## Paso 2: descartar cartas no válidas
+
+  Una carta es válida si su **última letra** es uno de los cuatro palos y **lo que va delante** es una clave del mapa. Se distinguen mayúsculas: `7c` no es válida. Recorre la baraja en orden y, por cada carta no válida, escribe:
+
+  ```
+  Carta descartada: <carta>
+  ```
+
+  Las cartas descartadas no se reparten.
+
+  ## Paso 3: repartir
+
+  Crea una `List<String>` para cada jugador (por ejemplo, una `List<List<String>>`). Reparte las cartas válidas una a una, por turnos: la primera al jugador 1, la segunda al jugador 2… y cuando todos tienen una, vuelve a empezar por el jugador 1. Puede que unos jugadores acaben con más cartas que otros.
+
+  ## Paso 4: mostrar las manos
+
+  Para cada jugador, en orden, suma los puntos de sus cartas con el mapa y escribe:
+
+  ```
+  Jugador <n>: <sus cartas separadas por un espacio> (<puntos> puntos)
+  ```
+
+  Si un jugador no ha recibido ninguna carta, escribe `Jugador <n>: sin cartas (0 puntos)`.
+
+  ## Paso 5: el ganador
+
+  Gana quien tenga **más puntos**. Escribe:
+
+  ```
+  Gana el jugador <n> con <puntos> puntos
+  ```
+
+  **Regla de empate:** si varios jugadores comparten la puntuación más alta, no hay un único ganador. Escribe sus números en orden, separados por coma y espacio:
+
+  ```
+  Empate a <puntos> puntos entre los jugadores <n1>, <n2>
+  ```
+
+  ## Ejemplo completo
+
+  Con la entrada:
+
+  ```
+  2
+  AS 1C KD 9H QX 10C
+  ```
+
+  la salida es:
+
+  ```
+  Carta descartada: 1C
+  Carta descartada: QX
+  Jugador 1: AS 9H (20 puntos)
+  Jugador 2: KD 10C (20 puntos)
+  Empate a 20 puntos entre los jugadores 1, 2
+  ```
+starter: |
+  import java.util.ArrayList;
+  import java.util.HashMap;
+  import java.util.List;
+  import java.util.Map;
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int jugadores = Integer.parseInt(entrada.nextLine().strip());
+          String[] baraja = entrada.nextLine().strip().split("\\s+");
+
+          // Paso 1: el valor de cada carta.
+          Map<String, Integer> valores = new HashMap<>();
+
+          // Paso 2: descarta las cartas no válidas.
+
+          // Paso 3: reparte las válidas en una List por jugador.
+
+          // Paso 4: escribe cada mano con sus puntos.
+
+          // Paso 5: anuncia al ganador o el empate.
+      }
+  }
+solution: |
+  import java.util.ArrayList;
+  import java.util.HashMap;
+  import java.util.List;
+  import java.util.Map;
+  import java.util.Scanner;
+
+  public class Main {
+      static boolean esValida(String carta, Map<String, Integer> valores) {
+          if (carta.length() < 2) {
+              return false;
+          }
+          String palo = carta.substring(carta.length() - 1);
+          String valor = carta.substring(0, carta.length() - 1);
+          return "CDHS".contains(palo) && valores.containsKey(valor);
+      }
+
+      public static void main(String[] args) {
+          Scanner entrada = new Scanner(System.in);
+          int jugadores = Integer.parseInt(entrada.nextLine().strip());
+          String[] baraja = entrada.nextLine().strip().split("\\s+");
+
+          // Paso 1
+          Map<String, Integer> valores = new HashMap<>();
+          for (int numero = 2; numero <= 10; numero++) {
+              valores.put(String.valueOf(numero), numero);
+          }
+          valores.put("J", 10);
+          valores.put("Q", 10);
+          valores.put("K", 10);
+          valores.put("A", 11);
+
+          // Pasos 2 y 3
+          List<List<String>> manos = new ArrayList<>();
+          for (int i = 0; i < jugadores; i++) {
+              manos.add(new ArrayList<>());
+          }
+          int repartidas = 0;
+          for (String carta : baraja) {
+              if (esValida(carta, valores)) {
+                  manos.get(repartidas % jugadores).add(carta);
+                  repartidas++;
+              } else {
+                  System.out.println("Carta descartada: " + carta);
+              }
+          }
+
+          // Paso 4
+          List<Integer> puntos = new ArrayList<>();
+          int mejor = 0;
+          for (int i = 0; i < jugadores; i++) {
+              List<String> mano = manos.get(i);
+              int total = 0;
+              for (String carta : mano) {
+                  total += valores.get(carta.substring(0, carta.length() - 1));
+              }
+              puntos.add(total);
+              mejor = Math.max(mejor, total);
+              String cartas = mano.isEmpty() ? "sin cartas" : String.join(" ", mano);
+              System.out.println("Jugador " + (i + 1) + ": " + cartas + " (" + total + " puntos)");
+          }
+
+          // Paso 5
+          List<String> ganadores = new ArrayList<>();
+          for (int i = 0; i < jugadores; i++) {
+              if (puntos.get(i) == mejor) {
+                  ganadores.add(String.valueOf(i + 1));
+              }
+          }
+          if (ganadores.size() == 1) {
+              System.out.println("Gana el jugador " + ganadores.get(0) + " con " + mejor + " puntos");
+          } else {
+              System.out.println("Empate a " + mejor + " puntos entre los jugadores " + String.join(", ", ganadores));
+          }
+      }
+  }
+hints:
+  - 'La idea: es una cadena de pasos pequeños. Primero preparas la tabla de valores, luego separas las cartas buenas de las malas, las repartes por turnos, sumas cada mano y, por último, buscas la puntuación más alta y quién la tiene.'
+  - 'Qué usar: un `Map<String, Integer>` para los valores (`containsKey` para validar y `get` para sumar), `substring` para separar valor y palo, una `List<List<String>>` con una lista por jugador, el resto `%` para repartir por turnos y `String.join` para escribir las cartas.'
+  - 'El plan: valor = `carta.substring(0, carta.length() - 1)` y palo = la última letra. Lleva un contador `repartidas` de cartas válidas y da cada una a `manos.get(repartidas % jugadores)`. Guarda los puntos de cada jugador en una lista mientras escribes las manos y calcula el máximo. Después recorre esos puntos y junta en otra lista los números de los jugadores que tienen el máximo: si hay uno, gana; si hay más, es empate.'
+tests:
+  - input: |
+      3
+      7C KD AS 10H 2S QH 5D 9C 3H
+    output: |
+      Jugador 1: 7C 10H 5D (22 puntos)
+      Jugador 2: KD 2S 9C (21 puntos)
+      Jugador 3: AS QH 3H (24 puntos)
+      Gana el jugador 3 con 24 puntos
+    sample: true
+  - input: |
+      2
+      AS 1C KD 9H QX 10C
+    output: |
+      Carta descartada: 1C
+      Carta descartada: QX
+      Jugador 1: AS 9H (20 puntos)
+      Jugador 2: KD 10C (20 puntos)
+      Empate a 20 puntos entre los jugadores 1, 2
+  - input: |
+      4
+      2C 3D
+    output: |
+      Jugador 1: 2C (2 puntos)
+      Jugador 2: 3D (3 puntos)
+      Jugador 3: sin cartas (0 puntos)
+      Jugador 4: sin cartas (0 puntos)
+      Gana el jugador 2 con 3 puntos
+  - input: |
+      3
+      KC 7c QD JH 5S 5D 5H Z
+    output: |
+      Carta descartada: 7c
+      Carta descartada: Z
+      Jugador 1: KC 5S (15 puntos)
+      Jugador 2: QD 5D (15 puntos)
+      Jugador 3: JH 5H (15 puntos)
+      Empate a 15 puntos entre los jugadores 1, 2, 3
+  - input: |
+      2
+      AH AD AC 2S 3S
+    output: |
+      Jugador 1: AH AC 3S (25 puntos)
+      Jugador 2: AD 2S (13 puntos)
+      Gana el jugador 1 con 25 puntos

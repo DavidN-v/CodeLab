@@ -1,0 +1,68 @@
+title: Del Observable al signal
+summary: Completa un componente que usa toSignal y takeUntilDestroyed.
+difficulty: MEDIUM
+kind: fill
+statement: |
+  Este componente muestra los segundos que lleva abierto y, además, escribe «guardado» en la consola cada 10 segundos. Las dos cosas deben **pararse solas** cuando el componente se destruye.
+
+  Completa los tres huecos, en orden:
+
+  1. La función que convierte el Observable `interval(1000)` en un signal.
+  2. La opción que da al signal su valor mientras no ha llegado nada.
+  3. El operador que corta la suscripción manual al destruir el componente.
+
+  Nada más abrirse, la página muestra:
+
+  ```text
+  Abierto hace 0 s
+  ```
+starter: |
+  // src/app/contador/contador.ts
+  import { Component } from '@angular/core';
+  import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+  import { interval } from 'rxjs';
+
+  @Component({
+    selector: 'app-contador',
+    template: `<p>Abierto hace {{ segundos() }} s</p>`,
+  })
+  export class Contador {
+    protected readonly segundos = {{?}}(interval(1000), { {{?}}: 0 });
+
+    constructor() {
+      interval(10000)
+        .pipe({{?}}())
+        .subscribe(() => console.log('guardado'));
+    }
+  }
+answers:
+  - toSignal
+  - initialValue
+  - takeUntilDestroyed
+solution: |
+  // src/app/contador/contador.ts
+  import { Component } from '@angular/core';
+  import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+  import { interval } from 'rxjs';
+
+  @Component({
+    selector: 'app-contador',
+    template: `<p>Abierto hace {{ segundos() }} s</p>`,
+  })
+  export class Contador {
+    protected readonly segundos = toSignal(interval(1000), { initialValue: 0 });
+
+    constructor() {
+      interval(10000)
+        .pipe(takeUntilDestroyed())
+        .subscribe(() => console.log('guardado'));
+    }
+  }
+hints:
+  - 'La idea: un puente convierte el Observable en signal (y se da de baja solo); otro operador corta la suscripción que haces tú a mano.'
+  - 'Qué usar: los dos vienen de `@angular/core/rxjs-interop` y ya están importados. La opción del valor inicial se llama igual que en inglés «valor inicial».'
+  - 'El plan: toSignal(interval(1000), { initialValue: 0 }) y .pipe(takeUntilDestroyed()) en el constructor.'
+tests:
+  - output: |
+      Abierto hace 0 s
+    sample: true

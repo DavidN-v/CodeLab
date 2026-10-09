@@ -1,0 +1,56 @@
+title: Prerenderiza los productos destacados
+summary: Ordena una regla de servidor que prerenderiza rutas con parámetro usando getPrerenderParams.
+difficulty: HARD
+kind: parsons
+statement: |
+  La tienda tiene la ruta `productos/:id`. Quieres que **los productos destacados** se prerendericen en el build, y que el resto se rendericen en el servidor cuando alguien los visite (el comportamiento por defecto).
+
+  El servicio `Catalogo` tiene un método asíncrono `idsDestacados()` que devuelve, por ejemplo, `['1', '2']`. Con esos datos, el build debe generar `/productos/1` y `/productos/2`.
+
+  Ordena las líneas de la regla. Cuidado: hay líneas que sobran.
+starter: |
+  import { inject } from '@angular/core';
+  import { RenderMode, ServerRoute } from '@angular/ssr';
+  import { Catalogo } from './catalogo';
+
+  export const serverRoutes: ServerRoute[] = [
+  {{lines}}
+    },
+    { path: '**', renderMode: RenderMode.Server },
+  ];
+solution: |
+  import { inject } from '@angular/core';
+  import { RenderMode, ServerRoute } from '@angular/ssr';
+  import { Catalogo } from './catalogo';
+
+  export const serverRoutes: ServerRoute[] = [
+    {
+      path: 'productos/:id',
+      renderMode: RenderMode.Prerender,
+      async getPrerenderParams() {
+        const ids = await inject(Catalogo).idsDestacados();
+        return ids.map((id) => ({ id }));
+      },
+    },
+    { path: '**', renderMode: RenderMode.Server },
+  ];
+lines:
+  - '  {'
+  - "    path: 'productos/:id',"
+  - '    renderMode: RenderMode.Prerender,'
+  - '    async getPrerenderParams() {'
+  - '      const ids = await inject(Catalogo).idsDestacados();'
+  - '      return ids.map((id) => ({ id }));'
+  - '    },'
+distractors:
+  - '    renderMode: RenderMode.Server,'
+  - '      return ids;'
+hints:
+  - 'La idea: una regla es un objeto con la ruta, el modo y, como la ruta tiene un parámetro, una función que diga qué valores de `:id` hay que generar.'
+  - 'Qué usar: `RenderMode.Prerender` para generar en el build y `getPrerenderParams`, que debe devolver una lista de objetos `{ id: … }`, no una lista de textos sueltos.'
+  - 'El plan: abre el objeto; `path`; `renderMode`; abre `async getPrerenderParams()`; pide los ids con `await inject(Catalogo)…`; devuélvelos con `map` a `{ id }`; cierra la función (el objeto ya se cierra en el código de abajo).'
+tests:
+  - output: |
+      /productos/1
+      /productos/2
+    sample: true

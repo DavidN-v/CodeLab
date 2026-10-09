@@ -1,0 +1,30 @@
+questions:
+  - type: output
+    prompt: 'Con `colores = signal([''rojo'', ''verde'', ''azul''])`, ¿qué se ve? Una línea por elemento.'
+    code: |
+      <ul>
+        @for (c of colores(); track c) {
+          <li>{{ $index }}-{{ c }}{{ $last ? '.' : '' }}</li>
+        }
+      </ul>
+    answer: |
+      0-rojo
+      1-verde
+      2-azul.
+    explanation: '`$index` empieza en 0 y `$last` solo es verdadero en el último elemento, que es el único que lleva punto.'
+  - type: choice
+    prompt: ¿Qué pasa si escribes un `@for` sin `track`?
+    options:
+      - El compilador da error NG5002 y la app no se construye
+      - Funciona igual, pero más lento
+      - Angular usa `$index` automáticamente
+    answer: 0
+    explanation: 'En el control de flujo moderno `track` es obligatorio. El compilador se niega con `@for loop must have a "track" expression`.'
+  - type: choice
+    prompt: 'Tu lista de usuarios se puede reordenar y cada usuario tiene un `email` único. ¿Qué `track` eliges?'
+    options:
+      - '`track usuario.email`'
+      - '`track $index`'
+      - '`track usuario.nombre`'
+    answer: 0
+    explanation: 'El email identifica a cada usuario aunque cambie de posición. `$index` identifica por posición (falla al reordenar) y dos usuarios pueden llamarse igual.'

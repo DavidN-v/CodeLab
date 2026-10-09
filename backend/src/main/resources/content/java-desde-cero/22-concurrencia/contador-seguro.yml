@@ -1,0 +1,86 @@
+title: Contador seguro
+summary: Arregla una condición de carrera.
+difficulty: MEDIUM
+statement: |
+  El programa lanza `h` hilos que incrementan un contador compartido `n` veces cada uno (la entrada es `h n`). Tal como está, el resultado final casi nunca es `h × n` porque `contador++` no es atómico.
+
+  Arréglalo para que el resultado sea **siempre** correcto. Puedes usar `AtomicInteger`, `AtomicLong` o `synchronized`. No cambies el número de hilos ni de incrementos.
+
+  La salida es `Esperado: <h×n>` y `Obtenido: <valor final>`.
+starter: |
+  import java.util.ArrayList;
+  import java.util.List;
+  import java.util.Scanner;
+
+  public class Main {
+      static long contador = 0;
+
+      public static void main(String[] args) throws InterruptedException {
+          Scanner entrada = new Scanner(System.in);
+          int hilos = entrada.nextInt();
+          int incrementos = entrada.nextInt();
+          List<Thread> trabajadores = new ArrayList<>();
+          for (int h = 0; h < hilos; h++) {
+              Thread t = new Thread(() -> {
+                  for (int i = 0; i < incrementos; i++) {
+                      contador++;
+                  }
+              });
+              trabajadores.add(t);
+              t.start();
+          }
+          for (Thread t : trabajadores) {
+              t.join();
+          }
+          System.out.println("Esperado: " + (long) hilos * incrementos);
+          System.out.println("Obtenido: " + contador);
+      }
+  }
+solution: |
+  import java.util.ArrayList;
+  import java.util.List;
+  import java.util.Scanner;
+  import java.util.concurrent.atomic.AtomicLong;
+
+  public class Main {
+      static final AtomicLong contador = new AtomicLong();
+
+      public static void main(String[] args) throws InterruptedException {
+          Scanner entrada = new Scanner(System.in);
+          int hilos = entrada.nextInt();
+          int incrementos = entrada.nextInt();
+          List<Thread> trabajadores = new ArrayList<>();
+          for (int h = 0; h < hilos; h++) {
+              Thread t = new Thread(() -> {
+                  for (int i = 0; i < incrementos; i++) {
+                      contador.incrementAndGet();
+                  }
+              });
+              trabajadores.add(t);
+              t.start();
+          }
+          for (Thread t : trabajadores) {
+              t.join();
+          }
+          System.out.println("Esperado: " + (long) hilos * incrementos);
+          System.out.println("Obtenido: " + contador.get());
+      }
+  }
+hints:
+  - 'La idea: varios hilos hacen `contador++` sobre el mismo campo, y ese `++` son tres pasos (leer, sumar, escribir) en los que un hilo puede pisar a otro. Tienes que hacer que cada incremento sea indivisible.'
+  - 'Qué usar: un `AtomicLong` (de `java.util.concurrent.atomic`), cuyo método `incrementAndGet()` suma 1 de forma atómica. Otra opción es un método `synchronized`.'
+  - 'El plan: cambia el campo por `static final AtomicLong contador = new AtomicLong();`, sustituye `contador++` por `contador.incrementAndGet()` y, al imprimir, usa `contador.get()`.'
+tests:
+  - input: "2 1000\n"
+    output: |
+      Esperado: 2000
+      Obtenido: 2000
+    sample: true
+  - input: "4 500000\n"
+    output: |
+      Esperado: 2000000
+      Obtenido: 2000000
+  - input: "8 250000\n"
+    output: |
+      Esperado: 2000000
+      Obtenido: 2000000

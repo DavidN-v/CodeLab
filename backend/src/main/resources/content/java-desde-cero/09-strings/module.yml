@@ -1,0 +1,22 @@
+lessons:
+  - slug: metodos-de-string
+    title: Trabajar con String
+    summary: Los métodos que más usarás para consultar, recortar y transformar texto.
+    minutes: 6
+  - slug: inmutabilidad-y-stringbuilder
+    title: Inmutabilidad y StringBuilder
+    summary: Por qué un String nunca cambia y cómo construir texto de forma eficiente.
+    minutes: 5
+  - slug: dividir-unir-y-formatear
+    title: Dividir, unir y formatear
+    summary: split, join, String.format y los bloques de texto.
+    minutes: 6
+exercises:
+  - string-inmutable
+  - iniciales-del-nombre
+  - contar-vocales
+  - palindromo
+  - invertir-palabras
+  - cifrado-cesar
+  - contar-una-letra
+  - el-ahorcado

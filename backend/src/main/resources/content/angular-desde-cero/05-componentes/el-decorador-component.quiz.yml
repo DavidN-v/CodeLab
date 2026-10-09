@@ -1,0 +1,25 @@
+questions:
+  - type: choice
+    prompt: ¿Para qué sirve el campo `imports` de `@Component`?
+    options:
+      - Para descargar librerías de npm
+      - Para indicar qué componentes, directivas y pipes puede usar su plantilla
+      - Para importar el archivo CSS del componente
+    answer: 1
+    explanation: 'Si la plantilla usa `<app-insignia />`, la clase `Insignia` tiene que estar en `imports`. Los estilos van en `styleUrl` o `styles`, y las librerías se instalan con npm.'
+  - type: choice
+    prompt: ¿Qué estrategia de detección de cambios usa un componente de Angular 22 si no escribes `changeDetection`?
+    options:
+      - '`Eager`'
+      - '`Default`'
+      - '`OnPush`'
+    answer: 2
+    explanation: 'Desde Angular 22, `OnPush` es el valor por defecto. `Default` es el nombre antiguo de `Eager` y está obsoleto. Con signals, OnPush funciona sin hacer nada más.'
+  - type: choice
+    prompt: 'Un componente tiene `host: { role: ''alert'' }`. ¿Dónde aparece ese atributo?'
+    options:
+      - En el propio elemento del componente, por ejemplo `<app-aviso role="alert">`
+      - En el primer elemento de su plantilla
+      - En la etiqueta `<body>` de index.html
+    answer: 0
+    explanation: '`host` configura el elemento anfitrión: la etiqueta del componente, que está en la plantilla del padre. Sirve para atributos, clases y eventos de ese elemento.'

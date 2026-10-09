@@ -1,0 +1,96 @@
+title: El registro que se borra
+summary: Arregla un programa que pierde todo menos la última línea.
+difficulty: MEDIUM
+kind: fix
+statement: |
+  Este programa lee varias líneas de la entrada y debería guardarlas **todas**, una a una, en `registro.txt`. Después lee el archivo y escribe su contenido así:
+
+  ```
+  Registro:
+  - arrancar motor
+  - cargar datos
+  - terminar
+  Entradas: 3
+  ```
+
+  Pero al ejecutarlo solo aparece la última línea y `Entradas: 1`. Arréglalo para que cada escritura se **añada** a lo anterior en lugar de sustituirlo.
+starter: |
+  import java.io.IOException;
+  import java.nio.file.Files;
+  import java.nio.file.Path;
+  import java.nio.file.StandardOpenOption;
+  import java.util.List;
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) throws IOException {
+          Scanner entrada = new Scanner(System.in);
+          Path registro = Path.of("registro.txt");
+          while (entrada.hasNextLine()) {
+              String linea = entrada.nextLine();
+              Files.writeString(registro, linea + "\n");
+          }
+
+          List<String> guardadas = Files.readAllLines(registro);
+          System.out.println("Registro:");
+          for (String linea : guardadas) {
+              System.out.println("- " + linea);
+          }
+          System.out.println("Entradas: " + guardadas.size());
+      }
+  }
+solution: |
+  import java.io.IOException;
+  import java.nio.file.Files;
+  import java.nio.file.Path;
+  import java.nio.file.StandardOpenOption;
+  import java.util.List;
+  import java.util.Scanner;
+
+  public class Main {
+      public static void main(String[] args) throws IOException {
+          Scanner entrada = new Scanner(System.in);
+          Path registro = Path.of("registro.txt");
+          while (entrada.hasNextLine()) {
+              String linea = entrada.nextLine();
+              Files.writeString(registro, linea + "\n", StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+          }
+
+          List<String> guardadas = Files.readAllLines(registro);
+          System.out.println("Registro:");
+          for (String linea : guardadas) {
+              System.out.println("- " + linea);
+          }
+          System.out.println("Entradas: " + guardadas.size());
+      }
+  }
+hints:
+  - 'La idea: cada vuelta del bucle arranca la hoja y escribe una nueva, así que al final solo sobrevive la última línea.'
+  - 'Qué usar: las opciones de `StandardOpenOption`: `APPEND` añade al final, y `CREATE` crea el archivo si todavía no existe (con `APPEND` solo, la primera escritura fallaría porque el archivo no está).'
+  - 'El plan: cambia la escritura del bucle por `Files.writeString(registro, linea + "\n", StandardOpenOption.CREATE, StandardOpenOption.APPEND);`.'
+tests:
+  - input: |
+      arrancar motor
+      cargar datos
+      terminar
+    output: |
+      Registro:
+      - arrancar motor
+      - cargar datos
+      - terminar
+      Entradas: 3
+    sample: true
+  - input: |
+      hola
+    output: |
+      Registro:
+      - hola
+      Entradas: 1
+  - input: |
+      a
+      b
+    output: |
+      Registro:
+      - a
+      - b
+      Entradas: 2

@@ -1,0 +1,25 @@
+questions:
+  - type: choice
+    prompt: Has creado `projects/ui-kit/src/lib/aviso.ts` con un componente `Aviso`. La app no lo encuentra al escribir `import { Aviso } from 'ui-kit';`. ¿Qué falta?
+    options:
+      - Exportarlo en `projects/ui-kit/src/public-api.ts`
+      - Añadirlo a `providers` en `app.config.ts`
+      - Moverlo a `src/app/shared/`
+    answer: 0
+    explanation: 'Desde fuera solo se puede usar lo que la librería exporta en `public-api.ts`. Es su puerta de entrada.'
+  - type: choice
+    prompt: '¿Para qué sirve el alias `"ui-kit": ["./dist/ui-kit"]` que `ng generate library` añade a `tsconfig.json`?'
+    options:
+      - Para importar la librería compilada con `from 'ui-kit'`, como si viniera de npm
+      - Para publicar la librería en npm automáticamente
+      - Para que la librería se compile sola al guardar
+    answer: 0
+    explanation: 'El alias traduce el nombre `ui-kit` a la carpeta compilada. Por eso, si cambias la librería, tienes que volver a compilarla con `ng build ui-kit`.'
+  - type: choice
+    prompt: ¿Qué es ng-packagr?
+    options:
+      - La herramienta que empaqueta una librería de Angular en el formato estándar de los paquetes
+      - Un gestor de paquetes que sustituye a npm
+      - La herramienta de Nx para monorepos
+    answer: 0
+    explanation: 'Las librerías se compilan con el builder `@angular/build:ng-packagr`, que genera el mismo formato que usan los paquetes oficiales como `@angular/core`.'

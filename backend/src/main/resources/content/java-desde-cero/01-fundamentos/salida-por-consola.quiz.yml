@@ -1,0 +1,37 @@
+questions:
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              System.out.print("A");
+              System.out.print("B");
+              System.out.println("C");
+              System.out.println("D");
+          }
+      }
+    answer: |
+      ABC
+      D
+    explanation: '`print` no salta de línea, así que A, B y C quedan juntas. `println("C")` salta de línea al final, y por eso D va debajo.'
+  - type: output
+    prompt: ¿Qué imprime este programa?
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              System.out.println("Total: " + 2 + 3);
+              System.out.println("Total: " + (2 + 3));
+          }
+      }
+    answer: |
+      Total: 23
+      Total: 5
+    explanation: 'Java lee de izquierda a derecha: `"Total: " + 2` ya es un texto, y al añadirle `3` lo pega detrás. Con paréntesis, primero se suma `2 + 3` y luego se une el 5.'
+  - type: choice
+    prompt: ¿Cómo escribes un texto que contenga comillas, como `Dijo "hola"`?
+    options:
+      - '`System.out.println("Dijo \"hola\"");`'
+      - '`System.out.println("Dijo "hola"");`'
+      - '`System.out.println(''Dijo "hola"'');`'
+    answer: 0
+    explanation: 'Una comilla dentro del texto se escribe `\"`. Sin la barra, Java cree que el texto termina en la segunda comilla. Las comillas simples son para un solo carácter, no para textos.'

@@ -1,0 +1,28 @@
+lessons:
+  - slug: que-es-un-observable
+    title: ¿Qué es un Observable?
+    summary: Valores a lo largo del tiempo, next, error y complete, diagramas de canicas, subscribe y unsubscribe.
+    minutes: 8
+  - slug: subjects
+    title: Subject y BehaviorSubject
+    summary: Emitir valores a mano, eventos frente a estado y el patrón de servicio con asObservable.
+    minutes: 7
+  - slug: operadores
+    title: Operadores esenciales
+    summary: pipe, map, filter, tap, debounceTime, distinctUntilChanged, catchError, combineLatest y forkJoin.
+    minutes: 9
+  - slug: switchmap-mergemap-concatmap
+    title: switchMap, mergeMap y concatMap
+    summary: Convertir valores en peticiones y qué pasa cuando se solapan en el tiempo.
+    minutes: 9
+  - slug: rxjs-y-signals
+    title: RxJS y signals
+    summary: El pipe async, toSignal, toObservable, takeUntilDestroyed y cuándo usar cada herramienta.
+    minutes: 8
+exercises:
+  - ng-predice-filter-map
+  - ng-predice-subject-tarde
+  - ng-ordena-behaviorsubject
+  - ng-completa-buscador-rxjs
+  - ng-completa-tosignal
+  - ng-predice-merge-concat-switch
