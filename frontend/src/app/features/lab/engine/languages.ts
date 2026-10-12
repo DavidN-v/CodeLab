@@ -7,6 +7,7 @@ const BY_EXTENSION: Record<string, LabLanguage> = {
   js: 'javascript',
   mjs: 'javascript',
   ts: 'typescript',
+  java: 'java',
 };
 
 export function languageOf(path: string): LabLanguage {
@@ -24,6 +25,7 @@ export const LANGUAGE_LABEL: Record<LabLanguage, string> = {
   css: 'CSS',
   javascript: 'JavaScript',
   typescript: 'TypeScript',
+  java: 'Java',
   text: 'Texto',
 };
 
@@ -38,7 +40,7 @@ export function pathProblem(path: string, files: readonly LabFile[], current?: s
     return 'Usa letras, números, guiones y puntos; las carpetas se separan con /.';
   }
   if (languageOf(path) === 'text') {
-    return 'El archivo debe terminar en .html, .css, .js o .ts.';
+    return 'El archivo debe terminar en .html, .css, .js, .ts o .java.';
   }
   if (path !== current && files.some((file) => file.path.toLowerCase() === path.toLowerCase())) {
     return 'Ya existe un archivo con ese nombre.';

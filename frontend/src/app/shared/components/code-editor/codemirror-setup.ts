@@ -1,11 +1,19 @@
+import { acceptCompletion } from '@codemirror/autocomplete';
 import { indentWithTab } from '@codemirror/commands';
-import { java } from '@codemirror/lang-java';
+import { java, javaLanguage } from '@codemirror/lang-java';
 import { HighlightStyle, indentUnit, syntaxHighlighting } from '@codemirror/language';
 import { Diagnostic, lintGutter, setDiagnostics } from '@codemirror/lint';
 import { EditorState, Extension } from '@codemirror/state';
 import { EditorView, keymap } from '@codemirror/view';
 import { tags } from '@lezer/highlight';
 import { basicSetup } from 'codemirror';
+
+import { javaCompletions } from './java-completion';
+
+/** Java with completion: the grammar alone suggests nothing. */
+function javaSupport(): Extension {
+  return [java(), javaLanguage.data.of({ autocomplete: javaCompletions })];
+}
 
 /** Languages the editor can highlight. Java is the default: it is what the courses run. */
 export type EditorLanguage = 'java' | 'javascript' | 'typescript' | 'html' | 'css' | 'text';
@@ -17,7 +25,7 @@ export type EditorLanguage = 'java' | 'javascript' | 'typescript' | 'html' | 'cs
 export async function loadLanguage(language: EditorLanguage): Promise<Extension> {
   switch (language) {
     case 'java':
-      return java();
+      return javaSupport();
     case 'javascript':
       return (await import('@codemirror/lang-javascript')).javascript();
     case 'typescript':
@@ -119,7 +127,7 @@ export function createEditor(
   doc: string,
   label: string,
   callbacks: EditorCallbacks,
-  language: Extension = java(),
+  language: Extension = javaSupport(),
   indent = '    ',
 ): EditorView {
   return new EditorView({
@@ -140,6 +148,8 @@ export function createEditor(
               return true;
             },
           },
+          // Tab takes the highlighted suggestion; with no list open it indents.
+          { key: 'Tab', run: acceptCompletion },
           indentWithTab,
         ]),
         theme,

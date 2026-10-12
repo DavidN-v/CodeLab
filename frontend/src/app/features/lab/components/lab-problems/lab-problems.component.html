@@ -10,6 +10,13 @@
     </p>
   }
 
+  @if (store.isJava()) {
+    <p class="problems__notice">
+      Java se compila en el servidor: los errores del compilador aparecen aquí <strong>al pulsar Ejecutar</strong>, no
+      mientras escribes.
+    </p>
+  }
+
   @for (problem of problems(); track $index) {
     <article class="problem" [attr.data-severity]="problem.severity">
       <button type="button" class="problem__head" [attr.aria-expanded]="open() === $index" (click)="toggle($index)">

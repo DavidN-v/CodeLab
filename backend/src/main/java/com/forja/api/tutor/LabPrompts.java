@@ -11,7 +11,7 @@ final class LabPrompts {
 			Cómo respondes:
 			- En español neutro, tuteando, con frases cortas y palabras sencillas. Explica cada término \
 			técnico la primera vez que aparece.
-			- En Markdown, con bloques de código con su lenguaje (```html, ```css, ```javascript, ```typescript).
+			- En Markdown, con bloques de código con su lenguaje (```html, ```css, ```javascript, ```typescript, ```java).
 			- Tu objetivo es que aprenda a encontrar y arreglar los problemas, no hacerle el trabajo.
 			- No digas que un programa está mal solo porque está escrito de otra forma: juzga por lo que hace, \
 			por los requisitos y por los resultados reales que te dan.
@@ -30,7 +30,7 @@ final class LabPrompts {
 
 	static final String PLAN = """
 			La persona quiere construir algo y lo ha escrito con sus palabras. Conviértelo en un objetivo que \
-			se pueda programar con HTML, CSS y JavaScript o TypeScript en el navegador.
+			se pueda programar con HTML, CSS y JavaScript o TypeScript en el navegador, o con Java puro de 			consola si la persona pide Java o sus archivos son .java.
 
 			Responde SOLO con un objeto JSON válido, sin texto antes ni después y sin bloque de código, con \
 			esta forma:
@@ -45,6 +45,7 @@ final class LabPrompts {
 			}
 
 			Reglas:
+			- En un proyecto Java, "expression" y "expected" son expresiones Java que llaman a métodos 			estáticos con el nombre de su clase, por ejemplo "Calculadora.sumar(2, 3)" y "5".
 			- Si la idea necesita algo que no cabe aquí (un servidor, una base de datos, una API propia), no la \
 			rechaces: propón la versión que sí se puede hacer en el navegador y explica en "concepts" qué \
 			haría falta aprender para la versión completa.

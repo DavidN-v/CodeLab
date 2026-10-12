@@ -34,7 +34,7 @@
           <span>Al evaluar…</span>
           <input
             class="tests__input tests__input--code"
-            placeholder="sumar(2, 3)"
+            [placeholder]="store.isJava() ? 'Calculadora.sumar(2, 3)' : 'sumar(2, 3)'"
             spellcheck="false"
             [value]="expression()"
             (input)="expression.set(read($event))"
@@ -56,8 +56,15 @@
         </label>
         <button class="tests__tool tests__tool--run" [disabled]="!expression().trim() || !expected().trim()">Añadir</button>
         <p class="tests__help">
-          Las dos casillas son JavaScript: los textos van entre comillas (<code>"hola"</code>), las listas entre corchetes
-          (<code>[1, 2]</code>). Se evalúan después de cargar tu programa, así que puedes llamar a tus funciones.
+          @if (store.isJava()) {
+            Las dos casillas son Java. Llama a tus métodos estáticos con el nombre de su clase:
+            <code>Calculadora.sumar(2, 3)</code> debe dar <code>5</code>. Los textos van entre comillas dobles
+            (<code>"hola"</code>). Las pruebas se compilan junto a tu programa y se ejecutan de verdad.
+          } @else {
+            Las dos casillas son JavaScript: los textos van entre comillas (<code>"hola"</code>), las listas entre
+            corchetes (<code>[1, 2]</code>). Se evalúan después de cargar tu programa, así que puedes llamar a tus
+            funciones.
+          }
         </p>
       </form>
     }
@@ -101,7 +108,7 @@
               </dl>
               <p class="test__note">
                 El resultado es real: el programa se ha ejecutado y ha devuelto eso. Para encontrar la causa, sigue con
-                <code>console.log</code> los valores dentro de la función, o pide una pista al tutor.
+                <code>{{ store.isJava() ? 'System.out.println' : 'console.log' }}</code> los valores dentro de la función, o pide una pista al tutor.
               </p>
             } @else if (outcome.status === 'error') {
               <p class="test__error">No se ha podido evaluar: {{ outcome.error }}</p>

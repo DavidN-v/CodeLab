@@ -69,7 +69,7 @@
       <li class="explorer__item">
         <input
           class="explorer__input"
-          placeholder="nombre.js"
+          placeholder="nombre.js o Nombre.java"
           aria-label="Nombre del archivo nuevo"
           [value]="draft()"
           (input)="onDraft($event)"
@@ -82,7 +82,7 @@
 
   @if (editing() !== null) {
     <p class="explorer__hint" [class.explorer__hint--error]="problem()" role="status">
-      {{ problem() ?? 'Intro para confirmar, Esc para cancelar. Extensiones: .html, .css, .js, .ts' }}
+      {{ problem() ?? 'Intro para confirmar, Esc para cancelar. Extensiones: .html, .css, .js, .ts, .java' }}
     </p>
   }
 </div>

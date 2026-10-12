@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, ElementRef, effect, inject, output,
 
 import { ConsoleEntry } from '../../models/lab.models';
 import { LabRunnerService } from '../../services/lab-runner.service';
+import { LabStore } from '../../services/lab-store.service';
 
 /** What the program wrote while it really ran: console messages, warnings and errors. */
 @Component({
@@ -12,6 +13,7 @@ import { LabRunnerService } from '../../services/lab-runner.service';
 })
 export class LabConsoleComponent {
   protected readonly runner = inject(LabRunnerService);
+  protected readonly store = inject(LabStore);
 
   /** The learner clicked the location of an error. */
   readonly locate = output<{ path: string; line: number }>();

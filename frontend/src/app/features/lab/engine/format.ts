@@ -12,6 +12,9 @@ export async function formatCode(path: string, code: string): Promise<FormatResu
   if (language === 'text') {
     return { ok: false, error: 'Este tipo de archivo no se puede formatear.' };
   }
+  if (language === 'java') {
+    return { ok: false, error: 'El formateo automático todavía no está disponible para Java.' };
+  }
   try {
     const [prettier, estree, babel, typescript, postcss, html] = await Promise.all([
       import('prettier/standalone'),

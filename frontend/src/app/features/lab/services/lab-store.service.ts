@@ -6,6 +6,7 @@ import { AuthService } from '../../../core/services/auth.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { CatalogEntry, TEMPLATES, catalogEntry } from '../data/lab-catalog';
 import { formatCode } from '../engine/format';
+import { isJavaProject } from '../engine/java-project';
 import { pathProblem } from '../engine/languages';
 import {
   EMPTY_CONTENT,
@@ -65,6 +66,8 @@ export class LabStore {
   readonly activeFile = computed(
     () => this.current().files.find((file) => file.path === this.active()) ?? this.current().files[0] ?? null,
   );
+  /** Java projects are compiled and run by the server, not by the browser. */
+  readonly isJava = computed(() => isJavaProject(this.current().files));
   /** The exercise this project started from, with its statement. */
   readonly exercise = computed(() => {
     const entry = catalogEntry(this.current().catalogId);
@@ -738,6 +741,6 @@ function suggested(answer: PlanAnswer): LabTest[] {
 
 /** The file a learner most likely wants to see first: the script, then the page. */
 function preferredFile(files: readonly LabFile[]): string {
-  const script = files.find((file) => /\.(js|ts)$/i.test(file.path));
+  const script = files.find((file) => /\.(js|ts|java)$/i.test(file.path));
   return (script ?? files[0])?.path ?? '';
 }

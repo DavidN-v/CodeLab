@@ -29,7 +29,8 @@ contenido en [docs/CONTENT.md](docs/CONTENT.md).
   programa y proyectos. Escalera de pistas, solución y corrección contra
   pruebas visibles y ocultas.
 - **Práctica general (`/lab`):** un laboratorio libre con HTML, CSS,
-  JavaScript y TypeScript. Editor con varios archivos, consola real y vista
+  JavaScript, TypeScript y Java puro (varias clases, entrada para `Scanner`
+  y pruebas; se compila y ejecuta en el servidor, con sesión iniciada). Editor con varios archivos, consola real y vista
   previa en un marco aislado (sin red ni acceso a la sesión), corte de bucles
   infinitos, errores del compilador de TypeScript en español, reglas propias y
   pruebas automáticas. Cada problema se explica en siete puntos y se marca

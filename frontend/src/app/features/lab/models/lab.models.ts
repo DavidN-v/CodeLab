@@ -1,5 +1,5 @@
 /** Languages the lab can edit, analyse and run. */
-export type LabLanguage = 'html' | 'css' | 'javascript' | 'typescript' | 'text';
+export type LabLanguage = 'html' | 'css' | 'javascript' | 'typescript' | 'java' | 'text';
 
 export interface LabFile {
   /** Path inside the project, e.g. `index.html` or `js/main.ts`. */

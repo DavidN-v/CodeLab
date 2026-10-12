@@ -12,6 +12,19 @@
     </button>
   </div>
 
+  @if (store.isJava()) {
+    <label class="console__stdin">
+      <span>Entrada (lo que leerá <code>Scanner</code>)</span>
+      <textarea
+        rows="2"
+        spellcheck="false"
+        placeholder="Una línea por cada dato que pida el programa"
+        [value]="runner.stdin()"
+        (input)="runner.setStdin($any($event.target).value)"
+      ></textarea>
+    </label>
+  }
+
   <div class="console__body" #body aria-live="polite">
     @for (entry of runner.entries(); track $index) {
       <p class="console__line" [attr.data-level]="entry.level">
@@ -29,7 +42,8 @@
       <p class="console__empty">
         @if (runner.status() === 'idle') {
           Pulsa <strong>Ejecutar</strong> (o Ctrl + Intro). Aquí verás lo que escriba tu programa con
-          <code>console.log()</code> y los errores que se produzcan al ejecutarlo.
+          <code>{{ store.isJava() ? 'System.out.println()' : 'console.log()' }}</code> y los errores que se produzcan al
+          ejecutarlo.
         } @else if (runner.status() === 'running') {
           Ejecutando…
         } @else {

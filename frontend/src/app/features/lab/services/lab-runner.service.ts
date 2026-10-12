@@ -1,7 +1,14 @@
 import { DOCUMENT } from '@angular/common';
 import { Injectable, computed, inject, signal } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
 
+import { AppError } from '../../../core/models/api-error.model';
+import { ExecutionResult } from '../../../core/models/execution.model';
+import { AuthService } from '../../../core/services/auth.service';
+import { ExecutionService } from '../../../core/services/execution.service';
+import { explainCompileErrors, explainRuntimeError } from '../../../shared/utils/java-errors';
 import { CompiledProject, SourceLocation } from '../engine/compile';
+import { JavaBundle, bundleJava, isJavaProject, splitJavaOutput } from '../engine/java-project';
 import { LESSONS } from '../engine/lessons';
 import { RuntimeMessage, RuntimeTestResult } from '../engine/runtime';
 import { WORKER_LIMIT_MS } from '../engine/sandbox-document';
@@ -23,11 +30,16 @@ const MAX_CONSOLE_ENTRIES = 500;
 export class LabRunnerService {
   private readonly engine = inject(LabEngineService);
   private readonly document = inject(DOCUMENT);
+  private readonly executions = inject(ExecutionService);
+  private readonly auth = inject(AuthService);
 
   private readonly state = signal<RunStatus>('idle');
   private readonly consoleEntries = signal<ConsoleEntry[]>([]);
   private readonly outcomes = signal<TestOutcome[]>([]);
   private readonly runtimeProblems = signal<LabDiagnostic[]>([]);
+  /** What javac said in the last run; kept while the learner fixes it. */
+  private readonly compilerProblems = signal<LabDiagnostic[]>([]);
+  private readonly input = signal('');
   private readonly elapsed = signal<number | null>(null);
   private readonly page = signal(false);
   private readonly testsStale = signal(false);
@@ -37,7 +49,9 @@ export class LabRunnerService {
   /** Results of the last run that included tests. */
   readonly testOutcomes = this.outcomes.asReadonly();
   /** Errors the browser raised while running, as diagnostics. */
-  readonly runtimeDiagnostics = this.runtimeProblems.asReadonly();
+  readonly runtimeDiagnostics = computed(() => [...this.compilerProblems(), ...this.runtimeProblems()]);
+  /** What a Java program will read from System.in. */
+  readonly stdin = this.input.asReadonly();
   /** Milliseconds until the program finished loading; null when unknown. */
   readonly durationMs = this.elapsed.asReadonly();
   /** Whether the last run produced a page to look at. */
@@ -72,6 +86,10 @@ export class LabRunnerService {
     this.runtimeProblems.set([]);
   }
 
+  setStdin(text: string): void {
+    this.input.set(text);
+  }
+
   clearConsole(): void {
     this.consoleEntries.set([]);
   }
@@ -83,6 +101,7 @@ export class LabRunnerService {
     this.consoleEntries.set([]);
     this.outcomes.set([]);
     this.runtimeProblems.set([]);
+    this.compilerProblems.set([]);
     this.elapsed.set(null);
     this.page.set(false);
     this.testsStale.set(false);
@@ -101,6 +120,7 @@ export class LabRunnerService {
     this.state.set('running');
     this.consoleEntries.set([]);
     this.runtimeProblems.set([]);
+    this.compilerProblems.set([]);
     this.elapsed.set(null);
     if (tests.length > 0) {
       this.outcomes.set([]);
@@ -109,6 +129,11 @@ export class LabRunnerService {
 
     const token = crypto.randomUUID();
     this.token = token;
+    if (isJavaProject(files)) {
+      this.page.set(false);
+      await this.runJava(files, tests, token);
+      return;
+    }
     let build;
     try {
       build = await this.engine.build(
@@ -165,6 +190,126 @@ export class LabRunnerService {
         this.timeOut();
       }
     }, limit);
+  }
+
+  /**
+   * Java cannot run in a browser: the project goes to the platform's runner,
+   * which compiles it with javac and runs it in an isolated container.
+   */
+  private async runJava(files: readonly LabFile[], tests: readonly LabTest[], token: string): Promise<void> {
+    if (!this.auth.isAuthenticated()) {
+      this.system('Entra con tu cuenta para ejecutar Java: se compila y se ejecuta en el servidor, no en tu navegador.');
+      this.state.set('blocked');
+      return;
+    }
+    const marker = `@@lab-${token}@@`;
+    const bundled = bundleJava(files, tests, marker);
+    if (!bundled.ok) {
+      this.system(bundled.error);
+      this.state.set('blocked');
+      return;
+    }
+    const bundle = bundled.bundle;
+    let result: ExecutionResult;
+    try {
+      result = await firstValueFrom(this.executions.run(bundle.source, this.input()));
+    } catch (error) {
+      if (this.token === token) {
+        this.system(error instanceof AppError ? error.message : 'No se ha podido ejecutar el programa en el servidor.');
+        this.state.set('blocked');
+      }
+      return;
+    }
+    if (this.token !== token) {
+      return;
+    }
+
+    if (result.status === 'COMPILATION_ERROR') {
+      const problems = this.javaCompileProblems(result.compileOutput, bundle, tests);
+      this.compilerProblems.set(problems);
+      const count = problems.length;
+      this.system(
+        `No se ha ejecutado: el compilador de Java ha encontrado ${count === 1 ? 'un error' : `${count} errores`}. ` +
+          'Míralos en la pestaña Problemas y corrígelos primero.',
+      );
+      if (problems.length === 0) {
+        this.push({ level: 'error', text: result.compileOutput.trim() });
+      }
+      this.state.set('blocked');
+      return;
+    }
+
+    const { output, results } = splitJavaOutput(result.stdout, marker);
+    output.forEach((text) => this.push({ level: 'log', text }));
+    if (result.outputTruncated) {
+      this.system('La salida era muy larga y se ha recortado.');
+    }
+    this.elapsed.set(result.durationMs);
+    if (tests.length > 0) {
+      this.outcomes.set(results.map((line) => ({ testId: line.id, ...line })));
+    }
+
+    if (result.status === 'TIMEOUT') {
+      this.system(
+        'Ejecución detenida: el programa no terminaba. Suele ser un bucle que no llega a su condición de salida, o un Scanner que espera una entrada que no le has dado.',
+      );
+      this.state.set('timeout');
+      return;
+    }
+    const stderr = result.stderr.trim();
+    if (result.status === 'RUNTIME_ERROR') {
+      const friendly = explainRuntimeError(stderr);
+      const location = friendly?.line ? bundle.locate(friendly.line) : null;
+      const header = stderr.split('\n')[0].replace(/^Exception in thread "[^"]*" /, '');
+      this.push({ level: 'error', text: header, path: location?.path, line: location?.line });
+      this.runtimeProblems.update((problems) => [
+        ...problems,
+        {
+          category: 'runtime',
+          severity: 'error',
+          confirmed: true,
+          source: 'Máquina virtual de Java (ejecución real)',
+          code: `java/${/^([\w.$]+)/.exec(header)?.[1] ?? 'error'}`,
+          message: friendly ? `${friendly.title}. ${friendly.explanation}` : header,
+          path: location?.path ?? null,
+          line: location?.line ?? 0,
+          column: 0,
+          lesson: null,
+        },
+      ]);
+      this.state.set('error');
+      return;
+    }
+    if (stderr) {
+      // What the program wrote with System.err.
+      stderr.split('\n').forEach((text) => this.push({ level: 'warn', text }));
+    }
+    this.state.set('ok');
+  }
+
+  /** javac's errors, each on the learner's own file and line. */
+  private javaCompileProblems(output: string, bundle: JavaBundle, tests: readonly LabTest[]): LabDiagnostic[] {
+    return explainCompileErrors(output).map((error) => {
+      const location = error.line ? bundle.locate(error.line) : null;
+      const test = error.line ? tests.find((candidate) => candidate.id === bundle.testAt(error.line!)) : undefined;
+      const semantic = /cannot find symbol|incompatible types|cannot be applied|might not have been initialized|missing return/.test(
+        error.original,
+      );
+      return {
+        category: semantic ? 'types' : 'syntax',
+        severity: 'error',
+        confirmed: true,
+        source: 'javac (compilador real)',
+        code: 'javac',
+        message: test
+          ? `La prueba «${test.description}» no compila: ${error.title}. ${error.explanation} (${error.original})`
+          : `${error.title}. ${error.explanation} (${error.original})`,
+        path: location?.path ?? null,
+        line: location?.line ?? 0,
+        column: 0,
+        lesson: null,
+      } satisfies LabDiagnostic;
+    });
   }
 
   private firstPage(files: readonly LabFile[]): string | null {

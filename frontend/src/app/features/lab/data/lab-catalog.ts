@@ -125,6 +125,47 @@ console.log('Total:', total(carrito));
     ],
     tests: [],
   },
+  {
+    id: 'plantilla-java',
+    mode: 'free',
+    title: 'Solo Java',
+    summary: 'Java puro con varias clases. Se compila y se ejecuta en el servidor.',
+    statement: '',
+    files: [
+      {
+        path: 'Calculadora.java',
+        content: `public class Calculadora {
+    public static int sumar(int a, int b) {
+        return a + b;
+    }
+
+    public static double dividir(double a, double b) {
+        return a / b;
+    }
+}
+`,
+      },
+      {
+        path: 'Main.java',
+        content: `import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("Hola desde Java");
+        System.out.println("2 + 3 = " + Calculadora.sumar(2, 3));
+
+        // Para leer datos, escríbelos en «Entrada», encima de la consola.
+        Scanner entrada = new Scanner(System.in);
+        if (entrada.hasNextLine()) {
+            System.out.println("Has escrito: " + entrada.nextLine());
+        }
+    }
+}
+`,
+      },
+    ],
+    tests: [{ description: '2 + 3 da 5', expression: 'Calculadora.sumar(2, 3)', expected: '5' }],
+  },
 ];
 
 /** Goals with tests: the learner writes the solution. */
