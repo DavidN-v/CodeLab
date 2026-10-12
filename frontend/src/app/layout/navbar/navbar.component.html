@@ -36,6 +36,9 @@
               ariaCurrentWhenActive="page"
               (click)="closeMenu()"
             >
+              @if (link.icon) {
+                <span class="navbar__link-icon" aria-hidden="true">{{ link.icon }}</span>
+              }
               {{ link.label }}
             </a>
           </li>

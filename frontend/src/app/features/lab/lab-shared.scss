@@ -1,0 +1,76 @@
+// Pieces shared by the lab's panels. Used with `@use`, never emitted on its own.
+
+@mixin label {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/// A scrollable panel body that fills what is left of its flex column.
+@mixin scroll-body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+/// A small, quiet button for panel bars and rows.
+@mixin tool-button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-height: 1.75rem;
+  padding: 0 var(--space-2);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  cursor: pointer;
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast),
+    border-color var(--transition-fast);
+
+  &:hover:not(:disabled) {
+    background-color: var(--color-surface-raised);
+    color: var(--color-text);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+/// A centred message for a panel with nothing to show yet.
+@mixin empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  height: 100%;
+  padding: var(--space-5);
+  color: var(--color-text-subtle);
+  font-size: var(--text-sm);
+  text-align: center;
+}
+
+@mixin text-field {
+  width: 100%;
+  min-height: 2rem;
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-code-bg);
+  color: var(--color-text);
+  font: inherit;
+  font-size: var(--text-sm);
+
+  &:focus-visible {
+    outline: none;
+    border-color: var(--color-accent);
+  }
+}

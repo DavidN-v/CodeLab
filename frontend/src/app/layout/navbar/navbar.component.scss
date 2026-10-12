@@ -158,3 +158,11 @@
     border-color: var(--color-accent);
   }
 }
+
+.navbar__link-icon {
+  margin-right: var(--space-2);
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 600;
+}

@@ -1,0 +1,151 @@
+<dialog #dialog class="projects" aria-labelledby="projects-title" (click)="$event.target === dialog && close()">
+  <div class="projects__panel">
+    <header class="projects__header">
+      <h2 id="projects-title" class="projects__title">Proyectos</h2>
+      <button type="button" class="projects__button" aria-label="Cerrar" (click)="close()">✕</button>
+    </header>
+
+    <div class="projects__body">
+      <section class="projects__section">
+        <h3 class="projects__heading">Este proyecto</h3>
+        <label class="projects__field">
+          <span>Nombre</span>
+          <input class="projects__input" maxlength="120" [value]="name()" (input)="name.set(read($event))" />
+        </label>
+        <label class="projects__field">
+          <span>Descripción</span>
+          <input
+            class="projects__input"
+            maxlength="500"
+            placeholder="Para qué sirve, qué estás practicando…"
+            [value]="description()"
+            (input)="description.set(read($event))"
+          />
+        </label>
+        @if (store.signedIn()) {
+          <div class="projects__row">
+            <button type="button" class="projects__button projects__button--primary" [disabled]="busy()" (click)="saveDetails()">
+              {{ store.project().id === null ? 'Guardar en mi cuenta' : 'Guardar cambios' }}
+            </button>
+          </div>
+        } @else {
+          <p class="projects__note">
+            Ahora mismo es un <strong>borrador en este navegador</strong>: se conserva al recargar, pero no está en ninguna
+            cuenta y se pierde si borras los datos del navegador.
+            <a routerLink="/login" [queryParams]="{ returnUrl: '/lab' }" (click)="close()">Entra</a> para guardarlo de
+            verdad.
+          </p>
+        }
+      </section>
+
+      @if (store.signedIn()) {
+        <section class="projects__section">
+          <h3 class="projects__heading">Versiones guardadas</h3>
+          <p class="projects__note">Un punto al que puedes volver, por ejemplo antes de un cambio grande.</p>
+          <div class="projects__row">
+            <input
+              class="projects__input"
+              maxlength="120"
+              placeholder="Antes de añadir la división"
+              aria-label="Nombre de la versión"
+              [value]="versionLabel()"
+              (input)="versionLabel.set(read($event))"
+              (keydown.enter)="saveVersion()"
+            />
+            <button type="button" class="projects__button" [disabled]="busy()" (click)="saveVersion()">Guardar versión</button>
+          </div>
+          @if (store.versions(); as versions) {
+            <ul class="projects__list">
+              @for (version of versions; track version.id) {
+                <li class="projects__item">
+                  <span class="projects__item-main">
+                    <span class="projects__item-name">{{ version.label }}</span>
+                    <span class="projects__item-meta">{{ version.createdAt | date: 'd MMM y, HH:mm' }}</span>
+                  </span>
+                  @if (restoring() === version.id) {
+                    <span class="projects__confirm">
+                      Lo de ahora se guarda como otra versión.
+                      <button type="button" class="projects__button projects__button--primary" (click)="restore(version.id)">
+                        Recuperar
+                      </button>
+                      <button type="button" class="projects__button" (click)="restoring.set(null)">No</button>
+                    </span>
+                  } @else {
+                    <button type="button" class="projects__button" (click)="restoring.set(version.id)">Recuperar</button>
+                  }
+                </li>
+              } @empty {
+                <li class="projects__empty">
+                  {{ store.project().id === null ? 'Guarda el proyecto para poder crear versiones.' : 'Todavía no hay versiones.' }}
+                </li>
+              }
+            </ul>
+          }
+        </section>
+
+        <section class="projects__section">
+          <h3 class="projects__heading">Mis proyectos</h3>
+          @if (store.savedProjects(); as projects) {
+            <ul class="projects__list">
+              @for (project of projects; track project.id) {
+                <li class="projects__item" [class.projects__item--current]="project.id === store.project().id">
+                  <span class="projects__item-main">
+                    <span class="projects__item-name">{{ project.name }}</span>
+                    <span class="projects__item-meta">
+                      {{ modes[project.mode] }} · {{ project.updatedAt | date: 'd MMM y, HH:mm' }}
+                      @if (project.id === store.project().id) {
+                        · abierto ahora
+                      }
+                    </span>
+                    @if (project.description) {
+                      <span class="projects__item-meta">{{ project.description }}</span>
+                    }
+                  </span>
+                  @if (deleting() === project.id) {
+                    <span class="projects__confirm">
+                      Se borra con todas sus versiones.
+                      <button type="button" class="projects__button projects__button--danger" (click)="remove(project.id)">
+                        Borrar
+                      </button>
+                      <button type="button" class="projects__button" (click)="deleting.set(null)">No</button>
+                    </span>
+                  } @else {
+                    <span class="projects__actions">
+                      @if (project.id !== store.project().id) {
+                        <button type="button" class="projects__button" [disabled]="busy()" (click)="openProject(project.id)">
+                          Abrir
+                        </button>
+                      }
+                      <button type="button" class="projects__button" [disabled]="busy()" (click)="duplicate(project.id)">
+                        Duplicar
+                      </button>
+                      <button type="button" class="projects__button" (click)="deleting.set(project.id)">Borrar</button>
+                    </span>
+                  }
+                </li>
+              } @empty {
+                <li class="projects__empty">Todavía no has guardado ningún proyecto.</li>
+              }
+            </ul>
+          } @else {
+            <p class="projects__note">Cargando…</p>
+          }
+        </section>
+      }
+
+      <section class="projects__section">
+        <h3 class="projects__heading">Proyecto nuevo</h3>
+        @if (store.project().id === null) {
+          <p class="projects__note">El proyecto actual no está guardado en tu cuenta: al crear otro, se sustituye.</p>
+        }
+        <div class="projects__row">
+          @for (template of templates; track template.id) {
+            <button type="button" class="projects__button" [title]="template.summary" (click)="startNew(template)">
+              ＋ {{ template.title }}
+            </button>
+          }
+        </div>
+      </section>
+    </div>
+  </div>
+</dialog>

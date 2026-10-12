@@ -1,0 +1,289 @@
+@use 'mixins' as *;
+@use '../../lab-shared' as lab;
+
+:host {
+  display: block;
+}
+
+.lab {
+  display: flex;
+  flex-direction: column;
+  height: calc(100dvh - var(--navbar-height));
+  min-height: 34rem;
+  background-color: var(--color-bg);
+
+  // While a divider is dragged, frames must not swallow the pointer.
+  &--dragging {
+    user-select: none;
+
+    ::ng-deep iframe {
+      pointer-events: none;
+    }
+  }
+}
+
+.lab__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-4);
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+}
+
+.lab__identity {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.lab__project {
+  @include lab.tool-button;
+  max-width: 16rem;
+  border-color: var(--color-border-strong);
+  color: var(--color-text);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.lab__project-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lab__save {
+  color: var(--color-text-subtle);
+  font-size: var(--text-xs);
+  white-space: nowrap;
+
+  &[data-state='saved'] {
+    color: var(--color-success);
+  }
+
+  &[data-state='unsaved'],
+  &[data-state='draft'] {
+    color: var(--color-warning);
+  }
+
+  &[data-state='error'] {
+    color: var(--color-danger);
+  }
+}
+
+.lab__modes,
+.lab__toggles {
+  display: inline-flex;
+  padding: 2px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-bg);
+}
+
+.lab__mode,
+.lab__toggle {
+  @include lab.tool-button;
+  min-height: 1.6rem;
+}
+
+.lab__mode--active {
+  background-color: var(--color-accent);
+  color: var(--color-on-accent);
+
+  &:hover:not(:disabled) {
+    background-color: var(--color-accent-hover);
+    color: var(--color-on-accent);
+  }
+}
+
+.lab__toggle--on {
+  background-color: var(--color-surface-raised);
+  color: var(--color-text);
+}
+
+.lab__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.lab__main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+.lab__side,
+.lab__right {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  min-width: 0;
+  background-color: var(--color-surface);
+}
+
+.lab__center {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 12rem;
+}
+
+.lab__editor {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 8rem;
+}
+
+.lab__code {
+  flex: 1;
+  min-height: 0;
+}
+
+.lab__loading {
+  @include lab.empty-state;
+}
+
+.lab__bottom {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  background-color: var(--color-console-bg);
+}
+
+.lab__panel {
+  flex: 1;
+  min-height: 0;
+
+  &[hidden] {
+    display: none;
+  }
+}
+
+.lab__tabs {
+  display: flex;
+  flex-shrink: 0;
+  align-items: stretch;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+  scrollbar-width: none;
+}
+
+.lab__tab {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: none;
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  cursor: pointer;
+
+  &:hover {
+    color: var(--color-text);
+  }
+
+  &--active {
+    border-bottom-color: var(--color-accent);
+    background-color: var(--color-code-bg);
+    color: var(--color-text);
+  }
+
+  &[data-language] {
+    font-family: var(--font-mono);
+  }
+}
+
+.lab__language {
+  @include lab.label;
+  align-self: center;
+  margin-left: auto;
+  padding: 0 var(--space-3);
+  color: var(--color-text-subtle);
+  white-space: nowrap;
+}
+
+.lab__badge {
+  padding: 0 0.4rem;
+  border-radius: 999px;
+  background-color: var(--color-surface-raised);
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+
+  &--error {
+    background-color: var(--color-danger-soft);
+    color: var(--color-danger);
+  }
+
+  &--warning {
+    background-color: color-mix(in srgb, var(--color-warning) 16%, transparent);
+    color: var(--color-warning);
+  }
+}
+
+.lab__divider {
+  flex-shrink: 0;
+  background-color: var(--color-border);
+  transition: background-color var(--transition-fast);
+  touch-action: none;
+
+  &:hover,
+  &:focus-visible {
+    outline: none;
+    background-color: var(--color-accent);
+  }
+
+  &--vertical {
+    width: 4px;
+    cursor: col-resize;
+  }
+
+  &--horizontal {
+    height: 4px;
+    cursor: row-resize;
+  }
+}
+
+// Narrow screens: one column, in the order a learner works. Nothing is resized.
+@media (max-width: 55.99rem) {
+  .lab {
+    height: auto;
+  }
+
+  .lab__main {
+    flex-direction: column;
+  }
+
+  .lab__side,
+  .lab__right {
+    width: auto !important;
+  }
+
+  .lab__side {
+    max-height: 12rem;
+  }
+
+  .lab__right {
+    height: 30rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .lab__editor {
+    height: 24rem;
+    flex: none;
+  }
+
+  .lab__divider {
+    display: none;
+  }
+}

@@ -14,14 +14,14 @@ import {
 } from '@angular/core';
 
 import { SettingsService } from '../../../core/services/settings.service';
-import type { LineMark } from './codemirror-setup';
+import type { EditorLanguage, LineMark } from './codemirror-setup';
 
 type EditorModule = typeof import('./codemirror-setup');
 type EditorView = ReturnType<EditorModule['createEditor']>;
 
 /**
- * Java code editor (CodeMirror 6). CodeMirror is loaded on first use, so it
- * only weighs on the practice pages. Until it arrives, a plain textarea keeps
+ * Code editor (CodeMirror 6), for Java unless told otherwise. CodeMirror is
+ * loaded on first use, so it only weighs on the practice pages. Until it arrives, a plain textarea keeps
  * the code editable. Ctrl/Cmd + Enter asks to run.
  */
 @Component({
@@ -34,6 +34,8 @@ export class CodeEditorComponent {
   /** The code; two-way bindable. */
   readonly value = model.required<string>();
   readonly label = input('Editor de código Java');
+  /** Fixed for the life of the editor: show another file with another editor. */
+  readonly language = input<EditorLanguage>('java');
 
   /** Lines to underline as errors, e.g. from the compiler. */
   readonly marks = input<readonly LineMark[]>([]);
@@ -52,15 +54,24 @@ export class CodeEditorComponent {
   constructor() {
     const destroyRef = inject(DestroyRef);
     afterNextRender(() => {
-      void import('./codemirror-setup').then((module) => {
+      void import('./codemirror-setup').then(async (module) => {
+        const language = this.language();
+        const support = await module.loadLanguage(language);
         if (destroyRef.destroyed) {
           return;
         }
         this.editorModule = module;
-        this.view = module.createEditor(this.host().nativeElement, this.value(), this.label(), {
-          onChange: (code) => this.value.set(code),
-          onRun: () => this.run.emit(),
-        });
+        this.view = module.createEditor(
+          this.host().nativeElement,
+          this.value(),
+          this.label(),
+          {
+            onChange: (code) => this.value.set(code),
+            onRun: () => this.run.emit(),
+          },
+          support,
+          language === 'java' ? '    ' : '  ',
+        );
         this.ready.set(true);
         module.markLines(this.view, this.marks());
       });
@@ -81,6 +92,13 @@ export class CodeEditorComponent {
         this.editorModule.replaceDocument(this.view, code);
       }
     });
+  }
+
+  /** Puts the cursor on a line and brings it into view. */
+  revealLine(line: number): void {
+    if (this.view && this.editorModule) {
+      this.editorModule.revealLine(this.view, line);
+    }
   }
 
   protected onFallbackInput(event: Event): void {

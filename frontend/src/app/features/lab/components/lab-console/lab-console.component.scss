@@ -1,0 +1,144 @@
+@use '../../lab-shared' as lab;
+
+:host {
+  display: block;
+  height: 100%;
+  min-height: 0;
+}
+
+.console {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: var(--color-console-bg);
+}
+
+.console__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-1) var(--space-2) var(--space-1) var(--space-3);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.console__status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+
+  &[data-status='ok'] {
+    color: var(--color-success);
+  }
+
+  &[data-status='error'],
+  &[data-status='timeout'] {
+    color: var(--color-danger);
+  }
+
+  &[data-status='blocked'] {
+    color: var(--color-warning);
+  }
+
+  &[data-status='running'] .console__dot {
+    animation: lab-pulse 0.9s ease-in-out infinite;
+  }
+}
+
+.console__dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background-color: currentColor;
+}
+
+.console__time {
+  color: var(--color-text-subtle);
+}
+
+.console__clear {
+  @include lab.tool-button;
+}
+
+.console__body {
+  @include lab.scroll-body;
+  padding: var(--space-2) 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  line-height: 1.6;
+}
+
+.console__line {
+  display: flex;
+  gap: var(--space-2);
+  padding: 1px var(--space-3);
+  color: var(--color-text);
+  white-space: pre-wrap;
+  word-break: break-word;
+
+  &[data-level='error'] {
+    background-color: var(--color-danger-soft);
+    color: var(--color-danger);
+  }
+
+  &[data-level='warn'] {
+    color: var(--color-warning);
+  }
+
+  &[data-level='system'] {
+    color: var(--color-text-muted);
+    font-family: var(--font-sans);
+  }
+
+  &[data-level='debug'] {
+    color: var(--color-text-subtle);
+  }
+}
+
+.console__mark {
+  flex-shrink: 0;
+  width: 0.8rem;
+  text-align: center;
+}
+
+.console__text {
+  flex: 1;
+  min-width: 0;
+}
+
+.console__where {
+  flex-shrink: 0;
+  align-self: flex-start;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-size: var(--text-xs);
+  text-decoration: underline;
+  cursor: pointer;
+
+  &:disabled {
+    text-decoration: none;
+    cursor: default;
+  }
+}
+
+.console__empty {
+  padding: var(--space-3);
+  color: var(--color-text-subtle);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+
+  code {
+    font-family: var(--font-mono);
+  }
+}
+
+@keyframes lab-pulse {
+  50% {
+    opacity: 0.25;
+  }
+}

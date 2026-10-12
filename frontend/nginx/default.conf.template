@@ -5,6 +5,12 @@ server {
     root /usr/share/nginx/html;
     index index.html;
 
+    # The lab downloads the TypeScript compiler and its type libraries, which are
+    # megabytes of text: compression makes that a fraction.
+    gzip on;
+    gzip_min_length 1024;
+    gzip_types text/css application/javascript application/json text/plain video/mp2t application/octet-stream;
+
     add_header X-Content-Type-Options "nosniff" always;
     add_header X-Frame-Options "DENY" always;
     add_header Referrer-Policy "strict-origin-when-cross-origin" always;
@@ -25,6 +31,12 @@ server {
 
     # `expires` is used instead of add_header for caching: an add_header inside a
     # location would discard the security headers declared above.
+
+    # The compiler and its libraries keep their names between versions: revalidate them.
+    location ^~ /vendor/ {
+        expires -1;
+        try_files $uri =404;
+    }
 
     # Build output is content-hashed, so it can be cached for a long time.
     location ~* \.(?:js|css|woff2?)$ {

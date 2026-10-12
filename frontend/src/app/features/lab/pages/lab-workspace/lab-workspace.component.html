@@ -1,0 +1,293 @@
+@let project = store.project();
+@let view = layout();
+
+<section
+  class="lab"
+  [class.lab--dragging]="dragging()"
+  [attr.data-run]="store.runner.status()"
+  aria-labelledby="lab-heading"
+>
+  <header class="lab__bar">
+    <div class="lab__identity">
+      <h1 id="lab-heading" class="visually-hidden">Práctica general</h1>
+      <button type="button" class="lab__project" title="Proyectos: nombre, versiones, abrir otro" (click)="projects.open()">
+        <span aria-hidden="true">▤</span>
+        <span class="lab__project-name">{{ project.name }}</span>
+      </button>
+      <span class="lab__save" [attr.data-state]="store.saveState()" role="status">{{ saveLabels[store.saveState()] }}</span>
+    </div>
+
+    <div class="lab__modes" role="group" aria-label="Modo de aprendizaje">
+      @for (option of modes; track option.mode) {
+        <button
+          type="button"
+          class="lab__mode"
+          [class.lab__mode--active]="project.mode === option.mode"
+          [attr.aria-pressed]="project.mode === option.mode"
+          [title]="option.hint"
+          (click)="setMode(option.mode)"
+        >
+          {{ option.label }}
+        </button>
+      }
+    </div>
+
+    <div class="lab__actions">
+      <span class="lab__toggles" role="group" aria-label="Paneles">
+        <button
+          type="button"
+          class="lab__toggle"
+          [class.lab__toggle--on]="view.showSide"
+          [attr.aria-pressed]="view.showSide"
+          title="Mostrar u ocultar los archivos"
+          (click)="toggle('showSide')"
+        >
+          Archivos
+        </button>
+        <button
+          type="button"
+          class="lab__toggle"
+          [class.lab__toggle--on]="view.showBottom"
+          [attr.aria-pressed]="view.showBottom"
+          title="Mostrar u ocultar la consola, los problemas y las pruebas"
+          (click)="toggle('showBottom')"
+        >
+          Consola
+        </button>
+        <button
+          type="button"
+          class="lab__toggle"
+          [class.lab__toggle--on]="view.showRight"
+          [attr.aria-pressed]="view.showRight"
+          title="Mostrar u ocultar la vista previa, la guía y el tutor"
+          (click)="toggle('showRight')"
+        >
+          Lateral
+        </button>
+      </span>
+      <button type="button" class="button button--ghost button--small" title="Formatear el archivo con Prettier" (click)="store.format()">
+        Formatear
+      </button>
+      <button
+        type="button"
+        class="button button--ghost button--small"
+        title="Guardar (Ctrl + S)"
+        [disabled]="store.saveState() === 'saving'"
+        (click)="store.save()"
+      >
+        Guardar
+      </button>
+      <button
+        type="button"
+        class="button button--secondary button--small"
+        title="Ejecutar el programa y sus pruebas"
+        [disabled]="store.runner.running() || project.tests.length === 0"
+        (click)="run(true)"
+      >
+        Probar
+      </button>
+      <button
+        type="button"
+        class="button button--primary button--small"
+        title="Ejecutar (Ctrl + Intro)"
+        [disabled]="store.runner.running()"
+        (click)="run(false)"
+      >
+        {{ store.runner.running() ? 'Ejecutando…' : 'Ejecutar ▸' }}
+      </button>
+    </div>
+  </header>
+
+  <div class="lab__main">
+    @if (view.showSide) {
+      <aside class="lab__side" [style.width.px]="view.side" aria-label="Archivos del proyecto">
+        <app-lab-explorer />
+      </aside>
+      <div
+        class="lab__divider lab__divider--vertical"
+        role="separator"
+        aria-orientation="vertical"
+        aria-label="Ancho del panel de archivos"
+        tabindex="0"
+        (pointerdown)="startDrag('side', $event)"
+        (pointermove)="drag($event)"
+        (pointerup)="endDrag()"
+        (pointercancel)="endDrag()"
+        (keydown)="nudge('side', $event)"
+      ></div>
+    }
+
+    <div class="lab__center">
+      <div class="lab__editor">
+        <div class="lab__tabs" role="tablist" aria-label="Archivos abiertos">
+          @for (file of project.files; track file.path) {
+            <button
+              type="button"
+              role="tab"
+              class="lab__tab"
+              [class.lab__tab--active]="file.path === store.activePath()"
+              [attr.aria-selected]="file.path === store.activePath()"
+              [attr.data-language]="languageOf(file.path)"
+              (click)="store.select(file.path)"
+            >
+              {{ file.path }}
+            </button>
+          }
+          <span class="lab__language">
+            @if (store.analyzing()) {
+              Analizando…
+            } @else {
+              {{ activeLanguageLabel() }}
+            }
+          </span>
+        </div>
+        @if (store.ready()) {
+          @for (file of [store.activeFile()]; track file?.path) {
+            @if (file) {
+              <app-code-editor
+                class="lab__code"
+                [language]="activeLanguage()"
+                [label]="'Editor de ' + file.path"
+                [value]="file.content"
+                [marks]="store.activeMarks()"
+                (valueChange)="store.updateFile(file.path, $event)"
+                (run)="run(false)"
+              />
+            }
+          }
+        } @else {
+          <p class="lab__loading" role="status">Abriendo tu proyecto…</p>
+        }
+      </div>
+
+      @if (view.showBottom) {
+        <div
+          class="lab__divider lab__divider--horizontal"
+          role="separator"
+          aria-orientation="horizontal"
+          aria-label="Alto del panel inferior"
+          tabindex="0"
+          (pointerdown)="startDrag('bottom', $event)"
+          (pointermove)="drag($event)"
+          (pointerup)="endDrag()"
+          (pointercancel)="endDrag()"
+          (keydown)="nudge('bottom', $event)"
+        ></div>
+        <div class="lab__bottom" [style.height.px]="view.bottom">
+          <div class="lab__tabs" role="tablist" aria-label="Resultados">
+            <button
+              type="button"
+              role="tab"
+              class="lab__tab"
+              [class.lab__tab--active]="bottomTab() === 'console'"
+              [attr.aria-selected]="bottomTab() === 'console'"
+              (click)="bottomTab.set('console')"
+            >
+              Consola
+            </button>
+            <button
+              type="button"
+              role="tab"
+              class="lab__tab"
+              [class.lab__tab--active]="bottomTab() === 'problems'"
+              [attr.aria-selected]="bottomTab() === 'problems'"
+              (click)="bottomTab.set('problems')"
+            >
+              Problemas
+              @if (store.errorCount() > 0) {
+                <span class="lab__badge lab__badge--error">{{ store.errorCount() }}</span>
+              }
+              @if (store.warningCount() > 0) {
+                <span class="lab__badge lab__badge--warning">{{ store.warningCount() }}</span>
+              }
+            </button>
+            <button
+              type="button"
+              role="tab"
+              class="lab__tab"
+              [class.lab__tab--active]="bottomTab() === 'tests'"
+              [attr.aria-selected]="bottomTab() === 'tests'"
+              (click)="bottomTab.set('tests')"
+            >
+              Pruebas
+              @if (testSummary()) {
+                <span class="lab__badge">{{ testSummary() }}</span>
+              }
+            </button>
+          </div>
+          <div class="lab__panel">
+            @switch (bottomTab()) {
+              @case ('console') {
+                <app-lab-console (locate)="locate($event)" />
+              }
+              @case ('problems') {
+                <app-lab-problems (locate)="locate($event)" (asked)="showRight('tutor')" />
+              }
+              @case ('tests') {
+                <app-lab-tests />
+              }
+            }
+          </div>
+        </div>
+      }
+    </div>
+
+    @if (view.showRight) {
+      <div
+        class="lab__divider lab__divider--vertical"
+        role="separator"
+        aria-orientation="vertical"
+        aria-label="Ancho del panel lateral"
+        tabindex="0"
+        (pointerdown)="startDrag('right', $event)"
+        (pointermove)="drag($event)"
+        (pointerup)="endDrag()"
+        (pointercancel)="endDrag()"
+        (keydown)="nudge('right', $event)"
+      ></div>
+      <aside class="lab__right" [style.width.px]="view.right">
+        <div class="lab__tabs" role="tablist" aria-label="Vista previa y ayuda">
+          <button
+            type="button"
+            role="tab"
+            class="lab__tab"
+            [class.lab__tab--active]="rightTab() === 'preview'"
+            [attr.aria-selected]="rightTab() === 'preview'"
+            (click)="rightTab.set('preview')"
+          >
+            Vista previa
+          </button>
+          <button
+            type="button"
+            role="tab"
+            class="lab__tab"
+            [class.lab__tab--active]="rightTab() === 'guide'"
+            [attr.aria-selected]="rightTab() === 'guide'"
+            (click)="rightTab.set('guide')"
+          >
+            Guía
+          </button>
+          <button
+            type="button"
+            role="tab"
+            class="lab__tab"
+            [class.lab__tab--active]="rightTab() === 'tutor'"
+            [attr.aria-selected]="rightTab() === 'tutor'"
+            (click)="rightTab.set('tutor')"
+          >
+            ✦ Tutor
+            @if (store.proposal()) {
+              <span class="lab__badge">1</span>
+            }
+          </button>
+        </div>
+        <!-- All three stay mounted: switching tabs must not reload the running page. -->
+        <div class="lab__panel" [hidden]="rightTab() !== 'preview'"><app-lab-preview /></div>
+        <div class="lab__panel" [hidden]="rightTab() !== 'guide'"><app-lab-guide (asked)="showRight('tutor')" /></div>
+        <div class="lab__panel" [hidden]="rightTab() !== 'tutor'"><app-lab-tutor /></div>
+      </aside>
+    }
+  </div>
+
+  <app-lab-projects #projects />
+</section>

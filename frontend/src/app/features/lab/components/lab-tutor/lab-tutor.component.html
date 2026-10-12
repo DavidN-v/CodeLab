@@ -1,0 +1,126 @@
+<div class="tutor">
+  @if (!store.signedIn()) {
+    <div class="tutor__empty">
+      <p><strong>El tutor necesita tu cuenta.</strong></p>
+      <p>
+        <a routerLink="/login" [queryParams]="{ returnUrl: '/lab' }">Entra</a> o
+        <a routerLink="/register">crea una cuenta</a> para pedir pistas y explicaciones. Las explicaciones de la pestaña
+        Problemas funcionan sin cuenta.
+      </p>
+    </div>
+  } @else if (enabled() === false) {
+    <div class="tutor__empty">
+      <p><strong>El tutor no está configurado en este servidor.</strong></p>
+      <p>
+        Falta la clave <code>ANTHROPIC_API_KEY</code> en el archivo <code>.env</code>. Mientras tanto tienes el análisis,
+        la ejecución real, las pruebas y las explicaciones de la pestaña Problemas.
+      </p>
+    </div>
+  } @else {
+    <section class="tutor__ask">
+      <p class="tutor__intro">
+        Elige cuánta ayuda quieres. El tutor lee tu código y lo que han dicho las herramientas (problemas, consola y
+        pruebas): cuanto más hayas ejecutado y probado, más preciso es.
+      </p>
+      <input
+        class="tutor__question"
+        type="text"
+        maxlength="1000"
+        placeholder="Tu pregunta (opcional): ¿por qué no suma bien?"
+        aria-label="Tu pregunta para el tutor"
+        [value]="question()"
+        (input)="onQuestion($event)"
+        (keydown.enter)="ask(1)"
+      />
+      <div class="tutor__levels" role="group" aria-label="Nivel de ayuda">
+        @for (option of levels; track option.level) {
+          <button
+            type="button"
+            class="tutor__level"
+            [title]="option.hint"
+            [disabled]="store.tutorLoading()"
+            (click)="ask(option.level)"
+          >
+            <span class="tutor__step">{{ option.level }}</span> {{ option.label }}
+          </button>
+        }
+      </div>
+      <button
+        type="button"
+        class="tutor__fix"
+        title="El tutor propone un cambio en el archivo abierto. Lo verás comparado con tu código y tú decides."
+        [disabled]="store.tutorLoading() || !store.activeFile() || store.proposal() !== null"
+        (click)="requestFix()"
+      >
+        <span class="tutor__step">5</span> Proponer una corrección de {{ store.activeFile()?.path }}
+      </button>
+      @if (!store.executed()) {
+        <p class="tutor__note">
+          No has ejecutado el programa desde el último cambio: el tutor solo podrá leer el código, sin saber qué hace al
+          ejecutarse.
+        </p>
+      }
+    </section>
+
+    @if (store.tutorLoading()) {
+      <p class="tutor__status" role="status">✦ El tutor está pensando…</p>
+    }
+    @if (store.tutorError(); as failure) {
+      <p class="tutor__error" role="alert">⚠ {{ failure }}</p>
+    }
+
+    @if (store.proposal(); as proposal) {
+      <section class="tutor__proposal" aria-label="Corrección propuesta">
+        <h3 class="tutor__heading">Corrección propuesta para {{ proposal.path }}</h3>
+        <p class="tutor__note">Todavía no se ha cambiado nada. Compara y decide.</p>
+        <div class="diff" role="table" aria-label="Comparación entre tu código y la corrección">
+          @for (line of comparison(); track $index) {
+            @if (line) {
+              <div class="diff__line" role="row" [attr.data-kind]="line.kind">
+                <span class="diff__number" role="cell">{{ line.before ?? '' }}</span>
+                <span class="diff__number" role="cell">{{ line.after ?? '' }}</span>
+                <span class="diff__sign" role="cell">{{
+                  line.kind === 'added' ? '+' : line.kind === 'removed' ? '−' : ''
+                }}</span>
+                <span class="diff__text" role="cell">{{ line.text }}</span>
+              </div>
+            } @else {
+              <div class="diff__skip" role="row">⋯</div>
+            }
+          }
+        </div>
+        @if (proposal.explanation) {
+          <app-markdown [content]="proposal.explanation" />
+        }
+        <div class="tutor__row">
+          <button type="button" class="tutor__button tutor__button--primary" (click)="acceptAndTest()">
+            Aceptar y volver a probar
+          </button>
+          <button type="button" class="tutor__button" (click)="store.acceptProposal()">Aceptar</button>
+          <button type="button" class="tutor__button" (click)="store.rejectProposal()">Rechazar</button>
+        </div>
+        <p class="tutor__note">
+          Es una propuesta de una IA: puede no resolver el problema. Las pruebas son las que dicen si lo ha resuelto.
+        </p>
+      </section>
+    }
+
+    @if (store.undoable(); as applied) {
+      <p class="tutor__undo" role="status">
+        Has aceptado una corrección en {{ applied.path }}.
+        <button type="button" class="tutor__button" (click)="store.undoFix()">Deshacer</button>
+        <button type="button" class="tutor__button" (click)="store.run(true)">▸ Volver a probar</button>
+      </p>
+    }
+
+    @for (message of store.tutorMessages(); track $index) {
+      <article class="tutor__answer">
+        <p class="tutor__by">✦ {{ message.title }}</p>
+        <app-markdown [content]="message.markdown" />
+      </article>
+    }
+    @if (store.tutorMessages().length > 0) {
+      <button type="button" class="tutor__button tutor__clear" (click)="store.clearTutor()">Borrar las respuestas</button>
+    }
+  }
+</div>

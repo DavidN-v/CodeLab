@@ -39,7 +39,8 @@ describe('NavbarComponent', () => {
   it('renders one link per navigation entry, in order', () => {
     const links = Array.from(element.querySelectorAll<HTMLAnchorElement>('.navbar__link'));
 
-    expect(links.map((link) => link.textContent?.trim())).toEqual(NAV_LINKS.map((l) => l.label));
+    // An entry may carry a decorative icon before its label.
+    expect(links.map((link) => link.lastChild?.textContent?.trim())).toEqual(NAV_LINKS.map((l) => l.label));
     expect(links.map((link) => link.getAttribute('href'))).toEqual(NAV_LINKS.map((l) => l.path));
   });
 

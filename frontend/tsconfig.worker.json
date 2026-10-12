@@ -1,0 +1,9 @@
+/* Web workers have no DOM: they are compiled with the worker library instead. */
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "lib": ["es2022", "webworker"],
+    "types": []
+  },
+  "include": ["src/**/*.worker.ts"]
+}

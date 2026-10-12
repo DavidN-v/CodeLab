@@ -1,0 +1,81 @@
+<div class="problems">
+  @if (store.toolsError(); as failure) {
+    <p class="problems__notice problems__notice--error" role="alert">
+      ⚠ No se ha podido analizar el código: {{ failure }} Mientras tanto, esta lista no dice nada sobre tu programa.
+    </p>
+  } @else if (!store.typesChecked()) {
+    <p class="problems__notice">
+      No se han podido cargar las definiciones de tipos, así que los <strong>tipos de TypeScript no se han comprobado</strong>.
+      La sintaxis y las reglas sí.
+    </p>
+  }
+
+  @for (problem of problems(); track $index) {
+    <article class="problem" [attr.data-severity]="problem.severity">
+      <button type="button" class="problem__head" [attr.aria-expanded]="open() === $index" (click)="toggle($index)">
+        <span class="problem__kind">{{ labels[problem.category] }}</span>
+        <span class="problem__message">{{ problem.message }}</span>
+        <span class="problem__certainty" [class.problem__certainty--suspected]="!problem.confirmed">
+          {{ problem.confirmed ? 'Confirmado' : 'Sospecha' }}
+        </span>
+      </button>
+
+      @if (open() === $index) {
+        <div class="problem__body">
+          <dl class="problem__facts">
+            <dt>Qué está mal</dt>
+            <dd>{{ problem.message }}</dd>
+            <dt>Dónde</dt>
+            <dd>
+              @if (problem.path) {
+                <button type="button" class="problem__link" (click)="goTo(problem)">
+                  {{ problem.path }}{{ problem.line ? ', línea ' + problem.line : '' }}
+                </button>
+              } @else {
+                En el comportamiento del programa, no en una línea concreta.
+              }
+              <span class="problem__source">· {{ problem.source }} · {{ problem.code }}</span>
+            </dd>
+            @if (problem.lesson; as lesson) {
+              <dt>Por qué es un problema</dt>
+              <dd>{{ lesson.why }}</dd>
+              <dt>Qué consecuencia tiene</dt>
+              <dd>{{ lesson.consequence }}</dd>
+              <dt>Cómo corregirlo</dt>
+              <dd>{{ lesson.fix }}</dd>
+              <dt>Ejemplo corregido</dt>
+              <dd><pre class="problem__example">{{ lesson.example }}</pre></dd>
+              <dt>Qué concepto repasar</dt>
+              <dd>{{ lesson.concept }}</dd>
+            }
+          </dl>
+          @if (!problem.confirmed) {
+            <p class="problem__note">
+              Es una sospecha: lo dice una regla al leer el código, sin haberlo ejecutado. Puede que tu código esté bien;
+              compruébalo ejecutando o con una prueba.
+            </p>
+          }
+          <button type="button" class="problem__ask" [disabled]="store.tutorLoading()" (click)="ask(problem)">
+            ✦ {{ problem.lesson ? 'Pedir otra explicación al tutor' : 'Pedir la explicación al tutor' }}
+          </button>
+        </div>
+      }
+    </article>
+  } @empty {
+    @if (!store.toolsError()) {
+      <div class="problems__empty">
+        @if (store.analyzing()) {
+          <p>Analizando…</p>
+        } @else {
+          <p><strong>El análisis no ha encontrado problemas.</strong></p>
+          <p>
+            Eso significa que el código se puede leer y que las reglas no ven nada sospechoso.
+            @if (!store.executed()) {
+              Todavía no dice si hace lo que quieres: ejecútalo y, mejor aún, escribe pruebas.
+            }
+          </p>
+        }
+      </div>
+    }
+  }
+</div>

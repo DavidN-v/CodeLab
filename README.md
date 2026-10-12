@@ -28,6 +28,14 @@ contenido en [docs/CONTENT.md](docs/CONTENT.md).
   imprime?», completar huecos, ordenar líneas, encontrar el error, escribir el
   programa y proyectos. Escalera de pistas, solución y corrección contra
   pruebas visibles y ocultas.
+- **Práctica general (`/lab`):** un laboratorio libre con HTML, CSS,
+  JavaScript y TypeScript. Editor con varios archivos, consola real y vista
+  previa en un marco aislado (sin red ni acceso a la sesión), corte de bucles
+  infinitos, errores del compilador de TypeScript en español, reglas propias y
+  pruebas automáticas. Cada problema se explica en siete puntos y se marca
+  como confirmado o sospecha. Cuatro modos (libre, tutor, desafío y
+  depuración) y proyectos con versiones guardados en la cuenta; sin sesión, el
+  trabajo queda como borrador en el navegador, y así se indica.
 - **Errores que no asustan:** los errores de compilación y las excepciones se
   explican en español y se subrayan en el editor; cuando la salida no coincide,
   se compara línea a línea con la esperada y se sugiere la causa (espacios,

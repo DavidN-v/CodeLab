@@ -47,8 +47,24 @@
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              {
+                "glob": "typescript.js",
+                "input": "node_modules/typescript/lib",
+                "output": "vendor"
+              },
+              {
+                "glob": "lib.*.d.ts",
+                "input": "node_modules/typescript/lib",
+                "output": "vendor/ts-lib"
+              },
+              {
+                "glob": "diagnosticMessages.generated.json",
+                "input": "node_modules/typescript/lib/es",
+                "output": "vendor/ts-es"
               }
             ],
+            "webWorkerTsConfig": "tsconfig.worker.json",
             "styles": [
               "@fontsource/ibm-plex-sans/latin-400.css",
               "@fontsource/ibm-plex-sans/latin-500.css",

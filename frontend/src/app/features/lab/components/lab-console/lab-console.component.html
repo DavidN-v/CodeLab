@@ -1,0 +1,41 @@
+<div class="console">
+  <div class="console__bar">
+    <span class="console__status" [attr.data-status]="runner.status()" role="status">
+      <span class="console__dot" aria-hidden="true"></span>
+      {{ statusText[runner.status()] }}
+      @if (runner.durationMs() !== null && runner.status() !== 'running') {
+        <span class="console__time">· {{ runner.durationMs() }} ms</span>
+      }
+    </span>
+    <button type="button" class="console__clear" [disabled]="runner.entries().length === 0" (click)="runner.clearConsole()">
+      Limpiar
+    </button>
+  </div>
+
+  <div class="console__body" #body aria-live="polite">
+    @for (entry of runner.entries(); track $index) {
+      <p class="console__line" [attr.data-level]="entry.level">
+        <span class="console__mark" aria-hidden="true">{{
+          entry.level === 'error' ? '✕' : entry.level === 'warn' ? '!' : entry.level === 'system' ? '›' : ''
+        }}</span>
+        <span class="console__text">{{ entry.text }}</span>
+        @if (entry.path) {
+          <button type="button" class="console__where" [disabled]="!entry.line" (click)="goTo(entry)">
+            {{ entry.path }}{{ entry.line ? ':' + entry.line : '' }}
+          </button>
+        }
+      </p>
+    } @empty {
+      <p class="console__empty">
+        @if (runner.status() === 'idle') {
+          Pulsa <strong>Ejecutar</strong> (o Ctrl + Intro). Aquí verás lo que escriba tu programa con
+          <code>console.log()</code> y los errores que se produzcan al ejecutarlo.
+        } @else if (runner.status() === 'running') {
+          Ejecutando…
+        } @else {
+          El programa se ha ejecutado y no ha escrito nada en la consola.
+        }
+      </p>
+    }
+  </div>
+</div>

@@ -1,0 +1,201 @@
+<ng-template #picker>
+  <ul class="guide__options">
+    @for (entry of options(); track entry.id) {
+      <li class="guide__option">
+        <div>
+          <p class="guide__option-title">{{ entry.title }}</p>
+          <p class="guide__option-summary">{{ entry.summary }}</p>
+        </div>
+        @if (confirming() === entry.id) {
+          <span class="guide__confirm">
+            Sustituirá lo que tienes en pantalla.
+            <button type="button" class="guide__button guide__button--primary" (click)="start(entry)">Empezar</button>
+            <button type="button" class="guide__button" (click)="confirming.set(null)">Cancelar</button>
+          </span>
+        } @else {
+          <button type="button" class="guide__button" (click)="confirming.set(entry.id)">Empezar</button>
+        }
+      </li>
+    }
+  </ul>
+  @if (store.project().id === null) {
+    <p class="guide__hint">
+      Tu proyecto actual no está guardado en tu cuenta: al empezar otro, se pierde. Guárdalo antes si quieres conservarlo.
+    </p>
+  }
+</ng-template>
+
+<div class="guide">
+  @if (isExerciseMode()) {
+    @if (exercise(); as current) {
+      <p class="guide__eyebrow">{{ mode() === 'challenge' ? 'Desafío' : 'Depuración' }}</p>
+      <h2 class="guide__title">{{ current.title }}</h2>
+      <app-markdown [content]="current.statement" />
+      <p class="guide__hint">
+        {{
+          mode() === 'challenge'
+            ? 'Tu solución se evalúa con las pruebas de la pestaña Pruebas: miran lo que hace el programa, no cómo está escrito.'
+            : 'No hay una única forma de arreglarlo: el ejercicio está resuelto cuando pasan todas las pruebas.'
+        }}
+      </p>
+      <div class="guide__row">
+        <button type="button" class="guide__button guide__button--primary" (click)="store.run(true)">▸ Ejecutar pruebas</button>
+        <button type="button" class="guide__button" (click)="store.resetExercise()">Volver al código inicial</button>
+        <button type="button" class="guide__button" (click)="browsing.set(!browsing())">
+          {{ browsing() ? 'Cerrar la lista' : 'Elegir otro' }}
+        </button>
+      </div>
+      @if (browsing()) {
+        <ng-container [ngTemplateOutlet]="picker" />
+      }
+    } @else {
+      <p class="guide__eyebrow">{{ mode() === 'challenge' ? 'Modo desafío' : 'Modo depuración' }}</p>
+      <h2 class="guide__title">
+        {{ mode() === 'challenge' ? 'Elige un objetivo' : 'Elige un programa con errores' }}
+      </h2>
+      <p class="guide__text">
+        {{
+          mode() === 'challenge'
+            ? 'Cada desafío tiene un objetivo y unas pruebas. Escribes la solución como quieras y las pruebas dicen si funciona.'
+            : 'Recibes un programa que falla. Usa la consola, los problemas y las pruebas para encontrar los errores y corregirlos.'
+        }}
+      </p>
+      <ng-container [ngTemplateOutlet]="picker" />
+    }
+  } @else {
+    <p class="guide__eyebrow">{{ mode() === 'tutor' ? 'Modo tutor' : 'Modo libre' }}</p>
+    <h2 class="guide__title">¿Qué quieres construir?</h2>
+    <p class="guide__text">
+      Escríbelo con tus palabras: una calculadora, un formulario de registro, una lista de tareas… o cualquier otra cosa.
+      {{
+        mode() === 'tutor'
+          ? 'El tutor lo convierte en pasos y te acompaña en cada uno.'
+          : 'Puedes programar directamente, o pedir un plan para ordenar las ideas.'
+      }}
+    </p>
+    <textarea
+      class="guide__idea"
+      rows="3"
+      maxlength="2000"
+      placeholder="Quiero crear una calculadora que sume, reste, multiplique y divida."
+      aria-label="Tu idea"
+      [value]="ideaText()"
+      (input)="onIdea($event)"
+      (blur)="keepIdea()"
+    ></textarea>
+
+    @if (!store.signedIn()) {
+      <p class="guide__hint">
+        <a routerLink="/login" [queryParams]="{ returnUrl: '/lab' }">Entra con tu cuenta</a> para que el tutor convierta tu
+        idea en un plan. Programar, ejecutar y probar funciona sin cuenta.
+      </p>
+    } @else if (tutorEnabled() === false) {
+      <p class="guide__hint">
+        El tutor no está configurado en este servidor (falta <code>ANTHROPIC_API_KEY</code>), así que no puede preparar un
+        plan. Todo lo demás funciona: escribe tu código, ejecútalo y añade tus pruebas.
+      </p>
+    } @else {
+      <div class="guide__row">
+        <button
+          type="button"
+          class="guide__button guide__button--primary"
+          [disabled]="!ideaText().trim() || store.tutorLoading()"
+          (click)="makePlan()"
+        >
+          ✦ {{ store.tutorLoading() ? 'Preparando el plan…' : plan() ? 'Rehacer el plan' : 'Convertir en un plan' }}
+        </button>
+      </div>
+    }
+    @if (store.tutorError(); as failure) {
+      <p class="guide__error" role="alert">⚠ {{ failure }}</p>
+    }
+
+    @if (plan(); as current) {
+      <section class="guide__plan">
+        <h3 class="guide__heading">Objetivo</h3>
+        <p class="guide__text">{{ current.goal }}</p>
+
+        @if (current.questions.length > 0) {
+          <h3 class="guide__heading">Antes de seguir, el tutor necesita saber</h3>
+          <ul class="guide__list">
+            @for (question of current.questions; track $index) {
+              <li>{{ question }}</li>
+            }
+          </ul>
+          <textarea
+            class="guide__idea"
+            rows="2"
+            maxlength="2000"
+            placeholder="Tus respuestas"
+            aria-label="Tus respuestas a las preguntas del tutor"
+            [value]="answers()"
+            (input)="answers.set(read($event))"
+          ></textarea>
+          <button
+            type="button"
+            class="guide__button"
+            [disabled]="!answers().trim() || store.tutorLoading()"
+            (click)="makePlan()"
+          >
+            Rehacer el plan con mis respuestas
+          </button>
+        }
+
+        @if (current.requirements.length > 0) {
+          <h3 class="guide__heading">Lo que debe hacer</h3>
+          <ul class="guide__list">
+            @for (requirement of current.requirements; track $index) {
+              <li>{{ requirement }}</li>
+            }
+          </ul>
+        }
+
+        @if (current.steps.length > 0) {
+          <h3 class="guide__heading">Pasos</h3>
+          <ol class="guide__steps">
+            @for (step of current.steps; track $index) {
+              <li class="guide__step" [class.guide__step--done]="store.project().doneSteps.includes($index)">
+                <label>
+                  <input
+                    type="checkbox"
+                    [checked]="store.project().doneSteps.includes($index)"
+                    (change)="store.toggleStep($index)"
+                  />
+                  <span>{{ step }}</span>
+                </label>
+                @if (mode() === 'tutor') {
+                  <button type="button" class="guide__button" [disabled]="store.tutorLoading()" (click)="explainStep(step)">
+                    Explícame este paso
+                  </button>
+                }
+              </li>
+            }
+          </ol>
+        }
+
+        @if (current.concepts.length > 0) {
+          <h3 class="guide__heading">Lo que vas a necesitar</h3>
+          <ul class="guide__list">
+            @for (concept of current.concepts; track $index) {
+              <li>{{ concept }}</li>
+            }
+          </ul>
+        }
+
+        @if (store.suggestedTests().length > 0) {
+          <p class="guide__hint">
+            El tutor propone {{ store.suggestedTests().length }} pruebas. Revísalas en la pestaña <strong>Pruebas</strong> y
+            acepta solo las que describan lo que tú quieres.
+          </p>
+        }
+      </section>
+    }
+
+    <button type="button" class="guide__button guide__more" (click)="browsing.set(!browsing())">
+      {{ browsing() ? 'Cerrar las plantillas' : 'Empezar desde una plantilla' }}
+    </button>
+    @if (browsing()) {
+      <ng-container [ngTemplateOutlet]="picker" />
+    }
+  }
+</div>

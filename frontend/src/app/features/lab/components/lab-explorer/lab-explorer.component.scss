@@ -1,0 +1,131 @@
+@use '../../lab-shared' as lab;
+
+:host {
+  display: block;
+  height: 100%;
+  min-height: 0;
+}
+
+.explorer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.explorer__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-2) var(--space-2) var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.explorer__title {
+  @include lab.label;
+  color: var(--color-text-subtle);
+}
+
+.explorer__tools,
+.explorer__actions {
+  display: flex;
+  gap: 2px;
+}
+
+.explorer__tool {
+  @include lab.tool-button;
+
+  &--danger {
+    color: var(--color-danger);
+  }
+}
+
+.explorer__list {
+  @include lab.scroll-body;
+  margin: 0;
+  padding: var(--space-1) 0;
+  list-style: none;
+}
+
+.explorer__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding-right: var(--space-1);
+  border-left: 2px solid transparent;
+
+  &--active {
+    border-left-color: var(--color-accent);
+    background-color: var(--color-surface-raised);
+  }
+
+  &:hover .explorer__actions,
+  &:focus-within .explorer__actions {
+    opacity: 1;
+  }
+}
+
+.explorer__file {
+  flex: 1;
+  min-width: 0;
+  padding: var(--space-1) var(--space-2) var(--space-1) var(--space-3);
+  overflow: hidden;
+  border: 0;
+  background: none;
+  color: var(--color-text);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.explorer__folder {
+  color: var(--color-text-subtle);
+}
+
+.explorer__count {
+  margin-left: var(--space-2);
+  padding: 0 0.35rem;
+  border-radius: 999px;
+  background-color: var(--color-danger-soft);
+  color: var(--color-danger);
+  font-size: 0.6875rem;
+}
+
+.explorer__actions {
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+
+  // Touch screens have no hover: keep the actions reachable.
+  @media (hover: none) {
+    opacity: 1;
+  }
+}
+
+.explorer__input {
+  @include lab.text-field;
+  margin: 2px var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+}
+
+.explorer__confirm {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--text-xs);
+}
+
+.explorer__hint {
+  padding: var(--space-2) var(--space-3);
+  border-top: 1px solid var(--color-border);
+  color: var(--color-text-subtle);
+  font-size: var(--text-xs);
+
+  &--error {
+    color: var(--color-danger);
+  }
+}

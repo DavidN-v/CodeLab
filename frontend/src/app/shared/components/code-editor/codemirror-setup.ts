@@ -2,10 +2,34 @@ import { indentWithTab } from '@codemirror/commands';
 import { java } from '@codemirror/lang-java';
 import { HighlightStyle, indentUnit, syntaxHighlighting } from '@codemirror/language';
 import { Diagnostic, lintGutter, setDiagnostics } from '@codemirror/lint';
-import { EditorState } from '@codemirror/state';
+import { EditorState, Extension } from '@codemirror/state';
 import { EditorView, keymap } from '@codemirror/view';
 import { tags } from '@lezer/highlight';
 import { basicSetup } from 'codemirror';
+
+/** Languages the editor can highlight. Java is the default: it is what the courses run. */
+export type EditorLanguage = 'java' | 'javascript' | 'typescript' | 'html' | 'css' | 'text';
+
+/**
+ * Highlighting, indentation and completion for a language. Everything but Java
+ * is loaded on demand, so the Java pages do not pay for the web languages.
+ */
+export async function loadLanguage(language: EditorLanguage): Promise<Extension> {
+  switch (language) {
+    case 'java':
+      return java();
+    case 'javascript':
+      return (await import('@codemirror/lang-javascript')).javascript();
+    case 'typescript':
+      return (await import('@codemirror/lang-javascript')).javascript({ typescript: true });
+    case 'html':
+      return (await import('@codemirror/lang-html')).html();
+    case 'css':
+      return (await import('@codemirror/lang-css')).css();
+    default:
+      return [];
+  }
+}
 
 export interface EditorCallbacks {
   onChange(value: string): void;
@@ -58,7 +82,13 @@ const theme = EditorView.theme(
       textDecoration: 'underline wavy var(--color-danger)',
       textUnderlineOffset: '3px',
     },
+    '.cm-lintRange-warning': {
+      backgroundImage: 'none',
+      textDecoration: 'underline wavy var(--color-warning)',
+      textUnderlineOffset: '3px',
+    },
     '.cm-diagnostic-error': { borderLeftColor: 'var(--color-danger)' },
+    '.cm-diagnostic-warning': { borderLeftColor: 'var(--color-warning)' },
     '.cm-tooltip-lint': { maxWidth: '28rem', fontFamily: 'var(--font-sans)' },
   },
   { dark: true },
@@ -78,6 +108,10 @@ const highlighting = HighlightStyle.define([
     fontStyle: 'italic',
   },
   { tag: tags.function(tags.variableName), color: 'var(--syntax-function)' },
+  // Markup: tags read like keywords and attributes like types.
+  { tag: tags.tagName, color: 'var(--syntax-keyword)' },
+  { tag: tags.attributeName, color: 'var(--syntax-type)' },
+  { tag: [tags.attributeValue, tags.regexp], color: 'var(--syntax-string)' },
 ]);
 
 export function createEditor(
@@ -85,6 +119,8 @@ export function createEditor(
   doc: string,
   label: string,
   callbacks: EditorCallbacks,
+  language: Extension = java(),
+  indent = '    ',
 ): EditorView {
   return new EditorView({
     parent,
@@ -92,10 +128,10 @@ export function createEditor(
       doc,
       extensions: [
         basicSetup,
-        java(),
+        language,
         lintGutter(),
-        indentUnit.of('    '),
-        EditorState.tabSize.of(4),
+        indentUnit.of(indent),
+        EditorState.tabSize.of(indent.length),
         keymap.of([
           {
             key: 'Mod-Enter',
@@ -126,10 +162,19 @@ export function replaceDocument(view: EditorView, value: string): void {
   }
 }
 
+/** Moves the cursor to a line and scrolls it into view, e.g. from a list of problems. */
+export function revealLine(view: EditorView, line: number): void {
+  const target = view.state.doc.line(Math.min(Math.max(line, 1), view.state.doc.lines));
+  view.dispatch({ selection: { anchor: target.from }, effects: EditorView.scrollIntoView(target.from, { y: 'center' }) });
+  view.focus();
+}
+
 /** A problem to mark on one line of the code, e.g. a compiler error. */
 export interface LineMark {
   line: number;
   message: string;
+  /** Defaults to an error. */
+  severity?: 'error' | 'warning';
 }
 
 /** Underlines the marked lines and shows the message on hover; an empty list clears them. */
@@ -143,7 +188,7 @@ export function markLines(view: EditorView, marks: readonly LineMark[]): void {
       return {
         from: Math.min(start, line.to),
         to: line.to,
-        severity: 'error',
+        severity: mark.severity ?? 'error',
         message: mark.message,
       };
     });

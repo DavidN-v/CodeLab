@@ -21,6 +21,10 @@ export const routes: Routes = [
       import('./features/practice/practice.routes').then((m) => m.PRACTICE_ROUTES),
   },
   {
+    path: 'lab',
+    loadChildren: () => import('./features/lab/lab.routes').then((m) => m.LAB_ROUTES),
+  },
+  {
     path: 'dashboard',
     loadChildren: () =>
       import('./features/dashboard/dashboard.routes').then((m) => m.DASHBOARD_ROUTES),

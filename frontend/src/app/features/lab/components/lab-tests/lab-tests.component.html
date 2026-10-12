@@ -1,0 +1,137 @@
+<div class="tests">
+  <div class="tests__bar">
+    <span class="tests__summary" role="status">
+      @if (rows().length === 0) {
+        Sin pruebas
+      } @else if (!hasResults()) {
+        {{ rows().length }} {{ rows().length === 1 ? 'prueba' : 'pruebas' }} sin ejecutar
+      } @else {
+        <strong [class.tests__all]="passed() === rows().length">{{ passed() }} de {{ rows().length }}</strong> pasan
+        @if (store.runner.resultsStale()) {
+          <span class="tests__stale">· resultados anteriores al último cambio</span>
+        }
+      }
+    </span>
+    <span class="tests__tools">
+      <button type="button" class="tests__tool" (click)="adding.set(!adding())">
+        {{ adding() ? 'Cancelar' : '＋ Añadir prueba' }}
+      </button>
+      <button
+        type="button"
+        class="tests__tool tests__tool--run"
+        [disabled]="rows().length === 0 || store.runner.running()"
+        (click)="store.run(true)"
+      >
+        ▸ Ejecutar pruebas
+      </button>
+    </span>
+  </div>
+
+  <div class="tests__body">
+    @if (adding()) {
+      <form class="tests__form" (submit)="$event.preventDefault(); add()">
+        <label class="tests__field">
+          <span>Al evaluar…</span>
+          <input
+            class="tests__input tests__input--code"
+            placeholder="sumar(2, 3)"
+            spellcheck="false"
+            [value]="expression()"
+            (input)="expression.set(read($event))"
+          />
+        </label>
+        <label class="tests__field">
+          <span>…debe dar</span>
+          <input
+            class="tests__input tests__input--code"
+            placeholder="5"
+            spellcheck="false"
+            [value]="expected()"
+            (input)="expected.set(read($event))"
+          />
+        </label>
+        <label class="tests__field tests__field--wide">
+          <span>Qué comprueba (opcional)</span>
+          <input class="tests__input" placeholder="2 + 3 da 5" [value]="description()" (input)="description.set(read($event))" />
+        </label>
+        <button class="tests__tool tests__tool--run" [disabled]="!expression().trim() || !expected().trim()">Añadir</button>
+        <p class="tests__help">
+          Las dos casillas son JavaScript: los textos van entre comillas (<code>"hola"</code>), las listas entre corchetes
+          (<code>[1, 2]</code>). Se evalúan después de cargar tu programa, así que puedes llamar a tus funciones.
+        </p>
+      </form>
+    }
+
+    @for (suggestion of store.suggestedTests(); track suggestion.id) {
+      <div class="test test--suggested">
+        <span class="test__icon" aria-hidden="true">✦</span>
+        <div class="test__main">
+          <p class="test__title">{{ suggestion.description }}</p>
+          <p class="test__code">{{ suggestion.expression }} <span>debe dar</span> {{ suggestion.expected }}</p>
+          <p class="test__note">
+            Propuesta del tutor. Acéptala solo si describe lo que <em>tú</em> quieres que haga el programa.
+          </p>
+        </div>
+        <span class="test__actions">
+          <button type="button" class="tests__tool tests__tool--run" (click)="store.acceptSuggestedTest(suggestion.id)">
+            Aceptar
+          </button>
+          <button type="button" class="tests__tool" (click)="store.discardSuggestedTest(suggestion.id)">Descartar</button>
+        </span>
+      </div>
+    }
+
+    @for (row of rows(); track row.test.id) {
+      <div class="test" [attr.data-status]="row.outcome?.status ?? 'pending'">
+        <span class="test__icon" aria-hidden="true">{{
+          row.outcome?.status === 'pass' ? '✓' : row.outcome ? '✕' : '○'
+        }}</span>
+        <div class="test__main">
+          <p class="test__title">
+            {{ row.test.description }} <span class="test__origin">{{ origins[row.test.origin] }}</span>
+          </p>
+          <p class="test__code">{{ row.test.expression }} <span>debe dar</span> {{ row.test.expected }}</p>
+          @if (row.outcome; as outcome) {
+            @if (outcome.status === 'fail') {
+              <dl class="test__result">
+                <dt>Esperado</dt>
+                <dd>{{ outcome.expected }}</dd>
+                <dt>Obtenido</dt>
+                <dd class="test__got">{{ outcome.actual }}</dd>
+              </dl>
+              <p class="test__note">
+                El resultado es real: el programa se ha ejecutado y ha devuelto eso. Para encontrar la causa, sigue con
+                <code>console.log</code> los valores dentro de la función, o pide una pista al tutor.
+              </p>
+            } @else if (outcome.status === 'error') {
+              <p class="test__error">No se ha podido evaluar: {{ outcome.error }}</p>
+              <p class="test__note">
+                La expresión ha lanzado un error antes de dar un valor. Comprueba que la función existe, que se llama así y
+                que el programa ha cargado sin errores (pestaña Consola).
+              </p>
+            }
+          }
+        </div>
+        <button
+          type="button"
+          class="tests__tool"
+          title="Quitar la prueba"
+          [attr.aria-label]="'Quitar la prueba ' + row.test.description"
+          (click)="store.removeTest(row.test.id)"
+        >
+          ✕
+        </button>
+      </div>
+    }
+
+    @if (rows().length === 0 && store.suggestedTests().length === 0 && !adding()) {
+      <div class="tests__empty">
+        <p><strong>Todavía no hay pruebas.</strong></p>
+        <p>
+          Sin pruebas, el laboratorio puede decirte si el programa se ejecuta, pero no si hace lo correcto: eso depende de
+          lo que tú quieras que haga. Una prueba lo deja por escrito: «<code>sumar(2, 3)</code> debe dar <code>5</code>».
+        </p>
+      </div>
+    }
+  </div>
+</div>

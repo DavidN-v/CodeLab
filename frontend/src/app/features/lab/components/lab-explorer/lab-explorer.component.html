@@ -1,0 +1,88 @@
+<div class="explorer">
+  <div class="explorer__bar">
+    <span class="explorer__title">Archivos</span>
+    <span class="explorer__tools">
+      <button type="button" class="explorer__tool" title="Nuevo archivo" aria-label="Nuevo archivo" (click)="startCreating()">
+        ＋
+      </button>
+      <button
+        type="button"
+        class="explorer__tool"
+        title="Descargar el proyecto (ZIP)"
+        aria-label="Descargar el proyecto en un archivo ZIP"
+        (click)="download()"
+      >
+        ⤓
+      </button>
+    </span>
+  </div>
+
+  <ul class="explorer__list">
+    @for (row of rows(); track row.file.path) {
+      <li class="explorer__item" [class.explorer__item--active]="row.file.path === store.activePath()">
+        @if (editing() === row.file.path) {
+          <input
+            class="explorer__input"
+            aria-label="Nuevo nombre del archivo"
+            [value]="draft()"
+            (input)="onDraft($event)"
+            (keydown.enter)="commit()"
+            (keydown.escape)="cancel()"
+          />
+        } @else if (confirming() === row.file.path) {
+          <span class="explorer__confirm">
+            ¿Borrar {{ row.name }}?
+            <button type="button" class="explorer__tool explorer__tool--danger" (click)="remove(row.file.path)">Borrar</button>
+            <button type="button" class="explorer__tool" (click)="confirming.set(null)">No</button>
+          </span>
+        } @else {
+          <button type="button" class="explorer__file" [title]="row.badge" (click)="store.select(row.file.path)">
+            <span class="explorer__folder">{{ row.folder }}</span>{{ row.name }}
+            @if (row.problems > 0) {
+              <span class="explorer__count" [attr.aria-label]="row.problems + ' errores'">{{ row.problems }}</span>
+            }
+          </button>
+          <span class="explorer__actions">
+            <button
+              type="button"
+              class="explorer__tool"
+              title="Cambiar el nombre"
+              [attr.aria-label]="'Cambiar el nombre de ' + row.name"
+              (click)="startRenaming(row.file.path)"
+            >
+              ✎
+            </button>
+            <button
+              type="button"
+              class="explorer__tool"
+              title="Borrar"
+              [attr.aria-label]="'Borrar ' + row.name"
+              (click)="confirming.set(row.file.path)"
+            >
+              ✕
+            </button>
+          </span>
+        }
+      </li>
+    }
+    @if (editing() === '') {
+      <li class="explorer__item">
+        <input
+          class="explorer__input"
+          placeholder="nombre.js"
+          aria-label="Nombre del archivo nuevo"
+          [value]="draft()"
+          (input)="onDraft($event)"
+          (keydown.enter)="commit()"
+          (keydown.escape)="cancel()"
+        />
+      </li>
+    }
+  </ul>
+
+  @if (editing() !== null) {
+    <p class="explorer__hint" [class.explorer__hint--error]="problem()" role="status">
+      {{ problem() ?? 'Intro para confirmar, Esc para cancelar. Extensiones: .html, .css, .js, .ts' }}
+    </p>
+  }
+</div>
