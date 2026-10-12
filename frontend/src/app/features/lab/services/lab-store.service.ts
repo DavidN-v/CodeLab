@@ -68,6 +68,40 @@ export class LabStore {
   );
   /** Java projects are compiled and run by the server, not by the browser. */
   readonly isJava = computed(() => isJavaProject(this.current().files));
+  /**
+   * The name the file on screen should have when it holds Java but is called
+   * something else (Java pasted into `main.js`); null when there is nothing to fix.
+   */
+  readonly javaRename = computed(() => {
+    const file = this.activeFile();
+    if (!file || !/\.(js|ts)$/i.test(file.path)) {
+      return null;
+    }
+    const type = /^\s*(?:public\s+)?(?:final\s+|abstract\s+)*class\s+([A-Za-z_$][\w$]*)/m.exec(file.content)?.[1];
+    const looksJava =
+      /static\s+void\s+main\s*\(\s*String/.test(file.content) ||
+      /System\.out\.print/.test(file.content) ||
+      /^\s*public\s+class\s/m.test(file.content);
+    if (!looksJava) {
+      return null;
+    }
+    const folder = file.path.includes('/') ? file.path.slice(0, file.path.lastIndexOf('/') + 1) : '';
+    return `${folder}${type ?? 'Main'}.java`;
+  });
+
+  /** Renames the file on screen so it is treated as the Java it contains. */
+  convertToJava(): void {
+    const file = this.activeFile();
+    const target = this.javaRename();
+    if (!file || !target) {
+      return;
+    }
+    const problem = this.renameFile(file.path, target);
+    if (problem) {
+      this.notifications.showInfo(problem);
+    }
+  }
+
   /** The exercise this project started from, with its statement. */
   readonly exercise = computed(() => {
     const entry = catalogEntry(this.current().catalogId);

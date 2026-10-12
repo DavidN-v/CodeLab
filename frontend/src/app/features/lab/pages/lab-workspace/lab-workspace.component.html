@@ -141,6 +141,18 @@
             }
           </span>
         </div>
+        @if (store.javaRename(); as javaName) {
+          <p class="lab__hint" role="status">
+            <span>
+              Esto parece <strong>Java</strong>, pero el archivo termina en
+              <code>{{ store.activePath().slice(store.activePath().lastIndexOf('.')) }}</code> y se está leyendo como
+              {{ activeLanguageLabel() }}.
+            </span>
+            <button type="button" class="button button--primary button--small" (click)="store.convertToJava()">
+              Convertir en {{ javaName }}
+            </button>
+          </p>
+        }
         @if (store.ready()) {
           @for (file of [store.activeFile()]; track file?.path) {
             @if (file) {
