@@ -1,5 +1,6 @@
 package com.forja.api.controller;
 
+import com.forja.api.dto.LabFolderRequest;
 import com.forja.api.dto.LabProjectRequest;
 import com.forja.api.dto.LabProjectResponse;
 import com.forja.api.dto.LabProjectSummaryResponse;
@@ -62,6 +63,13 @@ public class LabProjectController {
 	public LabProjectResponse update(@AuthenticationPrincipal Jwt token, @PathVariable Long id,
 			@Valid @RequestBody LabProjectRequest request) {
 		return service.update(CurrentUser.id(token), id, request);
+	}
+
+	@PutMapping("/{id}/folder")
+	@Operation(summary = "Move a project to a folder", description = "An empty folder takes it out of any folder.")
+	public LabProjectSummaryResponse move(@AuthenticationPrincipal Jwt token, @PathVariable Long id,
+			@Valid @RequestBody LabFolderRequest request) {
+		return service.move(CurrentUser.id(token), id, request.folder());
 	}
 
 	@DeleteMapping("/{id}")

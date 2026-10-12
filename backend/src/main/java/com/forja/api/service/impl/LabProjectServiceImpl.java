@@ -61,6 +61,7 @@ public class LabProjectServiceImpl implements LabProjectService {
 		requireJson(request.content());
 		LabProject project = new LabProject(users.getReferenceById(userId), request.name().strip(),
 				describe(request.description()), request.mode(), request.content());
+		project.moveTo(folderName(request.folder()));
 		return LabProjectResponse.of(projects.saveAndFlush(project));
 	}
 
@@ -69,7 +70,18 @@ public class LabProjectServiceImpl implements LabProjectService {
 		requireJson(request.content());
 		LabProject project = owned(userId, projectId);
 		project.update(request.name().strip(), describe(request.description()), request.mode(), request.content());
+		// A client that does not know about folders leaves the project where it is.
+		if (request.folder() != null) {
+			project.moveTo(folderName(request.folder()));
+		}
 		return LabProjectResponse.of(projects.saveAndFlush(project));
+	}
+
+	@Override
+	public LabProjectSummaryResponse move(Long userId, Long projectId, String folder) {
+		LabProject project = owned(userId, projectId);
+		project.moveTo(folderName(folder));
+		return LabProjectSummaryResponse.of(projects.saveAndFlush(project));
 	}
 
 	@Override
@@ -86,6 +98,7 @@ public class LabProjectServiceImpl implements LabProjectService {
 		LabProject copy = new LabProject(users.getReferenceById(userId),
 				(name.length() > room ? name.substring(0, room) : name) + COPY_SUFFIX, source.getDescription(),
 				source.getMode(), source.getContent());
+		copy.moveTo(source.getFolder());
 		return LabProjectResponse.of(projects.saveAndFlush(copy));
 	}
 
@@ -147,6 +160,11 @@ public class LabProjectServiceImpl implements LabProjectService {
 		catch (JacksonException ex) {
 			throw new InvalidRequestException("El contenido del proyecto no es JSON válido.");
 		}
+	}
+
+	/** Folder names differ only by their text: spaces around and repeated inside are dropped. */
+	private static String folderName(String folder) {
+		return folder == null ? "" : folder.strip().replaceAll("[ ]+", " ");
 	}
 
 	private static String describe(String description) {

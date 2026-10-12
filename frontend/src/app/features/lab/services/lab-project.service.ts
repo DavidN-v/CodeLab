@@ -20,6 +20,7 @@ interface ProjectDto {
   description: string;
   mode: 'FREE' | 'TUTOR' | 'CHALLENGE' | 'DEBUG';
   content: string;
+  folder: string;
   updatedAt: string;
 }
 
@@ -54,6 +55,7 @@ export class LabProjectService {
       description: project.description,
       mode: project.mode.toUpperCase(),
       content: JSON.stringify(contentOf(project)),
+      folder: project.folder,
     };
     const request =
       project.id === null
@@ -64,6 +66,11 @@ export class LabProjectService {
 
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.url}/${id}`);
+  }
+
+  /** Moves a saved project to a folder; an empty name takes it out of any folder. */
+  move(id: number, folder: string): Observable<LabProjectSummary> {
+    return this.http.put<SummaryDto>(`${this.url}/${id}/folder`, { folder }).pipe(map(toSummary));
   }
 
   duplicate(id: number): Observable<LabProject> {
@@ -103,6 +110,7 @@ export class LabProjectService {
         name: draft.name ?? 'Proyecto sin nombre',
         description: draft.description ?? '',
         mode: draft.mode ?? 'free',
+        folder: draft.folder ?? '',
       } as LabProject;
     } catch {
       return null;
@@ -144,7 +152,7 @@ function contentOf(project: LabProject): LabContent {
 }
 
 function toSummary(dto: SummaryDto): LabProjectSummary {
-  return { ...dto, mode: dto.mode.toLowerCase() as LabMode };
+  return { ...dto, folder: dto.folder ?? '', mode: dto.mode.toLowerCase() as LabMode };
 }
 
 function toProject(dto: ProjectDto): LabProject {
@@ -164,5 +172,6 @@ function toProject(dto: ProjectDto): LabProject {
     name: dto.name,
     description: dto.description,
     mode: dto.mode.toLowerCase() as LabMode,
+    folder: dto.folder ?? '',
   };
 }

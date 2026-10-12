@@ -1,9 +1,9 @@
 import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ElementRef, inject, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, computed, inject, signal, viewChild } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { CatalogEntry, TEMPLATES } from '../../data/lab-catalog';
-import { LabMode } from '../../models/lab.models';
+import { LabMode, LabProjectSummary } from '../../models/lab.models';
 import { LabStore } from '../../services/lab-store.service';
 
 const MODE_LABEL: Record<LabMode, string> = {
@@ -30,7 +30,28 @@ export class LabProjectsComponent {
 
   protected readonly name = signal('');
   protected readonly description = signal('');
+  protected readonly folder = signal('');
   protected readonly versionLabel = signal('');
+  /** Id of the project being moved, and the folder typed for it. */
+  protected readonly moving = signal<number | null>(null);
+  protected readonly target = signal('');
+
+  /** The folders in use, in alphabetical order. */
+  protected readonly folders = computed(() =>
+    [...new Set((this.store.savedProjects() ?? []).map((project) => project.folder).filter(Boolean))].sort((a, b) =>
+      a.localeCompare(b, 'es'),
+    ),
+  );
+  /** The saved projects by folder; those in no folder come last. */
+  protected readonly groups = computed<{ folder: string; projects: LabProjectSummary[] }[]>(() => {
+    const projects = this.store.savedProjects() ?? [];
+    const groups = this.folders().map((folder) => ({
+      folder,
+      projects: projects.filter((project) => project.folder === folder),
+    }));
+    const loose = projects.filter((project) => !project.folder);
+    return loose.length > 0 ? [...groups, { folder: '', projects: loose }] : groups;
+  });
   /** Id of the project waiting for the learner to confirm its deletion. */
   protected readonly deleting = signal<number | null>(null);
   protected readonly restoring = signal<number | null>(null);
@@ -40,6 +61,8 @@ export class LabProjectsComponent {
     const project = this.store.project();
     this.name.set(project.name);
     this.description.set(project.description);
+    this.folder.set(project.folder);
+    this.moving.set(null);
     this.deleting.set(null);
     this.restoring.set(null);
     this.dialog().nativeElement.showModal();
@@ -56,16 +79,19 @@ export class LabProjectsComponent {
   }
 
   protected async saveDetails(): Promise<void> {
-    this.store.rename(this.name(), this.description());
+    this.store.rename(this.name(), this.description(), this.folder());
     await this.guard(() => this.store.save());
+    // Saving changes the list below: its name, its folder, or a project that was not there.
+    await this.store.loadProjects();
   }
 
   protected async saveVersion(): Promise<void> {
-    this.store.rename(this.name(), this.description());
+    this.store.rename(this.name(), this.description(), this.folder());
     const saved = await this.guard(() => this.store.saveVersion(this.versionLabel().trim()));
     if (saved) {
       this.versionLabel.set('');
     }
+    await this.store.loadProjects();
   }
 
   protected async restore(versionId: number): Promise<void> {
@@ -76,6 +102,20 @@ export class LabProjectsComponent {
   protected async openProject(id: number): Promise<void> {
     await this.guard(() => this.store.openProject(id));
     this.close();
+  }
+
+  protected startMove(project: LabProjectSummary): void {
+    this.target.set(project.folder);
+    this.deleting.set(null);
+    this.moving.set(project.id);
+  }
+
+  protected async move(id: number): Promise<void> {
+    await this.guard(() => this.store.moveProject(id, this.target()));
+    if (id === this.store.project().id) {
+      this.folder.set(this.store.project().folder);
+    }
+    this.moving.set(null);
   }
 
   protected async duplicate(id: number): Promise<void> {

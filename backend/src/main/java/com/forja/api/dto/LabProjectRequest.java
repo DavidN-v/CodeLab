@@ -12,5 +12,7 @@ public record LabProjectRequest(
 		@Size(max = 500, message = "admite hasta 500 caracteres") String description,
 		@NotNull(message = "es obligatorio") LabMode mode,
 		@Schema(description = "JSON with the idea, files, tests and plan of the project.") @NotBlank(
-				message = "no puede estar vacío") @Size(max = 400_000, message = "admite hasta 400 KB") String content) {
+				message = "no puede estar vacío") @Size(max = 400_000, message = "admite hasta 400 KB") String content,
+		@Schema(description = "Folder the learner keeps it in; empty or absent for none.") @Size(max = 60,
+				message = "admite hasta 60 caracteres") String folder) {
 }

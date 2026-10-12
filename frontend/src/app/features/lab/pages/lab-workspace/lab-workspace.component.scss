@@ -55,6 +55,11 @@
   white-space: nowrap;
 }
 
+.lab__project-folder {
+  color: var(--color-text-subtle);
+  font-weight: 400;
+}
+
 .lab__save {
   color: var(--color-text-subtle);
   font-size: var(--text-xs);

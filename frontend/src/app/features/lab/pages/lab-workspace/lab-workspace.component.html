@@ -12,7 +12,12 @@
       <h1 id="lab-heading" class="visually-hidden">Práctica general</h1>
       <button type="button" class="lab__project" title="Proyectos: nombre, versiones, abrir otro" (click)="projects.open()">
         <span aria-hidden="true">▤</span>
-        <span class="lab__project-name">{{ project.name }}</span>
+        <span class="lab__project-name">
+          @if (project.folder) {
+            <span class="lab__project-folder">{{ project.folder }} /</span>
+          }
+          {{ project.name }}
+        </span>
       </button>
       <span class="lab__save" [attr.data-state]="store.saveState()" role="status">{{ saveLabels[store.saveState()] }}</span>
     </div>

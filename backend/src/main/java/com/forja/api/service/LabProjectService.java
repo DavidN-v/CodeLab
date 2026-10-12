@@ -17,6 +17,9 @@ public interface LabProjectService {
 
 	LabProjectResponse update(Long userId, Long projectId, LabProjectRequest request);
 
+	/** Moves a project to a folder without touching its content. */
+	LabProjectSummaryResponse move(Long userId, Long projectId, String folder);
+
 	void delete(Long userId, Long projectId);
 
 	LabProjectResponse duplicate(Long userId, Long projectId);

@@ -9,12 +9,14 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.forja.api.config.JwtConfig;
 import com.forja.api.config.SecurityConfig;
 import com.forja.api.dto.LabProjectResponse;
+import com.forja.api.dto.LabProjectSummaryResponse;
 import com.forja.api.entity.LabMode;
 import com.forja.api.exception.GlobalExceptionHandler;
 import com.forja.api.exception.ResourceNotFoundException;
@@ -58,11 +60,21 @@ class LabProjectControllerTest {
 	@Test
 	void createsTheProjectForTheLearnerInTheToken() throws Exception {
 		when(service.create(eq(7L), any()))
-			.thenReturn(new LabProjectResponse(1L, "Calculadora", "", LabMode.FREE, "{}", Instant.EPOCH));
+			.thenReturn(new LabProjectResponse(1L, "Calculadora", "", LabMode.FREE, "{}", "", Instant.EPOCH));
 
 		mockMvc.perform(post("/api/lab/projects").with(jwt().jwt(token -> token.subject("7")))
 			.contentType(MediaType.APPLICATION_JSON)
 			.content(BODY)).andExpect(status().isCreated()).andExpect(jsonPath("$.id").value(1));
+	}
+
+	@Test
+	void movesAProjectToAFolder() throws Exception {
+		when(service.move(7L, 1L, "Java"))
+			.thenReturn(new LabProjectSummaryResponse(1L, "Calculadora", "", LabMode.FREE, "Java", Instant.EPOCH));
+
+		mockMvc.perform(put("/api/lab/projects/1/folder").with(jwt().jwt(token -> token.subject("7")))
+			.contentType(MediaType.APPLICATION_JSON)
+			.content("{\"folder\": \"Java\"}")).andExpect(status().isOk()).andExpect(jsonPath("$.folder").value("Java"));
 	}
 
 	@Test

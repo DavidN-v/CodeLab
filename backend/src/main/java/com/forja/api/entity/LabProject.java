@@ -32,6 +32,10 @@ public class LabProject extends BaseEntity {
 	@Column(nullable = false, columnDefinition = "text")
 	private String content;
 
+	/** The learner's own grouping of projects; empty when it is in none. */
+	@Column(nullable = false, length = 60)
+	private String folder = "";
+
 	protected LabProject() {
 	}
 
@@ -45,6 +49,10 @@ public class LabProject extends BaseEntity {
 		this.description = description;
 		this.mode = mode;
 		this.content = content;
+	}
+
+	public void moveTo(String folder) {
+		this.folder = folder;
 	}
 
 	public void restore(String content) {
@@ -61,6 +69,10 @@ public class LabProject extends BaseEntity {
 
 	public LabMode getMode() {
 		return mode;
+	}
+
+	public String getFolder() {
+		return folder;
 	}
 
 	public String getContent() {

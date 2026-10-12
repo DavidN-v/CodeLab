@@ -6,11 +6,12 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.Instant;
 
 @Schema(name = "LabProjectSummary")
-public record LabProjectSummaryResponse(Long id, String name, String description, LabMode mode, Instant updatedAt) {
+public record LabProjectSummaryResponse(Long id, String name, String description, LabMode mode, String folder,
+		Instant updatedAt) {
 
 	public static LabProjectSummaryResponse of(LabProject project) {
 		return new LabProjectSummaryResponse(project.getId(), project.getName(), project.getDescription(),
-				project.getMode(), project.getUpdatedAt());
+				project.getMode(), project.getFolder(), project.getUpdatedAt());
 	}
 
 }

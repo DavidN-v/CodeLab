@@ -7,11 +7,11 @@ import java.time.Instant;
 
 @Schema(name = "LabProject")
 public record LabProjectResponse(Long id, String name, String description, LabMode mode, String content,
-		Instant updatedAt) {
+		String folder, Instant updatedAt) {
 
 	public static LabProjectResponse of(LabProject project) {
 		return new LabProjectResponse(project.getId(), project.getName(), project.getDescription(), project.getMode(),
-				project.getContent(), project.getUpdatedAt());
+				project.getContent(), project.getFolder(), project.getUpdatedAt());
 	}
 
 }

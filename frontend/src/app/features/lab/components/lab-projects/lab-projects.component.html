@@ -22,6 +22,22 @@
             (input)="description.set(read($event))"
           />
         </label>
+        <label class="projects__field">
+          <span>Carpeta</span>
+          <input
+            class="projects__input"
+            maxlength="60"
+            list="project-folders"
+            placeholder="Por ejemplo: Java, HTML, Ejercicios de clase…"
+            [value]="folder()"
+            (input)="folder.set(read($event))"
+          />
+        </label>
+        <datalist id="project-folders">
+          @for (name of folders(); track name) {
+            <option [value]="name"></option>
+          }
+        </datalist>
         @if (store.signedIn()) {
           <div class="projects__row">
             <button type="button" class="projects__button projects__button--primary" [disabled]="busy()" (click)="saveDetails()">
@@ -86,47 +102,74 @@
         <section class="projects__section">
           <h3 class="projects__heading">Mis proyectos</h3>
           @if (store.savedProjects(); as projects) {
-            <ul class="projects__list">
-              @for (project of projects; track project.id) {
-                <li class="projects__item" [class.projects__item--current]="project.id === store.project().id">
-                  <span class="projects__item-main">
-                    <span class="projects__item-name">{{ project.name }}</span>
-                    <span class="projects__item-meta">
-                      {{ modes[project.mode] }} · {{ project.updatedAt | date: 'd MMM y, HH:mm' }}
-                      @if (project.id === store.project().id) {
-                        · abierto ahora
+            @for (group of groups(); track group.folder) {
+              <details class="projects__folder" open>
+                <summary class="projects__folder-name">
+                  <span aria-hidden="true">{{ group.folder ? '▸' : '·' }}</span>
+                  {{ group.folder || 'Sin carpeta' }}
+                  <span class="projects__folder-count">{{ group.projects.length }}</span>
+                </summary>
+                <ul class="projects__list">
+                  @for (project of group.projects; track project.id) {
+                    <li class="projects__item" [class.projects__item--current]="project.id === store.project().id">
+                      <span class="projects__item-main">
+                        <span class="projects__item-name">{{ project.name }}</span>
+                        <span class="projects__item-meta">
+                          {{ modes[project.mode] }} · {{ project.updatedAt | date: 'd MMM y, HH:mm' }}
+                          @if (project.id === store.project().id) {
+                            · abierto ahora
+                          }
+                        </span>
+                        @if (project.description) {
+                          <span class="projects__item-meta">{{ project.description }}</span>
+                        }
+                      </span>
+                      @if (moving() === project.id) {
+                        <span class="projects__confirm">
+                          <input
+                            class="projects__input projects__input--short"
+                            maxlength="60"
+                            list="project-folders"
+                            placeholder="Carpeta (vacío: ninguna)"
+                            aria-label="Carpeta de destino"
+                            [value]="target()"
+                            (input)="target.set(read($event))"
+                            (keydown.enter)="move(project.id)"
+                          />
+                          <button type="button" class="projects__button projects__button--primary" [disabled]="busy()" (click)="move(project.id)">
+                            Mover
+                          </button>
+                          <button type="button" class="projects__button" (click)="moving.set(null)">No</button>
+                        </span>
+                      } @else if (deleting() === project.id) {
+                        <span class="projects__confirm">
+                          Se borra con todas sus versiones.
+                          <button type="button" class="projects__button projects__button--danger" (click)="remove(project.id)">
+                            Borrar
+                          </button>
+                          <button type="button" class="projects__button" (click)="deleting.set(null)">No</button>
+                        </span>
+                      } @else {
+                        <span class="projects__actions">
+                          @if (project.id !== store.project().id) {
+                            <button type="button" class="projects__button" [disabled]="busy()" (click)="openProject(project.id)">
+                              Abrir
+                            </button>
+                          }
+                          <button type="button" class="projects__button" (click)="startMove(project)">Mover</button>
+                          <button type="button" class="projects__button" [disabled]="busy()" (click)="duplicate(project.id)">
+                            Duplicar
+                          </button>
+                          <button type="button" class="projects__button" (click)="deleting.set(project.id)">Borrar</button>
+                        </span>
                       }
-                    </span>
-                    @if (project.description) {
-                      <span class="projects__item-meta">{{ project.description }}</span>
-                    }
-                  </span>
-                  @if (deleting() === project.id) {
-                    <span class="projects__confirm">
-                      Se borra con todas sus versiones.
-                      <button type="button" class="projects__button projects__button--danger" (click)="remove(project.id)">
-                        Borrar
-                      </button>
-                      <button type="button" class="projects__button" (click)="deleting.set(null)">No</button>
-                    </span>
-                  } @else {
-                    <span class="projects__actions">
-                      @if (project.id !== store.project().id) {
-                        <button type="button" class="projects__button" [disabled]="busy()" (click)="openProject(project.id)">
-                          Abrir
-                        </button>
-                      }
-                      <button type="button" class="projects__button" [disabled]="busy()" (click)="duplicate(project.id)">
-                        Duplicar
-                      </button>
-                      <button type="button" class="projects__button" (click)="deleting.set(project.id)">Borrar</button>
-                    </span>
+                    </li>
                   }
-                </li>
-              } @empty {
-                <li class="projects__empty">Todavía no has guardado ningún proyecto.</li>
-              }
-            </ul>
+                </ul>
+              </details>
+            } @empty {
+              <p class="projects__empty">Todavía no has guardado ningún proyecto.</p>
+            }
           } @else {
             <p class="projects__note">Cargando…</p>
           }

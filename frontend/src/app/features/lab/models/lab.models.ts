@@ -49,6 +49,8 @@ export interface LabProject extends LabContent {
   name: string;
   description: string;
   mode: LabMode;
+  /** The learner's own grouping ("Java", "HTML"); empty when it is in no folder. */
+  folder: string;
 }
 
 export interface LabProjectSummary {
@@ -56,6 +58,7 @@ export interface LabProjectSummary {
   name: string;
   description: string;
   mode: LabMode;
+  folder: string;
   updatedAt: string;
 }
 

@@ -291,8 +291,12 @@ export class LabStore {
     this.codeChanged();
   }
 
-  rename(name: string, description: string): void {
-    this.patch({ name: name.trim() || 'Proyecto sin nombre', description: description.trim() });
+  rename(name: string, description: string, folder = this.current().folder): void {
+    this.patch({
+      name: name.trim() || 'Proyecto sin nombre',
+      description: description.trim(),
+      folder: folder.trim().replace(/ +/g, ' '),
+    });
     this.changed();
   }
 
@@ -446,6 +450,20 @@ export class LabStore {
       this.projects.writeDraft(project);
     } catch {
       // The interceptor has already told the learner what went wrong.
+    }
+  }
+
+  /** Moves one of the saved projects to a folder; an empty name takes it out of any. */
+  async moveProject(id: number, folder: string): Promise<void> {
+    try {
+      const moved = await firstValueFrom(this.projects.move(id, folder.trim()));
+      if (this.current().id === id) {
+        this.patch({ folder: moved.folder });
+        this.projects.writeDraft(this.current());
+      }
+      await this.loadProjects();
+    } catch {
+      // Reported by the interceptor.
     }
   }
 
@@ -755,6 +773,7 @@ function fromCatalog(entry: CatalogEntry): LabProject {
     name: entry.mode === 'free' ? 'Proyecto sin nombre' : entry.title,
     description: entry.mode === 'free' ? '' : entry.summary,
     mode: entry.mode,
+    folder: '',
     files: entry.files.map((file: LabFile) => ({ ...file })),
     tests: entry.tests.map((test) => ({ ...test, id: crypto.randomUUID(), origin: 'catalog' as const })),
     catalogId: entry.id,
