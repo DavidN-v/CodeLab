@@ -55,7 +55,7 @@ export class MermaidDiagramComponent {
         startOnLoad: false,
         theme: theme === 'dark' ? 'dark' : 'neutral',
         securityLevel: 'strict',
-        fontFamily: 'IBM Plex Sans, system-ui, sans-serif',
+        fontFamily: 'Geist Sans, system-ui, sans-serif',
       });
       const { svg } = await mermaid.render(`forja-diagram-${++counter}`, source);
       if (this.destroyRef.destroyed) {

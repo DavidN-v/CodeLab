@@ -14,8 +14,20 @@
     <header class="page__header">
       <p class="page__eyebrow">Mi panel</p>
       <h1 id="dashboard-heading" class="page__title">
-        {{ greeting() }}, {{ panel.user.displayName }}
+        {{ greeting() }}, <span class="hello__name">{{ panel.user.displayName }}</span>
       </h1>
+      <p class="page__lead">
+        @if (panel.streak.activeToday) {
+          Hoy ya has sumado {{ panel.dailyGoal.todayXp }} XP. Cada día que vuelves, lo de ayer se queda un poco más.
+        } @else if (panel.streak.current > 0) {
+          Llevas {{ panel.streak.current }} {{ panel.streak.current === 1 ? 'día' : 'días' }} seguidos. Un paso pequeño
+          hoy y la cadena sigue.
+        } @else if (panel.xp === 0) {
+          Todo empieza con una lección de unos minutos. La primera ya está esperándote abajo.
+        } @else {
+          Vuelve a encender la racha: una lección o un ejercicio bastan.
+        }
+      </p>
     </header>
 
     @if (streakAtRisk()) {
@@ -41,12 +53,12 @@
     <div class="next-up">
       <h2 class="section-title">Sigue donde lo dejaste</h2>
       @for (card of panel.courses; track card.course.id) {
-        <article class="card course-card">
+        <article class="card course-card" [class.course-card--lead]="$first">
           <div class="course-card__head">
             <h3 class="course-card__title">
               <a [routerLink]="['/languages', card.course.languageSlug]">{{ card.course.title }}</a>
             </h3>
-            <span class="course-card__percent">{{ card.percent }} %</span>
+            <span class="course-card__percent">{{ card.percent }}<small>%</small></span>
           </div>
           <app-progress-bar [percent]="card.percent" [label]="'Progreso en ' + card.course.title" />
           <p class="card__detail">
@@ -139,8 +151,8 @@
       <div class="card streak" [class.streak--active]="panel.streak.activeToday">
         <p class="section-title">Racha</p>
         <p class="streak__value">
-          <span aria-hidden="true">🔥</span> {{ panel.streak.current }}
-          {{ panel.streak.current === 1 ? 'día' : 'días' }}
+          <span class="streak__flame" aria-hidden="true">🔥</span> {{ panel.streak.current }}
+          <small>{{ panel.streak.current === 1 ? 'día' : 'días' }}</small>
         </p>
         <p class="card__detail">
           @if (panel.streak.activeToday) {
@@ -217,7 +229,7 @@
           @for (achievement of panel.achievements; track achievement.code) {
             <li class="achievement" [class.achievement--earned]="achievement.earned">
               <span class="achievement__icon" aria-hidden="true">{{
-                achievement.earned ? '★' : '☆'
+                achievement.earned ? '★' : '◇'
               }}</span>
               <span>
                 <span class="achievement__title">{{ achievement.title }}</span>

@@ -21,7 +21,7 @@ interface Piece {
   color: string;
 }
 
-const COLORS = ['#e8a23a', '#f2b657', '#8fcf8a', '#ec7b66', '#7ab8e8', '#e3c25b'];
+const COLORS = ['#c6f04a', '#d6f877', '#5fe0a0', '#ff7a6b', '#5fd4f0', '#ffc857'];
 const PIECES = 140;
 const DURATION_MS = 2600;
 

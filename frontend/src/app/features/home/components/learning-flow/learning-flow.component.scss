@@ -3,7 +3,7 @@
 :host {
   display: block;
   border-block: 1px solid var(--color-border);
-  background-color: var(--color-surface);
+  background-color: color-mix(in srgb, var(--color-surface) 70%, transparent);
 }
 
 .flow {
@@ -25,6 +25,7 @@
   display: grid;
   gap: var(--space-6);
   margin: var(--space-7) 0 0;
+  counter-reset: step;
 
   @include from('sm') {
     grid-template-columns: repeat(2, 1fr);
@@ -32,62 +33,74 @@
 
   @include from('lg') {
     grid-template-columns: repeat(4, 1fr);
-    gap: var(--space-5);
+    gap: 0;
   }
 }
 
-// The top rule reads as one continuous track across the four steps; the short
-// accent segment marks where each step begins.
+// One continuous track runs under the four steps; each step is a stop on it.
 .flow__step {
   position: relative;
-  padding: var(--space-5);
-  overflow: hidden;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  background-color: var(--color-bg);
-  transition:
-    border-color var(--transition-base),
-    transform var(--transition-base),
-    box-shadow var(--transition-base);
+  padding: var(--space-6) var(--space-5) 0 0;
+  border-top: 2px solid var(--color-border);
+  transition: border-color var(--transition-base);
 
   &::before {
     content: '';
     position: absolute;
-    top: 0;
+    top: -7px;
     left: 0;
-    width: 100%;
-    height: 2px;
-    background: linear-gradient(90deg, var(--color-accent), transparent 70%);
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: var(--color-bg);
+    box-shadow: 0 0 0 2px var(--color-accent);
+    transition:
+      background-color var(--transition-base),
+      box-shadow var(--transition-base);
   }
 
   &:hover {
-    border-color: var(--color-border-strong);
-    box-shadow: var(--shadow-md);
-    transform: translateY(-3px);
+    border-top-color: var(--color-accent);
+
+    &::before {
+      background-color: var(--color-accent);
+      box-shadow:
+        0 0 0 2px var(--color-accent),
+        0 0 18px 2px color-mix(in srgb, var(--color-accent) 60%, transparent);
+    }
+
+    .flow__index {
+      color: var(--color-accent);
+      -webkit-text-stroke-color: var(--color-accent);
+    }
   }
 }
 
+// Big outlined numbers: they set the rhythm without shouting.
 .flow__index {
-  display: inline-grid;
-  place-items: center;
-  width: 2.25rem;
-  height: 2.25rem;
-  margin-bottom: var(--space-4);
-  border-radius: var(--radius-sm);
-  background-color: var(--color-accent-soft);
-  color: var(--color-accent);
-  font-family: var(--font-mono);
-  font-size: var(--text-sm);
-  font-weight: 600;
+  display: block;
+  margin-bottom: var(--space-3);
+  color: transparent;
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 2rem + 3vw, 4.5rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  -webkit-text-stroke: 1.5px var(--color-border-strong);
+  transition:
+    color var(--transition-base),
+    -webkit-text-stroke-color var(--transition-base);
 }
 
 .flow__label {
-  @include mono-label;
-  font-size: var(--text-sm);
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 600;
   color: var(--color-text);
 }
 
 .flow__description {
+  max-width: 17rem;
   margin-top: var(--space-2);
   color: var(--color-text-muted);
   font-size: var(--text-sm);
